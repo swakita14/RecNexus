@@ -1,4 +1,4 @@
-![Scheme](Milestones/Milestone1/logo.png)
+![Logo](/Milestones/Milestone1/logo.png)
 
 This repository is maintained by the Scrum Lords: 
 
