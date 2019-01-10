@@ -1,5 +1,3 @@
-# Scrum Lords
-
 This repository is maintained by the Scrum Lords: 
 
 * Austin Bergman
