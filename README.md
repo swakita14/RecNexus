@@ -1,5 +1,3 @@
-![Logo](/Milestones/Milestone1/logo.png)
-
 This repository is maintained by the Scrum Lords: 
 
 * Austin Bergman
