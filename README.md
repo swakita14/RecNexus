@@ -1,4 +1,4 @@
-# Scrum Lords
+<img src="Milestones\logo.png" width="400"/>
 
 This repository is maintained by the Scrum Lords: 
 
