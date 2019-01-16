@@ -27,9 +27,9 @@ We want a centralized discussion site that can be found easily and where an indi
    
     How about a browser plug-in?  It could send the URL of the current page to our API to see if a discussion page exists and provide an easy way for them to navigate to our page.
 
-  (Like the working principle of "honey", when you are in a shopping website, it will automatically find the coupons for you, and when you in the checkout page, it will pop out and apply the avaliable coupon.) We can make an extension of the browser like it, so when the user is in the news page, it will automatically running to search the discussion about news, when the user drag to the bottom, the extension will pop out and show all the discussion and the comment place .
+     (Like the working principle of "honey", when you are in a shopping website, it will automatically find the coupons for you, and when you in the checkout page, it will pop out and apply the avaliable coupon.) We can make an extension of the browser like it, so when the user is in the news page, it will automatically running to search the discussion about news, when the user drag to the bottom, the extension will pop out and show all the discussion and the comment place .
     
-  Or the user can copy the URL and paste it into a search bar on our site.
+     Or the user can copy the URL and paste it into a search bar on our site.
 
 3. Clearly we need accounts and logins.  Our own, or do we allow logging in via 3rd party, i.e. "Log in with Google" or ...?  
     
@@ -40,13 +40,22 @@ We want a centralized discussion site that can be found easily and where an indi
     In China, there is a very popular social media application named "Weibo", similar to twitter, users can document their life, publish their views about something and comment others' views. If one user's view is forward more than 500 times, then the user will be liable for any economic and legal liability incurred herefrom.
     I think users can read anoymously.
 5. Do we allow people to sign up with a pseudonym or will we demand/enforce real names?
-    I think the pseudonym can encourage users pulish their own opinions.
+    I think the pseudonym can encourage users publish their own opinions.
     
 6. What is it important to know about our users?  What data should we collect?
+   
+   Preference for news, what kinds of news are they like so we can recommend more for them????
+   We should collect the tags of news which users always scan.
     
 7. If there are news articles on multiple sites that are about the same topic should we have separate discussion pages or just one?
+   I think we should keep one discussion area but I really don't know how to do this.(how can we know they are about the same topic???
+   
 8. What kind of discussion do we want to create? Linear traditional, chronological, ranked, or ?
+   I think ranked will be ok, the hottest comment can always attract more comments and make the news interesting.
+   
 9. Should we allow image/video uploads and host them ourselves?
+   I think images are fine, for example, sometims the meme can help express feelings a lot.
+   
 10. 
 
 ### Interviews
@@ -61,8 +70,12 @@ We want a centralized discussion site that can be found easily and where an indi
 4. User accounts
 5. A user needs to be able to keep track of things they've commented on and easily go back to those discussion pages.  If someone rates or responds to their comment we need to alert them.
 6. Allow users to identify fundamental questions and potential answers about the topic under discussion.  Users can then vote on answers.
+7. A user can delete or edit his comment.
+8. Once a user edit his comment, the vote for the original comment will be clear.
+9. Once the article/news deleted by authors, all the comments will disappear but can save in users' own comment history.
 
 ## Initial Modeling
+
 
 ### Use Case Diagrams
 
