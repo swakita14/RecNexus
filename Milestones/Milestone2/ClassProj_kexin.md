@@ -56,7 +56,11 @@ We want a centralized discussion site that can be found easily and where an indi
 9. Should we allow image/video uploads and host them ourselves?
    I think images are fine, for example, sometims the meme can help express feelings a lot.
    
-10. 
+10. Should we allow user check others' comment history?
+    I don't think we should allow them to do that, it's like the part of the social media application, we just want to focus on the comment for news, also we not allow the user can follow other users.
+
+11. How can users record their loved comment?
+    They can view the comments which they voted in the history or they can star the comment they like. 
 
 ### Interviews
 
