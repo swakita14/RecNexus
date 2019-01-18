@@ -1,7 +1,7 @@
 # Team Project Q/A
 
 ## Helpful Travel Application
-<b>Overview</b>: An application that can help users find a place to vacation when they don't have a specifc place in mind. Users could input approximate price range, dates they'd like to travel, weather/climate they'd like to be in, how far they are willing to travel, and where they would like to travel from and the application would show ideal destinations including pricing for flights and hotels. 
+**Overview**: An application that can help users find a place to vacation when they don't have a specifc place in mind. Users could input approximate price range, dates they'd like to travel, weather/climate they'd like to be in, how far they are willing to travel, and where they would like to travel from and the application would show ideal destinations including pricing for flights and hotels. 
 
 Q. What is new/original about this idea? What are related websites/apps? (Be able to answer the question: isn’t somebody already doing this?)
 
@@ -29,7 +29,7 @@ A.
 
 
 ## Pick-Up Sports Application
-<b>Overview</b>: An application that allows users to find or host local sports pick-up games. Users could enter sports they wish to play and what times and/or locations work best for them and the application could search for other users with the same preferences set and allow users who sign up for a pick-up game to chat if they need to coordinate. The application will also show venues/locations where games take place. This feature would allow users to see details (such as timees of operation) for locations of games and also give an opportunity to leave reviews or feedback on those locations. 
+**Overview**: An application that allows users to find or host local sports pick-up games. Users could enter sports they wish to play and what times and/or locations work best for them and the application could search for other users with the same preferences set and allow users who sign up for a pick-up game to chat if they need to coordinate. The application will also show venues/locations where games take place. This feature would allow users to see details (such as timees of operation) for locations of games and also give an opportunity to leave reviews or feedback on those locations. 
 
 Q. What is new/original about this idea? What are related websites/apps? (Be able to answer the question: isn’t somebody already doing this?)
 
