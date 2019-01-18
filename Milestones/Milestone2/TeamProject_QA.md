@@ -24,9 +24,9 @@ A.
 Q. What resources will be required for you to complete this project that are not already included in the class. i.e. you already have the Microsoft stack, server, database so what else would you need? Additional API’s, frameworks or platforms you’ll need to use.
 
 A. 
-a. This project needs an additional api to add a map in the webpage.
-1. This project needs the data of the flight tickets and maybe the hotels.
-3. This project needs to tag the places or classify places so the result can match the users' filters.( Maybe there is an api for this function or we nned to tag them by ourselves, like the interesting words or boring words in the last term's project, but there will be a lot of work...)
+	-1. This project needs an additional api to add a map in the webpage.
+	-2. This project needs the data of the flight tickets and maybe the hotels.
+	-3. This project needs to tag the places or classify places so the result can match the users' filters.( Maybe there is an api for this function or we nned to tag them by ourselves, like the interesting words or boring words in the last term's project, but there will be a lot of work...)
 
 Q. What algorithmic content is there in this project? i.e. what algorithm(s) will you have to develop or implement in order to do something central to your project idea? (Remember, this isn’t just a software engineering course, it is your CS degree capstone course!)
 
