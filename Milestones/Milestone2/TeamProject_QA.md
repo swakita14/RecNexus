@@ -31,11 +31,11 @@ A.
 
 Q. What algorithmic content is there in this project? i.e. what algorithm(s) will you have to develop or implement in order to do something central to your project idea? (Remember, this isn’t just a software engineering course, it is your CS degree capstone course!)
 
-A. 
+A. Dijkstra，Probabilistic Road Maps，BFS
 
 Q. Rate the topic with a difficulty rating of 1-10. One being supremely easy to implement (not necessarily short though). Ten would require the best CS students using lots of what they learned in their CS degree, plus additional independent learning, to complete successfully.
 
-A. 
+A. 10
 
 
 ## Pick-Up Sports Application
