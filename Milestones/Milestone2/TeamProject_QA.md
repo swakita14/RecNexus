@@ -14,18 +14,28 @@ A. This would be useful for anyone who wants to find a new place to travel, to f
 Q. What are a few major features?
 
 A. 
+1. A great looking landing page with info to tell the user how to use it and link to the home page.
+2. A home page with a map to let users set their start location and some option or box to fill the preference of traveling.
+3. The ability to search and show all the places on the map that match the user’s filters.
+4. The ability to show the prices of the filght tickets when users touch the places marked on the map.
+5. Allow users to tag or star the flight or place.
+6. Provide a link for users to buy the filght tickets.
+7. The filght tickets are sorted by price low to high as default, but users can also sort them by time.
 
 Q. What resources will be required for you to complete this project that are not already included in the class. i.e. you already have the Microsoft stack, server, database so what else would you need? Additional API’s, frameworks or platforms you’ll need to use.
 
 A. 
+1. This project needs an additional api to add a map in the webpage.
+2. This project needs the data of the flight tickets and maybe the hotels.
+3. This project needs to tag the places or classify places so the result can match the users' filters.( Maybe there is an api for this function or we nned to tag them by ourselves, like the interesting words or boring words in the last term's project, but there will be a lot of work...)
 
 Q. What algorithmic content is there in this project? i.e. what algorithm(s) will you have to develop or implement in order to do something central to your project idea? (Remember, this isn’t just a software engineering course, it is your CS degree capstone course!)
 
-A.
+A. Dijkstra，Probabilistic Road Maps，BFS
 
 Q. Rate the topic with a difficulty rating of 1-10. One being supremely easy to implement (not necessarily short though). Ten would require the best CS students using lots of what they learned in their CS degree, plus additional independent learning, to complete successfully.
 
-A. 
+A. 10
 
 
 ## Pick-Up Sports Application
