@@ -23,7 +23,7 @@ A.
 
 Q. What resources will be required for you to complete this project that are not already included in the class. i.e. you already have the Microsoft stack, server, database so what else would you need? Additional API’s, frameworks or platforms you’ll need to use.
 
-A. 
+_A. 
 	 _1. This project needs an additional api to add a map in the webpage.
 	 _2. This project needs the data of the flight tickets and maybe the hotels.
 	 _3. This project needs to tag the places or classify places so the result can match the users' filters.( Maybe there is an api for this function or we nned to tag them by ourselves, like the interesting words or boring words in the last term's project, but there will be a lot of work...)
