@@ -21,7 +21,7 @@ We want a centralized discussion site that can be found easily and where an indi
 
 1. How do we link a discussion on the site to one or more articles/pages?
 
-    We were thinking via URL.
+    We were thinking via URL. Each discussion post will have the original poster's article link as well as their original comment regarding the article.
 
 2. How will users find out that there is a discussion on the site for the article/page they're currently viewing?
    
@@ -33,38 +33,58 @@ We want a centralized discussion site that can be found easily and where an indi
 
 3. Clearly we need accounts and logins.  Our own, or do we allow logging in via 3rd party, i.e. "Log in with Google" or ...?  
     
-    It depends on the different brower, if the user downloads extension from Google, he can use the google account log in and comment, if he use the microsoft edge, he can use microsoft account to log in. Because most time where the user downloads the extension shows which browser he prefer to use and stay for a long time, it's convenient to update and send new message to the user.
+    It depends on the different browser, if the user downloads extension from Google, they can use the Google account log in and comment, if they use Microsoft Edge, they can use Microsoft account to log in. Because most time where the user downloads the extension shows which browser they prefer to use and stay for a long time, it's convenient to update and send new message to the user.
+
+    There are also different things to consider for accounts/logins. We could use Azure AD or Google login to authenticate a user but would also need a database table to keep statistics and information stored. 
     
 4. Do we allow people to comment anonymously?  Read anonymously? 
-    I don't think people can comment anonymously, because they should take responsibility to their comment.
-    In China, there is a very popular social media application named "Weibo", similar to twitter, users can document their life, publish their views about something and comment others' views. If one user's view is forward more than 500 times, then the user will be liable for any economic and legal liability incurred herefrom.
-    I think users can read anoymously.
+
+    Users should not be able to comment anonymously, because they should take responsibility to their comment.
+    In China, there is a very popular social media application named "Weibo", similar to Twitter, users can document their life, publish their views about something and comment others' views. If one user's view is forward more than 500 times, then the user will be liable for any economic and legal liability incurred herefrom.
+
+    Another reason users should not be able to comment anonymously is because one of the main points of the discussion site is to build history and a level of trust which can not be done through anonymity. Users should be able to read discussions anonymously however they just would not be able to comment. 
+
 5. Do we allow people to sign up with a pseudonym or will we demand/enforce real names?
-    I think the pseudonym can encourage users publish their own opinions.
     
+    Yes, we think the pseudonym can encourage users publish their own opinions. However, we should also give the option to use either a username or real name.
+
 6. What is it important to know about our users?  What data should we collect?
-   
-   Preference for news, what kinds of news are they like so we can recommend more for them????
-   We should collect the tags of news which users always scan.
+
+    Preference for news/topics such as what kinds of news they like so we can recommend more for them. We should collect the tags of news which users always scan. This can also be found out through their comment history if we track what type of articles they comment on the most. We could also collect data on what sites users post articles from. 
     
 7. If there are news articles on multiple sites that are about the same topic should we have separate discussion pages or just one?
-   I think we should keep one discussion area but I really don't know how to do this.(how can we know they are about the same topic???
+
+    We should keep one discussion area but don't know how this can be achieved without knowing if articles are going to be completely about the same topic. Because of this, we believe that there should be separete dicussion pages for each article so discussions can take place specifically around that news article alone as each article may have separate details.
    
 8. What kind of discussion do we want to create? Linear traditional, chronological, ranked, or ?
-   I think ranked will be ok, the hottest comment can always attract more comments and make the news interesting.
+
+    Ranked would be preferrable. The hottest comment can always attract more comments and make the news interesting.
    
 9. Should we allow image/video uploads and host them ourselves?
-   I think images are fine, for example, sometims the meme can help express feelings a lot.
+
+    Images are fine, for example, sometims memes or images can help express feelings a lot. Unless videos are already embedded in the original article posted by the user, we should not allow videos for copyright purposes. 
    
 10. Should we allow user check others' comment history?
-    I don't think we should allow them to do that, it's like the part of the social media application, we just want to focus on the comment for news, also we not allow the user can follow other users.
+
+    I don't think we should allow them to do that, it's like the part of the social media application, we just want to focus on the comment for news, also we not allow the user can follow other users. 
 
 11. How can users record their loved comment?
+
     They can view the comments which they voted in the history or they can star the comment they like. 
 
 ### Interviews
 
-### ?
+Q: Will there be any moderators to monitor or control discussions?
+
+A: Yes and no. They should make sure that users aren't harassed but we don't want it to be so controlled that people aren't allowed to speak their minds. The discussions should be open but also constructive. 
+
+Q: Do you want every article and original discussion post to be reviewed by a moderator before being posted to the site?
+
+A: No but we would like to provide a way for users to flag posts or comments as in appropriate. 
+
+Q: Would you like posting articles and commenting to be a user-only feature or should anyone be allowed to do so whether or not they have an account?
+
+A: Only users should be able to post articles and comment on discussions however if they're not a user, they should still be able to read posts and comments.
 
 ## List of Needs and Features
 
@@ -77,6 +97,7 @@ We want a centralized discussion site that can be found easily and where an indi
 7. A user can delete or edit his comment.
 8. Once a user edit his comment, the vote for the original comment will be clear.
 9. Once the article/news deleted by authors, all the comments will disappear but can save in users' own comment history.
+10. The ability to set certain users as moderators who can help keep discussions civil. 
 
 ## Initial Modeling
 
@@ -91,7 +112,9 @@ We want a centralized discussion site that can be found easily and where an indi
 2. Site and data must be backed up regularly and have failover redundancy that will allow the site to remain functional in the event of loss of primary web server or primary database.  We can live with 1 minute of complete downtime per event and up to 1 hour of read-only functionality before full capacity is restored.
 3. Site should never return debug error pages.  Web server must never return 404's.  All server errors must be logged.  Users should receive a custom error page in that case telling them what to do.
 4. Must work in all languages and countries.  English will be the default language but users can comment in their own language and we may translate it.
-5. 
+5. Comments on discussion pages should be updated in real time to alow for up to date discussions. 
+6. Accuracy checks will be needed to ensure valid URLs for articles are provided and that they are posted by verified users on the site. 
+7. Users may choose whether to display their username or their real name. 
 
 ## Identify Functional Requirements (User Stories)
 
