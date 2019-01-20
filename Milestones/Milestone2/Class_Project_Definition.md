@@ -128,7 +128,7 @@ T: Task
    2. [T] Switch it over to Bootstrap 4
    3. [T] Create nice homepage: write content, customize navbar
    4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
-   
+
 2. [U] Fully enable Individual User Accounts
    1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
    2. [T] Configure web app to use our db with Identity tables in it
@@ -141,11 +141,7 @@ T: Task
    1. [F] Users will get a notification when someone replies to their comment
       1. [U] As a logged in user, I want to receive a notification whenever other users reply to my comment on the discussion board so I can engage in a conversation with them. 
          1. [T] Send a notification to the user via email whenever there is a comment on their post
-         2. [T]
-         3. [T]
-      2. [U]
-   2. [F]
-   3. [F]
+
 6. [U] As a robot I would like to be prevented from creating an account on your website so I don't ask millions of my friends to join your website and add comments about male enhancement drugs.
 
 7. [U] As a logged in user, I want to be able to report a post / user if I find it offensive 
@@ -162,6 +158,18 @@ T: Task
         1. [T] Temporarily locking the commenting feature for users that have received a certain number of reports on their account/ comments
         2. [T] Permanently banning the account if the user reaches a certain number of reports
 
+11. [E] Ordering the current active discussion. 
+    1. [F] Adding a menu/tab to ordering the discussion by popularity
+        1. [U] As a logged in user, I want to see the most popular discussions on the top of the queue so I can see which news are relevant to other users 
+            1. [T] Add an up vote / down vote functionality and order the discussions by the votes. 
+    2. [F] Adding a menu/tab to ordering the discussion by most recent 
+        1. [U] As a logged in user, I want to see the most recent discussions on the top of the queue so I can be up to date with the news. 
+            1. [T] Add a timestamp to the discussions, and order the discussions by the timestamp. 
+
+12. [U] As a logged in user, I want to be able to select the categories of discussion that appears on my queue so I don’t view any discussions that do not interest me. 
+
+13. [U] As a logged in user, I want to be able to view the actual posted news article so I can make my own judgement on the news. 
+    1. [T] Adding a link to the news article 
 
 
 ## Initial Architecture Envisioning
