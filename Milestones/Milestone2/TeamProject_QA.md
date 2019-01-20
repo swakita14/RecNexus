@@ -47,20 +47,20 @@ A. An application that does something similar is OpenSports which is a mobile ap
 
 Q. Why is this idea worth doing? Why is it useful and not boring?
 
-A. 
+A. Not only does it have the capability of getting the community together for a pick up sport game, but it also allows users to see the information about certain locations that the users can reserve. It could contain the availability, the times that are crowded, and the overall review of the place left by other users. 
 
 Q. What are a few major features?
 
-A. 
+A. The major features include sending notifications to other users when there are a certain number of players available for a certain location/sport. Being able to set an approximate of when the user will be at the location. Viewing the location information which includes availability, reviews, and reservations. 
 
 Q. What resources will be required for you to complete this project that are not already included in the class. i.e. you already have the Microsoft stack, server, database so what else would you need? Additional API’s, frameworks or platforms you’ll need to use.
 
-A.
+A. We would need a map API, some sort of analytic API (Google), and a schedule API to access the data for the locations
 
 Q. What algorithmic content is there in this project? i.e. what algorithm(s) will you have to develop or implement in order to do something central to your project idea? (Remember, this isn’t just a software engineering course, it is your CS degree capstone course!)
 
-A. 
+A. Analytics to figure out which sport is most frequently played at which location, finding out times of locations that are crowded. 
 
 Q. Rate the topic with a difficulty rating of 1-10. One being supremely easy to implement (not necessarily short though). Ten would require the best CS students using lots of what they learned in their CS degree, plus additional independent learning, to complete successfully.
 
-A. 
+A. 8 - 9 
