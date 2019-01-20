@@ -128,23 +128,49 @@ T: Task
    2. [T] Switch it over to Bootstrap 4
    3. [T] Create nice homepage: write content, customize navbar
    4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
+
 2. [U] Fully enable Individual User Accounts
    1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
    2. [T] Configure web app to use our db with Identity tables in it
    3. [T] Create a user table and customize user pages to display additional data
 3. [F] Allow logged in user to create new discussion page
+
 4. [F] Allow any user to search for and find an existing discussion page
+
 5. [E] Allow a logged in user to write a comment on an article in an existing discussion page
-   1. [F]
-      1. [U]
-         1. [T]
-         2. [T]
-         3. [T]
-      2. [U]
-   2. [F]
-   3. [F]
+   1. [F] Users will get a notification when someone replies to their comment
+      1. [U] As a logged in user, I want to receive a notification whenever other users reply to my comment on the discussion board so I can engage in a conversation with them. 
+         1. [T] Send a notification to the user via email whenever there is a comment on their post
+
 6. [U] As a robot I would like to be prevented from creating an account on your website so I don't ask millions of my friends to join your website and add comments about male enhancement drugs.
-7. 
+
+7. [U] As a logged in user, I want to be able to report a post / user if I find it offensive 
+
+8. [U] As a logged in user, I want to be able edit or remove my comment if it receives a certain amount of down votes so I know it is an unpopular opinion amongst other users. 
+    1. [T] Send a notification if the user’s comment receives a certain amount of down votes
+
+9. [U] As a logged in user, I want to receive a notification when my comment receives a certain amount of up votes so that I know my opinions are popular
+    1. [T] Send a notification if the user’s comment receives a certain amount of up votes
+
+10. [F] Temporarily/Permanently banning users that have a certain amount of reported comments
+    1. [U] As a frequent user, I do not want to see the same user repeatedly posting offensive comments so I can engage in discussion with users that respect other’s opinion
+    2. [U] As a news critic, I want to be able to given a couple of warnings before I get permanently banned so I can learn how to comment without offending other users. 
+        1. [T] Temporarily locking the commenting feature for users that have received a certain number of reports on their account/ comments
+        2. [T] Permanently banning the account if the user reaches a certain number of reports
+
+11. [E] Ordering the current active discussion. 
+    1. [F] Adding a menu/tab to ordering the discussion by popularity
+        1. [U] As a logged in user, I want to see the most popular discussions on the top of the queue so I can see which news are relevant to other users 
+            1. [T] Add an up vote / down vote functionality and order the discussions by the votes. 
+    2. [F] Adding a menu/tab to ordering the discussion by most recent 
+        1. [U] As a logged in user, I want to see the most recent discussions on the top of the queue so I can be up to date with the news. 
+            1. [T] Add a timestamp to the discussions, and order the discussions by the timestamp. 
+
+12. [U] As a logged in user, I want to be able to select the categories of discussion that appears on my queue so I don’t view any discussions that do not interest me. 
+
+13. [U] As a logged in user, I want to be able to view the actual posted news article so I can make my own judgement on the news. 
+    1. [T] Adding a link to the news article 
+
 
 ## Initial Architecture Envisioning
 
