@@ -13,7 +13,7 @@ A. This would be useful for anyone who wants to find a new place to travel, to f
 
 Q. What are a few major features?
 
-A. 
+A. Some major features include:
 1. A great looking landing page with info to tell the user how to use it and link to the home page.
 2. A home page with a map to let users set their start location and some option or box to fill the preference of traveling.
 3. The ability to search and show all the places on the map that match the user’s filters.
@@ -24,14 +24,14 @@ A.
 
 Q. What resources will be required for you to complete this project that are not already included in the class. i.e. you already have the Microsoft stack, server, database so what else would you need? Additional API’s, frameworks or platforms you’ll need to use.
 
-A. 
+A. Some outside resource that we will require:
 1. This project needs an additional api to add a map in the webpage.
 2. This project needs the data of the flight tickets and maybe the hotels.
 3. This project needs to tag the places or classify places so the result can match the users' filters.( Maybe there is an api for this function or we nned to tag them by ourselves, like the interesting words or boring words in the last term's project, but there will be a lot of work...)
 
 Q. What algorithmic content is there in this project? i.e. what algorithm(s) will you have to develop or implement in order to do something central to your project idea? (Remember, this isn’t just a software engineering course, it is your CS degree capstone course!)
 
-A. Dijkstra，Probabilistic Road Maps，BFS
+A. Dijkstra，Probabilistic Road Maps，BFS. We would like to add in a feature that would analyze which places were picked by which demographics during certain times of year. This would help to figure out which offers perform better. 
 
 Q. Rate the topic with a difficulty rating of 1-10. One being supremely easy to implement (not necessarily short though). Ten would require the best CS students using lots of what they learned in their CS degree, plus additional independent learning, to complete successfully.
 
@@ -39,7 +39,7 @@ A. 10
 
 
 ## Pick-Up Sports Application
-**Overview**: An application that allows users to find or host local sports pick-up games. Users could enter sports they wish to play and what times and/or locations work best for them and the application could search for other users with the same preferences set and allow users who sign up for a pick-up game to chat if they need to coordinate. The application will also show venues/locations where games take place. This feature would allow users to see details (such as timees of operation) for locations of games and also give an opportunity to leave reviews or feedback on those locations. 
+**Overview**:  An application that allows users to find or host local sports pick-up games. Users could enter sports they wish to play and what times and/or locations work best for them and the application could search for other users with the same preferences set and allow users who sign up for a pick-up game to chat if they need to coordinate. The application will also show venues/locations where games take place. This feature would allow users to see details (such as timees of operation) for locations of games and also give an opportunity to leave reviews or feedback on those locations. 
 
 Q. What is new/original about this idea? What are related websites/apps? (Be able to answer the question: isn’t somebody already doing this?)
 
@@ -51,11 +51,17 @@ A. Not only does it have the capability of getting the community together for a 
 
 Q. What are a few major features?
 
-A. The major features include sending notifications to other users when there are a certain number of players available for a certain location/sport. Being able to set an approximate of when the user will be at the location. Viewing the location information which includes availability, reviews, and reservations. 
+A. Some major features include:
+1. Sending notifications to other users when there are a certain number of players available for a certain location/sport. 
+2. Being able to set an approximate of when the user will be at the location. 
+3. Viewing the location information which includes availability, reviews, and reservations. 
 
 Q. What resources will be required for you to complete this project that are not already included in the class. i.e. you already have the Microsoft stack, server, database so what else would you need? Additional API’s, frameworks or platforms you’ll need to use.
 
-A. We would need a map API, some sort of analytic API (Google), and a schedule API to access the data for the locations
+A. Some outside resources that we will require:
+1. We would need a map/location API
+2. Some sort of analytic API (Google)
+3. An API to access the data for the locations or we could find out details of these locations ourselves and store to database
 
 Q. What algorithmic content is there in this project? i.e. what algorithm(s) will you have to develop or implement in order to do something central to your project idea? (Remember, this isn’t just a software engineering course, it is your CS degree capstone course!)
 

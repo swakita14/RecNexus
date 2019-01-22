@@ -124,28 +124,32 @@ U: User Story
 T: Task  
 
 1. [U] As a visitor to the site I would like to see a fantastic and modern homepage that tells me how to use the site so I can decide if I want to use this service in the future.
-   1. [T] Create starter ASP dot NET MVC 5 Web Application with Individual User Accounts and no unit test project
-   2. [T] Switch it over to Bootstrap 4
-   3. [T] Create nice homepage: write content, customize navbar
-   4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
+    1. [T] Create starter ASP dot NET MVC 5 Web Application with Individual User Accounts and no unit test project
+    2. [T] Switch it over to Bootstrap 4
+    3. [T] Create nice homepage: write content, customize navbar
+    4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
 
 2. [U] Fully enable Individual User Accounts
-   1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
-   2. [T] Configure web app to use our db with Identity tables in it
-   3. [T] Create a user table and customize user pages to display additional data
+    1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
+    2. [T] Configure web app to use our db with Identity tables in it
+    3. [T] Create a user table and customize user pages to display additional data
+
 3. [F] Allow logged in user to create new discussion page
 
 4. [F] Allow any user to search for and find an existing discussion page
 
 5. [E] Allow a logged in user to write a comment on an article in an existing discussion page
-   1. [F] Users will get a notification when someone replies to their comment
-      1. [U] As a logged in user, I want to receive a notification whenever other users reply to my comment on the discussion board so I can engage in a conversation with them. 
-         1. [T] Send a notification to the user via email whenever there is a comment on their post
+    1. [F] Users will get a notification when someone replies to their comment
+        1. [U] As a logged in user, I want to receive a notification whenever other users reply to my comment on the discussion board so I can engage in a conversation with them.
+            1. [T] Send a notification to the user via email whenever there is a comment on their post
 
 6. [U] As a robot I would like to be prevented from creating an account on your website so I don't ask millions of my friends to join your website and add comments about male enhancement drugs.
 
-7. [U] As a logged in user, I want to be able to report a post / user if I find it offensive 
-
+7. [U] As a logged in user, I want to be able to report a post/user if I find it offensive 
+    1. [T] Add Report link
+    2. [T] Add Report page with reason for reporting
+    3. [T] Store report 
+ 
 8. [U] As a logged in user, I want to be able edit or remove my comment if it receives a certain amount of down votes so I know it is an unpopular opinion amongst other users. 
     1. [T] Send a notification if the user’s comment receives a certain amount of down votes
 
@@ -157,6 +161,7 @@ T: Task
     2. [U] As a news critic, I want to be able to given a couple of warnings before I get permanently banned so I can learn how to comment without offending other users. 
         1. [T] Temporarily locking the commenting feature for users that have received a certain number of reports on their account/ comments
         2. [T] Permanently banning the account if the user reaches a certain number of reports
+    3. [U] As a moderator, I want the ability to remove users if they've been given too many warnings so that they can no longer engage in discussions. 
 
 11. [E] Ordering the current active discussion. 
     1. [F] Adding a menu/tab to ordering the discussion by popularity
@@ -167,9 +172,17 @@ T: Task
             1. [T] Add a timestamp to the discussions, and order the discussions by the timestamp. 
 
 12. [U] As a logged in user, I want to be able to select the categories of discussion that appears on my queue so I don’t view any discussions that do not interest me. 
+    1. [T] Add capability for users to filter categories such as checkboxes
 
 13. [U] As a logged in user, I want to be able to view the actual posted news article so I can make my own judgement on the news. 
     1. [T] Adding a link to the news article 
+
+14. [U] As a moderator, I want to be able to remove posts/comments so I can ensure that there are no inappropriate or offensive posts/comments.
+    1. [T] Add Remove links to all posts/comments if user is moderator
+
+15. [U] As a moderator, I want to be able to view any reports that users submit regarding inappropriate/offensive posts or comments so I can review them, respond, and take action accordingly.
+    1. [T] Create Moderator-only page
+    2. [T] Display all open requests where users reported a post or comment 
 
 
 ## Initial Architecture Envisioning
