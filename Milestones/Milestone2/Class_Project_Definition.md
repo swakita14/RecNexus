@@ -6,7 +6,7 @@
 With use of the discipline agile delivery methodology, we will deliver a website that allows users to make discussions that allows them to freely express their opinion and argue within a civil manner. The website will allow users to discuss and make comments about content from other websites and news sources. If a user is not logged in, then they are will only be able to view the content, but not participate in discussions.
 
 
-[What processes are we following?  What are we choosing to do and at what level of detail or extent?]
+
 
 ## Initial Vision Discussion with Stakeholders
 
