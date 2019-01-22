@@ -39,7 +39,7 @@ A. 10
 
 
 ## Pick-Up Sports Application
-**Overview**: An application that allows users to find or host local sports pick-up games. Users could enter sports they wish to play and what times and/or locations work best for them and the application could search for other users with the same preferences set and allow users who sign up for a pick-up game to chat if they need to coordinate. The application will also show venues/locations where games take place. This feature would allow users to see details (such as timees of operation) for locations of games and also give an opportunity to leave reviews or feedback on those locations. 
+**Overview**:  An application that allows users to find or host local sports pick-up games. Users could enter sports they wish to play and what times and/or locations work best for them and the application could search for other users with the same preferences set and allow users who sign up for a pick-up game to chat if they need to coordinate. The application will also show venues/locations where games take place. This feature would allow users to see details (such as timees of operation) for locations of games and also give an opportunity to leave reviews or feedback on those locations. 
 
 Q. What is new/original about this idea? What are related websites/apps? (Be able to answer the question: isn’t somebody already doing this?)
 

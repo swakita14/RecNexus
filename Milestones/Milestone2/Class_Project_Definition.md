@@ -124,24 +124,24 @@ U: User Story
 T: Task  
 
 1. [U] As a visitor to the site I would like to see a fantastic and modern homepage that tells me how to use the site so I can decide if I want to use this service in the future.
-   1. [T] Create starter ASP dot NET MVC 5 Web Application with Individual User Accounts and no unit test project
-   2. [T] Switch it over to Bootstrap 4
-   3. [T] Create nice homepage: write content, customize navbar
-   4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
+    1. [T] Create starter ASP dot NET MVC 5 Web Application with Individual User Accounts and no unit test project
+    2. [T] Switch it over to Bootstrap 4
+    3. [T] Create nice homepage: write content, customize navbar
+    4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
 
 2. [U] Fully enable Individual User Accounts
-   1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
-   2. [T] Configure web app to use our db with Identity tables in it
-   3. [T] Create a user table and customize user pages to display additional data
+    1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
+    2. [T] Configure web app to use our db with Identity tables in it
+    3. [T] Create a user table and customize user pages to display additional data
 
 3. [F] Allow logged in user to create new discussion page
 
 4. [F] Allow any user to search for and find an existing discussion page
 
 5. [E] Allow a logged in user to write a comment on an article in an existing discussion page
-   1. [F] Users will get a notification when someone replies to their comment
-      1. [U] As a logged in user, I want to receive a notification whenever other users reply to my comment on the discussion board so I can engage in a conversation with them. 
-         1. [T] Send a notification to the user via email whenever there is a comment on their post
+    1. [F] Users will get a notification when someone replies to their comment
+        1. [U] As a logged in user, I want to receive a notification whenever other users reply to my comment on the discussion board so I can engage in a conversation with them.
+            1. [T] Send a notification to the user via email whenever there is a comment on their post
 
 6. [U] As a robot I would like to be prevented from creating an account on your website so I don't ask millions of my friends to join your website and add comments about male enhancement drugs.
 
