@@ -60,6 +60,7 @@ T: Task
             1. [T] Add a "sort by" list box in the searching result page, sort by rate or distance
             2. [T] The searching results are sort by distance by default
             3. [T] Use ajax to show the results after user change the sort way
+            4. [T] Add "rate" box in the sports place detail page
 3. [E] Allow users to make an appointment in an available sports venues, and users can edit or delete them
     1. [F] Add ability for users to create a new sports event or join others sports event when the place is available
         1. [U] As a logged in user, I would like to create a new sports event or join others so I can play my preferred sports in my preferred place
@@ -80,16 +81,16 @@ T: Task
         1. [U] As a logged in user, I want to invite my friends to join my sports event by email so that I can play with my friends
             1. [T] Add "share" button under the sports event, it's the link to open the email.
             2. [T] Add "copied" button to help user copy the link of the event
-4. [E] Create an online clock-in(check-in) system to make sure everybody who join the event will present
+4. [E] Create an online clock-in(check-in?) system to make sure everybody who join the event will present
     1. [F] An online clockin system will be generated autmatically when the event start
         1. [U] As a user who in part of an event, I would like there is a clock-in system to make sure everyboday present so that I can play sports as my plan
             1. [T] Use current location to clock-in
     2. [F] The user will lost credit point if he didn't show in his event
         1. [U] As a user who in part of an event, I would like there is a punishment to the user who didn't show in the event so that more people will present on time
             1. [T] Depends on how long time the user late or didn't show, minus the credit point
-        2. [U] As a moderator, I would like I have the power to add or minus credit point for users so that the user's credit can be correct by mistake.
+        2. [U] As a moderator, I would like I have the power to add or minus credit point for users so that the user's credit can be correct if they lost point by mistake.
             1. [T] Send an email to the user who clocked-in the event to verify if the user who didn't clock-in but actually present
-            2. [T] Add a support button on webpage
+            2. [T] Add a support button on webpage to contact the moderator
 ## Initial Architecture Envisioning
 
 ## Agile Data Modeling
