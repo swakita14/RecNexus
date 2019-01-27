@@ -7,13 +7,9 @@ With use of the discipline agile delivery methodology, we will deliver a website
 
 ## Initial Vision Discussion with Stakeholders
 
-An application that allows users to find or host local sports pick-up games. If someone just wants to see what games are available in their area, they can login and enter the sport they wish to play and the website would provide a list of any nearby games happening so that user could join. If there are no games, users can start one! 
+An application that allows users to find or host local sports pick-up games. If someone just wants to see what games are available in their area, they can login and enter the sport they wish to play and the website would provide a list of any nearby games happening so that user could join. If there are no games, users can start one! We also want to provide a way for users to be notified of games instead of only searching for one. To accomplish this, users can enter their preferred sports and times they are available tp play then when a game happens around that time, the application would notify the user. 
 
-We also want to provide a way for users to be notified of games instead of only searching for one. To accomplish this, users can enter their preferred sports and times they are available tp play then when a game happens around that time, the application would notify the user. 
-
-Users will also be able to see details on locations where pick up games are happpening or could happen. Such details could include times of operation, address, pictures, reviews, whether reservations are required, etc. In addition to seeing other reviews for locations, users will be given the option to leave a review. 
-
-This application will give communities the opportunity to come together, get outside, and play. 
+Users will also be able to see details on locations where pick up games are happpening or could happen. Such details could include times of operation, address, pictures, reviews, whether reservations are required, etc. In addition to seeing other reviews for locations, users will be given the option to leave a review. This application will give communities the opportunity to come together, get outside, and play. 
 
 ## Initial Modeling
 
