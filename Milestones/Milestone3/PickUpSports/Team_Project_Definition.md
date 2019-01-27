@@ -37,7 +37,7 @@ T: Task
             3. [T] Create a user table and customize user pages to display additional data
         3. [U] As a robot I would like to be prevented from creating an account on your website so I don't ask millions of my friends to join your website and occupied all sports venues
 2. [E] Allow users to search the sports venues match the filters
-    1. [F] Allow all users to seach the sports venues by distance
+    1. [F] Allow all users to search the sports venues by distance
         1. [U] As a visitor to the site, I would like to search all the sports venues by the distance I set by myself in the filter so I can see all the sports venues in my expected distance
             1. [T] Create a filter to allow user set the distance before they start searching
             2. [T] Add a reminder to user if they didn't input the distance
@@ -48,9 +48,9 @@ T: Task
         1. [U] As a logged in user, I would like to save the search history in my own accounts so I can review them again in a quick time
             1. [T] Create SQL Server database to save the history for the user
     3. [F] Allow all users to add filters for the search result
-        1. [U] As a visitor, I would like to see if the sports venues avaliable or not after there are sports venues in my expect distance so I can create one or join others.
-            1. [T] Set a button to allow user choose "avaliable or all" sports venues
-            2. [T] Add a reminder to user if there is no avaliable sports venues when they choose "avaliable"
+        1. [U] As a visitor, I would like to see if the sports venues available or not after there are sports venues in my expect distance so I can create one or join others.
+            1. [T] Set a button to allow user choose "available or all" sports venues
+            2. [T] Add a reminder to user if there is no available sports venues when they choose "available"
             3. [T] Use ajax to show the results match the filters
         2. [U] As a visitor, I would like to add my preferred sports filter to the sports venues so I can choose a perfect place to play my sports
             1. [T] Add list box for the searching result page to allow user choose their favorite sports
@@ -60,8 +60,8 @@ T: Task
             1. [T] Add a "sort by" list box in the searching result page, sort by rate or distance
             2. [T] The searching results are sort by distance by default
             3. [T] Use ajax to show the results after user change the sort way
-3. [E] Allow users to make an appointment in an avaliable sports venues, and users can edit or delete them
-    1. [F] Add ability for users to create a new sports event or join others sports event when the place is avaliable
+3. [E] Allow users to make an appointment in an available sports venues, and users can edit or delete them
+    1. [F] Add ability for users to create a new sports event or join others sports event when the place is available
         1. [U] As a logged in user, I would like to create a new sports event or join others so I can play my preferred sports in my preferred place
             1. [T] Add a create page
             2. [T] Add "category", "people", "time" boxes in the create page
