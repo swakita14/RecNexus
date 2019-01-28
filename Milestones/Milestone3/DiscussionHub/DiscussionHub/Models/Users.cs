@@ -11,6 +11,8 @@
 
         public string LName { get; set; }
 
+        public string Email { get; set; }
+
         public string LoginPref { get; set; }
 
         public long VoteTotal { get; set; }
