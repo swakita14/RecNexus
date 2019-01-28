@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DiscussionHub.DAL;
 
 namespace DiscussionHub.Controllers
 {
     public class HomeController : Controller
     {
+        private DiscussionHubContext db = new DiscussionHubContext();
+
         public ActionResult Index()
         {
             return View();
@@ -15,9 +18,9 @@ namespace DiscussionHub.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Here is a list of current users";
 
-            return View();
+            return View(db.Users.ToList());
         }
 
         public ActionResult Contact()
