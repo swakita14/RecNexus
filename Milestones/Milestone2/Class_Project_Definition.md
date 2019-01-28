@@ -3,10 +3,7 @@
 
 ## Summary of Our Approach to Software Development
 
-With use of the discipline agile delivery methodology, we will deliver a website that allows users to make discussions that allows them to freely express their opinion and argue within a civil manner. The website will allow users to discuss and make comments about content from other websites and news sources. If a user is not logged in, then they are will only be able to view the content, but not participate in discussions.
-
-
-
+[What processes are we following?  What are we choosing to do and at what level of detail or extent?]
 
 ## Initial Vision Discussion with Stakeholders
 
@@ -126,67 +123,87 @@ F: Feature
 U: User Story  
 T: Task  
 
-1. [U] As a visitor to the site I would like to see a fantastic and modern homepage that tells me how to use the site so I can decide if I want to use this service in the future.
-    1. [T] Create starter ASP dot NET MVC 5 Web Application with Individual User Accounts and no unit test project
-    2. [T] Switch it over to Bootstrap 4
-    3. [T] Create nice homepage: write content, customize navbar
-    4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
+1. [E] Create website 
+    1. [F] Create website with homepage, database access, and login functionality
+        1. [U] As a visitor to the site I would like to see a fantastic and modern homepage that tells me how to use the site so I can decide if I want to use this service in the future.
+            1. [T] Create starter ASP dot NET MVC 5 Web Application with Individual User Accounts and no unit test project
+            2. [T] Switch it over to Bootstrap 4
+            3. [T] Create nice homepage: write content, customize navbar
+            4. [T] Create SQL Server database on Azure and configure web app to use it. Hide credentials.
+        2. [U] Fully enable Individual User Accounts
+            1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
+            2. [T] Configure web app to use our db with Identity tables in it
+            3. [T] Create a user table and customize user pages to display additional data
+        3. [U] As a robot I would like to be prevented from creating an account on your website so I don't ask millions of my friends to join your website and add comments about male enhancement drugs.
 
-2. [U] Fully enable Individual User Accounts
-    1. [T] Copy SQL schema from an existing ASP.NET Identity database and integrate it into our UP script
-    2. [T] Configure web app to use our db with Identity tables in it
-    3. [T] Create a user table and customize user pages to display additional data
-
-3. [F] Allow logged in user to create new discussion page
-
-4. [F] Allow any user to search for and find an existing discussion page
-
-5. [E] Allow a logged in user to write a comment on an article in an existing discussion page
-    1. [F] Users will get a notification when someone replies to their comment
-        1. [U] As a logged in user, I want to receive a notification whenever other users reply to my comment on the discussion board so I can engage in a conversation with them.
-            1. [T] Send a notification to the user via email whenever there is a comment on their post
-
-6. [U] As a robot I would like to be prevented from creating an account on your website so I don't ask millions of my friends to join your website and add comments about male enhancement drugs.
-
-7. [U] As a logged in user, I want to be able to report a post/user if I find it offensive 
-    1. [T] Add Report link
-    2. [T] Add Report page with reason for reporting
-    3. [T] Store report 
+2. [E] Allow users to create, read, update, or delete articles
+    1. [F] Allow logged in user to create new discussion page
+        1. [U] As a logged in user, I want to be able to post an article along with my assessment of it so that I can share my viewpoint with others. 
+            1. [T] Create page for user to create a new post
+        2. [U] As a logged in user, I want to be able to view the actual posted news article so I can make my own judgement on the news. 
+            1. [T] Require link to article in new discussion page
+    2. [F] Allow any user to search for and find an existing discussion page
+        1. [U] As a logged in user, I want to be able to search for an existing discussion so I can find articles that are relevant to my interests
+        2. [U] As a visitor (not logged in), I want to be able to browse and search existing discussions so I can find articles that are relevant to my interests
+            1. [T] Visitors should be able to search for discussions without ability to comment
+    3. [F] Notify user when another user comments on their article
+        1. [U] As a logged in user, I want to receive a notification when other users reply to my article so I can view their responses 
+            1. [T] Send notification to user via when receives a response on article 
+            2. [T] Put link to article in email
+    4. [F] Allow tagging capabilities to articles for categories
+        1. [U] As a logged in user, I want to be able to select the categories of articles that appears on my queue so I don’t view any discussions that do not interest me. 
+            1. [T] Add capability for users to filter categories such as checkboxes
+    5. [F] Moderators should be able to delete discussion posts 
+        1. [U] As a moderator, I want to be able to remove discussion posts so I can ensure that there are no inappropriate or offensive posts.
+            1. [T] Add Remove links to all posts if user is moderator
  
-8. [U] As a logged in user, I want to be able edit or remove my comment if it receives a certain amount of down votes so I know it is an unpopular opinion amongst other users. 
-    1. [T] Send a notification if the user’s comment receives a certain amount of down votes
-
-9. [U] As a logged in user, I want to receive a notification when my comment receives a certain amount of up votes so that I know my opinions are popular
-    1. [T] Send a notification if the user’s comment receives a certain amount of up votes
-
-10. [F] Temporarily/Permanently banning users that have a certain amount of reported comments
-    1. [U] As a frequent user, I do not want to see the same user repeatedly posting offensive comments so I can engage in discussion with users that respect other’s opinion
-    2. [U] As a news critic, I want to be able to given a couple of warnings before I get permanently banned so I can learn how to comment without offending other users. 
-        1. [T] Temporarily locking the commenting feature for users that have received a certain number of reports on their account/ comments
-        2. [T] Permanently banning the account if the user reaches a certain number of reports
-    3. [U] As a moderator, I want the ability to remove users if they've been given too many warnings so that they can no longer engage in discussions. 
-
-11. [E] Ordering the current active discussion. 
-    1. [F] Adding a menu/tab to ordering the discussion by popularity
+3. [E] Allow users to create, read, update, or delete comments on articles
+    1. [F] Add ability for users to comment on an existing article
+        1. [U] As a logged in user, I want to be able to comment on an existing article/discussion so I can share my views and opinions. 
+            1. [T] Add Comment links to articles 
+            2. [T] Add Comment/Reply links to comments
+        2. [F] Notify user when someone replies to their comment
+            1. [U] As a logged in user, I want to receive a notification when other users reply to my comment on the discussion board so I can engage in a conversation with them.
+                1. [T] Send a notification to the user via email whenever there is response to their comment
+                2. [T] Put link to discussion thread in email 
+    2. [F] Add ability for users to edit or remove their comments 
+        1. [U] As a logged in user, I want to be able edit or remove my comment so if it receives a certain amount of down votes so I know it is an unpopular opinion amongst other users. 
+            1. [T] Send a notification if the user’s comment receives a certain amount of down votes
+            2. [T] Add link/page to delete a comment
+            3. [T] Add link/page to edit a comment
+    3. [F] Add ability for user notifications
+        1. [U] As a logged in user, I want to receive a notification when my comment receives a certain amount of upvotes so that I know my opinions are popular
+            1. [T] Send a notification if the user’s comment receives a certain amount of upvotes
+        2. [U] As a logged in user, I want to receive a notification when my comment receives a certain amount of downvotes so I know when my opinions are disagreed with  
+            1. [T] Send a notification if the user’s comment receives a certain amount of up votes
+    4. [F] Moderators should be able to delete discussion posts 
+        1. [U] As a moderator, I want to be able to remove discussion posts so I can ensure that there are no inappropriate or offensive posts.
+            1. [T] Add Remove links to all posts if user is moderator
+    5. [F] Adding a menu/tab to ordering the discussion by popularity
         1. [U] As a logged in user, I want to see the most popular discussions on the top of the queue so I can see which news are relevant to other users 
             1. [T] Add an up vote / down vote functionality and order the discussions by the votes. 
-    2. [F] Adding a menu/tab to ordering the discussion by most recent 
+    6. [F] Adding a menu/tab to ordering the discussion by most recent 
         1. [U] As a logged in user, I want to see the most recent discussions on the top of the queue so I can be up to date with the news. 
             1. [T] Add a timestamp to the discussions, and order the discussions by the timestamp. 
 
-12. [U] As a logged in user, I want to be able to select the categories of discussion that appears on my queue so I don’t view any discussions that do not interest me. 
-    1. [T] Add capability for users to filter categories such as checkboxes
 
-13. [U] As a logged in user, I want to be able to view the actual posted news article so I can make my own judgement on the news. 
-    1. [T] Adding a link to the news article 
-
-14. [U] As a moderator, I want to be able to remove posts/comments so I can ensure that there are no inappropriate or offensive posts/comments.
-    1. [T] Add Remove links to all posts/comments if user is moderator
-
-15. [U] As a moderator, I want to be able to view any reports that users submit regarding inappropriate/offensive posts or comments so I can review them, respond, and take action accordingly.
-    1. [T] Create Moderator-only page
-    2. [T] Display all open requests where users reported a post or comment 
-
+4. [E] Website should have a reporting cability for inappropriate/offensive posts or comments
+    1. [F] Give user ability to report a post or comment
+        3. [U] As a logged in user, I want to be able to report a post or comment if I find it offensive so appropriate action can be taken against the post
+            1. [T] Add Report link
+            2. [T] Add Report page with reason for reporting
+            3. [T] Store report 
+    2. [F] Temporarily/Permanently banning users that have a certain amount of reported comments
+        1. [U] As a frequent user, I do not want to see the same user repeatedly posting offensive comments so I can engage in discussion with users that respect other’s opinion
+        2. [U] As a news critic, I want to be able to given a couple of warnings before I get permanently banned so I can learn how to comment without offending other users. 
+            1. [T] Temporarily locking the commenting feature for users that have received a certain number of reports on their account/ comments
+            2. [T] Permanently banning the account if the user reaches a certain number of reports
+        3. [U] As a moderator, I want the ability to remove users if they've been given too many warnings so that they can no longer engage in discussions. 
+    3. [F] Allow moderators to view and handle reports made by users
+        1. [U] As a moderator, I want to be able to view any reports that users submit regarding inappropriate/offensive posts or comments so I can review them, respond, and take action accordingly.
+            1. [T] Create Moderator-only page
+            2. [T] Display all open requests where users reported a post or comment 
+            3. [T] Allow moderators to respond or complete report requests 
 
 ## Initial Architecture Envisioning
 
