@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -9,12 +10,15 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DiscussionHub.Models;
+using Newtonsoft.Json;
+using reCAPTCHA.MVC;
 
 namespace DiscussionHub.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+       // private string apiKey = ;
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -142,6 +146,9 @@ namespace DiscussionHub.Controllers
             return View();
         }
 
+       
+
+
         //
         // POST: /Account/Register
         [HttpPost]
@@ -149,10 +156,12 @@ namespace DiscussionHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            CaptchaResponse response = ValidateCaptcha(Request["g-recaptcha-response"]);
+            if (response.Success && ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+              
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
@@ -168,9 +177,26 @@ namespace DiscussionHub.Controllers
                 AddErrors(result);
             }
 
+ 
+            else
+            {
+                return Content("Error From Google ReCaptcha : " + response.ErrorMessage[0].ToString());
+            }
+
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
+
+        public static CaptchaResponse ValidateCaptcha(string response)
+        {
+            string secret = System.Web.Configuration.WebConfigurationManager.AppSettings["reCaptchaPrivateKey"];
+            var client = new WebClient();
+            var jsonResult = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secret, response));
+            return JsonConvert.DeserializeObject<CaptchaResponse>(jsonResult.ToString());
+        }
+
+
 
         //
         // GET: /Account/ConfirmEmail
