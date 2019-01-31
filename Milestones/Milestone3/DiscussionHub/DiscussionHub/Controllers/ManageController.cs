@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using DiscussionHub.DAL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -64,7 +65,8 @@ namespace DiscussionHub.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            var model = new UserViewModel();
+            model.Identity = new IndexViewModel
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
@@ -72,6 +74,13 @@ namespace DiscussionHub.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+
+            var email = User.Identity.GetUserName();
+            using (var context = new DiscussionHubContext())
+            {
+                model.User = context.Users.FirstOrDefault(u => u.Email == email);
+            }
+
             return View(model);
         }
 
