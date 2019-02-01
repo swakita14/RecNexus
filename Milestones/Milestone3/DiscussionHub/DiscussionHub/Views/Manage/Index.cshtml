@@ -22,6 +22,10 @@
                     <b>Username:</b> @Model.DiscussionHubUser.LoginPref
                     <br/><b>Name:</b> @Model.DiscussionHubUser.FName @Model.DiscussionHubUser.LName
                     <br/><b>About:</b> @Model.DiscussionHubUser.About
+                    <br/><b>About:</b> @Model.DiscussionHubUser.UserId
+
+
+                    <br/><b>Current Discussion: </b><a href="Home/ViewDiscussionDetails/@Model.Discussion.UserId">@Model.Discussion.Title</a>
                     <br/>[ @Html.ActionLink("Update Account Details", "UpdateDetails") ]
                 </html>
             }          
