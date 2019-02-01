@@ -20,7 +20,7 @@ namespace DiscussionHub.Controllers
         {
             ViewBag.Message = "Here is a list of current users";
 
-            return View(db.Users.ToList());
+            return View(db.DiscussionHubUsers.ToList());
         }
 
         public ActionResult Contact()
