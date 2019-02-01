@@ -1,17 +1,14 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using DiscussionHub.DAL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DiscussionHub.Models;
 using Newtonsoft.Json;
-using reCAPTCHA.MVC;
 
 namespace DiscussionHub.Controllers
 {
@@ -21,6 +18,7 @@ namespace DiscussionHub.Controllers
        // private string apiKey = ;
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private DiscussionHubContext db = new DiscussionHubContext();
 
         public AccountController()
         {
@@ -161,7 +159,16 @@ namespace DiscussionHub.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
-              
+
+                var newUser = new DiscussionHubUser
+                {
+                    Email = model.Email,
+                    Browser = Request.Browser.Type
+                };
+
+                db.DiscussionHubUsers.Add(newUser);
+                db.SaveChanges();
+
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);

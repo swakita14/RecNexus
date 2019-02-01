@@ -16,6 +16,7 @@ namespace DiscussionHub.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private DiscussionHubContext db = new DiscussionHubContext();
 
         public ManageController()
         {
@@ -65,7 +66,7 @@ namespace DiscussionHub.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var model = new UserViewModel();
+            var model = new DiscussionHubUserViewModel();
             model.Identity = new IndexViewModel
             {
                 HasPassword = HasPassword(),
@@ -76,10 +77,8 @@ namespace DiscussionHub.Controllers
             };
 
             var email = User.Identity.GetUserName();
-            using (var context = new DiscussionHubContext())
-            {
-                model.User = context.Users.FirstOrDefault(u => u.Email == email);
-            }
+            model.DiscussionHubUser = db.DiscussionHubUsers.FirstOrDefault(u => u.Email == email);
+
 
             return View(model);
         }

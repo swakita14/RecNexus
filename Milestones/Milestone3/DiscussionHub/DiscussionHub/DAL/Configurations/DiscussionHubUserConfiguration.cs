@@ -44,12 +44,12 @@ namespace DiscussionHub.DAL.Configurations
                 .HasColumnName("LoginPref")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(256)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.VoteTotal)
                 .HasColumnName("VoteTotal")
                 .HasColumnType("bigint")
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.About)
                 .HasColumnName("About")

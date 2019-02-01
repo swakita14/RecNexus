@@ -6,7 +6,7 @@ namespace DiscussionHub.DAL
 {
     public class DiscussionHubContext : DbContext
     {
-        public DbSet<DiscussionHubUser> Users { get; set; }
+        public DbSet<DiscussionHubUser> DiscussionHubUsers { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Discussion> Discussions { get; set; }
 

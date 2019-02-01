@@ -1,16 +1,33 @@
-﻿@model DiscussionHub.Models.UserViewModel
+﻿@model DiscussionHub.Models.DiscussionHubUserViewModel
 @{
     ViewBag.Title = "Manage";
 }
 
-<h2>@ViewBag.Title.</h2>
-
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Change your account settings</h4>
+    <h4>Manage your account details and settings</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>Password:</dt>
+        <dd>
+            @if (Model.DiscussionHubUser.LoginPref == null)
+            {
+                <html>
+                    <b>You have not entered any account details</b>
+                    <br/>[ @Html.ActionLink("Enter Account Details", "UpdateDetails") ]
+                </html>
+            }
+            else
+            {
+                <html>
+                    <b>Username:</b> @Model.DiscussionHubUser.LoginPref
+                    <br/><b>Name:</b> @Model.DiscussionHubUser.FName @Model.DiscussionHubUser.LName
+                    <br/><b>About:</b> @Model.DiscussionHubUser.About
+                    <br/>[ @Html.ActionLink("Update Account Details", "UpdateDetails") ]
+                </html>
+            }          
+        </dd>
+
+        <br/><dt>Password:</dt>
         <dd>
             [
             @if (Model.Identity.HasPassword)
@@ -23,18 +40,11 @@
             }
             ]
         </dd>
-        <dt>External Logins:</dt>
+        
+        <br/><dt>External Logins:</dt>
         <dd>
             @Model.Identity.Logins.Count [
             @Html.ActionLink("Manage", "ManageLogins") ]
-        </dd>
-       
-        <dt>Two-Factor Authentication:</dt>
-        <dd>
-            <p>
-                There are no two-factor authentication providers configured. See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication.
-            </p>
         </dd>
     </dl>
 </div>

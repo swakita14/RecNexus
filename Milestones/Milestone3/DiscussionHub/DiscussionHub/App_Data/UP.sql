@@ -5,8 +5,8 @@
     [FName]            NVARCHAR(64),
     [LName]            NVARCHAR(128),
     [Email]            NVARCHAR(64),
-    [LoginPref]        NVARCHAR(128) NOT NULL,
-    [VoteTotal]        BIGINT NOT NULL,
+    [LoginPref]        NVARCHAR(128),
+    [VoteTotal]        BIGINT,
     [About]            TEXT,
     [Pseudonym]        NVARCHAR(128),
 
@@ -30,7 +30,7 @@ INSERT INTO [dbo].DiscussionHubUser(Browser,FName,LName,Email,LoginPref,VoteTota
     ('Dalvik/2.1.0 (Linux; U; Android 6.0.1; Nexus Player Build/MMB29T)','Margery', 'Tyrell', 'restlessqueen@yahoo.com', 'TMargery', 78, '26, born and raised in the meadows in Idaho, Senior @WOU', 'Tyler Marge'),
     ('Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36','Tormund', 'Guard', 'leadbyexample@gmail.com', 'torguard', 592, '6ft5, like reading articles on sports and MMA news', 'Tammond Gregory');
 	
-	CREATE TABLE [dbo].[Discussion] (
+CREATE TABLE [dbo].[Discussion] (
     [DiscussionID]  INT            IDENTITY (1, 1) NOT NULL,
     [VoteCount]	    BIGINT             NOT NULL,
     [UpvoteCount]	BIGINT             NOT NULL,
