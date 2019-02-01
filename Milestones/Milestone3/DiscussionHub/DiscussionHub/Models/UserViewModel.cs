@@ -4,6 +4,6 @@
     {
         public IndexViewModel Identity { get; set; }
 
-        public Users User { get; set; }
+        public DiscussionHubUser User { get; set; }
     }
 }
