@@ -1,0 +1,98 @@
+﻿@model DiscussionHub.Models.Discussion
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Discussion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.VoteCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VoteCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpvoteCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpvoteCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DownvoteCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DownvoteCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CommentCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CommentCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalViews)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalViews)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rank)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rank)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ArticleLink)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ArticleLink)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contents)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contents)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DiscussionId }) |
+    @Html.ActionLink("Back to Account Information", "Index", "Manage")
+</p>
