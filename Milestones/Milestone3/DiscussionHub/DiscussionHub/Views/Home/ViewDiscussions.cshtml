@@ -1,0 +1,87 @@
+﻿@model IEnumerable<DiscussionHub.Models.Discussion>
+
+@{
+    ViewBag.Title = "ViewDiscussions";
+}
+
+<h2>List of Current Discussions</h2>
+
+@*This is the View which is also stronlgy typed and is ordered by the time is was submitted*@
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DiscussionId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VoteCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpvoteCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DownvoteCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CommentCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalViews)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rank)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ArticleLink)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Contents)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscussionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VoteCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpvoteCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DownvoteCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CommentCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalViews)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rank)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArticleLink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contents)
+            </td>
+        </tr>     
+    }
+</table>
+

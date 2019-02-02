@@ -78,7 +78,7 @@ namespace DiscussionHub.Controllers
 
             var email = User.Identity.GetUserName();
             model.DiscussionHubUser = db.DiscussionHubUsers.FirstOrDefault(u => u.Email == email);
-
+            model.Discussion = db.Discussions.FirstOrDefault(x => x.UserId == model.DiscussionHubUser.UserId);
 
             return View(model);
         }
