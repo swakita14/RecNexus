@@ -3,7 +3,7 @@ using DiscussionHub.Models;
 
 namespace DiscussionHub.DAL.Configurations
 {
-    public class CommentsConfiguration : EntityTypeConfiguration<Comments>
+    public class CommentsConfiguration : EntityTypeConfiguration<Comment>
     {
         public CommentsConfiguration()
         {
