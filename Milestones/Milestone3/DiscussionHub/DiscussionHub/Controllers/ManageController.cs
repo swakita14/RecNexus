@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DiscussionHub.Models;
+using DiscussionHub.Models.ViewModels;
 
 namespace DiscussionHub.Controllers
 {
@@ -66,7 +67,7 @@ namespace DiscussionHub.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var model = new DiscussionHubUserViewModel();
+            var model = new ManageUserViewModel();
             model.Identity = new IndexViewModel
             {
                 HasPassword = HasPassword(),
@@ -81,6 +82,35 @@ namespace DiscussionHub.Controllers
             model.Discussion = db.Discussions.FirstOrDefault(x => x.UserId == model.DiscussionHubUser.UserId);
 
             return View(model);
+        }
+
+        public ActionResult UpdateDetails(int? id)
+        {
+            var user = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == id);
+
+            var model = new DiscussionHubUserViewModel
+            {
+                About = user.About,
+                FName = user.FName,
+                LName = user.LName,
+                LoginPref = user.LoginPref,
+                UserId = user.UserId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateDetails(DiscussionHubUserViewModel model)
+        {
+            var user = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == model.UserId);
+            user.About = model.About;
+            user.FName = model.FName;
+            user.LName = model.LName;
+            user.LoginPref = model.LoginPref;
+
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         //

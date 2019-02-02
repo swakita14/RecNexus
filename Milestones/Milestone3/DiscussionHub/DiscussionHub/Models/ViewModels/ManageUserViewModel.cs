@@ -1,6 +1,6 @@
-﻿namespace DiscussionHub.Models
+﻿namespace DiscussionHub.Models.ViewModels
 {
-    public class DiscussionHubUserViewModel
+    public class ManageUserViewModel
     {
         public IndexViewModel Identity { get; set; }
 
