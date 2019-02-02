@@ -30,7 +30,7 @@
         
         @if (Model.Discussion != null)
         {
-            <br/><b>Current Discussion: </b><a href="Discussion/ViewDiscussionDetails/@Model.Discussion.UserId">@Model.Discussion.Title</a>
+            <br/><b>Current Discussion: </b><a href="Discussions/ViewDiscussionDetails/@Model.DiscussionHubUser.UserId">@Model.Discussion.Title</a>
         }
         else
         {
