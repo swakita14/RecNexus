@@ -28,6 +28,7 @@ namespace DiscussionHub.Models
 
         public int UserId { get; set; }
 
+        [Required]
         [Display(Name = "Article")]
         public string ArticleLink { get; set; }
 

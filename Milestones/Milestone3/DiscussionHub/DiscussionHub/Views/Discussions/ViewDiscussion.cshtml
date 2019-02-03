@@ -74,10 +74,8 @@
             @Html.DisplayFor(modelItem => item.Contents)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.DiscussionId }) |
-            @Html.ActionLink("Details", "ViewDiscussionDetails", new { id = item.DiscussionId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.DiscussionId })
-        </td>
+           @Html.ActionLink("Details", "ViewDiscussionDetails", new { id = item.DiscussionId }) 
+         </td>
     </tr>
 }
 
