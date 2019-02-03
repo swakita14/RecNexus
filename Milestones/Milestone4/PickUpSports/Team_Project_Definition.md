@@ -76,7 +76,6 @@ T: Task
 7. [E] Allow users to start and modify pick-up games
     1. [F] Add ability for users to create a new pick-up game
         1. [U] As a logged in user, I would like to be able to start a new pick-up game so I can find other users who wish to play in my local area 
-            1. [T] Add a create page that lets users set time, sport, and venue 
     2. [F] Add ability for users to modify or delete their events in limited time
         1. [U] As a logged in user, I would like to delete my event so I can remove it if there is a collision with my schedule
         2. [U] As a logged in user, I would like to be able to modify my event so I can make changes if there is a time or venue change 
