@@ -309,6 +309,7 @@
     <Content Include="Views\Discussions\Edit.cshtml" />
     <Content Include="Views\Discussions\ViewDiscussion.cshtml" />
     <Content Include="Web_ deploy.config" />
+    <Content Include="Views\Discussions\Search.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<DiscussionHub.Models.Discussion>
+
+@{
+    ViewBag.Title = "Discussion Search";
+}
+<h2>Search</h2>
+
+@using (Html.BeginForm("Search", "Discussions", FormMethod.Get, new { @class = "form-inline" }))
+{
+    <div class="center-block">
+        @Html.TextBox("search", "", new { @class = "form-control", @placeholder = "Search by discussion title", required = "required", @style = "width:600px" })
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+}
+
+@if (ViewBag.message)
+{
+    if (Model.Count() == 0)
+    {
+        <h4>I'm sorry, your search returns no results.</h4>
+    }
+    else
+    {
+        <br />
+        <div>
+            <h4>Discussions matching your search:</h4>
+        </div>
+        foreach (var discussion in Model)
+        {
+            <div>
+                <a href="ViewDiscussionDetails/@discussion.DiscussionId" class="btn btn-primary btn-lg active" role="button" >@discussion.Title</a>
+            </div>
+        }
+    }
+}
+

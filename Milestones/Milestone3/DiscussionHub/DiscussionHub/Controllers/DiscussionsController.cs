@@ -132,5 +132,24 @@ namespace DiscussionHub.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public ActionResult Search(String titlePart)
+        {
+            titlePart = Request.QueryString["search"];
+
+            if (titlePart == null)
+            {
+                ViewBag.message = false;
+                return View();
+            }
+            else
+            {
+                ViewBag.message = true;
+                var titleMatch = db.Discussions.Where(p => p.Title.Contains(titlePart));
+                return View(titleMatch.ToList());
+            }
+        }
+
+
     }
 }
