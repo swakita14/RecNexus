@@ -4,11 +4,11 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<h2>Delete Discussion</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h4>Are you sure you want to delete this?</h4>
 <div>
-    <h4>Discussion</h4>
+
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -60,19 +60,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.ArticleLink)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ArticleLink)
+            <a href="@Html.DisplayFor(model => model.ArticleLink)">@Html.DisplayFor(model => model.ArticleLink)</a>
         </dd>
 
         <dt>
@@ -97,7 +89,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <button type="button" class="btn btn-danger">Delete Post</button> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }
