@@ -101,23 +101,23 @@ T: Task
 
 ### Textual Conceptional Diagram:
 
-Contact (__ContactID__, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
+Contact (<u>ContactID</u>, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
 
-Sport (__SportID__, Name)
+Sport (<u>SportID</u>, Name)
 
-SportPreference (__SportPreferenceID__, *SportID*, *ContactID*)
+SportPreference (<u>SportPreferenceID</u>, *SportID*, *ContactID*)
 
-TimePreference (__TimePreferenceID__, BeginTime, EndTime, *ContactID*)
+TimePreference (<u>TimePreferenceID</u>, BeginTime, EndTime, *ContactID*)
 
-Venue (__VenueID__, Name, Phone, Address1, Address2, City, State, ZipCode)
+Venue (<u>VenueID</u>, Name, Phone, Address1, Address2, City, State, ZipCode)
 
-Review (__ReviewID__, Rating, Review, *VenueID*, *ContactID*)
+Review (<u>ReviewID</u>, Rating, Review, *VenueID*, *ContactID*)
 
-Game (__GameID__, *VenueID*, *ContactID*, *SportID*)
+Game (<u>GameID</u>, *VenueID*, *ContactID*, *SportID*)
 
+------
 
-
-#### Table defintions:
+### Table defintions:
 
 **CONTACT**: Individual that can either start or join a pick-up game. Must be a logged-in user. 
 
