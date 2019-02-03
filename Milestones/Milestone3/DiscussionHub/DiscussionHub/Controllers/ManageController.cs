@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -79,7 +80,9 @@ namespace DiscussionHub.Controllers
 
             var email = User.Identity.GetUserName();
             model.DiscussionHubUser = db.DiscussionHubUsers.FirstOrDefault(u => u.Email == email);
-            model.Discussion = db.Discussions.FirstOrDefault(x => x.UserId == model.DiscussionHubUser.UserId);
+            model.Discussion = db.Discussions.Where(x => x.UserId == model.DiscussionHubUser.UserId).ToList();
+            Debug.WriteLine(model.Discussion.ToString());
+
 
             return View(model);
         }

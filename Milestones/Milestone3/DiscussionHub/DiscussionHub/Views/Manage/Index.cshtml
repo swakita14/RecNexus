@@ -5,7 +5,7 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Manage your account details and settings</h4>
+    <h4>Welcome to Your Account @Model.DiscussionHubUser.LoginPref</h4>
     <hr />
     <dl class="dl-horizontal">
         <dd>
@@ -30,7 +30,12 @@
         
         @if (Model.Discussion != null)
         {
-            <br/><b>Current Discussion: </b><a href="Discussions/ViewDiscussionDetails/@Model.Discussion.DiscussionId">@Model.Discussion.Title</a>
+            <br/><b>Current Discussion: </b>
+            foreach(var post in Model.Discussion) { 
+                <a href="../Discussions/ViewDiscussionDetails/@post.DiscussionId">@post.Title</a>
+                 @Html.Raw("|") 
+            }
+                 
         }
         else
         {
@@ -55,6 +60,11 @@
         <dd>
             @Model.Identity.Logins.Count [
             @Html.ActionLink("Manage", "ManageLogins") ]
+        </dd>
+        
+        <br/>
+        <dd>
+            <a class="btn btn-primary" href="../Discussions/Create/" role="button">Start New Discussion</a>
         </dd>
     </dl>
 </div>

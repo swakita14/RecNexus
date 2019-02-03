@@ -1,4 +1,6 @@
-﻿namespace DiscussionHub.Models.ViewModels
+﻿using System.Collections.Generic;
+
+namespace DiscussionHub.Models.ViewModels
 {
     public class ManageUserViewModel
     {
@@ -6,6 +8,6 @@
 
         public DiscussionHubUser DiscussionHubUser { get; set; }
 
-        public Discussion Discussion { get; set; }
+        public List<Discussion> Discussion { get; set; }
     }
 }
