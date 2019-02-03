@@ -16,6 +16,11 @@ namespace DiscussionHub.DAL.Configurations
                 .HasColumnType("int")
                 .IsRequired();
 
+            Property(x => x.PostTime)
+                .HasColumnName("PostTime")
+                .HasColumnType("datetime")
+                .IsRequired();
+
             Property(x => x.VoteCount)
                 .HasColumnName("VoteCount")
                 .HasColumnType("bigint")
@@ -46,27 +51,27 @@ namespace DiscussionHub.DAL.Configurations
                 .HasColumnType("int")
                 .IsRequired();
 
-            Property(x => x.UserId)
-                .HasColumnName("UserID")
-                .HasColumnType("int")
-                .IsRequired();
-
             Property(x => x.ArticleLink)
                 .HasColumnName("ArticleLink")
                 .HasColumnType("nvarchar")
-                .HasMaxLength(256)
                 .IsRequired();
 
             Property(x => x.Title)
                 .HasColumnName("Title")
                 .HasColumnType("nvarchar")
-                .HasMaxLength(256)
                 .IsRequired();
 
             Property(x => x.Contents)
                 .HasColumnName("Contents")
                 .HasColumnType("nvarchar")
                 .IsOptional();
+
+            Property(x => x.UserId)
+                .HasColumnName("UserID")
+                .HasColumnType("int")
+                .IsRequired();
+
         }
     }
+
 }
