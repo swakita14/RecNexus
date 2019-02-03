@@ -101,19 +101,19 @@ T: Task
 
 ### Textual Conceptional Diagram:
 
-Contact (<u>ContactID</u>, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
+Contact (**ContactID**, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
 
-Sport (<u>SportID</u>, Name)
+Sport (**SportID**, Name)
 
-SportPreference (<u>SportPreferenceID</u>, *SportID*, *ContactID*)
+SportPreference (**SportPreferenceID**, *SportID*, *ContactID*)
 
-TimePreference (<u>TimePreferenceID</u>, BeginTime, EndTime, *ContactID*)
+TimePreference (**TimePreferenceID**, BeginTime, EndTime, *ContactID*)
 
-Venue (<u>VenueID</u>, Name, Phone, Address1, Address2, City, State, ZipCode)
+Venue (**VenueID**, Name, Phone, Address1, Address2, City, State, ZipCode)
 
-Review (<u>ReviewID</u>, Rating, Review, *VenueID*, *ContactID*)
+Review (**ReviewID**, Rating, Review, *VenueID*, *ContactID*)
 
-Game (<u>GameID</u>, *VenueID*, *ContactID*, *SportID*)
+Game (**GameID**, *VenueID*, *ContactID*, *SportID*)
 
 ------
 
