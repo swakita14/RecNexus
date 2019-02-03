@@ -302,14 +302,13 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-
     <Content Include="Views\Manage\UpdateDetails.cshtml" />
     <Content Include="Views\Discussions\Create.cshtml" />
     <Content Include="Views\Discussions\Delete.cshtml" />
     <Content Include="Views\Discussions\ViewDiscussionDetails.cshtml" />
     <Content Include="Views\Discussions\Edit.cshtml" />
     <Content Include="Views\Discussions\ViewDiscussion.cshtml" />
-
+    <Content Include="Web_ deploy.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
