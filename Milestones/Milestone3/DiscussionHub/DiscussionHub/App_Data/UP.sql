@@ -42,6 +42,7 @@ CREATE TABLE [dbo].[Discussion] (
     [ArticleLink]   NVARCHAR(128)	   NOT NULL,
     [Title]		    NVARCHAR(128)	   NOT NULL,
 	[Contents]		NVARCHAR(MAX)	   NULL,
+	[PostTime]		DATETIME		   NOT NULL,
 
     CONSTRAINT [PK_dbo.Discussion] PRIMARY KEY CLUSTERED ([DiscussionID] ASC),
     CONSTRAINT [FK_dbo.DiscussionHubUser] FOREIGN KEY (UserID) REFERENCES [dbo].[DiscussionHubUser] (UserID) 

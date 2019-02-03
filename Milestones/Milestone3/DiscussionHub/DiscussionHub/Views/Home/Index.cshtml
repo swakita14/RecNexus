@@ -1,66 +1,112 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
+﻿@model IEnumerable<DiscussionHub.Models.Discussion>
+
+    @{
+        ViewBag.Title = "Home Page";
+    }
 
 
 
-<img src="~/Content/discussion_hub.jpg" class="img-fluid" alt="Responsive image" style="width: 100%">
+    <img src="~/Content/discussion_hub.jpg" class="img-fluid" alt="Responsive image" style="width: 100%">
 
 
-<br /><br /><br /><br /><br />
-<div class="container">
-    <h2 id="quote" style="text-align: center; font-style: italic; color:#e6e2d3">"a discussion page for everyone"</h2>
-</div>
-<br /><br /><br /><br /><br />
-
-<hr />
-
-<br /><br /><br /><br /><br />
-
-
-
-
-<div class="row">
-    <div class="col-md-4">
-        <h3 style="text-align:center">Validate Information</h3>
-        <br />
-        <img src="~/Content/pic1.png" class="img-thumbnail" alt="Responsive image" style="width:400px; height:240px">
-        <br /><br />
-        <p>
-            At Discussion Hub we prioritize the validity of the information presented on the websites that lack integrity. 
-        </p>
-       
+    <br /><br /><br /><br /><br />
+    <div class="container">
+        <h2 id="quote" style="text-align: center; font-style: italic; color:#e6e2d3">"a discussion page for everyone"</h2>
     </div>
-    <div class="col-md-4">
-        <h3 style="text-align: center">Discuss Viewpoints</h3>
-        <br />
-        <img src="~/Content/pic2.jpg" class="img-thumbnail" alt="Responsive image" style="width:400px; height:240px">
-        <br /><br />
-        <p>Engage in conversation and share ideas with other user that are interested in the different topics.</p>
-        
+    <br /><br /><br /><br /><br />
+
+    <hr />
+
+    <br /><br /><br /><br /><br />
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Recent Discussions</h4>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.PostTime)
+                    </th>
+                    <th></th>
+                </tr>
+                <tbody>
+                    @foreach (var discussion in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => discussion.Title)
+                            </td>
+
+                            <td>
+                                @if (discussion.PostTime.Date == DateTime.Today)
+                                {
+                                    DateTime todayTime = discussion.PostTime;
+                                    @todayTime.ToString("h:mm:ss tt")
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => discussion.PostTime)
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h3 style="text-align: center">Free for Everyone</h3>
-        <br />
-        <img src="~/Content/pic3.jpg" class="img-thumbnail" alt="Responsive image" style="width:400px; height:240px">
-        <br /><br />
-        <p>Easy to register and free for everyone. Get signed up now and start engaging in discussion with other users.</p>
-        
+
+    <br /><br /><br /><br /><br />
+
+    <hr />
+
+    <br /><br /><br /><br /><br />
+
+    <div class="row">
+        <div class="col-md-4">
+            <h3 style="text-align:center">Validate Information</h3>
+            <br />
+            <img src="~/Content/pic1.png" class="img-thumbnail" alt="Responsive image" style="width:400px; height:240px">
+            <br /><br />
+            <p>
+                At Discussion Hub we prioritize the validity of the information presented on the websites that lack integrity.
+            </p>
+
+        </div>
+        <div class="col-md-4">
+            <h3 style="text-align: center">Discuss Viewpoints</h3>
+            <br />
+            <img src="~/Content/pic2.jpg" class="img-thumbnail" alt="Responsive image" style="width:400px; height:240px">
+            <br /><br />
+            <p>Engage in conversation and share ideas with other user that are interested in the different topics.</p>
+
+        </div>
+        <div class="col-md-4">
+            <h3 style="text-align: center">Free for Everyone</h3>
+            <br />
+            <img src="~/Content/pic3.jpg" class="img-thumbnail" alt="Responsive image" style="width:400px; height:240px">
+            <br /><br />
+            <p>Easy to register and free for everyone. Get signed up now and start engaging in discussion with other users.</p>
+
+        </div>
     </div>
-</div>
-<br /><br /><br /><br /><br />
-<hr />
-<br /><br /><br /><br /><br />
-<div class="row">
-    <div class="col-8">
-        <h5 style="font-style:italic">"Thanks to Discussion Hub I was able to share my ideas in a open, respectful platform. Their moderation service is outstanding, and they keep me up-to-date with the news and the current disucssions."</h5>
-        <h5>- User</h5>
+    <br /><br /><br /><br /><br />
+    <hr />
+    <br /><br /><br /><br /><br />
+    <div class="row">
+        <div class="col-8">
+            <h5 style="font-style:italic">"Thanks to Discussion Hub I was able to share my ideas in a open, respectful platform. Their moderation service is outstanding, and they keep me up-to-date with the news and the current disucssions."</h5>
+            <h5>- User</h5>
+        </div>
+        <div class="col-4">
+            <h6>Scrum Lords</h6>
+            <h6>Western Oregon University</h6>
+            <h6>345 Monmouth Ave N, Monmouth, OR 97361</h6>
+        </div>
     </div>
-    <div class="col-4">
-        <h6>Scrum Lords</h6>
-        <h6>Western Oregon University</h6>
-        <h6>345 Monmouth Ave N, Monmouth, OR 97361</h6>
-    </div>
-</div>
-<br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br />
 

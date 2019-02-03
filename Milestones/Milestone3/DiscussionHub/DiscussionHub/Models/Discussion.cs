@@ -1,4 +1,7 @@
-﻿namespace DiscussionHub.Models
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace DiscussionHub.Models
 {
     public class Discussion
     {
@@ -25,5 +28,7 @@
 
         public string Contents { get; set; }
 
+        [Display(Name = "Time of Post")]
+        public DateTime PostTime { get; set; } = DateTime.Now;
     }
 }
