@@ -1,4 +1,4 @@
-﻿@model DiscussionHub.Models.DiscussionHubUserViewModel
+﻿@model DiscussionHub.Models.ViewModels.ManageUserViewModel
 @{
     ViewBag.Title = "Manage";
 }
@@ -12,22 +12,32 @@
             @if (Model.DiscussionHubUser.LoginPref == null)
             {
                 <html>
-                    <b>You have not entered any account details</b>
-                    <br/>[ @Html.ActionLink("Enter Account Details", "UpdateDetails") ]
+                <b>You have not entered any account details</b>
+                <br/>[ @Html.ActionLink("Enter Account Details", "UpdateDetails", new { id = Model.DiscussionHubUser.UserId }) ]
                 </html>
             }
             else
             {
                 <html>
-                    <b>Username:</b> @Model.DiscussionHubUser.LoginPref
-                    <br/><b>Name:</b> @Model.DiscussionHubUser.FName @Model.DiscussionHubUser.LName
-                    <br/><b>About:</b> @Model.DiscussionHubUser.About
-                    <br/>[ @Html.ActionLink("Update Account Details", "UpdateDetails") ]
+                <b>Username:</b> @Model.DiscussionHubUser.LoginPref
+                <br/><b>Name:</b> @Model.DiscussionHubUser.FName @Model.DiscussionHubUser.LName
+                <br/><b>About:</b> @Model.DiscussionHubUser.About
+
+                <br/>[ @Html.ActionLink("Update Account Details", "UpdateDetails", new { id = Model.DiscussionHubUser.UserId }) ]
                 </html>
             }          
         </dd>
-
-        <br/><dt>Password:</dt>
+        
+        @if (Model.Discussion != null)
+        {
+            <br/><b>Current Discussion: </b><a href="Discussions/ViewDiscussionDetails/@Model.Discussion.DiscussionId">@Model.Discussion.Title</a>
+        }
+        else
+        {
+            <br/><b>You have not yet started any discussions!</b>
+        }
+        
+        <br/><br/><dt>Password:</dt>
         <dd>
             [
             @if (Model.Identity.HasPassword)

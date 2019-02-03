@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DiscussionHub.Models;
+using DiscussionHub.Models.ViewModels;
 using Newtonsoft.Json;
 
 namespace DiscussionHub.Controllers
