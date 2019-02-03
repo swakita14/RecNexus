@@ -20,48 +20,42 @@
         <div class="form-group">
             @Html.LabelFor(model => model.VoteCount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.VoteCount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.VoteCount, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.VoteCount, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.UpvoteCount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.UpvoteCount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UpvoteCount, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.UpvoteCount, new { htmlAttributes = new { @class = "form-control" } })              
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.DownvoteCount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DownvoteCount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DownvoteCount, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.DownvoteCount, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.CommentCount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CommentCount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CommentCount, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.CommentCount, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.TotalViews, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalViews, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TotalViews, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.TotalViews, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Rank, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Rank, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Rank, "", new { @class = "text-danger" })
+                @Html.DisplayFor(model => model.Rank, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 
