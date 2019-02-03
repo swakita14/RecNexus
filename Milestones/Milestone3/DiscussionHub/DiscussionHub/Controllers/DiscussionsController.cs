@@ -9,10 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using DiscussionHub.DAL;
 using DiscussionHub.Models;
+using DiscussionHub.Models.ViewModels;
 
 namespace DiscussionHub.Controllers
 {
-    [Authorize]
     public class DiscussionsController : Controller
     {
         private DiscussionHubContext db = new DiscussionHubContext();
@@ -42,7 +42,7 @@ namespace DiscussionHub.Controllers
         }
 
         // GET: Discussions/Create
-        
+        [Authorize]
         public ActionResult Create()
         {
             return View();
