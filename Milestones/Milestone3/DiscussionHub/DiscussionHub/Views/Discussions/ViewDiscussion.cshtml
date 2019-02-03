@@ -7,6 +7,9 @@
 <h2>Index</h2>
 
 <p>
+    @Html.ActionLink("Search More", "Search")
+</p>
+<p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
@@ -73,11 +76,11 @@
         <td>
 <<<<<<< HEAD
 
-            @Html.ActionLink("Details", "Details", new { id = item.DiscussionId })
+           
            
 =======
             @Html.ActionLink("Edit", "Edit", new { id = item.DiscussionId }) |
-            @Html.ActionLink("Details", "Details", new { id = item.DiscussionId }) |
+            @Html.ActionLink("Details", "ViewDiscussionDetails", new { id = item.DiscussionId }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.DiscussionId })
 >>>>>>> development
         </td>
