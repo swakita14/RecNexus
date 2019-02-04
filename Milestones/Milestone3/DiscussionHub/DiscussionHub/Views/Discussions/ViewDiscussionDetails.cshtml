@@ -1,91 +1,42 @@
-﻿@model DiscussionHub.Models.Discussion
+﻿@model DiscussionHub.Models.ViewModels.DiscussionViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Discussion Details";
+    var date = Model.DiscussionDetails.PostTime.ToShortDateString();
 }
 
-<h2>Discussion Details</h2>
+<h2>
+    <i>@Model.DiscussionDetails.Title</i>
+</h2>
+<br /><b>Author:</b> @Model.Username | <b>Date written:</b> @date
+<br /><b>Article link:</b> <a href="@Model.DiscussionDetails.ArticleLink">@Model.DiscussionDetails.ArticleLink</a>
 
-<div>
+<hr />
+<b>Author's comments:</b> @Model.DiscussionDetails.Contents
 
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.VoteCount)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.VoteCount)
-        </dd>
+<br /><br />
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Total Votes</th>
+            <th scope="col">Upvotes</th>
+            <th scope="col">Downvotes</th>
+            <th scope="col">Total Views</th>
+            <th scope="col">Rank</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.DiscussionDetails.VoteCount</td>
+            <td>@Model.DiscussionDetails.UpvoteCount</td>
+            <td>@Model.DiscussionDetails.DownvoteCount</td>
+            <td>@Model.DiscussionDetails.TotalViews</td>
+            <td>@Model.DiscussionDetails.Rank</td>
+        </tr>
+    </tbody>
+</table>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.UpvoteCount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpvoteCount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DownvoteCount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DownvoteCount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CommentCount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CommentCount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalViews)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TotalViews)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Rank)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Rank)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ArticleLink)
-        </dt>
-
-        <dd>
-            <a href="@Html.DisplayFor(model => model.ArticleLink)">@Html.DisplayFor(model => model.ArticleLink)</a>
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Contents)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Contents)
-        </dd>
-
-    </dl>
-</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DiscussionId }) |
-    @Html.ActionLink("Delete", "Delete", new { id = Model.DiscussionId }) |
-    @Html.ActionLink("Back to Account Information", "Index", "Manage") |
+    [ @Html.ActionLink("Return to List of Discussions", "ViewDiscussions") ]
 </p>
