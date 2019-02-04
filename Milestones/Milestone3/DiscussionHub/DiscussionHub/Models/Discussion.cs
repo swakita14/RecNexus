@@ -37,7 +37,7 @@ namespace DiscussionHub.Models
 
         public string Contents { get; set; }
 
-        [Display(Name = "Time of Post")]
+        [Display(Name = "Time")]
         public DateTime PostTime { get; set; } 
     }
 }

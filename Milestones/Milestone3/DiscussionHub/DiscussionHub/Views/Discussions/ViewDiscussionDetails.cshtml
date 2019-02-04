@@ -8,35 +8,50 @@
 <h2>
     <i>@Model.DiscussionDetails.Title</i>
 </h2>
-<br /><b>Author:</b> @Model.Username | <b>Date written:</b> @date
-<br /><b>Article link:</b> <a href="@Model.DiscussionDetails.ArticleLink">@Model.DiscussionDetails.ArticleLink</a>
+<br/><b>Author:</b> @Model.Username | <b>Date written:</b> @date
+<br/><b>Article link:</b> <a href="@Model.DiscussionDetails.ArticleLink">@Model.DiscussionDetails.ArticleLink</a>
 
-<hr />
+<hr/>
 <b>Author's comments:</b> @Model.DiscussionDetails.Contents
 
 
-<br /><br />
+<br/><br/>
 <table class="table">
     <thead>
-        <tr>
-            <th scope="col">Total Votes</th>
-            <th scope="col">Upvotes</th>
-            <th scope="col">Downvotes</th>
-            <th scope="col">Total Views</th>
-            <th scope="col">Rank</th>
-        </tr>
+    <tr>
+        <th scope="col">Total Votes</th>
+        <th scope="col">Upvotes</th>
+        <th scope="col">Downvotes</th>
+        <th scope="col">Total Views</th>
+        <th scope="col">Rank</th>
+    </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>@Model.DiscussionDetails.VoteCount</td>
-            <td>@Model.DiscussionDetails.UpvoteCount</td>
-            <td>@Model.DiscussionDetails.DownvoteCount</td>
-            <td>@Model.DiscussionDetails.TotalViews</td>
-            <td>@Model.DiscussionDetails.Rank</td>
-        </tr>
+    <tr>
+        <td>@Model.DiscussionDetails.VoteCount</td>
+        <td>@Model.DiscussionDetails.UpvoteCount</td>
+        <td>@Model.DiscussionDetails.DownvoteCount</td>
+        <td>@Model.DiscussionDetails.TotalViews</td>
+        <td>@Model.DiscussionDetails.Rank</td>
+    </tr>
     </tbody>
 </table>
 
 <p>
-    [ @Html.ActionLink("Return to List of Discussions", "ViewDiscussions") ]
+    @if (Model.IsAuthor)
+    {
+        <html>
+            [ @Html.ActionLink("Modify Discussion Post", "Edit", new {id = Model.DiscussionDetails.DiscussionId}) ] |
+            [ @Html.ActionLink("Delete Discussion Post", "Delete", new {id = Model.DiscussionDetails.DiscussionId}) ] |
+            [ @Html.ActionLink("Return to List of Discussions", "ViewDiscussions") ]
+        </html>
+    }
+    else
+    {
+        <html>
+            [ @Html.ActionLink("Return to List of Discussions", "ViewDiscussions") ]
+        </html>
+    }
+</p>
+<p>
 </p>

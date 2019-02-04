@@ -1,103 +1,50 @@
 ﻿@model DiscussionHub.Models.Discussion
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Modify Discussion";
 }
 
-<h2>Edit</h2>
+<h2>Modify Discussion</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>Discussion</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.DiscussionId)
 
-    
+    <div class="form-horizontal">
+        <hr/>
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.DiscussionId)
+
         <div class="form-group">
-            @Html.LabelFor(model => model.VoteCount, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Title, new {@class = "control-label col-md-6"})
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.VoteCount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.UpvoteCount, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ArticleLink, new {@class = "control-label col-md-6"})
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.UpvoteCount, new { htmlAttributes = new { @class = "form-control" } })              
+                @Html.DisplayFor(model => model.ArticleLink, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.HiddenFor(model => model.ArticleLink)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DownvoteCount, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Contents, new {@class = "control-label col-md-6"})
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.DownvoteCount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Contents, new {@class = "form-control", rows = 5, placeholder = "Leave your opinions, feedback, comments about the article here!"})
+                @Html.ValidationMessageFor(model => model.Contents, "", new {@class = "text-danger"})
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CommentCount, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.CommentCount, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-outline-dark"/>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TotalViews, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.TotalViews, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Rank, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.Rank, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.ArticleLink, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.ArticleLink, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ArticleLink, "", new { @class = "text-danger" })
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Contents, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Contents, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Contents, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-primary" />
-        </div>
-    </div>
-</div>
 }
 
 
