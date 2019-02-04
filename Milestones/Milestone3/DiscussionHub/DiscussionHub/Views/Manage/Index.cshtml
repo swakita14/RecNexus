@@ -28,10 +28,11 @@
             }          
         </dd>
         
-        @if (Model.Discussion != null)
+        @if (Model.Discussion.Count > 0)
         {
-            <br/><b>Current Discussion: </b>
-            foreach(var post in Model.Discussion) { 
+            <br/><b>Current Discussions: </b>
+            foreach(var post in Model.Discussion)
+            {
                 <a href="../Discussions/ViewDiscussionDetails/@post.DiscussionId">@post.Title</a>
                  @Html.Raw("|") 
             }
@@ -39,7 +40,11 @@
         }
         else
         {
-            <br/><b>You have not yet started any discussions!</b>
+            <html>
+            <br/>
+            <b>You have not yet started any discussions!</b>
+            <br />[ @Html.ActionLink("Create a New Discussion Post", "Create", "Discussions") ]
+            </Html>
         }
         
         <br/><br/><dt>Password:</dt>

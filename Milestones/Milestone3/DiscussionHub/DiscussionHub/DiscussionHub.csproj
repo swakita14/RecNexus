@@ -20,8 +20,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44319</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -196,7 +195,9 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Discussion.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ViewModels\CreateDiscussionViewModel.cs" />
     <Compile Include="Models\ViewModels\DiscussionHubUserViewModel.cs" />
+    <Compile Include="Models\ViewModels\DiscussionViewModel.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\DiscussionHubUser.cs" />
     <Compile Include="Models\ViewModels\ManageUserViewModel.cs" />
@@ -307,8 +308,7 @@
     <Content Include="Views\Discussions\Delete.cshtml" />
     <Content Include="Views\Discussions\ViewDiscussionDetails.cshtml" />
     <Content Include="Views\Discussions\Edit.cshtml" />
-    <Content Include="Views\Discussions\ViewDiscussion.cshtml" />
-    <Content Include="Web_ deploy.config" />
+    <Content Include="Views\Discussions\ViewDiscussions.cshtml" />
     <Content Include="Views\Discussions\Search.cshtml" />
   </ItemGroup>
   <ItemGroup />

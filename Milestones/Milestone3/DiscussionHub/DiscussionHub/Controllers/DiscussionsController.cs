@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using DiscussionHub.DAL;
 using DiscussionHub.Models;
 using DiscussionHub.Models.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace DiscussionHub.Controllers
 {
@@ -18,52 +15,57 @@ namespace DiscussionHub.Controllers
         private DiscussionHubContext db = new DiscussionHubContext();
 
         // GET: Discussions
-        public ActionResult ViewDiscussion()
+        public ActionResult ViewDiscussions()
         {
             return View(db.Discussions.ToList().OrderBy(x => x.Rank));
         }
-
-
-
+        
         // GET: Discussions/Details/5
         public ActionResult ViewDiscussionDetails(int? id)
         {
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            
             Discussion discussion = db.Discussions.Find(id);
-            if (discussion == null)
-            {
-                return HttpNotFound();
-            }
-            return View(discussion);
+            DiscussionViewModel model = new DiscussionViewModel();
+            model.DiscussionDetails = discussion;
+            model.Username = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == discussion.UserId).LoginPref;
+
+            return View(model);
         }
 
         // GET: Discussions/Create
         [Authorize]
         public ActionResult Create()
         {
-            return View();
+            string email = User.Identity.GetUserName();
+
+            CreateDiscussionViewModel model = new CreateDiscussionViewModel
+            {
+                UserId = (int) db.DiscussionHubUsers.FirstOrDefault(u => u.Email == email)?.UserId
+            };
+
+            return View(model);
         }
 
-        // POST: Discussions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DiscussionId,VoteCount,UpvoteCount,DownvoteCount,CommentCount,TotalViews,Rank,UserId,ArticleLink,Title,Contents")] Discussion discussion)
+        public ActionResult Create(CreateDiscussionViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                db.Discussions.Add(discussion);
-                db.SaveChanges();
-                return RedirectToAction("Index", "Manage");
-            }
+            if (!ModelState.IsValid) return View(model);
 
-            return View(discussion);
+            Discussion newPost = new Discussion
+            {
+                UserId = model.UserId,
+                PostTime = DateTime.Now,
+                Title = model.Title,
+                ArticleLink = model.ArticleLink,
+                Contents = model.Contents
+            };
+
+            db.Discussions.Add(newPost);
+            db.SaveChanges();
+
+            int discussionId = db.Discussions.FirstOrDefault(d => d.Title == newPost.Title).DiscussionId;
+            return RedirectToAction("ViewDiscussionDetails", new { id  = discussionId});
         }
 
         // GET: Discussions/Edit/5
@@ -149,7 +151,5 @@ namespace DiscussionHub.Controllers
                 return View(titleMatch.ToList());
             }
         }
-
-
     }
 }

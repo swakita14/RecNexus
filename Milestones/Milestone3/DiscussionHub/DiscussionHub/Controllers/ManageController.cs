@@ -67,8 +67,9 @@ namespace DiscussionHub.Controllers
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
 
-            var userId = User.Identity.GetUserId();
-            var model = new ManageUserViewModel();
+            string userId = User.Identity.GetUserId();
+
+            ManageUserViewModel model = new ManageUserViewModel();
             model.Identity = new IndexViewModel
             {
                 HasPassword = HasPassword(),
@@ -78,7 +79,7 @@ namespace DiscussionHub.Controllers
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
 
-            var email = User.Identity.GetUserName();
+            string email = User.Identity.GetUserName();
             model.DiscussionHubUser = db.DiscussionHubUsers.FirstOrDefault(u => u.Email == email);
             model.Discussion = db.Discussions.Where(x => x.UserId == model.DiscussionHubUser.UserId).ToList();
             Debug.WriteLine(model.Discussion.ToString());
