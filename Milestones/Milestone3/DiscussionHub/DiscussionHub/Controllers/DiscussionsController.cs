@@ -24,11 +24,17 @@ namespace DiscussionHub.Controllers
         public ActionResult ViewDiscussionDetails(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            
+
+
             Discussion discussion = db.Discussions.Find(id);
             DiscussionViewModel model = new DiscussionViewModel();
             model.DiscussionDetails = discussion;
-            model.Username = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == discussion.UserId).LoginPref;
+
+            var author = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == discussion.UserId);
+            model.Username = author.LoginPref;
+
+            string email = User.Identity.GetUserName();
+            if (email == author.Email) model.IsAuthor = true;
 
             return View(model);
         }
@@ -92,9 +98,13 @@ namespace DiscussionHub.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(discussion).State = EntityState.Modified;
+                Discussion existingDiscussion = db.Discussions.Find(discussion.DiscussionId);
+                existingDiscussion.PostTime = DateTime.Now;
+                existingDiscussion.Title = discussion.Title;
+                existingDiscussion.Contents = discussion.Contents; 
+
                 db.SaveChanges();
-                return RedirectToAction("Index", "Manage");
+                return RedirectToAction("ViewDiscussionDetails", "Discussions", new {id = existingDiscussion.DiscussionId});
             }
             return View(discussion);
         }

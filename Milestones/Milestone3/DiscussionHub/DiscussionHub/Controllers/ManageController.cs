@@ -107,7 +107,7 @@ namespace DiscussionHub.Controllers
         [HttpPost]
         public ActionResult UpdateDetails(DiscussionHubUserViewModel model)
         {
-            var user = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == model.UserId);
+            DiscussionHubUser user = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == model.UserId);
             user.About = model.About;
             user.FName = model.FName;
             user.LName = model.LName;
