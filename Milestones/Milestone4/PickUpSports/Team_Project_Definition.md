@@ -32,6 +32,11 @@ Users will also be able to see details on locations where pick up games are happ
 1. User accounts and data must be stored indefinitely.
 2. Site and data must be backed up regularly and have failover redundancy that will allow the site to remain functional in the event of loss of primary web server or primary database. We can live with 1 minute of complete downtime per event and up to 1 hour of read-only functionality before full capacity is restored.
 3. Site should never return debug error pages. Web server must never return 404's. All server errors must be logged. Users should receive a custom error page in that case telling them what to do.
+4. All sports venues' information pages must have a consistent format.
+5. The website can run on any browser without messed up format.
+6. The log in password should be encrypted for safety.
+7. User has internet.
+8. The layout should be self-explanatory enough so that any user needs only access the user manual to understand the functions of the product.
 
 ## Identify Functional Requirements (User Stories)
 
