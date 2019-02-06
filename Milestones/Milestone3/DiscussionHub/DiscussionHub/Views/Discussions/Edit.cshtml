@@ -1,0 +1,50 @@
+﻿@model DiscussionHub.Models.Discussion
+
+@{
+    ViewBag.Title = "Modify Discussion";
+}
+
+<h2>Modify Discussion</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr/>
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.DiscussionId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, new {@class = "control-label col-md-6"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ArticleLink, new {@class = "control-label col-md-6"})
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.ArticleLink, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.HiddenFor(model => model.ArticleLink)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Contents, new {@class = "control-label col-md-6"})
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Contents, new {@class = "form-control", rows = 5, placeholder = "Leave your opinions, feedback, comments about the article here!"})
+                @Html.ValidationMessageFor(model => model.Contents, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-outline-dark"/>
+            </div>
+        </div>
+    </div>
+}
+
+

@@ -1,8 +1,7 @@
 ﻿namespace DiscussionHub.Models
 {
-    public class Users
+    public class DiscussionHubUser
     {
-
         public int UserId { get; set; }
 
         public string Browser { get; set; }
@@ -20,6 +19,5 @@
         public string About { get; set; }
 
         public string Pseudonym { get; set; }
-
     }
 }

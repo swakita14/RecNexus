@@ -3,11 +3,11 @@ using DiscussionHub.Models;
 
 namespace DiscussionHub.DAL.Configurations
 {
-    public class UsersConfiguration : EntityTypeConfiguration<Users>
+    public class DiscussionHubUserConfiguration : EntityTypeConfiguration<DiscussionHubUser>
     {
-        public UsersConfiguration()
+        public DiscussionHubUserConfiguration()
         {
-            ToTable("Users");
+            ToTable("DiscussionHubUser");
 
             HasKey(x => x.UserId);
 
@@ -34,16 +34,22 @@ namespace DiscussionHub.DAL.Configurations
                 .HasMaxLength(256)
                 .IsOptional();
 
+            Property(x => x.Email)
+                .HasColumnName("Email")
+                .HasColumnType("nvarchar")
+                .HasMaxLength(128)
+                .IsOptional();
+
             Property(x => x.LoginPref)
                 .HasColumnName("LoginPref")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(256)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.VoteTotal)
                 .HasColumnName("VoteTotal")
                 .HasColumnType("bigint")
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.About)
                 .HasColumnName("About")
@@ -58,5 +64,4 @@ namespace DiscussionHub.DAL.Configurations
 
         }
     }
-
 }

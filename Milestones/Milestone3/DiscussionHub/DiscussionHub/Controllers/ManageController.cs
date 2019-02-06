@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using DiscussionHub.DAL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using DiscussionHub.Models;
+using DiscussionHub.Models.ViewModels;
 
 namespace DiscussionHub.Controllers
 {
@@ -15,6 +18,7 @@ namespace DiscussionHub.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private DiscussionHubContext db = new DiscussionHubContext();
 
         public ManageController()
         {
@@ -63,8 +67,10 @@ namespace DiscussionHub.Controllers
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
 
-            var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
+            string userId = User.Identity.GetUserId();
+
+            ManageUserViewModel model = new ManageUserViewModel();
+            model.Identity = new IndexViewModel
             {
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
@@ -72,7 +78,43 @@ namespace DiscussionHub.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+
+            string email = User.Identity.GetUserName();
+            model.DiscussionHubUser = db.DiscussionHubUsers.FirstOrDefault(u => u.Email == email);
+            model.Discussion = db.Discussions.Where(x => x.UserId == model.DiscussionHubUser.UserId).ToList();
+            Debug.WriteLine(model.Discussion.ToString());
+
+
             return View(model);
+        }
+
+        public ActionResult UpdateDetails(int? id)
+        {
+            var user = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == id);
+
+            var model = new DiscussionHubUserViewModel
+            {
+                About = user.About,
+                FName = user.FName,
+                LName = user.LName,
+                LoginPref = user.LoginPref,
+                UserId = user.UserId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateDetails(DiscussionHubUserViewModel model)
+        {
+            DiscussionHubUser user = db.DiscussionHubUsers.FirstOrDefault(u => u.UserId == model.UserId);
+            user.About = model.About;
+            user.FName = model.FName;
+            user.LName = model.LName;
+            user.LoginPref = model.LoginPref;
+
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         //

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<DiscussionHub.Models.Discussion>
+
+@{
+    ViewBag.Title = "Discussions";
+}
+
+<center>
+    <p>
+        [ @Html.ActionLink("Create a New Discussion Post", "Create") ]
+    </p>
+</center>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PostTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ArticleLink)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var discussion in Model)
+    {
+        var date = discussion.PostTime.ToShortDateString();
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => discussion.Title)
+            </td>
+            <td>
+                <a href="@discussion.ArticleLink">@discussion.ArticleLink</a>
+            </td>
+            <td>
+                @Html.ActionLink("Details", "ViewDiscussionDetails", new {id = discussion.DiscussionId})
+            </td>
+        </tr>
+    }
+
+</table>

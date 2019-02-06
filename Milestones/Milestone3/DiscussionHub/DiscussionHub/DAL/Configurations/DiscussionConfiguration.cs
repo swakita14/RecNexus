@@ -3,20 +3,22 @@ using DiscussionHub.Models;
 
 namespace DiscussionHub.DAL.Configurations
 {
-    public class DiscussionsConfiguration : EntityTypeConfiguration<Discussions>
+    public class DiscussionConfiguration : EntityTypeConfiguration<Discussion>
     {
-        public DiscussionsConfiguration()
+        public DiscussionConfiguration()
         {
-            ToTable("Discussions");
+            ToTable("Discussion");
 
-            // Change as needed for primary key
             HasKey(x => x.DiscussionId);
-
-            // Configure any foreign keys
 
             Property(x => x.DiscussionId)
                 .HasColumnName("DiscussionID")
                 .HasColumnType("int")
+                .IsRequired();
+
+            Property(x => x.PostTime)
+                .HasColumnName("PostTime")
+                .HasColumnType("datetime")
                 .IsRequired();
 
             Property(x => x.VoteCount)
@@ -48,6 +50,21 @@ namespace DiscussionHub.DAL.Configurations
                 .HasColumnName("Rank")
                 .HasColumnType("int")
                 .IsRequired();
+
+            Property(x => x.ArticleLink)
+                .HasColumnName("ArticleLink")
+                .HasColumnType("nvarchar")
+                .IsRequired();
+
+            Property(x => x.Title)
+                .HasColumnName("Title")
+                .HasColumnType("nvarchar")
+                .IsRequired();
+
+            Property(x => x.Contents)
+                .HasColumnName("Contents")
+                .HasColumnType("nvarchar")
+                .IsOptional();
 
             Property(x => x.UserId)
                 .HasColumnName("UserID")
