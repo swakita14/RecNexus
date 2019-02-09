@@ -15,7 +15,7 @@ For our senior capstone, the project we chose is an application that will provid
 
 ## Vision Statement
 
-For active individuals, who would like to utilize the facilities and egage in activities with other individuals, Pickup Sport is a web application that reintroduces the sense of commmunity and open doors for available space. This application will help users form sports groups through common interest, and at the same time obtain information on the facilities. Unlike other sport grouping applications, our product will also feature the information on facilities in the region including rating and availability. 
+    For active individuals, who would like to utilize the facilities and egage in activities with other individuals, Pickup Sport is a web application that reintroduces the sense of commmunity and open doors for available space. This application will help users form sports groups through common interest, and at the same time obtain information on the facilities. Unlike other sport grouping applications, our product will also feature the information on facilities in the region including rating and availability. 
 
 ## Getting started 
 
@@ -25,3 +25,12 @@ For active individuals, who would like to utilize the facilities and egage in ac
 ## Guidelines and Contribution
 
 When contributing to this repository/project, please follow the guidelines [here](guidelines.md).
+
+## Software construction process
+
+For our projects, we use discipline agile delivery methodology which allows us to develop features so we can collaborate and incorporate feedabck sooner and faster. As part of this scrum/agile methodology, we do daily scrums, sprint planning and reviews, backlog refinement meetings, and sprint retrospectives. 
+
+
+## Tools 
+
+A list of tools we frequently use can be found [here](tools.md).
