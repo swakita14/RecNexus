@@ -54,6 +54,7 @@ Our repository contains two main branches: `development` and `master`. Here are 
 ## Pull requests
 
 Before you start working on a feature, ensure that your local and forked repository are synced with the latest changes in `development` and `master` of the official repository then:
+
 * Create a feature branch from `development`
 * Checkout your feature branch and work on your feature committing changes every so often
 * When feature is tested and finished, commit all changes
