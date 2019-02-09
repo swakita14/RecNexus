@@ -46,6 +46,7 @@ For this project, we use ASP.NET MVC which contains C#, JavaScript, CSS, and Raz
 ## Our Bitbucket repository guidelines
 
 Our repository contains two main branches: `development` and `master`. Here are some guidelines regarding branches in this repository:
+
 * Merges can only be made to `development` branch via pull request
 * Pull requests can only be approved and completed by the repository owner 
 * Merging `development` into `master` will be done at the end of each sprint by the repository owner 
