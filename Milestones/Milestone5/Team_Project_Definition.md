@@ -108,19 +108,17 @@ T: Task
 
 Contact (**ContactID**, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
 
-Game (**GameID**, *VenueID*, *ContactID*, *SportID*)
-
-PickUpGame (**PickUpGameID**, *ContactID*)
-
-Review (**ReviewID**, Rating, Review, *VenueID*, *ContactID*)
-
 Sport (**SportID**, Name)
 
 SportPreference (**SportPreferenceID**, *SportID*, *ContactID*)
 
-TimePreference (**TimePreferenceID**, DayOfWeek, BeginTime, EndTime, *ContactID*)
+TimePreference (**TimePreferenceID**, BeginTime, EndTime, *ContactID*)
 
 Venue (**VenueID**, Name, Phone, Address1, Address2, City, State, ZipCode)
+
+Review (**ReviewID**, Rating, Review, *VenueID*, *ContactID*)
+
+Game (**GameID**, *VenueID*, *ContactID*, *SportID*)
 
 ------
 
@@ -150,19 +148,11 @@ ZipCode:  The zip code for a contact.
 
 ------
 
-**GAME**: A game which consists of a sport and a venue
+**GAME**: A pick-up game which consists of a contact, a sport, and a venue
 
 __Attributes for GAME table__:
 
-GameID: Auto number key field to uniquely identify a game
-
-------
-
-**PICKUPGAME**: A pick up game which constists of a game and a contact
-
-__Attributes for PICKUPGAME table__:
-
-PickUpGameID: Auto number key field to uniquely identify a pick-up game
+GameID: Auto number key field to uniquely identify a sport
 
 ------
 
@@ -196,17 +186,15 @@ SportPreferenceID: Auto number key field to uniquely identify a preference
 
 ------
 
-**TIMEPREFERENCE**: Time preference for contact (time range they are available to play)
+**TIMEPREFERENCE**: Sport preference for contact (sport they are interested in)
 
 __Attributes for TIMEPREFERENCE table__:
 
-BeginTime: Start of date range user is available to play a sport
-
-DayOfWeek: Represents day of week user is available (Ex: Monday, Tuesday, Wednesday)
-
-EndTime: End of date range user is available to play a sport 
-
 TimePreferenceID: Auto number key field to uniquely identify a preference
+
+BeginTime: start of date range user is available to play a sport
+
+EndTime: end of date range user is available to play a sport 
 
 ------
 
@@ -230,6 +218,6 @@ ZipCode:  The zip code for a venue.
 
 
 ## Identification of Risks
-One major risk is not being able to keep information about venues current. We will likely use Google's Places API to get information but unfortunately it's not easy to find dates that venues are open to the public nor is there an easy way to make reservations at such places. Another roadblock we face is finding an effective way to store dates/times that users are available to play that doesn't require storing date ranges directly in the database.   
+One major risk is not being able to keep information about venues current. We will likely use Google's Places API to get information but unfortunately it's not easy to find dates that venues are open to the public nor is there an easy way to make reservations at such places. 
 
 ## Timeline and Release Plan
