@@ -108,7 +108,7 @@ T: Task
 
 Contact (**ContactID**, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
 
-Game (**GameID**, *VenueID*, *ContactID*, *SportID*)
+Game (**GameID**, DayOfWeek, BeginTime, *VenueID*, *SportID*)
 
 PickUpGame (**PickUpGameID**, *ContactID*)
 
@@ -150,9 +150,13 @@ ZipCode:  The zip code for a contact.
 
 ------
 
-**GAME**: A game which consists of a sport and a venue
+**GAME**: A game which consists of a sport, time, and a venue
 
 __Attributes for GAME table__:
+
+BeginTime: Start of date range for game
+
+DayOfWeek: Represents day of week game will occur (Ex: Monday, Tuesday, Wednesday)
 
 GameID: Auto number key field to uniquely identify a game
 
