@@ -110,7 +110,7 @@ Contact (**ContactID**, FirstName, LastName, Email, Phone, Address1, Address2, C
 
 Game (**GameID**, DayOfWeek, BeginTime, *VenueID*, *SportID*)
 
-PickUpGame (**PickUpGameID**, *ContactID*)
+PickUpGame (**PickUpGameID**, *ContactID*, *GameID*)
 
 Review (**ReviewID**, Rating, Review, *VenueID*, *ContactID*)
 
