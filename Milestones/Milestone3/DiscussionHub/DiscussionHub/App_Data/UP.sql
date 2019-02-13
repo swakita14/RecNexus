@@ -10,7 +10,7 @@
     [About]            TEXT,
     [Pseudonym]        NVARCHAR(128),
 
-    CONSTRAINT [PK_dbo.Requests] PRIMARY KEY CLUSTERED ([UserID] ASC)
+    CONSTRAINT [PK_dbo.DiscussionHubUser] PRIMARY KEY CLUSTERED ([UserID] ASC)
 );
 
 INSERT INTO [dbo].DiscussionHubUser(Browser,FName,LName,Email,LoginPref,VoteTotal,About,Pseudonym) VALUES
@@ -32,17 +32,16 @@ INSERT INTO [dbo].DiscussionHubUser(Browser,FName,LName,Email,LoginPref,VoteTota
 	
 CREATE TABLE [dbo].[Discussion] (
     [DiscussionID]  INT            IDENTITY (1, 1) NOT NULL,
-	[PostTime]		DATETIME		   NOT NULL,
     [VoteCount]	    BIGINT             NOT NULL,
     [UpvoteCount]	BIGINT             NOT NULL,
 	[DownvoteCount]	BIGINT             NOT NULL,
     [CommentCount]	BIGINT             NOT NULL,
     [TotalViews]	BIGINT             NOT NULL,
 	[Rank]		    INT	               NOT NULL,
-    [ArticleLink]   NVARCHAR(MAX)	   NOT NULL,
-    [Title]		    NVARCHAR(MAX)	   NOT NULL,
+    [UserID]		INT	               NOT NULL,
+    [ArticleLink]   NVARCHAR(128)	   NOT NULL,
+    [Title]		    NVARCHAR(128)	   NOT NULL,
 	[Contents]		NVARCHAR(MAX)	   NULL,
-	[UserID]		INT	               NOT NULL
 
     CONSTRAINT [PK_dbo.Discussion] PRIMARY KEY CLUSTERED ([DiscussionID] ASC),
     CONSTRAINT [FK_dbo.DiscussionHubUser] FOREIGN KEY (UserID) REFERENCES [dbo].[DiscussionHubUser] (UserID) 
@@ -51,17 +50,18 @@ CREATE TABLE [dbo].[Discussion] (
 
 
 
-INSERT INTO [dbo].[Discussion](VoteCount, UpvoteCount, DownvoteCount,CommentCount,TotalViews,Rank,ArticleLink,Title, Contents, UserID) VALUES
-    ('12/10/2018 12:00:00 AM', 345, 200, 145, 3, 400, 4, 'https://www.ancient-origins.net/history-famous-people/niall-nine-hostages-0011410', 'Niall of the Nine Hostages, One of the Most Fruitful Kings in History', 'Test article', 2),
-    ('5/10/2018 12:00:00 AM', 200, 152, 48, 5, 265, 5, 'https://www.alaskapublic.org/2019/01/30/study-finds-poor-air-quality-aboard-cruise-ships/', 'Study finds poor air quality aboard cruise ships', 'Test article', 9), 
-    ('10/6/2018 12:00:00 AM', 1000, 990, 10, 45, 2000, 2, 'https://www.sciencemag.org/news/2019/01/tourism-endangering-these-giant-lizards', 'Is tourism endangering these giant lizards?', 'Test article', 5), 
-    ('12/26/2018 12:00:00 AM', 450, 150, 300, 10, 500, 6, 'https://www.history.com/news/knights-middle-ages', 'Eight Knights Who Changed History', 'Test article', 7), 
-    ('2/15/2018 12:00:00 AM', 76, 23, 54, 5, 205, 9, 'https://www.kdlt.com/2019/01/30/local-animal-sanctuary-helping-horses-stay-warm/', 'Local Animal Sanctuary Helping Horses Stay Warm', 'Test article', 11), 
-    ('9/6/2018 12:00:00 AM', 100, 50, 50, 12, 154, 8, 'https://www.express.co.uk/news/royal/1080615/the-queen-news-elizabeth-ii-prince-philip-buckingham-palace-finance-net-worth-spt', 'Royal SCANDAL: How the Queen almost LOST Buckingham Palace because of :MONEY PROBLEMS', 'Test article', 6),
-    ('7/24/2018 12:00:00 AM', 5017, 5000, 17, 357, 6078, 1, 'https://www.timeslive.co.za/motoring/news/2019-01-31-at-last-bash-proof-and-pinch-proof-car-doors/' , 'At last: bash-proof and pinch-proof car doors', 'Test article', 8), 
-    ('10/15/2018 12:00:00 AM', 296, 266, 30, 24, 709, 3, 'https://www.dezeen.com/2019/01/23/marc-newson-gagosian-gallery-exhibition-new-york/', 'Marc Newson exhibition in New York features swords and surfboards', 'Test article', 12), 
-    ('3/11/2018 12:00:00 AM', 400, 100, 300, 35, 594, 7, 'https://www.foxnews.com/travel/disney-world-uses-secret-shade-paint-park-elements-hide', 'Disney World reportedly uses a secret shade of paint to camouflage less than exciting park elements', 'Test article', 4), 
-    ('1/13/2019 12:00:00 AM', 10, 1, 9, 2, 58, 10, 'https://www.kmov.com/news/it-s-about-loyalty-st-louis-group-rooting-for-rams/article_933823f6-24e7-11e9-9caa-d757bd32399b.html', 'Its about loyalty: St. Louis group rooting for Rams in Super Bowl', 'Test article', 13); 
+INSERT INTO [dbo].[Discussion](VoteCount, UpvoteCount, DownvoteCount,CommentCount,TotalViews,Rank,UserID,ArticleLink,Title) VALUES
+    (345, 200, 145, 3, 400, 4, 2, 'https://www.ancient-origins.net/history-famous-people/niall-nine-hostages-0011410', 'Niall of the Nine Hostages, One of the Most Fruitful Kings in History'),
+    (200, 152, 48, 5, 265, 5, 9, 'https://www.alaskapublic.org/2019/01/30/study-finds-poor-air-quality-aboard-cruise-ships/', 'Study finds poor air quality aboard cruise ships'), 
+    (1000, 990, 10, 45, 2000, 2, 5, 'https://www.sciencemag.org/news/2019/01/tourism-endangering-these-giant-lizards', 'Is tourism endangering these giant lizards?'),
+    (500, 250, 250, 45, 2000, 14, 5, 'https://www.sciencedirect.com/science/article/pii/0016648065900560', 'The role of the thyroid gland in the oxygen consumption of lizards'), 
+    (450, 150, 300, 10, 500, 6, 7, 'https://www.history.com/news/knights-middle-ages', 'Eight Knights Who Changed History'), 
+    (76, 23, 54, 5, 205, 9, 11, 'https://www.kdlt.com/2019/01/30/local-animal-sanctuary-helping-horses-stay-warm/', 'Local Animal Sanctuary Helping Horses Stay Warm'), 
+    (100, 50, 50, 12, 154, 8, 6, 'https://www.express.co.uk/news/royal/1080615/the-queen-news-elizabeth-ii-prince-philip-buckingham-palace-finance-net-worth-spt', 'Royal SCANDAL: How the Queen almost LOST Buckingham Palace because of :MONEY PROBLEMS'),
+    (5017, 5000, 17, 357, 6078, 1, 8, 'https://www.timeslive.co.za/motoring/news/2019-01-31-at-last-bash-proof-and-pinch-proof-car-doors/' , 'At last: bash-proof and pinch-proof car doors'), 
+    (296, 266, 30, 24, 709, 3, 12, 'https://www.dezeen.com/2019/01/23/marc-newson-gagosian-gallery-exhibition-new-york/', 'Marc Newson exhibition in New York features swords and surfboards'), 
+    (400, 100, 300, 35, 594, 7, 4, 'https://www.foxnews.com/travel/disney-world-uses-secret-shade-paint-park-elements-hide', 'Disney World reportedly uses a secret shade of paint to camouflage less than exciting park elements'), 
+    (10, 1, 9, 2, 58, 10, 13, 'https://www.kmov.com/news/it-s-about-loyalty-st-louis-group-rooting-for-rams/article_933823f6-24e7-11e9-9caa-d757bd32399b.html', 'Its about loyalty: St. Louis group rooting for Rams in Super Bowl'); 
 
 
 CREATE TABLE [dbo].Comment	

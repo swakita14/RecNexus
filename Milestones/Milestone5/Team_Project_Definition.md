@@ -45,7 +45,7 @@ F: Feature
 U: User Story  
 T: Task  
 
-1. [E] Create website
+1. [E] Create website with database access
     1. [F] Create website with homepage with database access
         1. [U] As a visitor/user to the site I would like to see a fantastic and modern homepage that tells me how to use the site so I can decide if I want to use this service in the future.
             1. [T] Create starter ASP dot NET MVC 5 Web Application 
@@ -61,6 +61,9 @@ T: Task
             4. [T] Create a user table and customize user pages to display additional data
             5. [T] Enable Captcha 
         2. [U] As a user, I would like to be able to login with Google so I don't have to create separate accounts to use the website
+        3. [U]As a new logged-in user, I would like to be able to provide a username and other details such as my name and phone number so I do not just have my email address as my only contact information.
+        4. [U] As a logged-in user, I would like to be able to modify my account details to ensure it's updated if my information changes
+        5. [U] As a logged-in user, I would like the option to delete my account so I can be removed if I decide to stop using the service
 3. [E] Create pages for venues 
     1. [F] Create pages where any user or visitor can view information on a venue
         1. [U] As a visitor to the site, I would like to be able to see information on a venue so I can determine whether or not it's a place I wish to play
@@ -106,11 +109,11 @@ T: Task
 
 ### Textual Conceptional Diagram:
 
-Contact (**ContactID**, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
+Contact (**ContactID**, Username, FirstName, LastName, Email, Phone, Address1, Address2, City, State, ZipCode)
 
-Game (**GameID**, *VenueID*, *ContactID*, *SportID*)
+Game (**GameID**, DayOfWeek, BeginTime, *VenueID*, *SportID*)
 
-PickUpGame (**PickUpGameID**, *ContactID*)
+PickUpGame (**PickUpGameID**, *ContactID*, *GameID*)
 
 Review (**ReviewID**, Rating, Review, *VenueID*, *ContactID*)
 
@@ -146,13 +149,19 @@ Phone:  The phone number for a contact.
 
 State:  The state where a contact is located.
 
+Username: Unique username chosen by contact.
+
 ZipCode:  The zip code for a contact.
 
 ------
 
-**GAME**: A game which consists of a sport and a venue
+**GAME**: A game which consists of a sport, time, and a venue
 
 __Attributes for GAME table__:
+
+BeginTime: Start of date range for game
+
+DayOfWeek: Represents day of week game will occur (Ex: Monday, Tuesday, Wednesday)
 
 GameID: Auto number key field to uniquely identify a game
 
