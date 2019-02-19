@@ -16,7 +16,7 @@ namespace PickUpSports.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private ContactContext db = new ContactContext();
+        private PickUpContext db = new PickUpContext();
         public ManageController()
         {
         }
