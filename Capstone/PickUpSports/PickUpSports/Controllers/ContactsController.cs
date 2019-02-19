@@ -14,7 +14,7 @@ namespace PickUpSports.Controllers
 {
     public class ContactsController : Controller
     {
-        private ContactContext db = new ContactContext();
+        private PickUpContext db = new PickUpContext();
 
         // GET: Contacts
         public ActionResult Index()
