@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using PickUpSports.Models;
 
 namespace PickUpSports.Controllers
@@ -21,16 +23,28 @@ namespace PickUpSports.Controllers
         }
 
         // GET: Contacts/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(int? id)
         {
-            if (id == null)
+            string newContact_Email = User.Identity.GetUserName();
+
+            Contact newPerson = new Contact()
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Contact contact = db.Contacts.Find(id);
+                Email = newContact_Email
+            };
+            db.Contacts.Add(newPerson);
+            db.SaveChanges();
+
+
+            Contact contact = db.Contacts.Where(x => x.Email == newContact_Email).FirstOrDefault();
             if (contact == null)
             {
                 return HttpNotFound();
+            }
+            //We have to switch the username in the DB from NOT NULL to nullable 
+            //If username not chosen, it's time to create one for you buddy 
+            else if (contact.Username == null)
+            {
+                return RedirectToAction("Create", "Contacts");
             }
             return View(contact);
         }
@@ -38,6 +52,11 @@ namespace PickUpSports.Controllers
         // GET: Contacts/Create
         public ActionResult Create()
         {
+            string email = User.Identity.GetUserName();
+            Contact model = new Contact()
+            {
+                ContactId = (int)db.Contacts.FirstOrDefault(x => x.Email == email)?.ContactId
+            };
             return View();
         }
 
@@ -46,14 +65,36 @@ namespace PickUpSports.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ContactId,Username,FirstName,LastName,Email,PhoneNumber,Address1,Address2,City,State,ZipCode")] Contact contact)
+        public ActionResult Create(Contact contact)
         {
-            
-            if (ModelState.IsValid)
+            if (!db.Contacts.Where(u => u.Username == contact.Username).Any())
             {
-                db.Contacts.Add(contact);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                Contact newContact = new Contact()
+                {
+                    ContactId = contact.ContactId,
+                    Username = contact.Username,
+                    FirstName = contact.FirstName,
+                    LastName = contact.LastName,
+                    PhoneNumber = contact.PhoneNumber,
+                    Address1 = contact.Address1,
+                    Address2 = contact.Address2,
+                    City = contact.City,
+                    State = contact.State,
+                    ZipCode = contact.ZipCode
+                };
+
+
+                if (ModelState.IsValid)
+                {
+                    db.Contacts.Add(contact);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                Debug.Write("Hello World");
+
             }
 
             return View(contact);
