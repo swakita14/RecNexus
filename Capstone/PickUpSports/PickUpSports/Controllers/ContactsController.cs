@@ -48,6 +48,7 @@ namespace PickUpSports.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ContactId,Username,FirstName,LastName,Email,PhoneNumber,Address1,Address2,City,State,ZipCode")] Contact contact)
         {
+            
             if (ModelState.IsValid)
             {
                 db.Contacts.Add(contact);

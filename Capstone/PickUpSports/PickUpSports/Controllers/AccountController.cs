@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -152,8 +153,17 @@ namespace PickUpSports.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!db.Contacts.Where(u => u.Email == model.Email).Any())
+                {
+                    Debug.Write("Hello World1");
+                    return RedirectToAction("Create", "Contacts");
+                }
+
+
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+
+
 
                 var newUser = new Contact
                 {
@@ -166,6 +176,7 @@ namespace PickUpSports.Controllers
                 {
                     db.Contacts.Add(newUser);
                     db.SaveChanges();
+
                 }
                 catch (DbEntityValidationException dbEx)
                 {
@@ -192,6 +203,7 @@ namespace PickUpSports.Controllers
                 }
                 AddErrors(result);
             }
+
 
             // If we got this far, something failed, redisplay form
             return View(model);
