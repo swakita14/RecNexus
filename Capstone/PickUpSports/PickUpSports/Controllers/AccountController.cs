@@ -153,11 +153,6 @@ namespace PickUpSports.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!db.Contacts.Where(u => u.Email == model.Email).Any())
-                {
-                    Debug.Write("Hello World1");
-                    return RedirectToAction("Create", "Contacts");
-                }
 
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };

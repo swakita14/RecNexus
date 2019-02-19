@@ -8,7 +8,7 @@ namespace PickUpSports.Models
 
     public partial class Contact
     {
-        public string ContactId { get; set; }
+        public int ContactId { get; set; }
 
         [Required]
         [StringLength(128)]
