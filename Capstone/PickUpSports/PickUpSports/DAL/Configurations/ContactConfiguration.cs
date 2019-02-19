@@ -24,19 +24,19 @@ namespace PickUpSports.DAL.Configurations
                 .HasColumnName("Username")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(256)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.FirstName)
                 .HasColumnName("FirstName")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(128)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.LastName)
                 .HasColumnName("LastName")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(256)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.Email)
                 .HasColumnName("Email")
@@ -47,13 +47,13 @@ namespace PickUpSports.DAL.Configurations
             Property(x => x.PhoneNumber)
                 .HasColumnName("PhoneNumber")
                 .HasColumnType("nvarchar")
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.Address1)
                 .HasColumnName("Address1")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(256)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.Address2)
                .HasColumnName("Address2")
@@ -65,19 +65,19 @@ namespace PickUpSports.DAL.Configurations
                 .HasColumnName("City")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(256)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.State)
                .HasColumnName("State")
                .HasColumnType("nvarchar")
                .HasMaxLength(256)
-               .IsRequired();
+               .IsOptional();
 
             Property(x => x.ZipCode)
               .HasColumnName("ZipCode")
               .HasColumnType("nvarchar")
               .HasMaxLength(256)
-              .IsRequired();
+              .IsOptional();
         }
 
     }
