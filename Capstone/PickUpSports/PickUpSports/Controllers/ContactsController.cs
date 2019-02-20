@@ -28,6 +28,7 @@ namespace PickUpSports.Controllers
         {
             string newContact_Email = User.Identity.GetUserName();
 
+            //check if user email is already in db, if not redirect him to creating info for contact table
             if (!db.Contacts.Where(u => u.Email == newContact_Email).Any())
             {
                 return RedirectToAction("Create", "Contacts");
@@ -57,6 +58,7 @@ namespace PickUpSports.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Contact contact)
         {
+            //create user 
             string email = User.Identity.GetUserId();
             Debug.Write(email);
 
@@ -66,7 +68,7 @@ namespace PickUpSports.Controllers
                     Username = contact.Username,
                     FirstName = contact.FirstName,
                     LastName = contact.LastName,
-                    Email = User.Identity.GetUserName(),
+                    Email = email,
                     PhoneNumber = contact.PhoneNumber,
                     Address1 = contact.Address1,
                     Address2 = contact.Address2,
@@ -75,7 +77,7 @@ namespace PickUpSports.Controllers
                     ZipCode = contact.ZipCode
                 };
 
-
+                //Need to find out why its not being valid
                 if (ModelState.IsValid)
                 {
                     db.Contacts.Add(contact);
