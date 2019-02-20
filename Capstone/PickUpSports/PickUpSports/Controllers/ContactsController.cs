@@ -85,7 +85,7 @@ namespace PickUpSports.Controllers
         }
 
         // GET: Contacts/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -104,19 +104,36 @@ namespace PickUpSports.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ContactId,Username,FirstName,LastName,Email,PhoneNumber,Address1,Address2,City,State,ZipCode")] Contact contact)
+        public ActionResult Edit(CreateContactViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) return View(model);
+
+            string email = User.Identity.GetUserName();
+
+            Contact newContact = new Contact()
             {
-                db.Entry(contact).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(contact);
+                ContactId = model.ContactId,
+                Username = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = email,
+                PhoneNumber = model.PhoneNumber,
+                Address1 = model.Address1,
+                Address2 = model.Address2,
+                City = model.City,
+                State = model.State,
+                ZipCode = model.ZipCode
+            };
+
+            db.Entry(newContact).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+
         }
 
         // GET: Contacts/Delete/5
-        public ActionResult Delete(string id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -133,7 +150,7 @@ namespace PickUpSports.Controllers
         // POST: Contacts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
+        public ActionResult DeleteConfirmed(int? id)
         {
             Contact contact = db.Contacts.Find(id);
             db.Contacts.Remove(contact);
