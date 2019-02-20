@@ -128,7 +128,7 @@ namespace PickUpSports.Controllers
             db.Entry(newContact).State = EntityState.Modified;
             db.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Details");
 
         }
 
