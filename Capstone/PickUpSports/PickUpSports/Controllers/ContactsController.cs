@@ -47,7 +47,6 @@ namespace PickUpSports.Controllers
         // GET: Contacts/Create
         public ActionResult Create()
         {
-
             return View();
         }
 
@@ -56,37 +55,33 @@ namespace PickUpSports.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Contact contact)
+        public ActionResult Create(CreateContactViewModel model)
         {
+            if (ModelState.IsValid) return View(model);
             //create user 
-            string email = User.Identity.GetUserId();
+            string email = User.Identity.GetUserName();
             Debug.Write(email);
 
                 Contact newContact = new Contact()
                 {
-                    ContactId = contact.ContactId,
-                    Username = contact.Username,
-                    FirstName = contact.FirstName,
-                    LastName = contact.LastName,
+                    ContactId = model.ContactId,
+                    Username = model.Username,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
                     Email = email,
-                    PhoneNumber = contact.PhoneNumber,
-                    Address1 = contact.Address1,
-                    Address2 = contact.Address2,
-                    City = contact.City,
-                    State = contact.State,
-                    ZipCode = contact.ZipCode
+                    PhoneNumber = model.PhoneNumber,
+                    Address1 = model.Address1,
+                    Address2 = model.Address2,
+                    City = model.City,
+                    State = model.State,
+                    ZipCode = model.ZipCode
                 };
 
                 //Need to find out why its not being valid
-                if (ModelState.IsValid)
-                {
-                    db.Contacts.Add(contact);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
-                }
+                db.Contacts.Add(newContact);
+                db.SaveChanges();
+                return RedirectToAction("Index");
 
-
-            return View(contact);
         }
 
         // GET: Contacts/Edit/5
