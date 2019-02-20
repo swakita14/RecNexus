@@ -3,6 +3,7 @@ using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -10,6 +11,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json;
 using PickUpSports.Models;
 
 namespace PickUpSports.Controllers
@@ -151,7 +153,8 @@ namespace PickUpSports.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            CaptchaResponse response = ValidateCaptcha(Request["g-recaptcha-response"]);
+            if (response.Success && ModelState.IsValid)
             {
 
 
@@ -198,12 +201,21 @@ namespace PickUpSports.Controllers
                 }
                 AddErrors(result);
             }
-
+            else
+            {
+                return Content("Error From Google ReCaptcha : " + response.ErrorMessage[0].ToString());
+            }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        public static CaptchaResponse ValidateCaptcha(string response)
+        {
+            string secret = System.Web.Configuration.WebConfigurationManager.AppSettings["ReCaptchaPrivateKey"];
+            var client = new WebClient();
+            var jsonResult = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secret, response));
+            return JsonConvert.DeserializeObject<CaptchaResponse>(jsonResult.ToString());
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
