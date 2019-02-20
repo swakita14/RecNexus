@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Models;
+using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
 {
@@ -27,36 +28,25 @@ namespace PickUpSports.Controllers
         {
             string newContact_Email = User.Identity.GetUserName();
 
-            Contact newPerson = new Contact()
+            if (!db.Contacts.Where(u => u.Email == newContact_Email).Any())
             {
-                Email = newContact_Email
-            };
-            db.Contacts.Add(newPerson);
-            db.SaveChanges();
-
+                return RedirectToAction("Create", "Contacts");
+            }
 
             Contact contact = db.Contacts.Where(x => x.Email == newContact_Email).FirstOrDefault();
+
             if (contact == null)
             {
                 return HttpNotFound();
             }
-            //We have to switch the username in the DB from NOT NULL to nullable 
-            //If username not chosen, it's time to create one for you buddy 
-            else if (contact.Username == null)
-            {
-                return RedirectToAction("Create", "Contacts");
-            }
+
             return View(contact);
         }
 
         // GET: Contacts/Create
         public ActionResult Create()
         {
-            string email = User.Identity.GetUserName();
-            Contact model = new Contact()
-            {
-                ContactId = (int)db.Contacts.FirstOrDefault(x => x.Email == email)?.ContactId
-            };
+
             return View();
         }
 
@@ -67,14 +57,16 @@ namespace PickUpSports.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Contact contact)
         {
-            if (!db.Contacts.Where(u => u.Username == contact.Username).Any())
-            {
+            string email = User.Identity.GetUserId();
+            Debug.Write(email);
+
                 Contact newContact = new Contact()
                 {
                     ContactId = contact.ContactId,
                     Username = contact.Username,
                     FirstName = contact.FirstName,
                     LastName = contact.LastName,
+                    Email = User.Identity.GetUserName(),
                     PhoneNumber = contact.PhoneNumber,
                     Address1 = contact.Address1,
                     Address2 = contact.Address2,
@@ -90,12 +82,7 @@ namespace PickUpSports.Controllers
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-            }
-            else
-            {
-                Debug.Write("Hello World");
 
-            }
 
             return View(contact);
         }
