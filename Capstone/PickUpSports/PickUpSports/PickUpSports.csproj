@@ -20,8 +20,8 @@
     <Use64BitIISExpress />
     <IISExpressSSLPort>44341</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
