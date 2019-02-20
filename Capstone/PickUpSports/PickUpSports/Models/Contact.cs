@@ -8,6 +8,7 @@ namespace PickUpSports.Models
 
     public partial class Contact
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ContactId { get; set; }
 
         [Required]
