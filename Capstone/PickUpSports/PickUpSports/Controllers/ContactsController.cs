@@ -57,6 +57,7 @@ namespace PickUpSports.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateContactViewModel model)
         {
+            ViewBag.Error = "";
             if (ModelState.IsValid) return View(model);
             //create user 
             string email = User.Identity.GetUserName();
@@ -77,10 +78,16 @@ namespace PickUpSports.Controllers
                     ZipCode = model.ZipCode
                 };
 
-                //Need to find out why its not being valid
-                db.Contacts.Add(newContact);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (db.Contacts.Where(u => u.Username == model.Username).Any())
+                {
+                    ViewBag.Error = "Username Already Taken";
+                    return View(model);
+                }
+
+            //Need to find out why its not being valid
+            db.Contacts.Add(newContact);
+            db.SaveChanges();
+            return RedirectToAction("Details");
 
         }
 
@@ -104,7 +111,7 @@ namespace PickUpSports.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(CreateContactViewModel model)
+        public ActionResult Edit(EditContactViewModel model)
         {
             if (ModelState.IsValid) return View(model);
 
@@ -124,6 +131,12 @@ namespace PickUpSports.Controllers
                 State = model.State,
                 ZipCode = model.ZipCode
             };
+
+            if (db.Contacts.Where(u => u.Username == model.Username).Any())
+            {
+                ViewBag.Error = "Username Already Taken";
+                return View(newContact);
+            }
 
             db.Entry(newContact).State = EntityState.Modified;
             db.SaveChanges();
