@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Models;
 using PickUpSports.Models.ViewModel;
@@ -42,6 +43,20 @@ namespace PickUpSports.Controllers
             }
 
             return View(contact);
+        }
+
+        public JsonResult CheckDuplicateUser(string username)
+        {
+            var search_duplicate = db.Contacts.Where(x => x.Username == username).SingleOrDefault();
+
+            if (search_duplicate != null)
+            {
+                return Json(1);
+            }
+            else
+            {
+                return Json(0);
+            }
         }
 
         // GET: Contacts/Create
@@ -80,7 +95,7 @@ namespace PickUpSports.Controllers
 
                 if (db.Contacts.Where(u => u.Username == model.Username).Any())
                 {
-                    ViewBag.Error = "Username Already Taken";
+                  
                     return View(model);
                 }
 
@@ -134,7 +149,6 @@ namespace PickUpSports.Controllers
 
             if (db.Contacts.Where(u => u.Username == model.Username).Any())
             {
-                ViewBag.Error = "Username Already Taken";
                 return View(newContact);
             }
 

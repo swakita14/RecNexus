@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Contact</h4>
         <hr />
@@ -95,11 +95,7 @@
             </div>
         </div>
 
-        <br/>
 
-        <div class="form-group">
-            <h4 id="create-error">@ViewBag.Error</h4>     
-        </div>
     </div>
 }
 
@@ -109,4 +105,9 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+}
+
+@section myjs
+{
+    <script type="text/javascript" src="@Url.Content("/Scripts/duplicateUserCheck.js")"></script>
 }
