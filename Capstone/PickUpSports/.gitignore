@@ -3,6 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+AppSettingsSecrets.config
 Web_deploy.config
 
 # User-specific files

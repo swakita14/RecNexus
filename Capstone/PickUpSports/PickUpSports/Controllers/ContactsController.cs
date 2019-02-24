@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Models;
 using PickUpSports.Models.ViewModel;
@@ -80,7 +81,7 @@ namespace PickUpSports.Controllers
 
                 if (db.Contacts.Where(u => u.Username == model.Username).Any())
                 {
-                    ViewBag.Error = "Username Already Taken";
+                    ViewBag.Message = "Username Already Taken";
                     return View(model);
                 }
 
@@ -131,12 +132,6 @@ namespace PickUpSports.Controllers
                 State = model.State,
                 ZipCode = model.ZipCode
             };
-
-            if (db.Contacts.Where(u => u.Username == model.Username).Any())
-            {
-                ViewBag.Error = "Username Already Taken";
-                return View(newContact);
-            }
 
             db.Entry(newContact).State = EntityState.Modified;
             db.SaveChanges();
