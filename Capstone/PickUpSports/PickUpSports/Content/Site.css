@@ -23,6 +23,17 @@ textarea {
     max-width: 280px;
 }
 
-h4#create-error {
+.header {
+    color: #36A0FF;
+    font-size: 27px;
+    padding: 10px;
+}
+.bigicon {
+    font-size: 30px;
+    color: #36A0FF;
+}
+
+#Status {
     color: red;
 }
+
