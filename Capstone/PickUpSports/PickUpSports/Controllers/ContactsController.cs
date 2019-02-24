@@ -45,20 +45,6 @@ namespace PickUpSports.Controllers
             return View(contact);
         }
 
-        public JsonResult CheckDuplicateUser(string username)
-        {
-            var search_duplicate = db.Contacts.Where(x => x.Username == username).SingleOrDefault();
-
-            if (search_duplicate != null)
-            {
-                return Json(1);
-            }
-            else
-            {
-                return Json(0);
-            }
-        }
-
         // GET: Contacts/Create
         public ActionResult Create()
         {
@@ -95,7 +81,7 @@ namespace PickUpSports.Controllers
 
                 if (db.Contacts.Where(u => u.Username == model.Username).Any())
                 {
-                  
+                    ViewBag.Message = "Username Already Taken";
                     return View(model);
                 }
 
@@ -146,11 +132,6 @@ namespace PickUpSports.Controllers
                 State = model.State,
                 ZipCode = model.ZipCode
             };
-
-            if (db.Contacts.Where(u => u.Username == model.Username).Any())
-            {
-                return View(newContact);
-            }
 
             db.Entry(newContact).State = EntityState.Modified;
             db.SaveChanges();
