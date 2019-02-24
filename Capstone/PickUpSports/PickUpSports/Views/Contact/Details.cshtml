@@ -90,5 +90,6 @@
     </div>
 </div>
 <p>
-    @Html.ActionLink("Edit Information", "Edit", new { id = Model.ContactId })
+    [ @Html.ActionLink("Edit Information", "Edit", new { id = Model.ContactId }) ] | [ @Html.ActionLink("Delete Account", "Delete", "Contact", new {id = Model.ContactId}) ]
+
 </p>

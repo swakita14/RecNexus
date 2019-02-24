@@ -1,10 +1,6 @@
-﻿using System;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -22,6 +18,7 @@ namespace PickUpSports.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private PickUpContext db = new PickUpContext();
+
         public AccountController()
         {
         }
@@ -156,25 +153,18 @@ namespace PickUpSports.Controllers
             CaptchaResponse response = ValidateCaptcha(Request["g-recaptcha-response"]);
             if (response.Success && ModelState.IsValid)
             {
-
-
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
-
-
-
+                
                 var newUser = new Contact
                 {
                     Email = model.Email,
-
                 };
-
-
+                
                 try
                 {
                     db.Contacts.Add(newUser);
                     db.SaveChanges();
-
                 }
                 catch (DbEntityValidationException dbEx)
                 {
@@ -190,25 +180,22 @@ namespace PickUpSports.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    // Redirect user to create Contact profile because new user
+                    return RedirectToAction("Create", "Contacts");
                 }
+
                 AddErrors(result);
             }
             else
             {
-                return Content("Error From Google ReCaptcha : " + response.ErrorMessage[0].ToString());
+                return Content("Error From Google ReCaptcha : " + response.ErrorMessage[0]);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
         public static CaptchaResponse ValidateCaptcha(string response)
         {
             string secret = System.Web.Configuration.WebConfigurationManager.AppSettings["ReCaptchaPrivateKey"];
@@ -216,7 +203,7 @@ namespace PickUpSports.Controllers
             var jsonResult = client.DownloadString(string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", secret, response));
             return JsonConvert.DeserializeObject<CaptchaResponse>(jsonResult.ToString());
         }
-        //
+
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)

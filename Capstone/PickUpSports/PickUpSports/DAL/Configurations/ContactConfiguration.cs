@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
+﻿using System.Data.Entity.ModelConfiguration;
 using PickUpSports.Models;
-using System.Web;
 
 namespace PickUpSports.DAL.Configurations
 {

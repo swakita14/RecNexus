@@ -1,41 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Models;
 using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
 {
-    public class ContactsController : Controller
+    public class ContactController : Controller
     {
-        private PickUpContext db = new PickUpContext();
+        private PickUpContext context = new PickUpContext();
 
         // GET: Contacts
         public ActionResult Index()
         {
-            return View(db.Contacts.ToList());
+            return View(context.Contacts.ToList());
         }
 
         // GET: Contacts/Details/5
         public ActionResult Details(int? id)
         {
-            string newContact_Email = User.Identity.GetUserName();
+            string newContactEmail = User.Identity.GetUserName();
 
             //check if user email is already in db, if not redirect him to creating info for contact table
-            if (!db.Contacts.Where(u => u.Email == newContact_Email).Any())
+            if (!context.Contacts.Where(u => u.Email == newContactEmail).Any())
             {
-                return RedirectToAction("Create", "Contacts");
+                return RedirectToAction("Create", "Contact");
             }
 
-            Contact contact = db.Contacts.Where(x => x.Email == newContact_Email).FirstOrDefault();
+            Contact contact = context.Contacts.Where(x => x.Email == newContactEmail).FirstOrDefault();
 
             if (contact == null)
             {
@@ -52,14 +47,13 @@ namespace PickUpSports.Controllers
         }
 
         // POST: Contacts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateContactViewModel model)
         {
             ViewBag.Error = "";
             if (ModelState.IsValid) return View(model);
+
             //create user 
             string email = User.Identity.GetUserName();
             Debug.Write(email);
@@ -79,15 +73,15 @@ namespace PickUpSports.Controllers
                     ZipCode = model.ZipCode
                 };
 
-                if (db.Contacts.Where(u => u.Username == model.Username).Any())
+                if (context.Contacts.Where(u => u.Username == model.Username).Any())
                 {
                     ViewBag.Message = "Username Already Taken";
                     return View(model);
                 }
 
             //Need to find out why its not being valid
-            db.Contacts.Add(newContact);
-            db.SaveChanges();
+            context.Contacts.Add(newContact);
+            context.SaveChanges();
             return RedirectToAction("Details");
 
         }
@@ -99,12 +93,26 @@ namespace PickUpSports.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = db.Contacts.Find(id);
-            if (contact == null)
+            Contact contact = context.Contacts.Find(id);
+
+            if (contact == null) return HttpNotFound();
+
+            EditContactViewModel model = new EditContactViewModel
             {
-                return HttpNotFound();
-            }
-            return View(contact);
+                ContactId = contact.ContactId,
+                Username = contact.Username,
+                FirstName = contact.FirstName,
+                LastName = contact.LastName,
+                Email = contact.Email,
+                PhoneNumber = contact.PhoneNumber,
+                Address1 = contact.Address1,
+                Address2 = contact.Address2,
+                City = contact.City,
+                State = contact.State,
+                ZipCode = contact.ZipCode
+            };
+
+            return View(model);
         }
 
         // POST: Contacts/Edit/5
@@ -133,8 +141,8 @@ namespace PickUpSports.Controllers
                 ZipCode = model.ZipCode
             };
 
-            db.Entry(newContact).State = EntityState.Modified;
-            db.SaveChanges();
+            context.Entry(newContact).State = EntityState.Modified;
+            context.SaveChanges();
 
             return RedirectToAction("Details");
 
@@ -143,15 +151,11 @@ namespace PickUpSports.Controllers
         // GET: Contacts/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Contact contact = db.Contacts.Find(id);
-            if (contact == null)
-            {
-                return HttpNotFound();
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            Contact contact = context.Contacts.Find(id);
+            if (contact == null) return HttpNotFound();
+
             return View(contact);
         }
 
@@ -160,9 +164,9 @@ namespace PickUpSports.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int? id)
         {
-            Contact contact = db.Contacts.Find(id);
-            db.Contacts.Remove(contact);
-            db.SaveChanges();
+            Contact contact = context.Contacts.Find(id);
+            context.Contacts.Remove(contact);
+            context.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -170,7 +174,7 @@ namespace PickUpSports.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                context.Dispose();
             }
             base.Dispose(disposing);
         }
