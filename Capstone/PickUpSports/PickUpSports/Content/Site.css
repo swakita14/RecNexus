@@ -37,3 +37,8 @@ textarea {
     color: red;
 }
 
+.googleButton {
+    background: url(../Content/images/googleSignIn.png) no-repeat;
+    cursor: pointer;
+    border: none;
+}
