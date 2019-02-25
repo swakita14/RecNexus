@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
+using PickUpSports.DAL;
 using PickUpSports.Models;
 
 namespace PickUpSports.Controllers
@@ -17,7 +18,7 @@ namespace PickUpSports.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private PickUpContext db = new PickUpContext();
+        private readonly PickUpContext _context = new PickUpContext();
 
         public AccountController()
         {
@@ -155,7 +156,7 @@ namespace PickUpSports.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
-                
+               
                 var newUser = new Contact
                 {
                     Email = model.Email,
@@ -163,8 +164,8 @@ namespace PickUpSports.Controllers
                 
                 try
                 {
-                    db.Contacts.Add(newUser);
-                    db.SaveChanges();
+                    _context.Contacts.Add(newUser);
+                    _context.SaveChanges();
                 }
                 catch (DbEntityValidationException dbEx)
                 {
@@ -182,7 +183,7 @@ namespace PickUpSports.Controllers
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     // Redirect user to create Contact profile because new user
-                    return RedirectToAction("Create", "Contacts");
+                    return RedirectToAction("Create", "Contact");
                 }
 
                 AddErrors(result);
@@ -194,6 +195,25 @@ namespace PickUpSports.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        public async Task<ActionResult> RemoveAccount(int id)
+        {
+            Contact contact = _context.Contacts.Find(id);
+            
+            // Remove from AspNet tables
+            ApplicationUser user = UserManager.Users.FirstOrDefault(u => u.Email == contact.Email);
+            IdentityResult result = await UserManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                // Remove from Contact table
+                _context.Contacts.Remove(contact);
+                _context.SaveChanges();
+            }
+
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Index", "Home");
         }
 
         public static CaptchaResponse ValidateCaptcha(string response)
@@ -400,13 +420,16 @@ namespace PickUpSports.Controllers
                 }
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user);
+
                 if (result.Succeeded)
                 {
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+
+                        // Redirect user to create Contact profile because new user
+                        return RedirectToAction("Create", "Contact");
                     }
                 }
                 AddErrors(result);

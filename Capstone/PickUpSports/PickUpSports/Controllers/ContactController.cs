@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using PickUpSports.DAL;
 using PickUpSports.Models;
 using PickUpSports.Models.ViewModel;
 
@@ -11,31 +12,23 @@ namespace PickUpSports.Controllers
 {
     public class ContactController : Controller
     {
-        private PickUpContext context = new PickUpContext();
+        private readonly PickUpContext _context = new PickUpContext();
 
         // GET: Contacts
         public ActionResult Index()
         {
-            return View(context.Contacts.ToList());
+            return View(_context.Contacts.ToList());
         }
 
-        // GET: Contacts/Details/5
+        // GET: Contact/Details/5
         public ActionResult Details(int? id)
         {
             string newContactEmail = User.Identity.GetUserName();
 
-            //check if user email is already in db, if not redirect him to creating info for contact table
-            if (!context.Contacts.Where(u => u.Email == newContactEmail).Any())
-            {
-                return RedirectToAction("Create", "Contact");
-            }
+            Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
 
-            Contact contact = context.Contacts.Where(x => x.Email == newContactEmail).FirstOrDefault();
-
-            if (contact == null)
-            {
-                return HttpNotFound();
-            }
+            // If username is null, profile was never set up
+            if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
 
             return View(contact);
         }
@@ -73,15 +66,15 @@ namespace PickUpSports.Controllers
                     ZipCode = model.ZipCode
                 };
 
-                if (context.Contacts.Where(u => u.Username == model.Username).Any())
+                if (_context.Contacts.Where(u => u.Username == model.Username).Any())
                 {
                     ViewBag.Message = "Username Already Taken";
                     return View(model);
                 }
 
             //Need to find out why its not being valid
-            context.Contacts.Add(newContact);
-            context.SaveChanges();
+            _context.Contacts.Add(newContact);
+            _context.SaveChanges();
             return RedirectToAction("Details");
 
         }
@@ -93,7 +86,7 @@ namespace PickUpSports.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = context.Contacts.Find(id);
+            Contact contact = _context.Contacts.Find(id);
 
             if (contact == null) return HttpNotFound();
 
@@ -126,55 +119,36 @@ namespace PickUpSports.Controllers
 
             string email = User.Identity.GetUserName();
 
-            Contact newContact = new Contact()
-            {
-                ContactId = model.ContactId,
-                Username = model.Username,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = email,
-                PhoneNumber = model.PhoneNumber,
-                Address1 = model.Address1,
-                Address2 = model.Address2,
-                City = model.City,
-                State = model.State,
-                ZipCode = model.ZipCode
-            };
+            Contact existing = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
-            context.Entry(newContact).State = EntityState.Modified;
-            context.SaveChanges();
+            existing.FirstName = model.FirstName;
+            existing.LastName = model.LastName;
+            existing.PhoneNumber = model.PhoneNumber;
+            existing.Address1 = model.Address1;
+            existing.Address2 = model.Address2;
+            existing.City = model.City;
+            existing.State = model.State;
+            existing.ZipCode = model.ZipCode;
+
+            _context.Entry(existing).State = EntityState.Modified;
+            _context.SaveChanges();
 
             return RedirectToAction("Details");
-
-        }
-
-        // GET: Contacts/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
-            Contact contact = context.Contacts.Find(id);
-            if (contact == null) return HttpNotFound();
-
-            return View(contact);
         }
 
         // POST: Contacts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int? id)
+        public ActionResult Delete(EditContactViewModel model)
         {
-            Contact contact = context.Contacts.Find(id);
-            context.Contacts.Remove(contact);
-            context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("RemoveAccount", "Account", new { id = model.ContactId});
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                context.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }

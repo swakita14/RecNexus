@@ -1,12 +1,10 @@
-namespace PickUpSports.Models
-{
-    using System;
-    using System.Data.Entity;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using PickUpSports.DAL.Configurations;
+using System.Data.Entity;
+using PickUpSports.DAL.Configurations;
+using PickUpSports.Models;
 
-    public partial class PickUpContext : DbContext
+namespace PickUpSports.DAL
+{
+    public class PickUpContext : DbContext
     {
         public PickUpContext()
             : base("name=PickUpContext")

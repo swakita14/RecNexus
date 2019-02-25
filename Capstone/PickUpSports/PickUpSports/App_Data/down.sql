@@ -1,1 +1,1 @@
-﻿DROP TABLE [dbo].[Contacts];
+﻿DROP TABLE [dbo].[Contact];
