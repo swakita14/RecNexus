@@ -14,12 +14,6 @@ namespace PickUpSports.Controllers
     {
         private readonly PickUpContext _context = new PickUpContext();
 
-        // GET: Contacts
-        public ActionResult Index()
-        {
-            return View(_context.Contacts.ToList());
-        }
-
         // GET: Contact/Details/5
         public ActionResult Details(int? id)
         {
