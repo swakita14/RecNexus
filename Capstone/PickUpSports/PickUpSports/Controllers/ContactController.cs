@@ -28,7 +28,15 @@ namespace PickUpSports.Controllers
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
 
             // If username is null, profile was never set up
-            if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
+            if (contact.Username == null)
+            {
+                Debug.Write(contact.Username);
+                return RedirectToAction("Create", "Contact");
+            }
+            else if (contact == null)
+            {
+                Debug.Write("This shouldnt be here");
+            }
 
             return View(contact);
         }
