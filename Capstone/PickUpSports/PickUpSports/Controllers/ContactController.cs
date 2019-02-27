@@ -14,12 +14,6 @@ namespace PickUpSports.Controllers
     {
         private readonly PickUpContext _context = new PickUpContext();
 
-        // GET: Contacts
-        public ActionResult Index()
-        {
-            return View(_context.Contacts.ToList());
-        }
-
         // GET: Contact/Details/5
         public ActionResult Details(int? id)
         {
@@ -59,28 +53,27 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Debug.Write(email);
 
-                Contact newContact = new Contact()
-                {
-                    ContactId = model.ContactId,
-                    Username = model.Username,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Email = email,
-                    PhoneNumber = model.PhoneNumber,
-                    Address1 = model.Address1,
-                    Address2 = model.Address2,
-                    City = model.City,
-                    State = model.State,
-                    ZipCode = model.ZipCode
-                };
+            Contact newContact = new Contact()
+            {
+                ContactId = model.ContactId,
+                Username = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = email,
+                PhoneNumber = model.PhoneNumber,
+                Address1 = model.Address1,
+                Address2 = model.Address2,
+                City = model.City,
+                State = model.State,
+                ZipCode = model.ZipCode
+            };
 
-                if (_context.Contacts.Where(u => u.Username == model.Username).Any())
-                {
-                    ViewBag.Message = "Username Already Taken";
-                    return View(model);
-                }
+            if (_context.Contacts.Any(u => u.Username == model.Username))
+            {
+                ViewBag.Message = "Username Already Taken";
+                return View(model);
+            }
 
-            //Need to find out why its not being valid
             _context.Contacts.Add(newContact);
             _context.SaveChanges();
             return RedirectToAction("Details");

@@ -1,4 +1,5 @@
-﻿@model PickUpSports.Models.IndexViewModel
+﻿@model PickUpSports.Models.ViewModel.ManageUserViewModel 
+
 @{
     ViewBag.Title = "Manage";
 }
@@ -13,7 +14,7 @@
         <dt>Password:</dt>
         <dd>
             [
-            @if (Model.HasPassword)
+            @if (Model.Identity.HasPassword)
             {
                 @Html.ActionLink("Change your password", "ChangePassword")
             }
@@ -25,7 +26,7 @@
         </dd>
         <dt>External Logins:</dt>
         <dd>
-            @Model.Logins.Count [
+            @Model.Identity.Logins.Count [
             @Html.ActionLink("Manage", "ManageLogins") ]
         </dd>
         @*
