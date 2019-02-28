@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PickUpSports.Models.ViewModel
 {
-    public enum DayOfWeek : byte
+    public enum DayOfWeek
     {
         Sunday = 1,
         Monday,
