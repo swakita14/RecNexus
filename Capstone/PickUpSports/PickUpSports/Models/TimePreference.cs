@@ -12,9 +12,9 @@ namespace PickUpSports.Models
 
         public byte? DayOfWeek { get; set; }
 
-        public DateTime? BeginTime { get; set; }
+        public TimeSpan? BeginTime { get; set; }
 
-        public DateTime? EndTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
 
         public int ContactID { get; set; }
 

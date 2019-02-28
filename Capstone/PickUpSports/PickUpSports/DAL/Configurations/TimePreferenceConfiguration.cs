@@ -8,11 +8,10 @@ namespace PickUpSports.DAL.Configurations
         public TimePreferenceConfiguration()
         {
             ToTable("TimePreference");
-
             // Change as needed for primary key
             HasKey(x => x.TimePrefID);
-
             // Configure any foreign keys
+
             Property(x => x.TimePrefID)
                 .HasColumnName("TimePrefID")
                 .HasColumnType("int")
@@ -25,12 +24,12 @@ namespace PickUpSports.DAL.Configurations
 
             Property(x => x.BeginTime)
                 .HasColumnName("BeginTime")
-                .HasColumnType("datetime")
+                .HasColumnType("time")
                 .IsOptional();
 
             Property(x => x.EndTime)
                 .HasColumnName("EndTime")
-                .HasColumnType("datetime")
+                .HasColumnType("time")
                 .IsOptional();
 
             Property(x => x.ContactID)
@@ -40,4 +39,5 @@ namespace PickUpSports.DAL.Configurations
 
         }
     }
+
 }

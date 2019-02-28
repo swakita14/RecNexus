@@ -16,8 +16,8 @@
 CREATE TABLE [dbo].[TimePreference](
     [TimePrefID]    INT IDENTITY(1,1) NOT NULL,
     [DayOfWeek]     TINYINT,
-    [BeginTime]     DATETIME,
-    [EndTime]       DATETIME,
+    [BeginTime]     TIME,
+    [EndTime]       TIME,
     [ContactID]		INT	               NOT NULL,
 
     CONSTRAINT [PK_dbo.TimePreference] PRIMARY KEY CLUSTERED ([TimePrefID] ASC),
