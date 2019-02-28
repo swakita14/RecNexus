@@ -24,3 +24,29 @@ CREATE TABLE [dbo].[TimePreference](
     CONSTRAINT [FK_dbo.Contact] FOREIGN KEY (ContactID) REFERENCES [dbo].[Contact] (ContactId) 
 
 );
+
+CREATE TABLE Venue
+(
+	VenueID int IDENTITY(1,1) NOT NULL,
+	Name nvarchar(max) NOT NULL,
+	Phone nvarchar(50) NULL,
+	Address1 nvarchar(50) NOT NULL,
+	Address2 nvarchar(50) NULL,
+	City nvarchar(50) NOT NULL,
+	State nvarchar(50) NOT NULL,
+	ZipCode nvarchar(50) NOT NULL,
+
+	CONSTRAINT PK_Venue PRIMARY KEY (VenueID),
+);
+
+CREATE TABLE BusinessHours
+(
+	BusinessHoursID int IDENTITY(1,1) NOT NULL,
+	DayOfWeek int NOT NULL,
+	OpenTime time(7) NOT NULL,
+	CloseTime time(7) NOT NULL,
+	VenueID int NOT NULL,
+
+	CONSTRAINT PK_BusinessHours PRIMARY KEY (BusinessHoursID),
+	CONSTRAINT FK_BusinessHours_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
+);
