@@ -13,10 +13,13 @@ namespace PickUpSports.DAL
         }
 
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Contact> TimePreference { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder builder)
         {
             // Model configurations to map entity to model
             builder.Configurations.Add(new ContactConfiguration());
+            builder.Configurations.Add(new TimePreferenceConfiguration());
         }
     }
 }

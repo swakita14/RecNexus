@@ -12,3 +12,15 @@
 	[ZipCode]              NVARCHAR (256)  NULL,
     CONSTRAINT [PK_dbo.Contacts] PRIMARY KEY CLUSTERED ([ContactId] ASC)
 );
+
+CREATE TABLE [dbo].[TimePreference](
+    [TimePrefID]    INT IDENTITY(1,1) NOT NULL,
+    [DayOfWeek]     TINYINT,
+    [BeginTime]     TIME,
+    [EndTime]       TIME,
+    [ContactID]		INT	               NOT NULL,
+
+    CONSTRAINT [PK_dbo.TimePreference] PRIMARY KEY CLUSTERED ([TimePrefID] ASC),
+    CONSTRAINT [FK_dbo.Contact] FOREIGN KEY (ContactID) REFERENCES [dbo].[Contact] (ContactId) 
+
+);
