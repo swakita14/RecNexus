@@ -13,6 +13,7 @@ namespace PickUpSports.Controllers
     public class ContactController : Controller
     {
         private readonly PickUpContext _context = new PickUpContext();
+        //enum DayOfWeek : byte { Sunday = 1, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday};
 
         // GET: Contact/Details/5
         public ActionResult Details(int? id)
