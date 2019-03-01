@@ -18,16 +18,18 @@ namespace PickUpSports.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private readonly PickUpContext _context = new PickUpContext();
+        private readonly PickUpContext _context;
 
-        public AccountController()
+        public AccountController(PickUpContext context)
         {
+            _context = context;
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, PickUpContext context)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _context = context;
         }
 
         public ApplicationSignInManager SignInManager

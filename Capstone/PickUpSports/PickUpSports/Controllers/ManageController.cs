@@ -17,15 +17,18 @@ namespace PickUpSports.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private PickUpContext db = new PickUpContext();
-        public ManageController()
+        private readonly PickUpContext _context;
+
+        public ManageController(PickUpContext context)
         {
+            _context = context;
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, PickUpContext context)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _context = context;
         }
 
         public ApplicationSignInManager SignInManager
@@ -77,7 +80,7 @@ namespace PickUpSports.Controllers
             };
 
             string email = User.Identity.GetUserName();
-            model.Contact = db.Contacts.FirstOrDefault(u => u.Email == email);
+            model.Contact = _context.Contacts.FirstOrDefault(u => u.Email == email);
 
             return View(model);
         }
