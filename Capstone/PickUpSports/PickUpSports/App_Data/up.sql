@@ -30,11 +30,12 @@ CREATE TABLE Venue
 	VenueID int IDENTITY(1,1) NOT NULL,
 	Name nvarchar(max) NOT NULL,
 	Phone nvarchar(50) NULL,
-	Address1 nvarchar(50) NOT NULL,
+	Address1 nvarchar(50) NULL,
 	Address2 nvarchar(50) NULL,
-	City nvarchar(50) NOT NULL,
-	State nvarchar(50) NOT NULL,
-	ZipCode nvarchar(50) NOT NULL,
+	City nvarchar(50) NULL,
+	State nvarchar(50) NULL,
+	ZipCode nvarchar(50) NULL,
+	GooglePlaceID nvarchar(50) NULL,
 
 	CONSTRAINT PK_Venue PRIMARY KEY (VenueID),
 );

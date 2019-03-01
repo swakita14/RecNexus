@@ -31,7 +31,7 @@ namespace PickUpSports.DAL.Configurations
                 .HasColumnName("Address1")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(100)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.Address2)
                 .HasColumnName("Address2")
@@ -43,19 +43,26 @@ namespace PickUpSports.DAL.Configurations
                 .HasColumnName("City")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(100)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.State)
                 .HasColumnName("State")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(100)
-                .IsRequired();
+                .IsOptional();
 
             Property(x => x.ZipCode)
                 .HasColumnName("ZipCode")
                 .HasColumnType("nvarchar")
                 .HasMaxLength(100)
-                .IsRequired();
+                .IsOptional();
+
+            Property(x => x.GooglePlaceId)
+                .HasColumnName("GooglePlaceID")
+                .HasColumnType("nvarchar")
+                .HasMaxLength(100)
+                .IsOptional();
         }
     }
+
 }

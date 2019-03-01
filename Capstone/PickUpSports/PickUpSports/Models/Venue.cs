@@ -18,6 +18,7 @@
 
         public string ZipCode { get; set; }
 
+        public string GooglePlaceId { get; set; }
     }
 
 }
