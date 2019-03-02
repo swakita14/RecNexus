@@ -8,10 +8,12 @@
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/w3.css")
     @Styles.Render("~/Content/w3-theme.css")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/angularapp")
     
 
 </head>
-<body>
+<body ng-app="myApp" ng-controller="RootController">
     <div class="w3-top">
         <div class="w3-bar w3-theme-d2 w3-left-align">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>

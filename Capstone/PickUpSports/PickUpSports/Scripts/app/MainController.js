@@ -1,6 +1,6 @@
 ﻿var app = angular.module('myApp');
 var mainController = function($scope) {
-    $scope.name = 'hello'
+    $scope.name = 'hello';
 };
 
-app.controller('MainController',['$scope',mainController]);
+app.controller('MainController',['$scope', mainController]);
