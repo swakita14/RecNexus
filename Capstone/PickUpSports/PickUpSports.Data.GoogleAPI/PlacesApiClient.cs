@@ -23,7 +23,7 @@ namespace PickUpSports.Data.GoogleAPI
          * Method that makes call to Google Places API and
          * retrieves list of places given specific parameters
          */
-        public async Task<PlaceSearchResponse> GetPlaces()
+        public Task<PlaceSearchResponse> GetPlaces()
         {
             // Initialize API request with URL and API key
             RestRequest request = new RestRequest("/nearbysearch/json?", Method.GET);
@@ -36,18 +36,18 @@ namespace PickUpSports.Data.GoogleAPI
             request.AddQueryParameter("type", "park");
 
             // Get respones from API using above request
-            IRestResponse response = await _client.ExecuteGetTaskAsync(request);
+            IRestResponse response = _client.Execute(request);
 
             // Convert JSON response to model and return response
             PlaceSearchResponse apiResponse = JsonConvert.DeserializeObject<PlaceSearchResponse>(response.Content);
-            return apiResponse;
+            return Task.FromResult(apiResponse);
         }
 
         /**
          * Method that makes call to Google Places API and
          * retrieves details of a single place given a Google Place ID
          */
-        public async Task<PlaceDetailsResponse> GetPlaceDetailsById(string placeId)
+        public Task<PlaceDetailsResponse> GetPlaceDetailsById(string placeId)
         {
             // Initialize API request with URL and API key
             RestRequest request = new RestRequest("/details/json?", Method.GET);
@@ -58,11 +58,11 @@ namespace PickUpSports.Data.GoogleAPI
             request.AddQueryParameter("fields", "name,opening_hours,reviews,address_component,formatted_phone_number");
 
             // Get responses from API using above request
-            IRestResponse response = await _client.ExecuteGetTaskAsync(request);
+            IRestResponse response = _client.Execute(request);
 
             // Convert JSON response to model and return response
             PlaceDetailsResponse apiResponse = JsonConvert.DeserializeObject<PlaceDetailsResponse>(response.Content);
-            return apiResponse;
+            return Task.FromResult(apiResponse);
         }
     }
 }
