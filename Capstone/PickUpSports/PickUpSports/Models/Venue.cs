@@ -1,4 +1,6 @@
-﻿namespace PickUpSports.Models
+﻿using System;
+
+namespace PickUpSports.Models
 {
     public class Venue
     {
@@ -17,6 +19,8 @@
         public string State { get; set; }
 
         public string ZipCode { get; set; }
+
+        public DateTime? DateUpdated { get; set; }
 
         public string GooglePlaceId { get; set; }
     }

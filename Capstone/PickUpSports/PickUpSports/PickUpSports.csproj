@@ -244,6 +244,7 @@
     <Compile Include="Models\CaptchaResponse.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="DAL\PickUpContext.cs" />
+    <Compile Include="Models\Enums\DayOfWeek.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\TimePreference.cs" />
