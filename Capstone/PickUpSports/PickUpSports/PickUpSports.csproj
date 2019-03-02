@@ -328,6 +328,12 @@
     <Content Include="Web_deploy.config" />
     <Content Include="Views\Venue\Index.cshtml" />
   </ItemGroup>
+    <ItemGroup>
+    <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
+      <Project>{67E10F34-47F7-4373-BAA8-AAF116C8683C}</Project>
+      <Name>PickUpSports.Data.GoogleAPI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
