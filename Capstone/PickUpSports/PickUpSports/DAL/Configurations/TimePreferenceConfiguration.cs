@@ -19,7 +19,7 @@ namespace PickUpSports.DAL.Configurations
 
             Property(x => x.DayOfWeek)
                 .HasColumnName("DayOfWeek")
-                .HasColumnType("tinyint")
+                .HasColumnType("int")
                 .IsOptional();
 
             Property(x => x.BeginTime)

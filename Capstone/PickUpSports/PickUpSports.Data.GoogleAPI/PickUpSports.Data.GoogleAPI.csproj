@@ -48,15 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\PlaceDetailsResponse.cs" />
     <Compile Include="PlacesApiClient.cs" />
     <Compile Include="Interfaces\IPlacesApiClient.cs" />
-    <Compile Include="Models\AltId.cs" />
-    <Compile Include="Models\Geometry.cs" />
-    <Compile Include="Models\Location.cs" />
-    <Compile Include="Models\OpeningHours.cs" />
-    <Compile Include="Models\Photo.cs" />
-    <Compile Include="Models\Result.cs" />
-    <Compile Include="Models\PlacesApiResponse.cs" />
+    <Compile Include="Models\PlaceSearchResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

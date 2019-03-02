@@ -1,21 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using DayOfWeek = PickUpSports.Models.Enums.DayOfWeek;
 
 namespace PickUpSports.Models.ViewModel
 {
-    public enum DayOfWeek
-    {
-        Sunday = 1,
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thurday,
-        Friday,
-        Saturday
-    }
-
     public class TimePreference
     {
 
