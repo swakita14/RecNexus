@@ -223,6 +223,7 @@
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TimePreferencesController.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\TimePreferenceConfiguration.cs" />
     <Compile Include="Global.asax.cs">
@@ -312,6 +313,11 @@
     <Content Include="Views\Contact\Edit.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Web_deploy.config" />
+    <Content Include="Views\TimePreferences\Create.cshtml" />
+    <Content Include="Views\TimePreferences\Delete.cshtml" />
+    <Content Include="Views\TimePreferences\Details.cshtml" />
+    <Content Include="Views\TimePreferences\Edit.cshtml" />
+    <Content Include="Views\TimePreferences\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
