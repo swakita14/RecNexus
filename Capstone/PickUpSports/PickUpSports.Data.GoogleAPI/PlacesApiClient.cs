@@ -19,7 +19,11 @@ namespace PickUpSports.Data.GoogleAPI
             _apiKey = apiKey;
         }
 
-        public async Task<List<Result>> GetPlaces()
+        /**
+         * Method that makes call to Google Places API and
+         * retrieves list of places given specific parameters
+         */
+        public async Task<PlaceSearchResponse> GetPlaces()
         {
             // Initialize API request with URL and API key
             RestRequest request = new RestRequest("/nearbysearch/json?", Method.GET);
@@ -28,34 +32,37 @@ namespace PickUpSports.Data.GoogleAPI
             // Add parameters to API request, these will need to be changed
             request.AddQueryParameter("keyword", "basketball");
             request.AddQueryParameter("location", "44.9429, -123.0351");
-            request.AddQueryParameter("radius", "20000");
+            request.AddQueryParameter("radius", "10000");
             request.AddQueryParameter("type", "park");
 
             // Get respones from API using above request
             IRestResponse response = await _client.ExecuteGetTaskAsync(request);
 
-            // List to return
-            List<Result> placeResults = new List<Result>();
+            // Convert JSON response to model and return response
+            PlaceSearchResponse apiResponse = JsonConvert.DeserializeObject<PlaceSearchResponse>(response.Content);
+            return apiResponse;
+        }
 
-            // Convert JSON response to model and add to results lists 
-            PlacesApiResponse apiResponse = JsonConvert.DeserializeObject<PlacesApiResponse>(response.Content);
-            placeResults.AddRange(apiResponse.Results);
+        /**
+         * Method that makes call to Google Places API and
+         * retrieves details of a single place given a Google Place ID
+         */
+        public async Task<PlaceDetailsResponse> GetPlaceDetailsById(string placeId)
+        {
+            // Initialize API request with URL and API key
+            RestRequest request = new RestRequest("/details/json?", Method.GET);
+            request.AddQueryParameter("key", _apiKey);
+            request.AddQueryParameter("placeid", placeId);
 
-            // If next_page_token exists, add token to API request and call again
+            // Only pull name, business hours, reviews, and address data
+            request.AddQueryParameter("fields", "name,opening_hours,reviews,address_component,formatted_phone_number");
 
-            bool hasNextToken = !IsNullOrEmpty(apiResponse.NextPageToken);
-            while (hasNextToken)
-            {
-                request.AddQueryParameter("pagetoken", apiResponse.NextPageToken);
-                response = await _client.ExecuteGetTaskAsync(request);
-                apiResponse = JsonConvert.DeserializeObject<PlacesApiResponse>(response.Content);
-                placeResults.AddRange(apiResponse.Results);
+            // Get responses from API using above request
+            IRestResponse response = await _client.ExecuteGetTaskAsync(request);
 
-                hasNextToken = !IsNullOrEmpty(apiResponse.NextPageToken);
-            }
-
-            // Return list of place results
-            return placeResults;
+            // Convert JSON response to model and return response
+            PlaceDetailsResponse apiResponse = JsonConvert.DeserializeObject<PlaceDetailsResponse>(response.Content);
+            return apiResponse;
         }
     }
 }

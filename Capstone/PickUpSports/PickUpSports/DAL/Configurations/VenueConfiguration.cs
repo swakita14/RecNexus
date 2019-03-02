@@ -57,6 +57,11 @@ namespace PickUpSports.DAL.Configurations
                 .HasMaxLength(100)
                 .IsOptional();
 
+            Property(x => x.DateUpdated)
+                .HasColumnName("DateUpdated")
+                .HasColumnType("datetime")
+                .IsOptional();
+
             Property(x => x.GooglePlaceId)
                 .HasColumnName("GooglePlaceID")
                 .HasColumnType("nvarchar")
@@ -64,5 +69,6 @@ namespace PickUpSports.DAL.Configurations
                 .IsOptional();
         }
     }
+
 
 }

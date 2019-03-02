@@ -15,7 +15,7 @@
 
 CREATE TABLE [dbo].[TimePreference](
     [TimePrefID]    INT IDENTITY(1,1) NOT NULL,
-    [DayOfWeek]     TINYINT,
+    [DayOfWeek]     INT,
     [BeginTime]     TIME,
     [EndTime]       TIME,
     [ContactID]		INT	               NOT NULL,
@@ -35,6 +35,7 @@ CREATE TABLE Venue
 	City nvarchar(50) NULL,
 	State nvarchar(50) NULL,
 	ZipCode nvarchar(50) NULL,
+	DateUpdated datetime null,
 	GooglePlaceID nvarchar(50) NULL,
 
 	CONSTRAINT PK_Venue PRIMARY KEY (VenueID),

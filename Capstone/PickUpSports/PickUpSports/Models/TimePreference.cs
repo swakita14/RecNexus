@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace PickUpSports.Models
 {
@@ -10,7 +7,7 @@ namespace PickUpSports.Models
 
         public int TimePrefID { get; set; }
 
-        public byte? DayOfWeek { get; set; }
+        public int DayOfWeek { get; set; }
 
         public TimeSpan? BeginTime { get; set; }
 
