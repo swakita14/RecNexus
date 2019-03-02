@@ -9,5 +9,12 @@ namespace PickUpSports.Controllers
         {
             return View();
         }
+
+        public ActionResult Main()
+        {
+            return View();
+        }
     }
+
+   
 }
