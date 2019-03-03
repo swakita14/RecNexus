@@ -19,6 +19,7 @@ namespace PickUpSports.Controllers
 
         public ActionResult Create(int id)
         {
+            // Confirm user is logged in (visitors can't leave reviews)
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
@@ -28,6 +29,7 @@ namespace PickUpSports.Controllers
                 return View();
             }
 
+            // Get name of venue to display on View and return model
             Venue venue = _context.Venues.Find(id);
 
             var model = new CreateReviewViewModel
@@ -42,9 +44,11 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult Create(CreateReviewViewModel model)
         {
+            // Get contact to tie to review
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
+            // Create and add Review to database
             Review review = new Review
             {
                 IsGoogleReview = false,
@@ -58,6 +62,7 @@ namespace PickUpSports.Controllers
             _context.Reviews.Add(review);
             _context.SaveChanges();
 
+            // Redirect user to Venue details page which shows all reviews
             return RedirectToAction("Details", "Venue", new {id = model.VenueId});
         }
         protected override void Dispose(bool disposing)
