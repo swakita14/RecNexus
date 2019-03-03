@@ -52,3 +52,19 @@ CREATE TABLE BusinessHours
 	CONSTRAINT PK_BusinessHours PRIMARY KEY (BusinessHoursID),
 	CONSTRAINT FK_BusinessHours_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
 );
+
+CREATE TABLE Review
+(
+	ReviewID int IDENTITY(1,1) NOT NULL,
+	Timestamp datetime NOT NULL,
+	Rating int NOT NULL,
+	Comments nvarchar(max) null,
+	IsGoogleReview bit NOT NULL,
+	GoogleAuthor nvarchar(50) null,
+	ContactID int NULL,
+	VenueID int NOT NULL,
+
+	CONSTRAINT PK_Review PRIMARY KEY (ReviewID),
+	CONSTRAINT FK_Review_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID),
+	CONSTRAINT FK_Review_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
+);

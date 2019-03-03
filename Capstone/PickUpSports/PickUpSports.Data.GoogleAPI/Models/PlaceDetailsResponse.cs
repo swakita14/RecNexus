@@ -15,7 +15,7 @@ namespace PickUpSports.Data.GoogleAPI.Models
         public List<string> Types { get; set; }
     }
 
-    public class Review
+    public class PlaceDetailsReview
     {
         [JsonProperty("author_name")]
         public string AuthorName { get; set; }
@@ -90,7 +90,7 @@ namespace PickUpSports.Data.GoogleAPI.Models
         public string Name { get; set; }
 
         [JsonProperty("reviews")]
-        public List<Review> Reviews { get; set; }
+        public List<PlaceDetailsReview> Reviews { get; set; }
 
         [JsonProperty("opening_hours")]
         public OpeningHours OpeningHours { get; set; }
