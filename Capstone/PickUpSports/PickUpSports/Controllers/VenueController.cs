@@ -124,10 +124,12 @@ namespace PickUpSports.Controllers
             List<ReviewViewModel> tempList = new List<ReviewViewModel>();
             foreach (var review in reviews)
             {
-                ReviewViewModel reviewModel = new ReviewViewModel();
-                reviewModel.Rating = review.Rating;
-                reviewModel.Timestamp = review.Timestamp;
-                reviewModel.Comments = review.Comments;
+                ReviewViewModel reviewModel = new ReviewViewModel
+                {
+                    Rating = review.Rating,
+                    Timestamp = review.Timestamp,
+                    Comments = review.Comments
+                };
 
                 // If review is not a Google review then there is no GoogleAuthor, 
                 // find author in Contact table
