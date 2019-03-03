@@ -117,7 +117,9 @@ namespace PickUpSports.Controllers
             // Map reviews 
             List<Review> reviews = _context.Reviews.Where(r => r.VenueId == id).ToList();
             model.Reviews = new List<ReviewViewModel>();
-            model.AverageRating = (decimal?) reviews.Average(r => r.Rating);
+
+            decimal avgRating = (decimal) reviews.Average(r => r.Rating);
+            model.AverageRating = Math.Round(avgRating, 1);
 
             List<ReviewViewModel> tempList = new List<ReviewViewModel>();
             foreach (var review in reviews)

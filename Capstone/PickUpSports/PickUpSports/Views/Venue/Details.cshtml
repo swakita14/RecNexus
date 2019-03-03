@@ -26,6 +26,7 @@
     }
     <div class="row">
         <br/><b>Average Review Rating:</b> @Model.AverageRating
+        <br/>@Html.ActionLink("Leave a review!", "Create", "Review", new {id = @Model.VenueId}, null)
     </div>
 </div>
 
