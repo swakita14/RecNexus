@@ -204,8 +204,12 @@ namespace PickUpSports.Controllers
                     foreach (var period in venueDetails.Result.OpeningHours.Periods)
                     {
                         hours.DayOfWeek = period.Open.Day;
-                        hours.OpenTime = DateTime.ParseExact(period.Open?.Time, "HHmm", CultureInfo.InvariantCulture).TimeOfDay;
-                        hours.CloseTime = DateTime.ParseExact(period.Close?.Time, "HHmm", CultureInfo.InvariantCulture).TimeOfDay;
+
+                        DateTime.TryParseExact(period.Open?.Time, "HHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var openDateTime);
+                        hours.OpenTime = openDateTime.TimeOfDay;
+
+                        DateTime.TryParseExact(period.Close?.Time, "HHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var closeDateTime);
+                        hours.CloseTime = closeDateTime.TimeOfDay;
 
                         // Add BusinessHours entity
                         _context.BusinessHours.Add(hours);
