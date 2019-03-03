@@ -40,7 +40,7 @@ namespace PickUpSports
             // Register PickUpContext for database
             builder.Register(context => new PickUpContext())
                 .AsSelf()
-                .InstancePerLifetimeScope();
+                .InstancePerRequest();
 
             var container = builder.Build();
 

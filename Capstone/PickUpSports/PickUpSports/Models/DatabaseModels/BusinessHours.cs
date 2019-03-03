@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PickUpSports.Models
+namespace PickUpSports.Models.DatabaseModels
 {
     public class BusinessHours
     {

@@ -58,6 +58,7 @@
     <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -90,6 +91,7 @@
     <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -234,25 +236,30 @@
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
+    <Compile Include="DAL\Configurations\ReviewConfiguration.cs" />
     <Compile Include="DAL\Configurations\TimePreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\VenueConfiguration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\BusinessHours.cs" />
+    <Compile Include="Models\DatabaseModels\BusinessHours.cs" />
     <Compile Include="Models\CaptchaResponse.cs" />
-    <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\DatabaseModels\Contact.cs" />
     <Compile Include="DAL\PickUpContext.cs" />
     <Compile Include="Models\Enums\DayOfWeek.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\TimePreference.cs" />
-    <Compile Include="Models\Venue.cs" />
+    <Compile Include="Models\DatabaseModels\Review.cs" />
+    <Compile Include="Models\DatabaseModels\TimePreference.cs" />
+    <Compile Include="Models\DatabaseModels\Venue.cs" />
+    <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
     <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
+    <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\TimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\VenueViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -327,8 +334,9 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Web_deploy.config" />
     <Content Include="Views\Venue\Index.cshtml" />
+    <Content Include="Views\Venue\Details.cshtml" />
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
       <Project>{67E10F34-47F7-4373-BAA8-AAF116C8683C}</Project>
       <Name>PickUpSports.Data.GoogleAPI</Name>
@@ -347,7 +355,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
-  <ItemGroup/>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

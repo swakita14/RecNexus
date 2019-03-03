@@ -1,5 +1,6 @@
 ﻿using PickUpSports.Models;
 using System.Data.Entity.ModelConfiguration;
+using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.DAL.Configurations
 {
