@@ -1,7 +1,28 @@
-﻿
+﻿@model List<PickUpSports.Models.ViewModel.VenueViewModel>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Sports Venues";
 }
 
-<h2>Index</h2>
-
+<h2><i>Local Sports Venues</i></h2>
+<hr />
+@foreach (var venue in Model)
+{
+    <div class="container">
+        <div class="row">
+            @Html.DisplayFor(x => venue.Name)
+        </div>
+        <div class="row">
+            @Html.DisplayFor(x => venue.Address1), @Html.DisplayFor(x => venue.City), @Html.DisplayFor(x => venue.State), @Html.DisplayFor(x => venue.ZipCode)
+        </div>
+        @if (venue.Phone != null)
+        {
+            <div class="row">
+                @Html.DisplayFor(x => venue.Phone)
+            </div>
+        }
+        <div class="row">
+            <br/>@Html.ActionLink("Click here to view venue details", "Details", new {id = venue.VenueId})
+        </div>
+    </div>
+    <hr/>
+}

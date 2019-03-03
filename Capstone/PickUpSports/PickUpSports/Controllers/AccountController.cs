@@ -10,6 +10,7 @@ using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 using PickUpSports.DAL;
 using PickUpSports.Models;
+using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Controllers
 {

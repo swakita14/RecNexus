@@ -1,5 +1,6 @@
 ﻿using PickUpSports.Models;
 using System.Data.Entity.ModelConfiguration;
+using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.DAL.Configurations
 {
@@ -19,7 +20,7 @@ namespace PickUpSports.DAL.Configurations
 
             Property(x => x.DayOfWeek)
                 .HasColumnName("DayOfWeek")
-                .HasColumnType("tinyint")
+                .HasColumnType("int")
                 .IsOptional();
 
             Property(x => x.BeginTime)

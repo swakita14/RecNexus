@@ -5,7 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
-using PickUpSports.Models;
+using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers

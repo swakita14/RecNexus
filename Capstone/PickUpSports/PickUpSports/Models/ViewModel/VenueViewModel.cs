@@ -1,6 +1,8 @@
-﻿namespace PickUpSports.Models
+﻿using System.Collections.Generic;
+
+namespace PickUpSports.Models.ViewModel
 {
-    public class Venue
+    public class VenueViewModel
     {
         public int VenueId { get; set; }
 
@@ -18,7 +20,10 @@
 
         public string ZipCode { get; set; }
 
-        public string GooglePlaceId { get; set; }
-    }
+        public List<BusinessHoursViewModel> BusinessHours { get; set; }
 
+        public decimal? AverageRating{ get; set; }
+
+        public List<ReviewViewModel> Reviews { get; set; }
+    }
 }
