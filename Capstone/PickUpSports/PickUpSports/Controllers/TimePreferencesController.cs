@@ -16,7 +16,7 @@ namespace PickUpSports.Controllers
         private PickUpContext _context = new PickUpContext();
 
         // GET: TimePreferences
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
             return View(_context.TimePreferences.ToList());
         }
@@ -30,14 +30,8 @@ namespace PickUpSports.Controllers
             //find the contact
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
 
-            //match the contactId w/ the time preference using ID
-            TimePreference timePreference = _context.TimePreferences.FirstOrDefault(x => x.ContactID == contact.ContactId);
-
-            if (timePreference == null)
-            {
-                return HttpNotFound();
-            }
-            return View(timePreference);
+            //Send a list of time preferences back that match the contact id
+            return View(_context.TimePreferences.Where(x => x.ContactID == contact.ContactId).ToList());
         }
 
         // GET: TimePreferences/Create
