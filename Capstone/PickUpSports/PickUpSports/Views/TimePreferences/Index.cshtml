@@ -1,0 +1,51 @@
+﻿@model IEnumerable<PickUpSports.Models.DatabaseModels.TimePreference>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DayOfWeek)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BeginTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DayOfWeek)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BeginTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.TimePrefID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.TimePrefID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.TimePrefID })
+        </td>
+    </tr>
+}
+
+</table>
