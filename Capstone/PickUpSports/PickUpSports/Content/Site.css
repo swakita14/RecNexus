@@ -1,0 +1,55 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.header {
+    color: #36A0FF;
+    font-size: 27px;
+    padding: 10px;
+}
+.bigicon {
+    font-size: 30px;
+    color: #36A0FF;
+}
+
+#Status {
+    color: red;
+}
+
+.googleButton {
+    background: url(../Content/images/googleSignIn.png) no-repeat;
+    cursor: pointer;
+    border: none;
+}
+
+.place-rating {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid;
+    border-color: #989898;
+    border-radius: 5px;
+    background-color: #F0F0F0;
+}
+
+.placed-rating hr {
+    margin-bottom: 20px;
+}
+

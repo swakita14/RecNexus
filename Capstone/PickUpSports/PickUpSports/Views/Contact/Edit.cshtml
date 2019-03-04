@@ -1,0 +1,101 @@
+﻿@model PickUpSports.Models.ViewModel.EditContactViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+ <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-sm">
+
+                <fieldset>
+                    <legend class="text-center header">Edit Your Information</legend>
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-user bigicon"></i></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-home bigicon"></i></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 1" } })
+                            @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address 2 (Optional)" } })
+                            @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-map-marker bigicon"></i></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City" } })
+                            @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "State" } })
+                            @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code" } })
+                            @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-earphone bigicon"></i></span>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number" } })
+                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <br/><br/>
+
+                    <div class="form-group">
+                        <div class="col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

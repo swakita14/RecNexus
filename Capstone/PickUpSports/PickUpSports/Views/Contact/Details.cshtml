@@ -1,0 +1,134 @@
+﻿@model PickUpSports.Models.DatabaseModels.Contact
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well well-sm">
+
+                <fieldset>
+                    <legend class="text-center header">Your Information</legend>
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center">
+                            <i class="glyphicon glyphicon-user bigicon"></i>
+                        </span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.Username):</dt>
+                            <dd>@Html.DisplayFor(model => model.Username)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.FirstName):</dt>
+                            <dd>@Html.DisplayFor(model => model.FirstName)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.LastName):</dt>
+                            <dd>@Html.DisplayFor(model => model.LastName)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center">
+                            <i class="glyphicon glyphicon-envelope bigicon"></i>
+                        </span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.Email):</dt>
+                            <dd>@Html.DisplayFor(model => model.Email)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center">
+                            <i class="glyphicon glyphicon-home bigicon"></i>
+                        </span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.Address1):</dt>
+                            <dd>@Html.DisplayFor(model => model.Address1)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.Address2):</dt>
+                            <dd>@Html.DisplayFor(model => model.Address2)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center">
+                            <i class="glyphicon glyphicon-map-marker bigicon"></i>
+                        </span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.City):</dt>
+                            <dd>@Html.DisplayFor(model => model.City)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center"></span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.State):</dt>
+                            <dd>@Html.DisplayFor(model => model.State)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="form-group">
+                        <span class="col-md-1 col-md-offset-2 text-center">
+                            <i class="glyphicon glyphicon-earphone bigicon"></i>
+                        </span>
+                        <div class="col-md-5">
+                            <dt>@Html.DisplayNameFor(model => model.PhoneNumber):</dt>
+                            <dd>@Html.DisplayFor(model => model.PhoneNumber)</dd>
+                        </div>
+                    </div>
+                    <br /><br />
+                </fieldset>
+                @Html.HiddenFor(model => model.ContactId)
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    <center>
+        <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href='@Url.Action("Edit", "Contact", new { id = Model.ContactId})'" />
+        &nbsp;
+        <input type="button" class="btn btn-default" value="Change Password" onclick="location.href='@Url.Action("ChangePassword", "Manage")'" />
+        &nbsp;
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#confirm">Delete Account</button>
+    </center>
+    </p>
+
+@using (Html.BeginForm("Delete", "Contact", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ContactId)
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirmRemove" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmRemove">Confirm Deletion</h5>
+                </div>
+                <div class="modal-body">
+                    Please confirm that you want to delete your account <b>permanently</b>.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" name="Button">Yes, delete my account.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
