@@ -96,15 +96,29 @@ namespace PickUpSports.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TimePrefID,DayOfWeek,BeginTime,EndTime,ContactID")] TimePreference timePreference)
+        public ActionResult Edit(CreateTimePreferenceViewModel model)
         {
-            if (ModelState.IsValid)
+            //Get the user and match with the Time preference
+            string email = User.Identity.GetUserName();
+            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+
+            //edit existing time preference
+            TimePreference existing = new TimePreference()
             {
-                _context.Entry(timePreference).State = EntityState.Modified;
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(timePreference);
+                ContactID = contact.ContactId,
+                BeginTime = model.BeginTime,
+                DayOfWeek = (int)model.DayOfWeek,
+                EndTime = model.EndTime,
+                TimePrefID = model.TimePrefID
+                
+            };
+
+            //save changes
+            _context.Entry(existing).State = EntityState.Modified;
+            _context.SaveChanges();
+            return RedirectToAction("Details");
+
+            
         }
 
         // GET: TimePreferences/Delete/5
