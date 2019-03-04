@@ -10,6 +10,7 @@ using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
 {
+    [Authorize]
     public class TimePreferencesController : Controller
     {
         private PickUpContext _context = new PickUpContext();
@@ -23,11 +24,15 @@ namespace PickUpSports.Controllers
         // GET: TimePreferences/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            TimePreference timePreference = _context.TimePreferences.Find(id);
+            //Identify the person using email
+            string newContactEmail = User.Identity.GetUserName();
+
+            //find the contact
+            Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
+
+            //match the contactId w/ the time preference using ID
+            TimePreference timePreference = _context.TimePreferences.FirstOrDefault(x => x.ContactID == contact.ContactId);
+
             if (timePreference == null)
             {
                 return HttpNotFound();
@@ -46,7 +51,7 @@ namespace PickUpSports.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateTimePreference model)
+        public ActionResult Create(CreateTimePreferenceViewModel model)
         {
             //Check the model state
             if (!ModelState.IsValid) return View(model);
@@ -55,7 +60,6 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
-            Debug.Write(contact.ContactId);
             //Creating the TimePreference tieing in with contact using contact credentials (ContactID)
             TimePreference timePreference = new TimePreference()
             {
@@ -65,6 +69,7 @@ namespace PickUpSports.Controllers
                 EndTime = model.EndTime,
             };
 
+            //Save to dB
             _context.TimePreferences.Add(timePreference);
             _context.SaveChanges();
             
