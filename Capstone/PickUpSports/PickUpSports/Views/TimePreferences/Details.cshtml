@@ -1,0 +1,55 @@
+﻿@model IEnumerable<PickUpSports.Models.DatabaseModels.TimePreference>
+
+@{
+    ViewBag.Title = "Details";
+}
+<br/>
+<h2>Current List of Time Preferences:</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+
+    @if (Model.Count() > 0)
+    {
+        <tr>
+            <th>
+                @Html.DisplayName("Day of Week")
+            </th>
+            <th>
+                @Html.DisplayName("Begin Time")
+            </th>
+            <th>
+                @Html.DisplayName("End Time")
+            </th>
+            <th></th>
+        </tr>
+        foreach (var item in Model)
+         {
+             <tr>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.DayOfWeek)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.BeginTime)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.EndTime)
+                 </td>
+                 <td>
+                     @Html.ActionLink("Edit", "Edit", new {id = item.TimePrefID}) |
+                     @Html.ActionLink("Details", "Details", new {id = item.TimePrefID}) |
+                     @Html.ActionLink("Delete", "Delete", new {id = item.TimePrefID})
+                 </td>
+             </tr>
+         }
+    }
+    else
+    {
+        <div class="container">
+            <h4>No time preference set yet.</h4>
+        </div>
+    }
+
+</table>
