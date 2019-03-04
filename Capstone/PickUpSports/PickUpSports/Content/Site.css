@@ -40,3 +40,16 @@ textarea {
     border: none;
 }
 
+.place-rating {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid;
+    border-color: #989898;
+    border-radius: 5px;
+    background-color: #F0F0F0;
+}
+
+.placed-rating hr {
+    margin-bottom: 20px;
+}
+
