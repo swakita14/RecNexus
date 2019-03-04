@@ -98,18 +98,11 @@ namespace PickUpSports.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(CreateTimePreferenceViewModel model)
         {
-            /**
-            if (ModelState.IsValid)
-            {
-                _context.Entry(timePreference).State = EntityState.Modified;
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            **/
-
+            //Get the user and match with the Time preference
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
+            //edit existing time preference
             TimePreference existing = new TimePreference()
             {
                 ContactID = contact.ContactId,
@@ -120,6 +113,7 @@ namespace PickUpSports.Controllers
                 
             };
 
+            //save changes
             _context.Entry(existing).State = EntityState.Modified;
             _context.SaveChanges();
             return RedirectToAction("Details");
