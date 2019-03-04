@@ -10,20 +10,21 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("Day of Week")
-        </th>
-        <th>
-            @Html.DisplayName("Begin Time")
-        </th>
-        <th>
-            @Html.DisplayName("End Time")
-        </th>
-        <th></th>
-    </tr>
+
     @if (Model.Count() > 0)
     {
+        <tr>
+            <th>
+                @Html.DisplayName("Day of Week")
+            </th>
+            <th>
+                @Html.DisplayName("Begin Time")
+            </th>
+            <th>
+                @Html.DisplayName("End Time")
+            </th>
+            <th></th>
+        </tr>
         foreach (var item in Model)
          {
              <tr>
@@ -46,8 +47,8 @@
     }
     else
     {
-        <div class="row">
-            You have not set any time availability.
+        <div class="container">
+            <h4>No time preference set yet.</h4>
         </div>
     }
 

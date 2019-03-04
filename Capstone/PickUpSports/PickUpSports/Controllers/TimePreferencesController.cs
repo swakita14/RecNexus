@@ -67,7 +67,7 @@ namespace PickUpSports.Controllers
             _context.TimePreferences.Add(timePreference);
             _context.SaveChanges();
             
-             return RedirectToAction("Index", "TimePreferences");
+             return RedirectToAction("Details", "TimePreferences");
 
         }
 
