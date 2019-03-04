@@ -13,7 +13,12 @@ namespace PickUpSports.Controllers
     [Authorize]
     public class TimePreferencesController : Controller
     {
-        private PickUpContext _context = new PickUpContext();
+        private readonly PickUpContext _context;
+
+        public TimePreferencesController(PickUpContext context)
+        {
+            _context = context;
+        }
 
         // GET: TimePreferences
         public ActionResult Index(int? id)
