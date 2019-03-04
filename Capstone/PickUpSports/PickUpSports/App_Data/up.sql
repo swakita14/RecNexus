@@ -68,3 +68,25 @@ CREATE TABLE Review
 	CONSTRAINT FK_Review_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID),
 	CONSTRAINT FK_Review_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
 );
+
+CREATE TABLE [dbo].[Sport](
+    [SportID]    INT IDENTITY(1,1) NOT NULL,
+    [SportName]     NVARCHAR (256) NOT NULL,
+    CONSTRAINT [PK_dbo.Sport] PRIMARY KEY CLUSTERED ([SportID] ASC),
+);
+
+INSERT INTO [dbo].[Sport] (SportName) VALUES
+('Football'),
+('Basketball'),
+('Tennis');
+GO 
+
+CREATE TABLE [dbo].[SportPreference](
+    [SportPrefID]    INT IDENTITY(1,1) NOT NULL,
+	[SportID]		INT		NOT NULL,
+    [ContactID]		INT	               NOT NULL,
+
+    CONSTRAINT [PK_dbo.SportPreference] PRIMARY KEY CLUSTERED ([SportPrefID] ASC),
+    CONSTRAINT [FK1_dbo.Contact] FOREIGN KEY (ContactID) REFERENCES [dbo].[Contact] (ContactId),
+	CONSTRAINT [FK2_dbo.Sport] FOREIGN KEY (SportID) REFERENCES [dbo].[Sport] (SportId)
+);

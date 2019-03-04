@@ -237,6 +237,8 @@
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\ReviewConfiguration.cs" />
+    <Compile Include="DAL\Configurations\SportConfiguration.cs" />
+    <Compile Include="DAL\Configurations\SportPreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\TimePreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\VenueConfiguration.cs" />
     <Compile Include="Global.asax.cs">
@@ -247,6 +249,8 @@
     <Compile Include="Models\CaptchaResponse.cs" />
     <Compile Include="Models\DatabaseModels\Contact.cs" />
     <Compile Include="DAL\PickUpContext.cs" />
+    <Compile Include="Models\DatabaseModels\Sport.cs" />
+    <Compile Include="Models\DatabaseModels\SportPreference.cs" />
     <Compile Include="Models\Enums\DayOfWeek.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
