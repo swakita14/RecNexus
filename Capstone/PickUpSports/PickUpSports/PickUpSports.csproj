@@ -234,6 +234,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
+    <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\ReviewConfiguration.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interface\IVenueServices.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DatabaseModels\BusinessHours.cs" />
     <Compile Include="Models\CaptchaResponse.cs" />
@@ -305,15 +307,14 @@
     <Content Include="Scripts\angular-touch.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
-    <Content Include="Scripts\app\app.js" />
-    <Content Include="Scripts\app\MainController.js" />
+    <Content Include="Scripts\app\Sort.js" />
+    <Content Include="Scripts\app\SortController.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="AppSettingsSecrets.config" />
-
     <None Include="Properties\PublishProfiles\PickupSports-Development - Web Deploy.pubxml" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular.min.js.map" />
@@ -328,7 +329,6 @@
     <Content Include="Scripts\angular-cookies.min.js.map" />
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
-
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
@@ -1117,12 +1117,10 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Web_deploy.config" />
     <Content Include="Views\Venue\Index.cshtml" />
-
     <Content Include="Scripts\version.json" />
-    <Content Include="Views\Home\Main.cshtml" />
     <Content Include="Views\Venue\Details.cshtml" />
     <Content Include="Views\Review\Create.cshtml" />
-
+    <Content Include="Views\Venue\Map.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
@@ -1143,7 +1141,9 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\VenueMap\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -40,3 +40,16 @@ textarea {
     border: none;
 }
 
+.map-canvas {
+    width: 100%;
+    height: 400px;
+}
+
+.body-content {
+    padding-top: 1em;
+}
+
+.active {
+    border-top: 2px solid #ff6a00;
+}
+

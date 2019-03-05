@@ -78,6 +78,14 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
+        public ActionResult Map()
+        {
+            return View();
+        }
+
+       
+       
+
         /**
          * Get venue, hours, and review data for single Venue and return to view
          */

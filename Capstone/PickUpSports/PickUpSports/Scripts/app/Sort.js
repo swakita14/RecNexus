@@ -4,9 +4,9 @@ app
     .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
-                .when('/start', { templateUrl: './home/main', controller: 'MainController' })
+                .when('/start', { templateUrl: './venue/map', controller: 'SortController' })
                 .otherwise({ redirectTo: '/start' });
         }])
-    .controller('RootController', ['$scope', '$route', '$routeParams', '$location',
+    .controller('SortController', ['$scope', '$route', '$routeParams', '$location',
         function($scope, $route, $routeParams, $location) {
         }]);

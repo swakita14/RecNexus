@@ -5,24 +5,51 @@
 
 <h2><i>Local Sports Venues</i></h2>
 <hr />
-@foreach (var venue in Model)
-{
-    <div class="container">
-        <div class="row">
-            @Html.DisplayFor(x => venue.Name)
-        </div>
-        <div class="row">
-            @Html.DisplayFor(x => venue.Address1), @Html.DisplayFor(x => venue.City), @Html.DisplayFor(x => venue.State), @Html.DisplayFor(x => venue.ZipCode)
-        </div>
-        @if (venue.Phone != null)
-        {
+
+
+
+<div ng-app="myApp">
+    <div ng-controller="SortController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+
+        <div class="container" ng-repeat="venue in venues ">
             <div class="row">
-                @Html.DisplayFor(x => venue.Phone)
+                {{venue.Name}}
             </div>
-        }
-        <div class="row">
-            <br/>@Html.ActionLink("Click here to view venue details", "Details", new {id = venue.VenueId})
+            <div class="row" ng-model="venue">
+                {{venue.Address1}}, {{venue.City}}, {{venue.State}}, {{venue.ZipCode}}
+            </div>
+            <div class="row">
+                {{venue.Phone}}
+            </div>
+
+            <div class="row">
+                <br />@{
+                    var url = Url.Action("Details", "Venue", new { id = "{{id=venue.VenueId}}" });
+                    url = HttpUtility.UrlDecode(url);
+                }
+                <a data-ng-href="@url">Click here to view venue details</a>
+            </div>
+            <br />
+            <button class="btn btn-default" ng-click="showMe()">Show me</button>
+            <hr />
         </div>
+
     </div>
-    <hr/>
+</div>
+
+<div class="w3-display-container w3-animate-opacity">
+    <div class="map-canvas" ng-></div>
+</div>
+
+@section PageScript{
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/angularapp")
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyArLYVrPG-JsjZSp4fyzp6um8qWoLfJAlw"></script>
+
+
 }
+
+
+
+

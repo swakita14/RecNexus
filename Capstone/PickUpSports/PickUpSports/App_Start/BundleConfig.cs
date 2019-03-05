@@ -32,8 +32,8 @@ namespace PickUpSports
                         "~/Scripts/angular-route.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angularapp").Include(
-                        "~/Scripts/app/app.js",
-                        "~/Scripts/app/MainController.js"));
+                        "~/Scripts/app/Sort.js",
+                        "~/Scripts/app/SortController.js"));
         }
     }
 }
