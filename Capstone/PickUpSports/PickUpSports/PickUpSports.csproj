@@ -233,6 +233,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Controllers\TimePreferencesController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
@@ -261,7 +262,7 @@
     <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
-    <Compile Include="Models\ViewModel\TimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\CreateTimePreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -1120,6 +1121,12 @@
     <Content Include="Views\Venue\Details.cshtml" />
     <Content Include="Views\Review\Create.cshtml" />
     <Content Include="Views\Venue\Map.cshtml" />
+    <Content Include="Views\TimePreferences\Create.cshtml" />
+    <Content Include="Views\TimePreferences\Delete.cshtml" />
+    <Content Include="Views\TimePreferences\Details.cshtml" />
+    <Content Include="Views\TimePreferences\Edit.cshtml" />
+    <Content Include="Views\TimePreferences\Index.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
