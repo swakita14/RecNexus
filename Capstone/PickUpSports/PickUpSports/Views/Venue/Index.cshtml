@@ -6,12 +6,15 @@
 <h2><i>Local Sports Venues</i></h2>
 <hr />
 
-
+<div class="w3-container">
+    <h3>Google Map</h3>
+    <div class="map-canvas" id="map"></div>
+</div>
 
 <div ng-app="myApp">
     <div ng-controller="SortController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
-
-        <div class="container" ng-repeat="venue in venues ">
+        <input type ="number" name="Distance" min ="1" max ="100" />
+        <div class="w3-row-padding w3-center w3-theme-l1" ng-repeat="venue in venues ">
             <div class="row">
                 {{venue.Name}}
             </div>
@@ -37,15 +40,14 @@
     </div>
 </div>
 
-<div class="w3-display-container w3-animate-opacity">
-    <div class="map-canvas" ng-></div>
-</div>
+
 
 @section PageScript{
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/angularapp")
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyArLYVrPG-JsjZSp4fyzp6um8qWoLfJAlw"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhpsA4b1SN5lLKDWItkbWRc6vCqf-b87M&callback=initMap"
+            type="text/javascript"></script>
 
 
 }
