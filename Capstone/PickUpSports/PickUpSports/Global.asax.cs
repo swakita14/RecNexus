@@ -3,9 +3,9 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
-using PickUpSports.Data.GoogleAPI;
-using PickUpSports.Data.GoogleAPI.Interfaces;
 using PickUpSports.DAL;
+using PickUpSports.GoogleApi;
+using PickUpSports.Interface;
 using RestSharp;
 
 namespace PickUpSports

@@ -13,6 +13,7 @@ namespace PickUpSports.DAL
         public DbSet<BusinessHours> BusinessHours { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Location> Locations { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder builder)
@@ -23,7 +24,7 @@ namespace PickUpSports.DAL
             builder.Configurations.Add(new BusinessHoursConfiguration());
             builder.Configurations.Add(new VenueConfiguration());
             builder.Configurations.Add(new ReviewConfiguration());
-
+            builder.Configurations.Add(new LocationConfiguration());
         }
     }
 }

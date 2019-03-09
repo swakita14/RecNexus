@@ -238,19 +238,25 @@
     <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
+    <Compile Include="DAL\Configurations\LocationConfiguration.cs" />
     <Compile Include="DAL\Configurations\ReviewConfiguration.cs" />
     <Compile Include="DAL\Configurations\TimePreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\VenueConfiguration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="GoogleApi\PlacesApiClient.cs" />
+    <Compile Include="Interface\IPlacesApiClient.cs" />
     <Compile Include="Interface\IVenueServices.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DatabaseModels\BusinessHours.cs" />
     <Compile Include="Models\CaptchaResponse.cs" />
     <Compile Include="Models\DatabaseModels\Contact.cs" />
     <Compile Include="DAL\PickUpContext.cs" />
+    <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\DayOfWeek.cs" />
+    <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
+    <Compile Include="Models\GoogleApiModels\PlaceSearchResponse.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\DatabaseModels\Review.cs" />
@@ -1126,13 +1132,6 @@
     <Content Include="Views\TimePreferences\Details.cshtml" />
     <Content Include="Views\TimePreferences\Edit.cshtml" />
     <Content Include="Views\TimePreferences\Index.cshtml" />
-
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
-      <Project>{67E10F34-47F7-4373-BAA8-AAF116C8683C}</Project>
-      <Name>PickUpSports.Data.GoogleAPI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

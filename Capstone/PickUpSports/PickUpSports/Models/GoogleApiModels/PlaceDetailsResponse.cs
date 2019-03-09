@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace PickUpSports.Data.GoogleAPI.Models
+namespace PickUpSports.Models.GoogleApiModels
 {
     public class AddressComponent
     {
@@ -81,6 +81,51 @@ namespace PickUpSports.Data.GoogleAPI.Models
         public List<string> WeekdayText { get; set; }
     }
 
+    public class Northeast
+    {
+        [JsonProperty("lat")]
+        public double Latitude { get; set; }
+
+        [JsonProperty("lng")]
+        public double Longitude { get; set; }
+    }
+
+    public class Southwest
+    {
+        [JsonProperty("lat")]
+        public double Latitude { get; set; }
+
+        [JsonProperty("lng")]
+        public double Longitude { get; set; }
+    }
+
+    public class Viewport
+    {
+        [JsonProperty("northeast")]
+        public Northeast Northeast { get; set; }
+
+        [JsonProperty("southwest")]
+        public Southwest Southwest { get; set; }
+    }
+
+    public class GeometryLocation
+    {
+        [JsonProperty("lat")]
+        public double Latitude { get; set; }
+
+        [JsonProperty("lng")]
+        public double Longitude { get; set; }
+    }
+
+    public class Geometry
+    {
+        [JsonProperty("location")]
+        public GeometryLocation GeometryLocation { get; set; }
+
+        [JsonProperty("viewport")]
+        public Viewport Viewport { get; set; }
+    }
+
     public class PlaceDetailsResult
     {
         [JsonProperty("address_components")]
@@ -97,6 +142,9 @@ namespace PickUpSports.Data.GoogleAPI.Models
 
         [JsonProperty("formatted_phone_number")]
         public string FormattedPhoneNumber { get; set; }
+
+        [JsonProperty("geometry")]
+        public Geometry Geometry { get; set; }
     }
 
     public class PlaceDetailsResponse
