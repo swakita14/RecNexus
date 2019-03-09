@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json;
-using PickUpSports.Data.GoogleAPI.Interfaces;
-using PickUpSports.Data.GoogleAPI.Models;
+using PickUpSports.Interface;
+using PickUpSports.Models.GoogleApiModels;
 using RestSharp;
-using static System.String;
 
-namespace PickUpSports.Data.GoogleAPI
+namespace PickUpSports.GoogleApi
 {
     public class PlacesApiClient : IPlacesApiClient
     {
@@ -55,7 +53,7 @@ namespace PickUpSports.Data.GoogleAPI
             request.AddQueryParameter("placeid", placeId);
 
             // Only pull name, business hours, reviews, and address data
-            request.AddQueryParameter("fields", "name,opening_hours,reviews,address_component,formatted_phone_number");
+            request.AddQueryParameter("fields", "geometry,name,opening_hours,reviews,address_component,formatted_phone_number");
 
             // Get responses from API using above request
             IRestResponse response = _client.Execute(request);

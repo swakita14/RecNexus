@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using PickUpSports.Data.GoogleAPI.Models;
+using PickUpSports.Models.GoogleApiModels;
 
-namespace PickUpSports.Data.GoogleAPI.Interfaces
+namespace PickUpSports.Interface
 {
     public interface IPlacesApiClient
     {

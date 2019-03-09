@@ -4,10 +4,10 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using PickUpSports.Data.GoogleAPI.Interfaces;
-using PickUpSports.Data.GoogleAPI.Models;
 using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
+using PickUpSports.Models.GoogleApiModels;
 using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
@@ -247,6 +247,23 @@ namespace PickUpSports.Controllers
                         _context.Reviews.Add(reviewEntity);
                     }
 
+                    _context.SaveChanges();
+                }
+
+                // Map Location API response to Location database entity
+                if (venueDetails.Result.Geometry != null)
+                {
+                    Location locationEntity = new Location
+                    {
+                        Latitude =
+                            venueDetails.Result.Geometry.GeometryLocation.Latitude.ToString(CultureInfo.InvariantCulture),
+                        Longitude =
+                            venueDetails.Result.Geometry.GeometryLocation.Longitude.ToString(CultureInfo.InvariantCulture),
+                        VenueId = venue.VenueId
+                    };
+
+                    // Add Location entity
+                    _context.Locations.Add(locationEntity);
                     _context.SaveChanges();
                 }
             }
