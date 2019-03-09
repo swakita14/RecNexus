@@ -215,11 +215,11 @@ namespace PickUpSports.Controllers
                     {
                         hours.DayOfWeek = period.Open.Day;
 
-                        DateTime.TryParseExact(period.Open?.Time, "HHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var openDateTime);
-                        hours.OpenTime = openDateTime.TimeOfDay;
+                        string openTime = period.Open?.Time.Insert(2, ":");
+                        hours.OpenTime = DateTime.Parse(openTime).TimeOfDay;
 
-                        DateTime.TryParseExact(period.Close?.Time, "HHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var closeDateTime);
-                        hours.CloseTime = closeDateTime.TimeOfDay;
+                        string closeTime = period.Close?.Time.Insert(2, ":");
+                        hours.CloseTime = DateTime.Parse(closeTime).TimeOfDay;
 
                         // Add BusinessHours entity
                         _context.BusinessHours.Add(hours);
