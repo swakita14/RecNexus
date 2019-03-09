@@ -1,0 +1,38 @@
+﻿@model PickUpSports.Models.ViewModel.CreateSportPreferenceViewModel
+
+@{
+    ViewBag.Title = "Add Your Sport Preferences";
+}
+
+<div class="container wrapped">
+    <h4><b><i>@Model.ContactUsername</i>'s sport preferences</b></h4>
+
+    @using (Html.BeginForm("Create", "SportPreferences", FormMethod.Post))
+    {
+        <form>
+            @Html.HiddenFor(model => model.ContactID)
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <br />@Html.DisplayNameFor(model => model.SportName):
+                    <label class="checkbox"><input type="checkbox" value=3 name="SportID">Tennis</label>
+                    <label class="checkbox"><input type="checkbox" value=2 name="SportID">Basketball</label>
+                    <label class="checkbox"><input type="checkbox" value=1 name="SportID">Football</label>
+                </div>
+            </div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <button type="submit" class="btn btn-default">Save Changes</button>
+                    </div>
+                </div>
+        </form>
+      
+    }
+</div>
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
