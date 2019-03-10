@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PickUpSports.Models.ViewModel
 {
-    public class List<CreateSportPreferenceViewModel>
+    public class CreateSportPreferenceViewModel
     {
         public int ContactID { get; set; }
         public string ContactUsername { get; set; }

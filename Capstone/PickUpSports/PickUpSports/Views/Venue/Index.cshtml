@@ -5,6 +5,11 @@
 
 <h2><i>Local Sports Venues</i></h2>
 <hr />
+<p>
+    <center>
+        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort})
+    </center>
+</p>
 @foreach (var venue in Model)
 {
     <div class="container">

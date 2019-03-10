@@ -42,7 +42,7 @@ namespace PickUpSports.Controllers
 
             //find the contact
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
-            var model = new List<CreateSportPreferenceViewModel>
+            var model = new CreateSportPreferenceViewModel
             {
                 ContactID = contact.ContactId,
                 ContactUsername = contact.Username
@@ -54,7 +54,7 @@ namespace PickUpSports.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(List<CreateSportPreferenceViewModel> model)
+        public ActionResult Create(CreateSportPreferenceViewModel model)
         {
             string email = User.Identity.GetUserName();
             //string name =;
