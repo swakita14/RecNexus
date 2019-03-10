@@ -5,7 +5,6 @@
 
 <h2><i>Local Sports Venues</i></h2>
 <hr />
-<<<<<<< HEAD
 <p>
     <center>
         @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort})
@@ -22,7 +21,6 @@
         </div>
         @if (venue.Phone != null)
         {
-=======
 
 <div class="w3-container">
     <h3>Google Map</h3>
@@ -33,7 +31,6 @@
     <div ng-controller="SortController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
         <input type ="number" name="Distance" min ="1" max ="100" />
         <div class="w3-row-padding w3-center w3-theme-l1" ng-repeat="venue in venues ">
->>>>>>> c381d77a0a98f95f60a8a92897e31d672f7a0b5c
             <div class="row">
                 {{venue.Name}}
             </div>

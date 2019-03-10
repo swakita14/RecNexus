@@ -277,12 +277,9 @@
     <Compile Include="Models\CaptchaResponse.cs" />
     <Compile Include="Models\DatabaseModels\Contact.cs" />
     <Compile Include="DAL\PickUpContext.cs" />
-<<<<<<< HEAD
     <Compile Include="Models\DatabaseModels\Sport.cs" />
     <Compile Include="Models\DatabaseModels\SportPreference.cs" />
-=======
     <Compile Include="Models\DatabaseModels\Location.cs" />
->>>>>>> c381d77a0a98f95f60a8a92897e31d672f7a0b5c
     <Compile Include="Models\Enums\DayOfWeek.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceSearchResponse.cs" />

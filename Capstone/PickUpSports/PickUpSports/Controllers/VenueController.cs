@@ -96,22 +96,14 @@ namespace PickUpSports.Controllers
             }
             return View(model);
         }
-
-<<<<<<< HEAD
-=======
         public ActionResult Map()
         {
             return View();
         }
-
-       
-       
->>>>>>> c381d77a0a98f95f60a8a92897e31d672f7a0b5c
-
-        /**
-         * Get venue, hours, and review data for single Venue and return to view
-         */
-        public ActionResult Details(int id)
+            /**
+             * Get venue, hours, and review data for single Venue and return to view
+             */
+            public ActionResult Details(int id)
         {
             // Model to be sent to view
             VenueViewModel model = new VenueViewModel();
