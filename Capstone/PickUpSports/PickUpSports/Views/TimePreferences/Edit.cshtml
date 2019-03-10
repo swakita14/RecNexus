@@ -12,44 +12,32 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div class="well well-sm">
+            <div class="well well-sm form-group">
+                <fieldset>
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(model => model.TimePrefID)
+                    <legend class="text-center header">Edit Your Time Preferences</legend>
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Select Day of Week:</label>
+                            @Html.DropDownList("DayOfWeek", new SelectList(Enum.GetValues(typeof(DayOfWeek))), "Select Day of Week", new { @class = "form-control" })                           
+                        </div>
+                        <div class="form-group">
+                            <label for="BeginTime">Select Beginning Time:</label>
+                            @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Begin Time:" } })
+                            @Html.ValidationMessageFor(model => model.BeginTime, "", new { @class = "text-danger" })
+                            <small id="emailHelp" class="form-text text-muted">Select time between 00:00 to 23:59</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="EndTime">Select Ending Time:</label>
+                            @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "End Time:" } })
+                            @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                            <small id="emailHelp" class="form-text text-muted">Select time between 00:00 to 23:59</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </fieldset>
 
-                    <fieldset>
-                        <legend class="text-center header">Edit Your Information</legend>
-                        <div class="form-group">
-                            <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-calendar bigicon"></i></span>
-                            <div class="col-md-5">
-                                @Html.DropDownList("DayOfWeek", new SelectList(Enum.GetValues(typeof(DayOfWeek))), "Select Day of Week", new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <br /><br />
-                        <div class="form-group">
-                            <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-time bigicon"></i></span>
-                            <div class="col-md-5">
-                                @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Begin Time:" } })
-                                @Html.ValidationMessageFor(model => model.BeginTime, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <br /><br />
-                        <div class="form-group">
-                            <span class="col-md-1 col-md-offset-2 text-center"></span>
-                            <div class="col-md-5">
-                                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "End Time:" } })
-                                @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <br /><br />
-                        <div class="form-group">
-                            <div class="col-md-12 text-center">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                </div>
             </div>
         </div>
     </div>
