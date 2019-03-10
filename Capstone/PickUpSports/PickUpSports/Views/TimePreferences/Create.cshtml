@@ -14,20 +14,35 @@
             <div class="well well-sm">
 
                 <fieldset>
-                    <legend class="text-center header">Add New Time Preferences</legend>
+                    <legend class="text-center header">Add New Time Preference</legend>
                     <div class="form-group">
-                        <label class="control-label col-sm-3" for="email">Select Day of Week:</label>
-                        @Html.DropDownList("DayOfWeek", new SelectList(Enum.GetValues(typeof(DayOfWeek))), "Select Day of Week", new { @class = "form-control" })                           
+                        <label class="control-label col-sm-3" for="day">Select Day of Week:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                            @Html.DropDownList("DayOfWeek", new SelectList(Enum.GetValues(typeof(DayOfWeek))), "Select Day of Week", new { @class = "form-control" })                           
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-3" for="email">Beginning Time:</label>
-                        @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Begin Time" } })
+                        <label class="control-label col-sm-3" for="btime">Beginning Time:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </div>
+                            @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Begin Time" } })
+                        </div>
                         @Html.ValidationMessageFor(model => model.BeginTime, "", new { @class = "text-danger" })
                             
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-3" for="email">Ending Time:</label>
-                        @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter End Time" } })
+                        <label class="control-label col-sm-3" for="etime">Ending Time:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </div>
+                            @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter End Time" } })
+                        </div>
                         @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })                     
                     </div>
                     <div class="form-group">

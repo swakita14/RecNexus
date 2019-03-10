@@ -33,7 +33,7 @@ namespace PickUpSports.Controllers
 
 
             //Send a list of time preferences back that match the contact id
-            return View(_context.TimePreferences.Where(x => x.ContactID == contact.ContactId).ToList());
+            return View(_context.TimePreferences.Where(x => x.ContactID == contact.ContactId).OrderBy(x => x.DayOfWeek).ToList());
         }
 
         // GET: TimePreferences/Create
