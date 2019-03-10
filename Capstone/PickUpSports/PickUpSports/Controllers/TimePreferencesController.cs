@@ -59,6 +59,8 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
+            ViewBag.DayOfWeeks = new SelectList(_context.TimePreferences, "DayOfWeek", "Day");
+
             //Creating the TimePreference tieing in with contact using contact credentials (ContactID)
             TimePreference timePreference = new TimePreference()
             {
@@ -83,6 +85,7 @@ namespace PickUpSports.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            ViewBag.DayOfWeeks = new SelectList(_context.TimePreferences, "DayOfWeek", "DayOfWeek");
             TimePreference timePreference = _context.TimePreferences.Find(id);
             if (timePreference == null)
             {
@@ -101,6 +104,8 @@ namespace PickUpSports.Controllers
             //Get the user and match with the Time preference
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+
+            ViewBag.DayOfWeeks = new SelectList(_context.TimePreferences, "TimePrefID", "Day");
 
             //edit existing time preference
             TimePreference existing = new TimePreference()

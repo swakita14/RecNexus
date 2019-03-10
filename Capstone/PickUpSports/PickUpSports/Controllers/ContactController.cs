@@ -10,6 +10,7 @@ using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
 {
+    [Authorize]
     public class ContactController : Controller
     {
         private readonly PickUpContext _context;
