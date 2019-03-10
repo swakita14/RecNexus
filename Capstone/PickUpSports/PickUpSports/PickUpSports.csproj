@@ -307,6 +307,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\responsive.css" />
     <Content Include="Content\w3-theme.css" />
     <Content Include="Content\w3.css" />
     <Content Include="favicon.ico" />
@@ -1161,6 +1162,7 @@
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
+    <Content Include="Views\TimePreferences\Edit1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
