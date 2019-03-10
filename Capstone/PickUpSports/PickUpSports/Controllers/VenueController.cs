@@ -4,10 +4,10 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using PickUpSports.Data.GoogleAPI.Interfaces;
-using PickUpSports.Data.GoogleAPI.Models;
 using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
+using PickUpSports.Models.GoogleApiModels;
 using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
@@ -97,6 +97,16 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
+<<<<<<< HEAD
+=======
+        public ActionResult Map()
+        {
+            return View();
+        }
+
+       
+       
+>>>>>>> c381d77a0a98f95f60a8a92897e31d672f7a0b5c
 
         /**
          * Get venue, hours, and review data for single Venue and return to view
@@ -227,11 +237,11 @@ namespace PickUpSports.Controllers
                     {
                         hours.DayOfWeek = period.Open.Day;
 
-                        DateTime.TryParseExact(period.Open?.Time, "HHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var openDateTime);
-                        hours.OpenTime = openDateTime.TimeOfDay;
+                        string openTime = period.Open?.Time.Insert(2, ":");
+                        hours.OpenTime = DateTime.Parse(openTime).TimeOfDay;
 
-                        DateTime.TryParseExact(period.Close?.Time, "HHmm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var closeDateTime);
-                        hours.CloseTime = closeDateTime.TimeOfDay;
+                        string closeTime = period.Close?.Time.Insert(2, ":");
+                        hours.CloseTime = DateTime.Parse(closeTime).TimeOfDay;
 
                         // Add BusinessHours entity
                         _context.BusinessHours.Add(hours);
@@ -259,6 +269,23 @@ namespace PickUpSports.Controllers
                         _context.Reviews.Add(reviewEntity);
                     }
 
+                    _context.SaveChanges();
+                }
+
+                // Map Location API response to Location database entity
+                if (venueDetails.Result.Geometry != null)
+                {
+                    Location locationEntity = new Location
+                    {
+                        Latitude =
+                            venueDetails.Result.Geometry.GeometryLocation.Latitude.ToString(CultureInfo.InvariantCulture),
+                        Longitude =
+                            venueDetails.Result.Geometry.GeometryLocation.Longitude.ToString(CultureInfo.InvariantCulture),
+                        VenueId = venue.VenueId
+                    };
+
+                    // Add Location entity
+                    _context.Locations.Add(locationEntity);
                     _context.SaveChanges();
                 }
             }
