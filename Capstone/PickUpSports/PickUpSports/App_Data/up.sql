@@ -69,6 +69,17 @@ CREATE TABLE Review
 	CONSTRAINT FK_Review_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
 );
 
+CREATE TABLE [dbo].[Location]
+(
+	LocationID int IDENTITY(1,1) NOT NULL,
+	Latitude nvarchar(50) NULL,
+	Longitude nvarchar(50) NULL,
+	VenueID int NOT NULL,
+	CONSTRAINT PK_Location PRIMARY KEY (LocationID),
+	CONSTRAINT FK_Location_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
+
+);
+
 CREATE TABLE [dbo].[Sport](
     [SportID]    INT IDENTITY(1,1) NOT NULL,
     [SportName]     NVARCHAR (256) NOT NULL,
@@ -90,13 +101,3 @@ CREATE TABLE [dbo].[SportPreference](
     CONSTRAINT [FK1_dbo.Contact] FOREIGN KEY (ContactID) REFERENCES [dbo].[Contact] (ContactId),
 	CONSTRAINT [FK2_dbo.Sport] FOREIGN KEY (SportID) REFERENCES [dbo].[Sport] (SportId)
 )
-CREATE TABLE [dbo].[Location]
-(
-	LocationID int IDENTITY(1,1) NOT NULL,
-	Latitude nvarchar(50) NULL,
-	Longitude nvarchar(50) NULL,
-	VenueID int NOT NULL,
-	CONSTRAINT PK_Location PRIMARY KEY (LocationID),
-	CONSTRAINT FK_Location_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
-
-);
