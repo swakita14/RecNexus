@@ -1,0 +1,40 @@
+﻿@model IEnumerable<PickUpSports.Models.DatabaseModels.SportPreference>
+
+    @{
+        ViewBag.Title = "Details";
+    }
+
+    <h2>Details</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+
+    <div>
+        <h4>SportPreference</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ContactID)
+            </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.SportID)
+            </dt>
+
+            @foreach (var item in Model)
+            {
+                <dd>
+                    @Html.DisplayFor(model => item.ContactID)
+                </dd>
+                <dd>
+                    @Html.DisplayFor(model => item.SportID)
+                </dd>
+                <dd>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.SportPrefID })
+                </dd>
+            }
+        </dl>
+    </div>
+
+
+

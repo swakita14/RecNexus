@@ -254,6 +254,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Controllers\SportPreferencesController.cs" />
     <Compile Include="Controllers\TimePreferencesController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\VenueMapController.cs" />
@@ -261,6 +262,8 @@
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\LocationConfiguration.cs" />
     <Compile Include="DAL\Configurations\ReviewConfiguration.cs" />
+    <Compile Include="DAL\Configurations\SportConfiguration.cs" />
+    <Compile Include="DAL\Configurations\SportPreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\TimePreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\VenueConfiguration.cs" />
     <Compile Include="Global.asax.cs">
@@ -274,6 +277,8 @@
     <Compile Include="Models\CaptchaResponse.cs" />
     <Compile Include="Models\DatabaseModels\Contact.cs" />
     <Compile Include="DAL\PickUpContext.cs" />
+    <Compile Include="Models\DatabaseModels\Sport.cs" />
+    <Compile Include="Models\DatabaseModels\SportPreference.cs" />
     <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\DayOfWeek.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
@@ -286,6 +291,7 @@
     <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
+    <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
@@ -1152,6 +1158,10 @@
     <Content Include="Views\TimePreferences\Details.cshtml" />
     <Content Include="Views\TimePreferences\Edit.cshtml" />
     <Content Include="Views\TimePreferences\Index.cshtml" />
+    <Content Include="Views\SportPreferences\Create.cshtml" />
+    <Content Include="Views\SportPreferences\Delete.cshtml" />
+    <Content Include="Views\SportPreferences\Details.cshtml" />
+    <Content Include="Views\SportPreferences\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

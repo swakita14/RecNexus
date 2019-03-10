@@ -23,7 +23,7 @@ namespace PickUpSports.Controllers
             _context = context;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string sortBy)
         {
             // Only want to update Venues database once a week
             Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
@@ -60,36 +60,50 @@ namespace PickUpSports.Controllers
 
             List<VenueViewModel> model = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
+
             foreach (var venue in venues)
             {
+                // get the rating 
+                List<Review> reviews = _context.Reviews.Where(r => r.VenueId == venue.VenueId).ToList();
+                decimal avgRating = (decimal)reviews.Average(r => r.Rating);
+
                 model.Add(new VenueViewModel
                 {
                     Address1 = venue.Address1,
                     Address2 = venue.Address2,
                     City = venue.City,
                     Name = venue.Name,
-                    Phone = venue.Phone, 
+                    Phone = venue.Phone,
                     State = venue.State,
                     VenueId = venue.VenueId,
-                    ZipCode = venue.ZipCode
+                    ZipCode = venue.ZipCode,
+                    // add rating to the model so can sort by rating
+                    AverageRating = avgRating
                 });
+                
             }
 
+            //implement sorting by rate fuction
+            ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
+            switch (sortBy)
+            {
+                case "RatingDesc":
+                    model=model.OrderByDescending(x=>x.AverageRating).ToList();
+                    break;
+                default:
+                    model=model.OrderBy(x => x.VenueId).ToList();
+                    break;
+            }
             return View(model);
         }
-
         public ActionResult Map()
         {
             return View();
         }
-
-       
-       
-
-        /**
-         * Get venue, hours, and review data for single Venue and return to view
-         */
-        public ActionResult Details(int id)
+            /**
+             * Get venue, hours, and review data for single Venue and return to view
+             */
+            public ActionResult Details(int id)
         {
             // Model to be sent to view
             VenueViewModel model = new VenueViewModel();
