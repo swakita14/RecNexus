@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PickUpSports.Models.DatabaseModels.TimePreference>
+﻿@using RestSharp.Extensions
+@model IEnumerable<PickUpSports.Models.DatabaseModels.TimePreference>
 
 @{
     ViewBag.Title = "Details";
@@ -30,7 +31,13 @@
          {
              <tr>
                  <td>
-                     @Html.DisplayFor(modelItem => item.DayOfWeek)
+                     @if(item.DayOfWeek == 0){ <p>Sunday</p>}
+                     else if(item.DayOfWeek == 1){ <p>Monday</p>}
+                     else if(item.DayOfWeek == 2){ <p>Tuesday</p>}
+                     else if(item.DayOfWeek == 3){ <p>Wednesday</p>}
+                     else if(item.DayOfWeek == 4){ <p>Thursday</p>}
+                     else if(item.DayOfWeek == 5){ <p>Friday</p>}
+                     @if(item.DayOfWeek == 6){ <p>Saturday</p>}
                  </td>
                  <td>
                      @Html.DisplayFor(modelItem => item.BeginTime)

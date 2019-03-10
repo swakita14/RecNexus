@@ -19,7 +19,7 @@
                     <div class="form-group">
                         <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-calendar bigicon"></i></span>
                         <div class="col-md-5">
-                            @Html.EnumDropDownListFor(model => model.DayOfWeek, new { htmlAttributes = new { @class = "form-control"})
+                            @Html.DropDownList("DayOfWeek", new SelectList(Enum.GetValues(typeof(DayOfWeek))),"Select Day of Week", new { @class = "form-control" })
                         </div>
                     </div>
                     <br /><br />

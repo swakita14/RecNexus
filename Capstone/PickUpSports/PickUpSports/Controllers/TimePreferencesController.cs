@@ -20,11 +20,6 @@ namespace PickUpSports.Controllers
             _context = context;
         }
 
-        // GET: TimePreferences
-        public ActionResult Index(int? id)
-        {
-            return View(_context.TimePreferences.ToList());
-        }
 
         // GET: TimePreferences/Details/5
         public ActionResult Details(int? id)
@@ -34,6 +29,7 @@ namespace PickUpSports.Controllers
 
             //find the contact
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
+
 
             //Send a list of time preferences back that match the contact id
             return View(_context.TimePreferences.Where(x => x.ContactID == contact.ContactId).ToList());
@@ -59,8 +55,6 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
-            ViewBag.DayOfWeeks = new SelectList(_context.TimePreferences, "DayOfWeek", "Day");
-
             //Creating the TimePreference tieing in with contact using contact credentials (ContactID)
             TimePreference timePreference = new TimePreference()
             {
@@ -85,7 +79,7 @@ namespace PickUpSports.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.DayOfWeeks = new SelectList(_context.TimePreferences, "DayOfWeek", "DayOfWeek");
+
             TimePreference timePreference = _context.TimePreferences.Find(id);
             if (timePreference == null)
             {
@@ -105,14 +99,13 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
 
-            ViewBag.DayOfWeeks = new SelectList(_context.TimePreferences, "TimePrefID", "Day");
 
             //edit existing time preference
             TimePreference existing = new TimePreference()
             {
                 ContactID = contact.ContactId,
                 BeginTime = model.BeginTime,
-                DayOfWeek = (int)model.DayOfWeek,
+                DayOfWeek = (int) model.DayOfWeek,
                 EndTime = model.EndTime,
                 TimePrefID = model.TimePrefID
                 
@@ -149,7 +142,7 @@ namespace PickUpSports.Controllers
             TimePreference timePreference = _context.TimePreferences.Find(id);
             _context.TimePreferences.Remove(timePreference);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details");
         }
 
         protected override void Dispose(bool disposing)

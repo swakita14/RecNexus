@@ -291,11 +291,7 @@
     <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
-<<<<<<< HEAD
-    <Compile Include="Models\ViewModel\DetailTimePreferenceViewModel.cs" />
-=======
     <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
->>>>>>> 3237dae06b2a7e9f983656582f9a475a3ff9354c
     <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
@@ -1161,7 +1157,6 @@
     <Content Include="Views\TimePreferences\Delete.cshtml" />
     <Content Include="Views\TimePreferences\Details.cshtml" />
     <Content Include="Views\TimePreferences\Edit.cshtml" />
-    <Content Include="Views\TimePreferences\Index.cshtml" />
     <Content Include="Views\SportPreferences\Create.cshtml" />
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
