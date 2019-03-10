@@ -5,6 +5,11 @@
 
 <h2><i>Local Sports Venues</i></h2>
 <hr />
+<p>
+    <center>
+        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort})
+    </center>
+</p>
 @foreach (var venue in Model)
 {
     <div class="container">
@@ -16,13 +21,53 @@
         </div>
         @if (venue.Phone != null)
         {
+
+<div class="w3-container">
+    <h3>Google Map</h3>
+    <div class="map-canvas" id="map"></div>
+</div>
+
+<div ng-app="myApp">
+    <div ng-controller="SortController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+        <input type ="number" name="Distance" min ="1" max ="100" />
+        <div class="w3-row-padding w3-center w3-theme-l1" ng-repeat="venue in venues ">
             <div class="row">
-                @Html.DisplayFor(x => venue.Phone)
+                {{venue.Name}}
             </div>
-        }
-        <div class="row">
-            <br/>@Html.ActionLink("Click here to view venue details", "Details", new {id = venue.VenueId})
+            <div class="row" ng-model="venue">
+                {{venue.Address1}}, {{venue.City}}, {{venue.State}}, {{venue.ZipCode}}
+            </div>
+            <div class="row">
+                {{venue.Phone}}
+            </div>
+
+            <div class="row">
+                <br />@{
+                    var url = Url.Action("Details", "Venue", new { id = "{{id=venue.VenueId}}" });
+                    url = HttpUtility.UrlDecode(url);
+                }
+                <a data-ng-href="@url">Click here to view venue details</a>
+            </div>
+            <br />
+            <button class="btn btn-default" ng-click="showMe()">Show me</button>
+            <hr />
         </div>
+
     </div>
-    <hr/>
+</div>
+
+
+
+@section PageScript{
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/angularapp")
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhpsA4b1SN5lLKDWItkbWRc6vCqf-b87M&callback=initMap"
+            type="text/javascript"></script>
+
+
 }
+
+
+
+
