@@ -5,7 +5,7 @@
     ViewBag.Title = "Details";
 }
 <br/>
-<h2>Current List of Time Preferences:</h2>
+<h2>Your Current List of Time Preferences</h2>
 <br/>
 
 <p>
@@ -28,29 +28,29 @@
             <th></th>
         </tr>
         foreach (var item in Model)
-         {
-             <tr>
-                 <td>
-                     @if(item.DayOfWeek == 0){ <p>Sunday</p>}
-                     else if(item.DayOfWeek == 1){ <p>Monday</p>}
-                     else if(item.DayOfWeek == 2){ <p>Tuesday</p>}
-                     else if(item.DayOfWeek == 3){ <p>Wednesday</p>}
-                     else if(item.DayOfWeek == 4){ <p>Thursday</p>}
-                     else if(item.DayOfWeek == 5){ <p>Friday</p>}
-                     @if(item.DayOfWeek == 6){ <p>Saturday</p>}
-                 </td>
-                 <td>
-                     @Html.DisplayFor(modelItem => item.BeginTime)
-                 </td>
-                 <td>
-                     @Html.DisplayFor(modelItem => item.EndTime)
-                 </td>
-                 <td>
-                     @Html.ActionLink("Edit", "Edit", new {id = item.TimePrefID}) |
-                     @Html.ActionLink("Delete", "Delete", new {id = item.TimePrefID})
-                 </td>
-             </tr>
-         }
+        {
+            <tr>
+                <td>
+                    @if(item.DayOfWeek == 0){ <p>Sunday</p>}
+                    else if(item.DayOfWeek == 1){ <p>Monday</p>}
+                    else if(item.DayOfWeek == 2){ <p>Tuesday</p>}
+                    else if(item.DayOfWeek == 3){ <p>Wednesday</p>}
+                    else if(item.DayOfWeek == 4){ <p>Thursday</p>}
+                    else if(item.DayOfWeek == 5){ <p>Friday</p>}
+                    @if(item.DayOfWeek == 6){ <p>Saturday</p>}
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BeginTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new {id = item.TimePrefID}) |
+                    @Html.ActionLink("Delete", "Delete", new {id = item.TimePrefID})
+                </td>
+            </tr>
+        }
     }
     else
     {
@@ -60,3 +60,6 @@
     }
 
 </table>
+
+
+

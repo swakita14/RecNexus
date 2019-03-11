@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Validation;
+﻿using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -189,6 +190,30 @@ namespace PickUpSports.Controllers
 
             if (result.Succeeded)
             {
+                // Delete any SportPreferences related to Contact
+                List<SportPreference> sportPrefs =
+                    _context.SportPreferences.Where(s => s.ContactID == contact.ContactId).ToList();
+                if (sportPrefs.Count > 0) _context.SportPreferences.RemoveRange(sportPrefs);
+
+                // Delete any TimePreferences related to Contact
+                List<TimePreference> timePrefs =
+                    _context.TimePreferences.Where(s => s.ContactID == contact.ContactId).ToList();
+                if (timePrefs.Count > 0) _context.TimePreferences.RemoveRange(timePrefs);
+
+                // Set ContactID for any Reviews to null
+                List<Review> reviews =
+                    _context.Reviews.Where(s => s.ContactId == contact.ContactId).ToList();
+
+                if (reviews.Count > 0)
+                {
+                    foreach (var review in reviews)
+                    {
+                        review.ContactId = null;
+                    }
+
+                    _context.SaveChanges();
+                }
+
                 // Remove from Contact table
                 _context.Contacts.Remove(contact);
                 _context.SaveChanges();

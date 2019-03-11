@@ -72,8 +72,13 @@
                     
                     @if (reviews.Author != null)
                     {
-                    <h4>Author: @reviews.Author</h4>
+                        <h4>Author: @reviews.Author</h4>
                     }
+                    else
+                    {
+                        <h4>Author: <i>anonymous</i></h4>
+                    }
+
                     <h4>Rating: @reviews.Rating</h4>
                     <h4>Review Date: @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</h4>
                     <p>@reviews.Comments</p>

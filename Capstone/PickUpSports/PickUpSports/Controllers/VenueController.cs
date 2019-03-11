@@ -103,7 +103,7 @@ namespace PickUpSports.Controllers
             /**
              * Get venue, hours, and review data for single Venue and return to view
              */
-            public ActionResult Details(int id)
+        public ActionResult Details(int id)
         {
             // Model to be sent to view
             VenueViewModel model = new VenueViewModel();
@@ -156,7 +156,12 @@ namespace PickUpSports.Controllers
                 // If review is not a Google review then there is no GoogleAuthor, 
                 // find author in Contact table
                 if (review.IsGoogleReview) reviewModel.Author = review.GoogleAuthor;
-                else reviewModel.Author = _context.Contacts.Find(review.ContactId).Username;
+                else
+                {
+                    Contact user = _context.Contacts.Find(review.ContactId);
+                    if (user == null) reviewModel.Author = null;
+                    else reviewModel.Author = user.Username;
+                }
 
                 tempList.Add(reviewModel);
             }
@@ -230,10 +235,10 @@ namespace PickUpSports.Controllers
                         hours.DayOfWeek = period.Open.Day;
 
                         string openTime = period.Open?.Time.Insert(2, ":");
-                        hours.OpenTime = DateTime.Parse(openTime).TimeOfDay;
+                        if (!string.IsNullOrEmpty(openTime)) hours.OpenTime = DateTime.Parse(openTime).TimeOfDay;
 
                         string closeTime = period.Close?.Time.Insert(2, ":");
-                        hours.CloseTime = DateTime.Parse(closeTime).TimeOfDay;
+                        if (!string.IsNullOrEmpty(closeTime)) hours.CloseTime = DateTime.Parse(closeTime).TimeOfDay;
 
                         // Add BusinessHours entity
                         _context.BusinessHours.Add(hours);
@@ -251,6 +256,7 @@ namespace PickUpSports.Controllers
                         Review reviewEntity = new Review
                         {
                             IsGoogleReview = true,
+                            GoogleAuthor = review.AuthorName,
                             VenueId = venue.VenueId,
                             Comments = review.Text,
                             Rating = review.Rating,

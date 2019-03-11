@@ -6,114 +6,66 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="well well-sm">
+        <div class="well well-sm">
 
-                <fieldset>
-                    <legend class="text-center header">Your Information</legend>
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center">
-                            <i class="glyphicon glyphicon-user bigicon"></i>
-                        </span>
-                        <div class="col-md-5">
-                            <dl>
-                                <dt>@Html.DisplayNameFor(model => model.Username):</dt>
-                                <dd>@Html.DisplayFor(model => model.Username)</dd>
-                            </dl>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center"></span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.FirstName):</dt>
-                            <dd>@Html.DisplayFor(model => model.FirstName)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center"></span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.LastName):</dt>
-                            <dd>@Html.DisplayFor(model => model.LastName)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center">
-                            <i class="glyphicon glyphicon-envelope bigicon"></i>
-                        </span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.Email):</dt>
-                            <dd>@Html.DisplayFor(model => model.Email)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center">
-                            <i class="glyphicon glyphicon-home bigicon"></i>
-                        </span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.Address1):</dt>
-                            <dd>@Html.DisplayFor(model => model.Address1)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center"></span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.Address2):</dt>
-                            <dd>@Html.DisplayFor(model => model.Address2)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center">
-                            <i class="glyphicon glyphicon-map-marker bigicon"></i>
-                        </span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.City):</dt>
-                            <dd>@Html.DisplayFor(model => model.City)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center"></span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.State):</dt>
-                            <dd>@Html.DisplayFor(model => model.State)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center">
-                            <i class="glyphicon glyphicon-earphone bigicon"></i>
-                        </span>
-                        <div class="col-md-5">
-                            <dt>@Html.DisplayNameFor(model => model.PhoneNumber):</dt>
-                            <dd>@Html.DisplayFor(model => model.PhoneNumber)</dd>
-                        </div>
-                    </div>
-                    <br /><br />
-                </fieldset>
-                @Html.HiddenFor(model => model.ContactId)
-            </div>
+            <fieldset>
+                <legend class="text-center header">Your Current Information</legend>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Username):
+                    @Html.DisplayFor(model => model.Username)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName):
+                    @Html.DisplayFor(model => model.FirstName)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email):
+                    @Html.DisplayFor(model => model.Email)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address1):
+                    @Html.DisplayFor(model => model.Address1)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address2):
+                    @Html.DisplayFor(model => model.Address2)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.City):
+                    @Html.DisplayFor(model => model.City)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.State):
+                    @Html.DisplayFor(model => model.State)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ZipCode):
+                    @Html.DisplayFor(model => model.ZipCode)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PhoneNumber):
+                    @Html.DisplayFor(model => model.PhoneNumber)
+                </div>
+            </fieldset>
+            @Html.HiddenFor(model => model.ContactId)
+
         </div>
     </div>
 </div>
+
 <p>
     <center>
-        <input type="button" class="btn btn-default" value="Sport Preference" onclick="location.href='@Url.Action("Details", "SportPreferences")'" />
-        &nbsp;
         <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href='@Url.Action("Edit", "Contact", new { id = Model.ContactId})'" />
         &nbsp;
         <input type="button" class="btn btn-default" value="Change Password" onclick="location.href='@Url.Action("ChangePassword", "Manage")'" />
         &nbsp;
         <input type="button" class="btn btn-default" value="Manage Time Preferences" onclick="location.href = '@Url.Action("Details", "TimePreferences")'" />
         &nbsp;
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#confirm">Delete Account</button>
+        <input type="button" class="btn btn-default" value="Manage Sport Preferences" onclick="location.href='@Url.Action("Details", "SportPreferences")'" />
+        &nbsp;
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm">Delete Account</button>
     </center>
-    </p>
+</p>
 
 @using (Html.BeginForm("Delete", "Contact", FormMethod.Post))
 {
