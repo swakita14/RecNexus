@@ -31,7 +31,20 @@ namespace PickUpSports.Controllers
 
             model.ContactID = contact.ContactId;
             model.ContactUsername = contact.Username;
-            
+
+            List<SportPreference> sportPrefs = _context.SportPreferences.Where(s => s.ContactID == contact.ContactId).ToList();
+            List<string> sportNameList = new List<string>();
+
+            foreach (var sportPref in sportPrefs)
+            {
+                List<Sport> sports = _context.Sports.Where(x => x.SportID == sportPref.SportID).ToList();
+                foreach (var sport in sports)
+                {
+                    sportNameList.Add(sport.SportName);
+                }              
+            }
+
+            model.SportName=sportNameList;
             return View(model);
         }
         [HttpGet]
