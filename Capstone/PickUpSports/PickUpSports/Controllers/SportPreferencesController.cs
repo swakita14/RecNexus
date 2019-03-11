@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -30,18 +31,23 @@ namespace PickUpSports.Controllers
             //find the contact
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == email);
 
-            return View(_context.SportPreferences.Where(x => x.ContactID == contact.ContactId).ToList());           
-        }
+            SportPreferenceViewModel model = new SportPreferenceViewModel();
 
-        // GET: SportPreferences/Create
-        public ActionResult Create()
+            model.ContactID = contact.ContactId;
+            model.ContactUsername = contact.Username;
+            
+            return View(model);
+        }
+        [HttpGet]
+        // GET: SportPreferences/Create    
+              public ActionResult Create()
         {
-            // Contact contact = _context.Contacts.Find(id);
             //Identify the person using email
             string newContactEmail = User.Identity.GetUserName();
 
             //find the contact
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
+
             var model = new CreateSportPreferenceViewModel
             {
                 ContactID = contact.ContactId,
@@ -57,22 +63,49 @@ namespace PickUpSports.Controllers
         public ActionResult Create(CreateSportPreferenceViewModel model)
         {
             string email = User.Identity.GetUserName();
-            //string name =;
 
             Contact contact = _context.Contacts.FirstOrDefault(x=>x.Email==email);
-            //Sport sport = _context.Sports.FirstOrDefault(x => x.SportName==name);
 
-            SportPreference sportPreference = new SportPreference
+            /* SportPreference sportPreference = new SportPreference
+             {
+                 SportID=model.SportID,
+                 ContactID=model.ContactID,           
+             };
+
+             _context.SportPreferences.Add(sportPreference);
+             _context.SaveChanges();
+
+             return RedirectToAction("Details", "SportPreferences");*/
+
+            //List<Sport> sports = _context.Reviews.Where(r => r.VenueId == id).ToList();
+            List<Sport> sports = _context.Sports.Where(r=>r.SportID==model.SportID).ToList();
+
+            model.Sports = new List<Sport>();
+
+            List<Sport> tempList = new List<Sport>();
+            foreach (var sport in sports)
             {
-                ContactID = contact.ContactId,
-                //the value is the id
-                SportID = model.SportID      
-            };
-            _context.SportPreferences.Add(sportPreference);
-            _context.SaveChanges();
+                Sport sportprefer = new Sport
+                {
+                    SportID=sport.SportID,
+                    SportName=sport.SportName
+                };
 
+                SportPreference sportPreference = new SportPreference
+                {
+                    SportID = model.SportID,
+                    ContactID = model.ContactID,
+                };
+                tempList.Add(sportprefer);
+                _context.SportPreferences.Add(sportPreference);
+                _context.SaveChanges();
+            }
+            
+            // Order reviews newest to oldest
+            model.Sports = tempList.ToList();
             return RedirectToAction("Details", "SportPreferences");
         }
+             
 
         // GET: SportPreferences/Edit/5
         public ActionResult Edit(int? id)

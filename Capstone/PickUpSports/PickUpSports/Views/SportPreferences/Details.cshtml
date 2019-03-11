@@ -1,9 +1,4 @@
-﻿@model IEnumerable<PickUpSports.Models.DatabaseModels.SportPreference>
-
-    @{
-        ViewBag.Title = "Details";
-    }
-
+﻿@model PickUpSports.Models.ViewModel.SportPreferenceViewModel
     <h2>Details</h2>
 
     <p>
@@ -15,24 +10,19 @@
         <hr />
         <dl class="dl-horizontal">
             <dt>
-                @Html.DisplayNameFor(model => model.ContactID)
+                @Html.DisplayNameFor(model => model.ContactUsername)
             </dt>
             <dt>
-                @Html.DisplayNameFor(model => model.SportID)
+                @Html.DisplayNameFor(model => model.SportName)
             </dt>
 
-            @foreach (var item in Model)
-            {
-                <dd>
-                    @Html.DisplayFor(model => item.ContactID)
-                </dd>
-                <dd>
-                    @Html.DisplayFor(model => item.SportID)
-                </dd>
-                <dd>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.SportPrefID })
-                </dd>
-            }
+            <dd>
+                @Html.DisplayFor(model => model.ContactUsername)
+            </dd>
+            <dd>
+                @Html.DisplayFor(model => model.SportName)
+            </dd>
+
         </dl>
     </div>
 

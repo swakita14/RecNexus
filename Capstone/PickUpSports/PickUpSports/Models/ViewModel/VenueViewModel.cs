@@ -22,7 +22,7 @@ namespace PickUpSports.Models.ViewModel
 
         public List<BusinessHoursViewModel> BusinessHours { get; set; }
 
-        public decimal? AverageRating{ get; set; }
+        public decimal? AverageRating { get; set; }
 
         public List<ReviewViewModel> Reviews { get; set; }
     }
