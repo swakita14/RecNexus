@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
@@ -40,7 +36,7 @@ namespace PickUpSports.Controllers
         }
         [HttpGet]
         // GET: SportPreferences/Create    
-              public ActionResult Create()
+        public ActionResult Create()
         {
             //Identify the person using email
             string newContactEmail = User.Identity.GetUserName();
@@ -48,61 +44,69 @@ namespace PickUpSports.Controllers
             //find the contact
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
 
+            // Create view model 
             var model = new CreateSportPreferenceViewModel
             {
-                ContactID = contact.ContactId,
-                ContactUsername = contact.Username
+                ContactId = contact.ContactId,
+                ContactUsername = contact.Username,
+                SportPreferenceCheckboxes = new List<SelectSportPreferenceViewModel>()
             };
+
+            List<Sport> sports = _context.Sports.ToList();
+
+            // For each sport in the database, add an object to the Sport Preferences list
+            // in the view model which will translate to checkboxes on the view
+            foreach (var sport in sports)
+            {
+                // Initialize viewmodel that will be used for checkbox
+                SelectSportPreferenceViewModel sportPrefCheckbox = new SelectSportPreferenceViewModel
+                {
+                    SportId = sport.SportID,
+                    SportName = sport.SportName
+                };
+
+                // Check if user has preference set for this specific sport
+                SportPreference sportPref = _context.SportPreferences.FirstOrDefault(s => s.ContactID == contact.ContactId && s.SportID == sport.SportID);
+
+                // If no preference for sport, set IsSelected to false because it's not a preference for this user
+                if (sportPref == null) sportPrefCheckbox.IsSelected = false;
+                else sportPrefCheckbox.IsSelected = true;
+
+                // Add to list of checkboxes
+                model.SportPreferenceCheckboxes.Add(sportPrefCheckbox);
+
+            }
             return View(model);
         }
 
-        // POST: SportPreferences/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public ActionResult Create(CreateSportPreferenceViewModel model)
         {
-            string email = User.Identity.GetUserName();
-
-            Contact contact = _context.Contacts.FirstOrDefault(x=>x.Email==email);
-
-            /* SportPreference sportPreference = new SportPreference
-             {
-                 SportID=model.SportID,
-                 ContactID=model.ContactID,           
-             };
-
-             _context.SportPreferences.Add(sportPreference);
-             _context.SaveChanges();
-
-             return RedirectToAction("Details", "SportPreferences");*/
-
-            //List<Sport> sports = _context.Reviews.Where(r => r.VenueId == id).ToList();
-            List<Sport> sports = _context.Sports.Where(r=>r.SportID==model.SportID).ToList();
-
-            model.Sports = new List<Sport>();
-
-            List<Sport> tempList = new List<Sport>();
-            foreach (var sport in sports)
+            // Update database with any updated values from checkboxes
+            foreach (var preference in model.SportPreferenceCheckboxes)
             {
-                Sport sportprefer = new Sport
-                {
-                    SportID=sport.SportID,
-                    SportName=sport.SportName
-                };
+                // check for existing sport preference
+                SportPreference existing = _context.SportPreferences.FirstOrDefault(s => s.ContactID == model.ContactId && s.SportID == preference.SportId);
 
-                SportPreference sportPreference = new SportPreference
+                // Sport preference does not exist and user has selected it so add to database
+                if (existing == null && preference.IsSelected)
                 {
-                    SportID = model.SportID,
-                    ContactID = model.ContactID,
-                };
-                tempList.Add(sportprefer);
-                _context.SportPreferences.Add(sportPreference);
+                    _context.SportPreferences.Add(new SportPreference
+                    {
+                        ContactID = model.ContactId,
+                        SportID = preference.SportId
+                    });
+                }
+
+                // Sport preference exists but user no longer wants it to be set so remove
+                if (existing != null && !preference.IsSelected)
+                {
+                    _context.SportPreferences.Remove(existing);
+                }
+
                 _context.SaveChanges();
             }
-            
-            // Order reviews newest to oldest
-            model.Sports = tempList.ToList();
+
             return RedirectToAction("Details", "SportPreferences");
         }
              
@@ -120,48 +124,6 @@ namespace PickUpSports.Controllers
                 return HttpNotFound();
             }
             return View(sportPreference);
-        }
-
-        // POST: SportPreferences/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SportPrefID,ContactID,SportID")] SportPreference sportPreference)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Entry(sportPreference).State = EntityState.Modified;
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(sportPreference);
-        }
-
-        // GET: SportPreferences/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SportPreference sportPreference = _context.SportPreferences.Find(id);
-            if (sportPreference == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sportPreference);
-        }
-
-        // POST: SportPreferences/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            SportPreference sportPreference = _context.SportPreferences.Find(id);
-            _context.SportPreferences.Remove(sportPreference);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
