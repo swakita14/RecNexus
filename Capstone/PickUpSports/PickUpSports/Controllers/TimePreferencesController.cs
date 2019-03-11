@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
+using PickUpSports.Models.Enums;
 using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
@@ -32,7 +33,7 @@ namespace PickUpSports.Controllers
 
 
             //Send a list of time preferences back that match the contact id
-            return View(_context.TimePreferences.Where(x => x.ContactID == contact.ContactId).ToList());
+            return View(_context.TimePreferences.Where(x => x.ContactID == contact.ContactId).OrderBy(x => x.DayOfWeek).ToList());
         }
 
         // GET: TimePreferences/Create
@@ -81,11 +82,21 @@ namespace PickUpSports.Controllers
             }
 
             TimePreference timePreference = _context.TimePreferences.Find(id);
+
+            CreateTimePreferenceViewModel model = new CreateTimePreferenceViewModel()
+            {
+                BeginTime = timePreference.BeginTime,
+                ContactID = timePreference.ContactID,
+                DayOfWeek = (DayOfWeek) timePreference.DayOfWeek,
+                EndTime = timePreference.EndTime,
+                TimePrefID = timePreference.TimePrefID
+            };
+
             if (timePreference == null)
             {
                 return HttpNotFound();
             }
-            return View(timePreference);
+            return View(model);
         }
 
         // POST: TimePreferences/Edit/5

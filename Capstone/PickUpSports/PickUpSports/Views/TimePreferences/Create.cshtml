@@ -11,34 +11,40 @@
     
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
             <div class="well well-sm">
 
                 <fieldset>
                     <legend class="text-center header">Add New Time Preference</legend>
                     <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-calendar bigicon"></i></span>
-                        <div class="col-md-5">
-                            @Html.DropDownList("DayOfWeek", new SelectList(Enum.GetValues(typeof(DayOfWeek))),"Select Day of Week", new { @class = "form-control" })
+                        <label class="control-label col-sm-3" for="day">Select Day of Week:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                            @Html.DropDownList("DayOfWeek", new SelectList(Enum.GetValues(typeof(DayOfWeek))), "Select Day of Week", new { @class = "form-control" })                           
                         </div>
                     </div>
-                    <br /><br />
                     <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center"><i class="glyphicon glyphicon-time bigicon"></i></span>
-                        <div class="col-md-5">
-                            @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Begin Time" } })
-                            @Html.ValidationMessageFor(model => model.BeginTime, "", new { @class = "text-danger" })
+                        <label class="control-label col-sm-3" for="btime">Beginning Time:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </div>
+                            @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Begin Time" } })
                         </div>
+                        @Html.ValidationMessageFor(model => model.BeginTime, "", new { @class = "text-danger" })
+                            
                     </div>
-                    <br /><br />
                     <div class="form-group">
-                        <span class="col-md-1 col-md-offset-2 text-center"></span>
-                        <div class="col-md-5">
-                            @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "End Time" } })
-                            @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
+                        <label class="control-label col-sm-3" for="etime">Ending Time:</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </div>
+                            @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter End Time" } })
                         </div>
+                        @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })                     
                     </div>
-                    <br /><br />
                     <div class="form-group">
                         <div class="col-md-12 text-center">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -47,7 +53,6 @@
                 </fieldset>
 
             </div>
-        </div>
     </div>
 </div>
 }
