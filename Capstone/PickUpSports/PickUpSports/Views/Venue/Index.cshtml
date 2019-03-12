@@ -5,16 +5,15 @@
 
 <h2><i>Local Sports Venues</i></h2>
 <hr />
-<p>
-    <center>
-        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort})
-    </center>
-</p>
 
 <div class="w3-container">
     <h3>Google Map</h3>
     <div class="map-canvas" id="map"></div>
 </div>
+
+<p>   
+        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort })
+</p>
 
 <div ng-app="myApp">
     <div ng-controller="SortController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
