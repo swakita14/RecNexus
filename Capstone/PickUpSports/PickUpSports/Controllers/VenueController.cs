@@ -23,8 +23,12 @@ namespace PickUpSports.Controllers
             _context = context;
         }
 
-        public ActionResult Index(string sortBy)
+        public ActionResult Index(string sortBy, string curLat, string curLong)
         {
+
+            
+
+
             // Only want to update Venues database once a week
             Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
 
@@ -60,9 +64,32 @@ namespace PickUpSports.Controllers
 
             List<VenueViewModel> model = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
+            //Initialize list of locations for view model
+
+            List<Location> locations = new List<Location>();
 
             foreach (var venue in venues)
             {
+
+               
+
+                //get location of venue
+                Location location = _context.Locations
+                    .FirstOrDefault(l => l.VenueId == venue.VenueId);
+
+                // add this location to the list of locations
+                locations.Add(location);
+
+                //converted coordinates from strings to doubles
+                double userLat = Convert.ToDouble(curLat);
+                double userLong = Convert.ToDouble(curLong);
+                double venLat = Convert.ToDouble(location.Latitude);
+                double venLong = Convert.ToDouble(location.Longitude);
+                
+                //Calculate the distance from user to venue. Method at the bottom
+                double distance = Calc(userLat, userLong, venLat, venLong);
+
+
                 // get the rating 
                 List<Review> reviews = _context.Reviews.Where(r => r.VenueId == venue.VenueId).ToList();
                 decimal avgRating = (decimal)reviews.Average(r => r.Rating);
@@ -78,10 +105,18 @@ namespace PickUpSports.Controllers
                     VenueId = venue.VenueId,
                     ZipCode = venue.ZipCode,
                     // add rating to the model so can sort by rating
-                    AverageRating = avgRating
+                    AverageRating = avgRating,
+                    LatitudeCoord = location.Latitude,
+                    LongitudeCoord = location.Longitude,
+                    Distance = distance
+
+
                 });
                 
             }
+
+             
+            ViewBag.DistanceSort = 
 
             //implement sorting by rate fuction
             ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
@@ -288,6 +323,35 @@ namespace PickUpSports.Controllers
                 }
             }
         }
+
+
+        /**
+         * Method to  calculate distance via Haversine formula.
+         */
+        public static double Calc(double lat1, double long1, double lat2, double long2)
+        {
+            double dDistance = Double.MinValue;
+            double dLat1InRad = lat1 * (Math.PI / 180.0);
+            double dLong1InRad = long1 * (Math.PI / 180);
+            double dLat2InRad = lat2 * (Math.PI / 180.0);
+            double dLong2InRad = long2 * (Math.PI / 180.0);
+
+            double dLongitude = dLong2InRad - dLong1InRad;
+            double dLatitude = dLat2InRad - dLat1InRad;
+
+            // Intermediate result a.
+            double a = Math.Pow(Math.Sin(dLatitude / 2.0), 2.0) +
+                       Math.Cos(dLat1InRad) * Math.Cos(dLat2InRad) *
+                       Math.Pow(Math.Sin(dLongitude / 2.0), 2.0);
+            //Intermediate result c 
+            double c = 2.0 * Math.Asin(Math.Sqrt(a));
+            
+            //Distance (using approximate radius of earth in miles)
+            const Double kEarthRadiusMiles = 3958.8;
+            dDistance = kEarthRadiusMiles * c;
+            return dDistance;
+        }
+      
 
         protected override void Dispose(bool disposing)
         {

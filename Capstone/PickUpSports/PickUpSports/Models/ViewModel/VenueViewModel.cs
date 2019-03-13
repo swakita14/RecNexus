@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Models.ViewModel
 {
@@ -25,5 +26,12 @@ namespace PickUpSports.Models.ViewModel
         public decimal? AverageRating { get; set; }
 
         public List<ReviewViewModel> Reviews { get; set; }
+
+        public string LatitudeCoord { get; set; }
+        public string LongitudeCoord { get; set; }
+
+        public List<Location> Locations { get; set; }
+
+        public double Distance { get; set; }
     }
 }

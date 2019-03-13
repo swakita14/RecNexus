@@ -1,4 +1,5 @@
-﻿@model List<PickUpSports.Models.ViewModel.VenueViewModel>
+﻿@using PickUpSports.Controllers
+@model List<PickUpSports.Models.ViewModel.VenueViewModel>
 @{
     ViewBag.Title = "Sports Venues";
 }
@@ -7,54 +8,72 @@
 <hr />
 <p>
     <center>
-        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort})
+        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort })
     </center>
 </p>
 
-<div class="w3-container">
-    <h3>Google Map</h3>
-    <div class="map-canvas" id="map"></div>
-</div>
+<input type="number" name="Distance" min="1" max="100" />
+@foreach (var venue in Model)
+{
+    <div class="container">
+        <div class="row">
+            @Html.DisplayFor(model => venue.Name)
+        </div>
+        <div class="row">
+            @Html.DisplayFor(model => venue.Address1), @Html.DisplayFor(model => venue.City), @Html.DisplayFor(model => venue.State), @Html.DisplayFor(model => venue.ZipCode)
+        </div>
+        <div class="row">
+            @Html.DisplayFor(model => venue.Phone)
+        </div>
+        <div class="row">
+            @Html.DisplayFor(model => venue.Distance)
+        </div>
 
-<div ng-app="myApp">
-    <div ng-controller="SortController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
-        <input type ="number" name="Distance" min ="1" max ="100" />
-        <div class="w3-row-padding w3-center w3-theme-l1" ng-repeat="venue in venues ">
-            <div class="row">
-                {{venue.Name}}
-            </div>
-            <div class="row" ng-model="venue">
-                {{venue.Address1}}, {{venue.City}}, {{venue.State}}, {{venue.ZipCode}}
-            </div>
-            <div class="row">
-                {{venue.Phone}}
-            </div>
+        <div class="row">
+            <br />@Html.ActionLink("Click here to view ratings and buisness hours", "Details", new { id = venue.VenueId })
 
-            <div class="row">
-                <br />@{
-                    var url = Url.Action("Details", "Venue", new { id = "{{id=venue.VenueId}}" });
-                    url = HttpUtility.UrlDecode(url);
-                }
-                <a data-ng-href="@url">Click here to view venue details</a>
-            </div>
-            <br />
-            <button class="btn btn-default" ng-click="showMe()">Show me</button>
-            <hr />
         </div>
 
     </div>
-</div>
-
-
-
-@section PageScript{
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/angularapp")
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhpsA4b1SN5lLKDWItkbWRc6vCqf-b87M&callback=initMap"
-            type="text/javascript"></script>
+    <hr />
 }
 
+@section PageScript
+{
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(ajax_call);
+            } else {
+                console.log("Geolocation is not supported by this browser");
+            }
+        }
+
+        function ajax_call(position) {
+            console.log("Latitude: " + position.coords.latitude +
+                "<br>Longitude: " + position.coords.longitude);
+
+            $.ajax({
+                url: '/Venue/Index',
+                type: 'GET',
+                dataType: "json",
+                data: JSON.stringify({ curLat: position.coords.latitude, curLong: position.coords.longitude }),
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        }
+
+
+    </script>
+
+
+}
 
 
 
