@@ -45,31 +45,31 @@
 {
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript">
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(ajax_call);
-            } else {
-                console.log("Geolocation is not supported by this browser");
-            }
-        }
-
-        function ajax_call(position) {
-            console.log("Latitude: " + position.coords.latitude +
-                "<br>Longitude: " + position.coords.longitude);
+        $(document).ready(function () {})
+       
+      
+        window.navigator.geolocation.getCurrentPosition(function(position) {
+            var userLat = position.coords.latitude;
+            var userLong = position.coords.longitude;
 
             $.ajax({
                 url: '/Venue/Index',
                 type: 'GET',
                 dataType: "json",
-                data: JSON.stringify({ curLat: position.coords.latitude, curLong: position.coords.longitude }),
+                data: JSON.stringify({ curLat: userLat, curLong: userLong }),
                 success: function (data) {
-                    console.log(data);
+                    alert(data);
                 },
                 error: function (errMsg) {
                     alert(errMsg);
                 }
             });
+        });
+           
+
+       
+
+           
         }
 
 
