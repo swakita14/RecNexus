@@ -172,6 +172,7 @@ namespace PickUpSports.Controllers
                 case "RatingDesc":
                     model=model.OrderByDescending(x=>x.AverageRating).ToList();
                     break;
+                default:
                     model=model.OrderBy(x => x.VenueId).ToList();
                     break;
             }
