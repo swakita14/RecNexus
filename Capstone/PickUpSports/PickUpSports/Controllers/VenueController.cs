@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -23,7 +24,7 @@ namespace PickUpSports.Controllers
             _context = context;
         }
 
-        public ActionResult Index(string sortBy)
+        public ActionResult Index(string sortBy, string time, string day)
         {
             // Only want to update Venues database once a week
             Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
@@ -61,10 +62,43 @@ namespace PickUpSports.Controllers
             List<VenueViewModel> model = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
 
+            //get all the buiness hours for all the venues
+            List<BusinessHours> hours = _context.BusinessHours.ToList();
+
+            //user input from the inline form
+            time = Request.QueryString["starting"];
+
+            //day of week 
+            day = Request.QueryString["day"];
+
+            //lets wait till time is NOT null
+            if (time != null)
+            {
+
+                //look at each business hour in each venue
+                foreach (var bhour in hours)
+                {
+                    //converting user input to TimeSpan before comparing 
+                    TimeSpan hs = TimeSpan.Parse(time);
+
+                    List<BusinessHours> open_from = hours.Where(x => x.OpenTime <= hs).ToList();
+                    List<BusinessHours> closed_from = open_from.Where(x => x.CloseTime <= hs).ToList();
+                    List<BusinessHours> day_available = closed_from.Where(x => x.DayOfWeek == ConvertDay(day)).ToList();
+
+                    Debug.Write(day_available);
+
+                    //find the venue by id and sort it and send it back to model.
+                    
+
+                    //condition to sort 
+                }
+            }
+
             foreach (var venue in venues)
             {
                 // get the rating 
                 List<Review> reviews = _context.Reviews.Where(r => r.VenueId == venue.VenueId).ToList();
+
                 decimal? avgRating;
                 if (reviews.Count > 0)
                 {
@@ -88,7 +122,7 @@ namespace PickUpSports.Controllers
                 });
                 
             }
-
+   
             //implement sorting by rate fuction
             ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
 
@@ -101,6 +135,38 @@ namespace PickUpSports.Controllers
                     break;
             }
             return View(model);
+        }
+
+        public int ConvertDay(string day) 
+        {
+            int day_num = 0;
+
+            switch (day)
+            {
+                case "Monday":
+                    day_num = 1;
+                    break;
+                case "Tuesday":
+                    day_num = 2;
+                    break;
+                case "Wednesday":
+                    day_num = 3;
+                    break;
+                case "Thursday":
+                    day_num = 4;
+                    break;
+                case "Friday":
+                    day_num = 5;
+                    break;
+                case "Saturday":
+                    day_num = 6;
+                    break;
+                case "Sunday":
+                    day_num = 7;
+                    break;
+            }
+
+            return day_num;
         }
 
         public ActionResult Map()
@@ -305,6 +371,8 @@ namespace PickUpSports.Controllers
                 }
             }
         }
+
+
 
         protected override void Dispose(bool disposing)
         {
