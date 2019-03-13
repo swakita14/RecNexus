@@ -3,40 +3,46 @@
     ViewBag.Title = "Sports Venues";
 }
 
-<h2><i>Local Sports Venues</i></h2>
-<hr />
+<div class="page-header">
+    <h3>Sports Venues and Fields</h3>
+    <p>Find local venues to play your favorite sports at here!</p>
+</div>
+
 <p>
-    <center>
-        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }) <button onclick="getLocation()">Sort Venues by Distance</button>
-
-
+    <center>        
+        <button type="button" class="btn btn-outline-dark" onclick="location.href='@Url.Action("Index", "Venue", new {sortBy = "RatingDesc"})'">Sort by Rating</button>
+        <button type="button" class="btn btn-outline-dark" onclick="getLocation()">Sort by Distance</button>
     </center>
 </p>
 
-<input type="number" name="Distance" min="1" max="100" />
-@foreach (var venue in Model)
-{
-    <div class="container">
-        <div class="row">
-            @Html.DisplayFor(model => venue.Name)
-        </div>
-        <div class="row">
-            @Html.DisplayFor(model => venue.Address1), @Html.DisplayFor(model => venue.City), @Html.DisplayFor(model => venue.State), @Html.DisplayFor(model => venue.ZipCode)
-        </div>
-        <div class="row">
-            @Html.DisplayFor(model => venue.Phone)
-        </div>
-        <div class="row">
-            @Html.DisplayFor(model => venue.Distance)
-        </div>
+<ul class="rolldown-list" id="myList">
+    <li>
+        @foreach (var venue in Model)
+        {
 
-        <div class="row">
-            <br />@Html.ActionLink("Click here to view ratings and buisness hours", "Details", new { id = venue.VenueId })
-        </div>
+            <div class="container">
+                <div class="row">
+                    @Html.DisplayFor(model => venue.Name)
+                </div>
+                <div class="row">
+                    @Html.DisplayFor(model => venue.Address1), @Html.DisplayFor(model => venue.City), @Html.DisplayFor(model => venue.State), @Html.DisplayFor(model => venue.ZipCode)
+                </div>
+                <div class="row">
+                    @Html.DisplayFor(model => venue.Phone)
+                </div>
+                <div class="row">
+                    @Html.DisplayFor(model => venue.Distance)
+                </div>
 
-    </div>
-    <hr />
-}
+                <div class="row">
+                    <br />@Html.ActionLink("Click here for details", "Details", new { id = venue.VenueId })
+                </div>
+
+            </div>
+            <hr />
+        }
+    </li>
+</ul> 
 
 
 
