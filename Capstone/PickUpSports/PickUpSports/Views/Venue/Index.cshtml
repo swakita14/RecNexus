@@ -18,14 +18,14 @@
                 </div>
                 <div class="form-group">
                     <label for="day">Day of Week:</label>
-                    @Html.DropDownList("day", new SelectList(Enum.GetValues(typeof(DayOfWeek))), new {@class = "form-control"}) &nbsp;
+                    @Html.DropDownList("day", new SelectList(Enum.GetValues(typeof(DayOfWeek))), new { @class = "form-control" }) &nbsp;
                 </div>
                 <button type="submit" class="btn btn-outline-dark">Find Available Venues</button> &nbsp;
-                <p style="color: red">@ViewBag.Message</p>
+<p style="color: red">@ViewBag.Message</p>
             </form>
-            <br/>
-            <button type="button" class="btn btn-outline-dark" onclick="location.href = '@Url.Action("Index", "Venue", new {sortBy = "RatingDesc"})'">Sort by Rating</button>
-            <button type="button" class="btn btn-outline-dark" onclick="getLocation()">Sort by Distance</button>
+<br />
+<button type="button" class="btn btn-outline-dark" onclick="location.href = '@Url.Action("Index", "Venue", new {sortBy = "RatingDesc"})'">Sort by Rating</button>
+<button type="button" class="btn btn-outline-dark" onclick="getLocation()">Sort by Distance</button>
         </center>
     </div>
 </p>
@@ -48,11 +48,11 @@
                 </div>
 
                 <div class="row">
-                    <br/>@Html.ActionLink("Click here for details", "Details", new {id = venue.VenueId})
+                    <br />@Html.ActionLink("Click here for details", "Details", new { id = venue.VenueId })
                 </div>
 
             </div>
-            <hr/>
+            <hr />
         }
     </li>
 </ul>
@@ -78,13 +78,17 @@
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ curLat: lat, curLong: long, sortBy: "Distance" }),
-            success: function(data) {
+            success: function (data) {
                 alert(data);
             },
-            failure: function(errMsg) {
+            failure: function (errMsg) {
                 alert(errMsg);
             }
         });
     }
+
+    getLocation();
+
 </script>
+
 

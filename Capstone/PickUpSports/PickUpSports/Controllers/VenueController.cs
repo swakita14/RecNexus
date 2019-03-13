@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -62,18 +61,12 @@ namespace PickUpSports.Controllers
 
             List<VenueViewModel> model = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
-            //Initialize list of locations for view model
-
-            List<Location> locations = new List<Location>();
 
             foreach (var venue in venues)
             {
                 //get location of venue
                 Location location = _context.Locations
                     .FirstOrDefault(l => l.VenueId == venue.VenueId);
-
-                // add this location to the list of locations
-                locations.Add(location);
 
                 //converted coordinates from strings to doubles
                 double userLat = Convert.ToDouble(curLat);
