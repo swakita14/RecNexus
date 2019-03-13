@@ -1,8 +1,7 @@
 ﻿@model PickUpSports.Models.ViewModel.SportPreferenceViewModel
-    <h2>Details</h2>
 
     <p>
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Create A New Preference", "Create")
     </p>
 
     <div>
@@ -23,11 +22,9 @@
             @foreach (var name in Model.SportName)
             {
                 <dd>
-                   @name
+                    @name
                 </dd>
             }
-
-
         </dl>
     </div>
 
