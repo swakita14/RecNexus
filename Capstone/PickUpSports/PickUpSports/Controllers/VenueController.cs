@@ -25,10 +25,6 @@ namespace PickUpSports.Controllers
 
         public ActionResult Index(string sortBy, string curLat, string curLong)
         {
-
-            
-
-
             // Only want to update Venues database once a week
             Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
 
@@ -121,9 +117,6 @@ namespace PickUpSports.Controllers
                 
             }
 
-             
-            ViewBag.DistanceSort = 
-
             //implement sorting by rate fuction
             ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
             switch (sortBy)
@@ -136,11 +129,6 @@ namespace PickUpSports.Controllers
                     break;
             }
             return View(model);
-        }
-
-        public ActionResult Map()
-        {
-            return View();
         }
 
         /**
