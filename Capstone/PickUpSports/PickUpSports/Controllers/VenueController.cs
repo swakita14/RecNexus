@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -27,8 +26,6 @@ namespace PickUpSports.Controllers
 
         public ActionResult Index(string sortBy, string curLat, string curLong, string time, string day)
         {
-            
-
             // Only want to update Venues database once a week
             Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
 
@@ -64,21 +61,12 @@ namespace PickUpSports.Controllers
 
             List<VenueViewModel> model = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
-            //Initialize list of locations for view model
-
-            List<Location> locations = new List<Location>();
 
             foreach (var venue in venues)
             {
-
-               
-
                 //get location of venue
                 Location location = _context.Locations
                     .FirstOrDefault(l => l.VenueId == venue.VenueId);
-
-                // add this location to the list of locations
-                locations.Add(location);
 
                 //converted coordinates from strings to doubles
                 double userLat = Convert.ToDouble(curLat);
@@ -116,21 +104,12 @@ namespace PickUpSports.Controllers
                     LatitudeCoord = location.Latitude,
                     LongitudeCoord = location.Longitude,
                     Distance = distance
-  
-
-
                 });
 
             }
 
             //get all the buiness hours for all the venues
             List<BusinessHours> hours = _context.BusinessHours.ToList();
-
-            //user input from the inline form which is the time the user searches for
-            time = Request.QueryString["starting"];
-
-            //day of week from user input
-            day = Request.QueryString["day"];
 
             //lets wait till time is NOT null
             if (time != null)
@@ -150,12 +129,29 @@ namespace PickUpSports.Controllers
                 //If there are some in the list that matches the user input - else it didnt match
                 if (open_from.Count > 0)
                 {
+                    // Clear current list so can add only venues that will be open during chosen time
+                    model.Clear();
+
                     foreach (var v in open_from)
                     {
-                        //match the id of the business hours with the acutal venue and send it back to the view
-                        model = model.Where(x => x.VenueId == v.VenueId).ToList();
-                        return View(model);
+                        Venue venue = _context.Venues.Find(v.VenueId);
+                        
+                        // Add venue to model
+                        model.Add(new VenueViewModel
+                        {
+                            Address1 = venue.Address1,
+                            Address2 = venue.Address2,
+                            City = venue.City,
+                            Name = venue.Name,
+                            Phone = venue.Phone,
+                            State = venue.State,
+                            VenueId = venue.VenueId,
+                            ZipCode = venue.ZipCode
+                        });
                     }
+
+                    return View(model);
+
                 }
                 else
                 {
