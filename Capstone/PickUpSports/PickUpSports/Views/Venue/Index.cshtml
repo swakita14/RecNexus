@@ -1,4 +1,5 @@
-﻿@model List<PickUpSports.Models.ViewModel.VenueViewModel>
+﻿@using PickUpSports.Controllers
+@model List<PickUpSports.Models.ViewModel.VenueViewModel>
 @{
     ViewBag.Title = "Sports Venues";
 }
@@ -25,7 +26,8 @@
                 <label for="day">Day of Week:</label>
                 @Html.DropDownList("day", new SelectList(Enum.GetValues(typeof(DayOfWeek))), new { @class = "form-control"})  &nbsp;
             </div>
-            <button type="submit" class="btn btn-default">Find Available Venues</button> &nbsp;
+            <button type="submit" class="btn btn-default">Find Available Venues</button> &nbsp; <p style="color:red">@ViewBag.Message</p>
+            
         </form>
         <br />
         <button class="btn btn-default"> @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort })</button>
@@ -35,45 +37,71 @@
   
 </div>
 
-<div ng-app="myApp">
-    <div ng-controller="SortController" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
-        <input type ="number" name="Distance" min ="1" max ="100" />
-        <div class="w3-row-padding w3-center w3-theme-l1" ng-repeat="venue in venues ">
-            <div class="row">
-                {{venue.Name}}
-            </div>
-            <div class="row" ng-model="venue">
-                {{venue.Address1}}, {{venue.City}}, {{venue.State}}, {{venue.ZipCode}}
-            </div>
-            <div class="row">
-                {{venue.Phone}}
-            </div>
 
-            <div class="row">
-                <br />@{
-                    var url = Url.Action("Details", "Venue", new { id = "{{id=venue.VenueId}}" });
-                    url = HttpUtility.UrlDecode(url);
-                }
-                <a data-ng-href="@url">Click here to view venue details</a>
-            </div>
-            <br />
-            <button class="btn btn-default" ng-click="showMe()">Show me</button>
-            <hr />
+<input type="number" name="Distance" min="1" max="100" />
+@foreach (var venue in Model)
+{
+    <div class="container">
+        <div class="row">
+            @Html.DisplayFor(model => venue.Name)
+        </div>
+        <div class="row">
+            @Html.DisplayFor(model => venue.Address1), @Html.DisplayFor(model => venue.City), @Html.DisplayFor(model => venue.State), @Html.DisplayFor(model => venue.ZipCode)
+        </div>
+        <div class="row">
+            @Html.DisplayFor(model => venue.Phone)
+        </div>
+        <div class="row">
+            @Html.DisplayFor(model => venue.Distance)
+        </div>
+
+        <div class="row">
+            <br />@Html.ActionLink("Click here to view ratings and buisness hours", "Details", new { id = venue.VenueId })
+
+
+
         </div>
 
     </div>
-</div>
-
-
-
-@section PageScript{
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/angularapp")
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhpsA4b1SN5lLKDWItkbWRc6vCqf-b87M&callback=initMap"
-            type="text/javascript"></script>
+    <hr />
 }
 
+@section PageScript
+{
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        $(document).ready(function () {})
+       
+      
+        window.navigator.geolocation.getCurrentPosition(function(position) {
+            var userLat = position.coords.latitude;
+            var userLong = position.coords.longitude;
+
+            $.ajax({
+                url: '/Venue/Index',
+                type: 'GET',
+                dataType: "json",
+                data: JSON.stringify({ curLat: userLat, curLong: userLong }),
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+           
+
+       
+
+           
+        }
+
+
+    </script>
+
+
+}
 
 
 
