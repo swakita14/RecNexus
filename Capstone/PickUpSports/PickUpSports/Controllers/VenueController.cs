@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -23,11 +24,10 @@ namespace PickUpSports.Controllers
             _context = context;
         }
 
-        public ActionResult Index(string sortBy, string curLat, string curLong)
+
+        public ActionResult Index(string sortBy, string curLat, string curLong, string time, string day)
         {
-
             
-
 
             // Only want to update Venues database once a week
             Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
@@ -92,6 +92,7 @@ namespace PickUpSports.Controllers
 
                 // get the rating 
                 List<Review> reviews = _context.Reviews.Where(r => r.VenueId == venue.VenueId).ToList();
+
                 decimal? avgRating;
                 if (reviews.Count > 0)
                 {
@@ -115,17 +116,59 @@ namespace PickUpSports.Controllers
                     LatitudeCoord = location.Latitude,
                     LongitudeCoord = location.Longitude,
                     Distance = distance
+  
 
 
                 });
-                
+
             }
 
+            //get all the buiness hours for all the venues
+            List<BusinessHours> hours = _context.BusinessHours.ToList();
+
+            //user input from the inline form which is the time the user searches for
+            time = Request.QueryString["starting"];
+
+            //day of week from user input
+            day = Request.QueryString["day"];
+
+            //lets wait till time is NOT null
+            if (time != null)
+            {
+                //convert user input string to a TimeSpan
+                TimeSpan hs = TimeSpan.Parse(time);
+
+                //First filter out using the days
+                List<BusinessHours> day_available = hours.Where(x => x.DayOfWeek == ConvertDay(day)).ToList();
+
+                //Then use that list and filter the closed times
+                List<BusinessHours> closed_from = day_available.Where(x => x.CloseTime >= hs).ToList();
+
+                //Finally filter the list above and you have the remaning few which maches the days and the closing time
+                List<BusinessHours> open_from = closed_from.Where(x => x.OpenTime <= hs).ToList();
+
+                //If there are some in the list that matches the user input - else it didnt match
+                if (open_from.Count > 0)
+                {
+                    foreach (var v in open_from)
+                    {
+                        //match the id of the business hours with the acutal venue and send it back to the view
+                        model = model.Where(x => x.VenueId == v.VenueId).ToList();
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    //Error Message shows 
+                    ViewBag.Message = "No Match Available";
+                }
+            }
 
 
             ViewBag.DistanceSort = string.IsNullOrEmpty(sortBy) ? "Distance" : "";
             //implement sorting by rate fuction
             ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
+
             switch (sortBy)
             {
                 case "RatingDesc":
@@ -139,6 +182,42 @@ namespace PickUpSports.Controllers
                     break;
             }
             return View(model);
+        }
+
+       
+        /**
+         * This is helper method that converts the string from the user input to an int
+         */
+        public int ConvertDay(string day) 
+        {
+            int day_num = 0;
+
+            switch (day)
+            {
+                case "Monday":
+                    day_num = 1;
+                    break;
+                case "Tuesday":
+                    day_num = 2;
+                    break;
+                case "Wednesday":
+                    day_num = 3;
+                    break;
+                case "Thursday":
+                    day_num = 4;
+                    break;
+                case "Friday":
+                    day_num = 5;
+                    break;
+                case "Saturday":
+                    day_num = 6;
+                    break;
+                case "Sunday":
+                    day_num = 0;
+                    break;
+            }
+
+            return day_num;
         }
 
         public ActionResult Map()
