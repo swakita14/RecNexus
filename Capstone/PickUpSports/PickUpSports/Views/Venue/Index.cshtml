@@ -2,17 +2,14 @@
 @{
     ViewBag.Title = "Sports Venues";
 }
-
 <h2><i>Local Sports Venues</i></h2>
 <hr />
 <p>
     <center>
         @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }) <button onclick="getLocation()">Sort Venues by Distance</button>
 
-
     </center>
 </p>
-
 <input type="number" name="Distance" min="1" max="100" />
 @foreach (var venue in Model)
 {
@@ -29,16 +26,12 @@
         <div class="row">
             @Html.DisplayFor(model => venue.Distance)
         </div>
-
         <div class="row">
             <br />@Html.ActionLink("Click here to view ratings and buisness hours", "Details", new { id = venue.VenueId })
         </div>
-
     </div>
     <hr />
 }
-
-
 
 <script>
     var x = document.getElementById("demo");
@@ -46,7 +39,7 @@
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
-        } else { 
+        } else {
             x.innerHTML = "Geolocation is not supported by this browser.";
         }
     }
@@ -69,4 +62,3 @@
         });
     }
 </script>
-
