@@ -1,15 +1,15 @@
-﻿@using PickUpSports.Controllers
-@model List<PickUpSports.Models.ViewModel.VenueViewModel>
+﻿@model List<PickUpSports.Models.ViewModel.VenueViewModel>
 @{
     ViewBag.Title = "Sports Venues";
 }
 
 <h2><i>Local Sports Venues</i></h2>
 <hr />
-<<<<<<< HEAD
 <p>
     <center>
-        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort })
+        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }) <button onclick="getLocation()">Sort Venues by Distance</button>
+
+
     </center>
 </p>
 
@@ -32,51 +32,41 @@
 
         <div class="row">
             <br />@Html.ActionLink("Click here to view ratings and buisness hours", "Details", new { id = venue.VenueId })
-
-
-
         </div>
 
     </div>
     <hr />
 }
 
-@section PageScript
-{
-    @Scripts.Render("~/bundles/jquery")
-    <script type="text/javascript">
-        $(document).ready(function () {})
-       
-      
-        window.navigator.geolocation.getCurrentPosition(function(position) {
-            var userLat = position.coords.latitude;
-            var userLong = position.coords.longitude;
 
-            $.ajax({
-                url: '/Venue/Index',
-                type: 'GET',
-                dataType: "json",
-                data: JSON.stringify({ curLat: userLat, curLong: userLong }),
-                success: function (data) {
-                    alert(data);
-                },
-                error: function (errMsg) {
-                    alert(errMsg);
-                }
-            });
-        });
-           
 
-       
+<script>
+    var x = document.getElementById("demo");
 
-           
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            x.innerHTML = "Geolocation is not supported by this browser.";
         }
+    }
 
-
-    </script>
-
-
-}
-
-
+    function showPosition(position) {
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("Index", "Venue")",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ curLat: lat, curLong: long, sortBy: "Distance" }),
+            success: function (data) {
+                alert(data);
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
+</script>
 
