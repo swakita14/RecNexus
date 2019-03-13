@@ -20,12 +20,12 @@
                     <label for="day">Day of Week:</label>
                     @Html.DropDownList("day", new SelectList(Enum.GetValues(typeof(DayOfWeek))), new { @class = "form-control" }) &nbsp;
                 </div>
-                <button type="submit" class="btn btn-outline-dark">Find Available Venues</button> &nbsp;
+                <button type="submit" class="btn btn-danger">Find Available Venues</button> &nbsp;
 <p style="color: red">@ViewBag.Message</p>
             </form>
 <br />
-<button type="button" class="btn btn-outline-dark" onclick="location.href = '@Url.Action("Index", "Venue", new {sortBy = "RatingDesc"})'">Sort by Rating</button>
-<button type="button" class="btn btn-outline-dark" onclick="getLocation()">Sort by Distance</button>
+@Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" }) 
+@Html.ActionLink("Sort Venues by Distance", "Index", new { sortBy = ViewBag.DistanceSort }, new { @class = "btn btn-danger" })
         </center>
     </div>
 </p>
@@ -43,9 +43,7 @@
                 <div class="row">
                     @Html.DisplayFor(model => venue.Phone)
                 </div>
-                <div class="row">
-                    @Html.DisplayFor(model => venue.Distance)
-                </div>
+               
 
                 <div class="row">
                     <br />@Html.ActionLink("Click here for details", "Details", new { id = venue.VenueId })
