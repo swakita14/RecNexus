@@ -6,8 +6,14 @@
 <h2><i>Local Sports Venues</i></h2>
 <hr />
 
+
+<div class="w3-container">
+    <h3>Google Map</h3>
+    <div class="map-canvas" id="map"></div>
+</div>
+
 <div class="row">
-   
+
     <div class="col-md-6">
         <form class="form-inline">
             <div class="form-group">
@@ -18,16 +24,9 @@
         </form>
     </div>
     <div class="col-md-6">
-        @Html.ActionLink("SortByRating", "Index", new {sortBy = ViewBag.RateSort})
+        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort })
     </div>
 
-</div>
-
-
-
-<div class="w3-container">
-    <h3>Google Map</h3>
-    <div class="map-canvas" id="map"></div>
 </div>
 
 <div ng-app="myApp">
