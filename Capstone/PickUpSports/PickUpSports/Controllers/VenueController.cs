@@ -32,14 +32,14 @@ namespace PickUpSports.Controllers
             // Only want to update Venues database once a week
             Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
 
-            // If there is no update or if most recent update was more than week ago
+            // If there is no update or if most recent update was more than two weeks ago
             // search places and update Venues database
-            if (mostRecentUpdate == null || mostRecentUpdate.DateUpdated < DateTime.Now.AddDays(-7))
+            if (mostRecentUpdate == null || mostRecentUpdate.DateUpdated < DateTime.Now.AddDays(-14))
             {
                 // Get list of places 
-                PlaceSearchResponse places = _placesApi.GetPlaces().Result;
+                List<PlaceSearchResult> places = _placesApi.GetVenues().Result;
                 
-                foreach (var place in places.Results)
+                foreach (var place in places)
                 {
                     // Check if we already have this venue in database
                      Venue existingVenue = _context.Venues.FirstOrDefault(v => v.GooglePlaceId == place.PlaceId);
@@ -92,7 +92,13 @@ namespace PickUpSports.Controllers
 
                 // get the rating 
                 List<Review> reviews = _context.Reviews.Where(r => r.VenueId == venue.VenueId).ToList();
-                decimal avgRating = (decimal)reviews.Average(r => r.Rating);
+                decimal? avgRating;
+                if (reviews.Count > 0)
+                {
+                    avgRating = (decimal) reviews.Average(r => r.Rating);
+                }
+                else avgRating = null;
+
 
                 model.Add(new VenueViewModel
                 {
@@ -131,13 +137,15 @@ namespace PickUpSports.Controllers
             }
             return View(model);
         }
+
         public ActionResult Map()
         {
             return View();
         }
-            /**
-             * Get venue, hours, and review data for single Venue and return to view
-             */
+
+        /**
+         * Get venue, hours, and review data for single Venue and return to view
+         */
         public ActionResult Details(int id)
         {
             // Model to be sent to view
@@ -175,8 +183,17 @@ namespace PickUpSports.Controllers
             List<Review> reviews = _context.Reviews.Where(r => r.VenueId == id).ToList();
             model.Reviews = new List<ReviewViewModel>();
 
-            decimal avgRating = (decimal) reviews.Average(r => r.Rating);
-            model.AverageRating = Math.Round(avgRating, 1);
+            decimal? avgRating;
+            if (reviews.Count > 0)
+            {
+                avgRating = (decimal) reviews.Average(r => r.Rating);
+                model.AverageRating = Math.Round((decimal) avgRating, 1);
+            }
+            else
+            {
+                avgRating = null;
+                model.AverageRating = null;
+            }
 
             List<ReviewViewModel> tempList = new List<ReviewViewModel>();
             foreach (var review in reviews)

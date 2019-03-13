@@ -19,9 +19,14 @@
             <dd>
                 @Html.DisplayFor(model => model.ContactUsername)
             </dd>
-            <dd>
-                @Html.DisplayFor(model => model.SportName)
-            </dd>
+
+            @foreach (var name in Model.SportName)
+            {
+                <dd>
+                   @name
+                </dd>
+            }
+
 
         </dl>
     </div>

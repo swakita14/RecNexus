@@ -18,7 +18,7 @@ namespace PickUpSports.Controllers
             _context = context;
         }        
 
-        // GET: SportPreferences/Details/5
+        // GET: SportPreferences/Details
         public ActionResult Details()
         {
             //Identify the person using email
@@ -31,7 +31,23 @@ namespace PickUpSports.Controllers
 
             model.ContactID = contact.ContactId;
             model.ContactUsername = contact.Username;
+
+            // find the sportpreferences for the user
+            List<SportPreference> sportPrefs = _context.SportPreferences.Where(s => s.ContactID == contact.ContactId).ToList();
             
+            //for each preference of the user, get the sport name
+            List<string> sportNameList = new List<string>();
+
+            foreach (var sportPref in sportPrefs)
+            {
+                List<Sport> sports = _context.Sports.Where(x => x.SportID == sportPref.SportID).ToList();
+                foreach (var sport in sports)
+                {
+                    sportNameList.Add(sport.SportName);
+                }              
+            }
+            //add all the sport name to the list back to the view
+            model.SportName=sportNameList;
             return View(model);
         }
         [HttpGet]
@@ -108,24 +124,7 @@ namespace PickUpSports.Controllers
             }
 
             return RedirectToAction("Details", "SportPreferences");
-        }
-             
-
-        // GET: SportPreferences/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            SportPreference sportPreference = _context.SportPreferences.Find(id);
-            if (sportPreference == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sportPreference);
-        }
-
+        }             
         protected override void Dispose(bool disposing)
         {
             if (disposing)
