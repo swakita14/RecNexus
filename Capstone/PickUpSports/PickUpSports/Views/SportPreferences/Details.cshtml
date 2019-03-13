@@ -1,0 +1,35 @@
+﻿@model PickUpSports.Models.ViewModel.SportPreferenceViewModel
+    <h2>Details</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+
+    <div>
+        <h4>SportPreference</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ContactUsername)
+            </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.SportName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ContactUsername)
+            </dd>
+
+            @foreach (var name in Model.SportName)
+            {
+                <dd>
+                   @name
+                </dd>
+            }
+
+
+        </dl>
+    </div>
+
+
+

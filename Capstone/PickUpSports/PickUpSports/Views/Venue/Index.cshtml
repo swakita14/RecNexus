@@ -1,0 +1,92 @@
+﻿@model List<PickUpSports.Models.ViewModel.VenueViewModel>
+@{
+    ViewBag.Title = "Sports Venues";
+}
+
+<div class="page-header">
+    <h3>Sports Venues and Fields</h3>
+    <p>Find local venues to play your favorite sports at here!</p>
+</div>
+
+<p>
+    <div class="row">
+        <center class="form-inline">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="endtime">Starting Time:</label>
+                    <input type="text" class="form-control" id="time" name="time" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" required> &nbsp;
+                </div>
+                <div class="form-group">
+                    <label for="day">Day of Week:</label>
+                    @Html.DropDownList("day", new SelectList(Enum.GetValues(typeof(DayOfWeek))), new { @class = "form-control" }) &nbsp;
+                </div>
+                <button type="submit" class="btn btn-danger">Find Available Venues</button> &nbsp;
+<p style="color: red">@ViewBag.Message</p>
+            </form>
+<br />
+@Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" }) 
+@Html.ActionLink("Sort Venues by Distance", "Index", new { sortBy = ViewBag.DistanceSort }, new { @class = "btn btn-danger" })
+        </center>
+    </div>
+</p>
+<ul class="rolldown-list" id="myList">
+    <li>
+        @foreach (var venue in Model)
+        {
+            <div class="container">
+                <div class="row">
+                    @Html.DisplayFor(model => venue.Name)
+                </div>
+                <div class="row">
+                    @Html.DisplayFor(model => venue.Address1), @Html.DisplayFor(model => venue.City), @Html.DisplayFor(model => venue.State), @Html.DisplayFor(model => venue.ZipCode)
+                </div>
+                <div class="row">
+                    @Html.DisplayFor(model => venue.Phone)
+                </div>
+               
+
+                <div class="row">
+                    <br />@Html.ActionLink("Click here for details", "Details", new { id = venue.VenueId })
+                </div>
+
+            </div>
+            <hr />
+        }
+    </li>
+</ul>
+
+
+<script>
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("Index", "Venue")",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ curLat: lat, curLong: long, sortBy: "Distance" }),
+            success: function (data) {
+                alert(data);
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
+
+    getLocation();
+
+</script>
+
+

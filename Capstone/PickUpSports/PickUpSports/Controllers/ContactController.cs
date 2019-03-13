@@ -5,14 +5,20 @@ using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
-using PickUpSports.Models;
+using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
 {
+    [Authorize]
     public class ContactController : Controller
     {
-        private readonly PickUpContext _context = new PickUpContext();
+        private readonly PickUpContext _context;
+
+        public ContactController(PickUpContext context)
+        {
+            _context = context;
+        }
 
         // GET: Contact/Details/5
         public ActionResult Details(int? id)

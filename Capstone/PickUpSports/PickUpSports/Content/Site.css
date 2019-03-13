@@ -39,4 +39,121 @@ textarea {
     cursor: pointer;
     border: none;
 }
+.map-canvas {
+    width: 100%;
+    height: 400px;
+}
 
+.body-content {
+    padding-top: 1em;
+}
+
+.active {
+    border-top: 2px solid #ff6a00;
+}
+.place-rating {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid;
+    border-color: #989898;
+    border-radius: 5px;
+    background-color: #F0F0F0;
+}
+
+.placed-rating hr {
+    margin-bottom: 20px;
+
+}
+
+html,body {
+    width: 100%;
+    height: 100%;
+}
+
+.rolldown-list {
+    text-align: left;
+    padding: 0;
+    margin: 0;
+}
+
+.rolldown-list li {
+    padding: 1em;
+    margin-bottom: .125em;
+    display: block;
+    list-style: none;
+    text-transform: uppercase;
+    font: 1.2em/1.4 'Oswald', sans-serif;
+    color: #fff;
+}
+
+.rolldown-list li {
+    visibility: hidden;
+    animation: rolldown .7s 1;
+    transform-origin: 50% 0;
+    animation-fill-mode: forwards;
+}
+
+.rolldown-list li:nth-child(2n) {
+    background-color: #444;
+}
+
+.rolldown-list li:nth-child(2n+1) {
+    background-color: #333;
+}
+
+#myList {
+    position: absolute;
+    width: 50%; 
+    left: 50%;
+    margin-left: -25%;
+}
+
+#btnReload {
+    float: right;
+    color: #333;
+    background: #ccc;
+    text-transform: uppercase;
+    border: none;
+    padding: .5em 1em;
+}
+
+#btnReload:hover {
+    background: #ddd;
+}
+
+@keyframes rolldown {
+    0% {
+        visibility: visible;
+        transform: rotateX(180deg) perspective(500px);
+    }
+    70% {
+        visibility: visible;
+        transform: rotateX(-20deg);
+    }
+    100% {
+        visibility: visible;
+        transform: rotateX(0deg);
+    }
+}
+
+body {
+    color: #3d3e44;
+    font-family: "Hind", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    -webkit-font-feature-settings: "kern", "liga", "pnum";
+    font-feature-settings: "kern", "liga", "pnum";
+    font-size: .9rem;
+    line-height: 1.7;
+    min-height: 100vh;
+    min-width: 320px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/*Typography*/
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "Hind", "Calibre", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    -webkit-font-feature-settings: "kern", "liga", "pnum";
+    font-feature-settings: "kern", "liga", "pnum";
+    -webkit-font-smoothing: antialiased;
+    color: #444;
+}

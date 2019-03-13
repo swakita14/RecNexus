@@ -37,13 +37,19 @@ audio:not([controls]) {
     display: none
 }
 
+.wrapped {
+    padding-top: 50px;
+}
 a {
     background-color: transparent;
-    -webkit-text-decoration-skip: objects
+    border-bottom: 1px solid black;
+    -webkit-text-decoration-skip: objects;
 }
 
     a:active, a:hover {
-        outline-width: 0
+        outline-width: 0;
+        border-bottom: 1px solid black;
+
     }
 
 abbr[title] {

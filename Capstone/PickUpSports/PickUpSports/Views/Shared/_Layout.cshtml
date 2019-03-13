@@ -8,18 +8,21 @@
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/w3.css")
     @Styles.Render("~/Content/w3-theme.css")
-    
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/angularapp")
+    @Scripts.Render("~/Content/responsive.css")
+
 
 </head>
 <body>
     <div class="w3-top">
         <div class="w3-bar w3-theme-d2 w3-left-align">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-              
+
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Pick-Up Sports Application", "Index", "Home", new { area = "" }, new { @class = "w3-button w3-red" })</li>
-                    <!--<li>@Html.ActionLink("Home", "Index", "Home")</li>-->
+                    <li>@Html.ActionLink("Venues", "Index", "Venue")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -27,10 +30,7 @@
     </div>
     <div class="w3-container">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Scrum Lords</p>
-        </footer>
+        @RenderSection("PageScript", required:false)
     </div>
 
     @Scripts.Render("~/bundles/jquery")
