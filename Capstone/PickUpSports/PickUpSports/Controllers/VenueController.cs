@@ -91,12 +91,12 @@ namespace PickUpSports.Controllers
 
             //implement sorting by rate fuction
             ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
+
             switch (sortBy)
             {
                 case "RatingDesc":
                     model=model.OrderByDescending(x=>x.AverageRating).ToList();
                     break;
-                default:
                     model=model.OrderBy(x => x.VenueId).ToList();
                     break;
             }

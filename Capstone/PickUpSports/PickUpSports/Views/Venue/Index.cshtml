@@ -5,11 +5,25 @@
 
 <h2><i>Local Sports Venues</i></h2>
 <hr />
-<p>
-    <center>
-        @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort})
-    </center>
-</p>
+
+<div class="row">
+   
+    <div class="col-md-6">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="endtime">Starting Time:</label>
+                <input type="time" class="form-control" id="starting" required> &nbsp;
+            </div>
+            <button type="submit" class="btn btn-default">Find Available Venues</button> &nbsp;
+        </form>
+    </div>
+    <div class="col-md-6">
+        @Html.ActionLink("SortByRating", "Index", new {sortBy = ViewBag.RateSort})
+    </div>
+
+</div>
+
+
 
 <div class="w3-container">
     <h3>Google Map</h3>

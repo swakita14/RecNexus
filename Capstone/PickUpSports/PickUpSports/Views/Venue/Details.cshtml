@@ -38,7 +38,7 @@
 <div class="container">
     <div class="row">
         <h3>
-           Hours of Operation:
+            <b>Hours of Operation:</b>
         </h3>
     </div>
     @if (Model.BusinessHours.Count > 0)
@@ -63,8 +63,9 @@
 <div class="container">
     <div class="row">
         <h3>
-            Reviews:
+            <b>Reviews:</b>
         </h3>
+        <br/>
     </div>
 
         @if (Model.Reviews.Count > 0)
@@ -75,15 +76,15 @@
                     
                     @if (reviews.Author != null)
                     {
-                        <h4>Author: @reviews.Author</h4>
+                        <h4><b>Author:</b> @reviews.Author</h4>
                     }
                     else
                     {
-                        <h4>Author: <i>anonymous</i></h4>
+                        <h4><b>Author:</b> <i>anonymous</i></h4>
                     }
 
-                    <h4>Rating: @reviews.Rating</h4>
-                    <h4>Review Date: @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</h4>
+                    <h4><b>Rating: </b>@reviews.Rating</h4>
+                    <h4><b>Review Date:</b> @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</h4>
                     <p>@reviews.Comments</p>
                                          
                 </div>
