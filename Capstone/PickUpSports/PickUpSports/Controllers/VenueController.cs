@@ -121,15 +121,18 @@ namespace PickUpSports.Controllers
                 
             }
 
-             
-            ViewBag.DistanceSort = 
 
+
+            ViewBag.DistanceSort = string.IsNullOrEmpty(sortBy) ? "Distance" : "";
             //implement sorting by rate fuction
             ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
             switch (sortBy)
             {
                 case "RatingDesc":
                     model=model.OrderByDescending(x=>x.AverageRating).ToList();
+                    break;
+                case "Distance":
+                    model = model.OrderBy(x => x.Distance).ToList();
                     break;
                 default:
                     model=model.OrderBy(x => x.VenueId).ToList();
