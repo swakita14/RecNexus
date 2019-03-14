@@ -27,5 +27,7 @@ namespace PickUpSports.DAL
             builder.Configurations.Add(new SportPreferenceConfiguration());
             builder.Configurations.Add(new LocationConfiguration());
         }
+
+        public System.Data.Entity.DbSet<PickUpSports.Models.TimePreference> TimePreferences { get; set; }
     }
 }

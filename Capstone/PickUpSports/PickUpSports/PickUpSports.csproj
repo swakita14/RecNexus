@@ -218,12 +218,19 @@
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+<<<<<<< HEAD
     <Compile Include="Controllers\ReviewController.cs" />
     <Compile Include="Controllers\SportPreferencesController.cs" />
     <Compile Include="Controllers\TimePreferencesController.cs" />
+=======
+<<<<<<< HEAD
+    <Compile Include="Controllers\TimePreferencesController.cs" />
+=======
+>>>>>>> 443264669bece13e1ed5ee9ae8504fc7bb3ad12b
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
+>>>>>>> e2abe082c181d6e127f8c33fb5b25b8652b78c81
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\LocationConfiguration.cs" />
     <Compile Include="DAL\Configurations\ReviewConfiguration.cs" />
@@ -341,6 +348,7 @@
     <Content Include="Views\Contact\Details.cshtml" />
     <Content Include="Views\Contact\Edit.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
+<<<<<<< HEAD
     <Content Include="Views\Venue\Index.cshtml" />
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Venue\Details.cshtml" />
@@ -354,6 +362,24 @@
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
+=======
+    <Content Include="Web_deploy.config" />
+<<<<<<< HEAD
+    <Content Include="Views\TimePreferences\Create.cshtml" />
+    <Content Include="Views\TimePreferences\Delete.cshtml" />
+    <Content Include="Views\TimePreferences\Details.cshtml" />
+    <Content Include="Views\TimePreferences\Edit.cshtml" />
+    <Content Include="Views\TimePreferences\Index.cshtml" />
+=======
+    <Content Include="Views\Venue\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
+      <Project>{67E10F34-47F7-4373-BAA8-AAF116C8683C}</Project>
+      <Name>PickUpSports.Data.GoogleAPI</Name>
+    </ProjectReference>
+>>>>>>> e2abe082c181d6e127f8c33fb5b25b8652b78c81
+>>>>>>> 443264669bece13e1ed5ee9ae8504fc7bb3ad12b
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
