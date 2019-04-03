@@ -1,6 +1,10 @@
 ﻿@model PickUpSports.Models.ViewModel.SportPreferenceViewModel
-
-    <p>
+@{
+    ViewBag.Title = "Details";
+}
+<br />
+@*
+        <p>
         @Html.ActionLink("Create A New Preference", "Create")
     </p>
 
@@ -11,22 +15,47 @@
             <dt>
                 @Html.DisplayNameFor(model => model.ContactUsername)
             </dt>
-            <dt>
-                @Html.DisplayNameFor(model => model.SportName)
-            </dt>
+            
 
             <dd>
                 @Html.DisplayFor(model => model.ContactUsername)
             </dd>
 
-            @foreach (var name in Model.SportName)
-            {
-                <dd>
-                    @name
-                </dd>
-            }
+            
         </dl>
     </div>
 
+*@
+
+<div class="container">
+    <div class="row">
+        <div class="well well-sm">
+
+            <fieldset>
+                <legend class="text-center header">Your Sports Preferences</legend>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ContactUsername)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ContactUsername)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.SportName)
+                </dt>
+                @foreach (var name in Model.SportName)
+                {
+                    <dd>
+                        @name
+                    </dd>
+                }
+            </fieldset>
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("Add New Sport Preference", "Create")
+    </p>
+</div>
 
 
