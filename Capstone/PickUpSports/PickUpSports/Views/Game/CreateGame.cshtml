@@ -1,0 +1,75 @@
+﻿@model PickUpSports.Models.ViewModel.GameController.CreateGameViewModel
+
+@{
+    ViewBag.Title = "Start a New Game";
+}
+
+@Styles.Render("https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css")
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <script>
+        $(function() {
+            $('input[name="datetimes"]').daterangepicker({
+                timePicker: true,
+                startDate: moment().startOf('hour'),
+                endDate: moment().startOf('hour').add(32, 'hour'),
+                locale: {
+                    format: 'M/DD hh:mm A'
+                }
+            });
+            $('#datetimes').daterangepicker({
+                timePicker: true,
+                startDate: moment().startOf('hour'),
+                endDate: moment().startOf('hour').add(32, 'hour'),
+                locale: {
+                    format: 'M/DD hh:mm A'
+                }
+            });
+        });
+    </script>
+}
+<h2>Start a New Game!</h2>
+
+@using (Html.BeginForm("CreateGame", "Game", FormMethod.Post))
+{
+    <form>
+        <div class="row">
+            <div class="form-group col-md-3">
+                @Html.DisplayNameFor(model => model.VenueId)
+                @Html.DropDownListFor(
+                    x => x.VenueId,
+                    new SelectList(ViewBag.Venues, "Key", "Value"),
+                    "Select a Venue",
+                    new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.VenueId, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-3">
+                @Html.DisplayNameFor(model => model.SportId)
+                @Html.DropDownListFor(
+                    x => x.SportId,
+                    new SelectList(ViewBag.Sports, "Key", "Value"),
+                    "Select a Sport",
+                    new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.SportId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group col-md-3">
+
+                @Html.DisplayNameFor(model => model.DateRange)
+                @Html.EditorFor(x => x.DateRange, new {htmlAttributes = new {@class = "form-control", name = "datetimes", @id = "datetimes"}})
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-3">
+                <button type="submit" class="btn btn-default">Create Your Game</button>
+            </div>
+        </div>
+    </form>
+}
