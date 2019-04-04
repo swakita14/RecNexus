@@ -4,3 +4,6 @@ DROP TABLE BusinessHours;
 DROP TABLE Review;
 DROP TABLE Location;
 DROP TABLE Venue;
+DROP TABLE PickUpGame;
+DROP TABLE Game;
+DROP TABLE GameStatus;

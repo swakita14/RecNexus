@@ -100,4 +100,44 @@ CREATE TABLE [dbo].[SportPreference](
     CONSTRAINT [PK_dbo.SportPreference] PRIMARY KEY CLUSTERED ([SportPrefID] ASC),
     CONSTRAINT [FK1_dbo.Contact] FOREIGN KEY (ContactID) REFERENCES [dbo].[Contact] (ContactId),
 	CONSTRAINT [FK2_dbo.Sport] FOREIGN KEY (SportID) REFERENCES [dbo].[Sport] (SportId)
-)
+);
+
+CREATE TABLE GameStatus
+(
+	GameStatusID int IDENTITY(1,1) NOT NULL,
+	GameStatus nvarchar(50) NOT NULL,
+
+	CONSTRAINT PK_GameStatus PRIMARY KEY (GameStatusID)
+);
+
+INSERT INTO GameStatus (GameStatus) VALUES
+('Open'),
+('Cancelled')
+GO
+
+CREATE TABLE Game
+(
+	GameID int IDENTITY(1,1) NOT NULL,
+	StartTime datetime NOT NULL,
+	VenueID int NOT NULL,
+	SportID int NOT NULL,
+	ContactID int NULL,
+	GameStatusID int NOT NULL,
+
+	CONSTRAINT PK_Game PRIMARY KEY (GameID),
+	CONSTRAINT FK_Game_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID),
+	CONSTRAINT FK_Game_Sport FOREIGN KEY (SportID) REFERENCES Sport(SportID),
+	CONSTRAINT FK_Game_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID),
+	CONSTRAINT FK_Game_GameStatus FOREIGN KEY (GameStatusID) REFERENCES GameStatus(GameStatusID)
+);
+
+CREATE TABLE PickUpGame
+(
+	PickUpGameID int IDENTITY(1,1) NOT NULL,
+	GameID int NOT NULL,
+	ContactID int NULL,
+
+	CONSTRAINT PK_PickUpGame PRIMARY KEY (PickUpGameID),
+	CONSTRAINT FK_PickUpGame_Game FOREIGN KEY (GameID) REFERENCES Game(GameID),
+	CONSTRAINT FK_PickUpGame_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID)
+);
