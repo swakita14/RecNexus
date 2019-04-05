@@ -21,6 +21,11 @@ namespace PickUpSports.DAL.Configurations
                 .HasColumnType("datetime")
                 .IsRequired();
 
+            Property(x => x.EndTime)
+                .HasColumnName("EndTime")
+                .HasColumnType("datetime")
+                .IsRequired();
+
             Property(x => x.VenueId)
                 .HasColumnName("VenueID")
                 .HasColumnType("int")

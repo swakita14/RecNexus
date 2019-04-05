@@ -23,6 +23,8 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Pick-Up Sports Application", "Index", "Home", new { area = "" }, new { @class = "w3-button w3-red" })</li>
                     <li>@Html.ActionLink("Venues", "Index", "Venue")</li>
+                    <li>@Html.ActionLink("Start a Game", "CreateGame", "Game")</li>
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

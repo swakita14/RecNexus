@@ -119,6 +119,7 @@ CREATE TABLE Game
 (
 	GameID int IDENTITY(1,1) NOT NULL,
 	StartTime datetime NOT NULL,
+	EndTime datetime NOT NULL,
 	VenueID int NOT NULL,
 	SportID int NOT NULL,
 	ContactID int NULL,
