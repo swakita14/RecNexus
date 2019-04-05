@@ -12,13 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     <script>
-        $(function() {
+        $(function () {
             $('input[name="datetimes"]').daterangepicker({
                 timePicker: true,
                 startDate: moment().startOf('hour'),
                 endDate: moment().startOf('hour').add(32, 'hour'),
                 locale: {
-                    format: 'M/DD hh:mm A'
+                    format: 'MM/DD//YYYY hh:mm A'
                 }
             });
             $('#datetimes').daterangepicker({
@@ -26,13 +26,23 @@
                 startDate: moment().startOf('hour'),
                 endDate: moment().startOf('hour').add(32, 'hour'),
                 locale: {
-                    format: 'M/DD hh:mm A'
+                    format: 'MM/DD/YYYY hh:mm A'
                 }
             });
         });
     </script>
 }
 <h2>Start a New Game!</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="row">
+        <div class="col-md-12">
+            @Html.ValidationSummary(false, "Please correct the following errors", new { @class = "text-danger" })
+
+        </div>
+    </div>
+}
 
 @using (Html.BeginForm("CreateGame", "Game", FormMethod.Post))
 {
@@ -45,7 +55,6 @@
                     new SelectList(ViewBag.Venues, "Key", "Value"),
                     "Select a Venue",
                     new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.VenueId, "", new { @class = "text-danger" })
             </div>
             <div class="form-group col-md-3">
                 @Html.DisplayNameFor(model => model.SportId)
@@ -54,15 +63,14 @@
                     new SelectList(ViewBag.Sports, "Key", "Value"),
                     "Select a Sport",
                     new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.SportId, "", new { @class = "text-danger" })
             </div>
         </div>
-        
+
         <div class="row">
             <div class="form-group col-md-3">
 
                 @Html.DisplayNameFor(model => model.DateRange)
-                @Html.EditorFor(x => x.DateRange, new {htmlAttributes = new {@class = "form-control", name = "datetimes", @id = "datetimes"}})
+                @Html.EditorFor(x => x.DateRange, new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" } })
             </div>
         </div>
 
