@@ -1,16 +1,20 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace PickUpSports.Models.ViewModel.GameController
 {
     public class CreateGameViewModel
     {
-        [DisplayName("Pick a start and finish time:")]
+        [Required]
+        [DisplayName("Pick a start and finish time (must start and end on same date):")]
         public string DateRange { get; set; }
 
-        [DisplayName("Venue:")]
+        [Required]
+        [DisplayName("Venue")]
         public int VenueId { get; set; }
 
-        [DisplayName("Sport:")]
+        [Required]
+        [DisplayName("Sport")]
         public int SportId { get; set; }
     }
 }
