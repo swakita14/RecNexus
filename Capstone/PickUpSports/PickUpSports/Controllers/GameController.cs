@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
+using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
 using DayOfWeek = System.DayOfWeek;
 
@@ -133,6 +137,29 @@ namespace PickUpSports.Controllers
             }
 
             return false;
+        }
+
+        public ActionResult SearchGame(CreateGameViewModel model)
+        {
+            if (model == null)
+            {
+                return View();
+            }
+            PopulateDropdownValues();
+            return View(); 
+        }
+
+        public JsonResult GetGamesResult(int venueId)
+        {
+            string gameItem = "";
+
+            var gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+
+            if (gameList.Count > 0)
+            {
+                gameItem = JsonConvert.SerializeObject(gameList);
+            }
+            return Json(gameItem, JsonRequestBehavior.AllowGet);
         }
     }
 }
