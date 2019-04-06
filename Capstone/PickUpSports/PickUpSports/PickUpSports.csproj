@@ -310,6 +310,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -364,6 +365,7 @@
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
     <Content Include="Web_deploy.config" />
+    <Content Include="Views\Game\SearchGame.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

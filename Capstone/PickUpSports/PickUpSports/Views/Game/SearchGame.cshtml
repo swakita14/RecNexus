@@ -1,0 +1,54 @@
+﻿@model PickUpSports.Models.ViewModel.GameController.CreateGameViewModel
+@{
+    ViewBag.Title = "SearchGame";
+}
+
+<h2>Search Games by Venue</h2>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <h2>Select Venue:</h2>
+        @Html.DropDownListFor(
+            x => x.VenueId,
+            new SelectList(ViewBag.Venues, "Key", "Value"),
+            "Select a Venue",
+            new { @class = "form-control" })
+    </div>
+
+    <div class="col-md-6">
+        <h2>List of Games:</h2>
+        <table class="table-striped" id="game-list">
+            <thead>
+                <tr>
+                    <th>
+                         Contact Person:   
+                    </th>
+                    <th>
+                         Game Status:    
+                    </th>
+                    <th>
+                         Start Time:
+                    </th>
+                    <th>
+                         End Time:   
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            
+
+            </tbody>
+            
+            
+
+        </table>
+
+    </div>
+
+</div>
+
+@section search_games
+{
+    <script type="text/javascript" src="@Url.Content("/Scripts/searchVenues.js")"></script>
+}
+
