@@ -34,5 +34,7 @@ namespace PickUpSports.DAL
             builder.Configurations.Add(new GameConfiguration());
             builder.Configurations.Add(new PickUpGameConfiguration());
         }
+
+        //public System.Data.Entity.DbSet<PickUpSports.Models.TimePreference> TimePreferences { get; set; }
     }
 }

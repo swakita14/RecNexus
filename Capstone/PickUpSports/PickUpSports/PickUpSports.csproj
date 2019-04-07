@@ -300,6 +300,7 @@
     <Content Include="Scripts\errors.json" />
     <None Include="Properties\PublishProfiles\PickupSports-Development - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\gameView.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -310,6 +311,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -363,6 +365,15 @@
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
+    <Content Include="Web_deploy.config" />
+    <Content Include="Views\Game\SearchGame.cshtml" />
+    <Content Include="Views\Game\_BusinessHours.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
+      <Project>{67E10F34-47F7-4373-BAA8-AAF116C8683C}</Project>
+      <Name>PickUpSports.Data.GoogleAPI</Name>
+    </ProjectReference>
     <Content Include="Views\Game\CreateGame.cshtml" />
   </ItemGroup>
   <ItemGroup>

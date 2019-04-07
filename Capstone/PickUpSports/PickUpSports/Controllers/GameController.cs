@@ -4,9 +4,11 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
+using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
 using DayOfWeek = System.DayOfWeek;
 
@@ -23,6 +25,7 @@ namespace PickUpSports.Controllers
 
         public ActionResult CreateGame()
         {
+            ViewBag.GameCreated = false;
             // Confirm user is logged in (visitors can't create game)
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
@@ -72,6 +75,16 @@ namespace PickUpSports.Controllers
                 return View(model);
             }
 
+            // Check if similar game already exists
+            Game existingGame = CheckForExistingGame(model.VenueId, model.SportId, startDateTime);
+            if (existingGame != null)
+            {
+                // TODO - Add link to existing game details later when that page is created
+                ViewData.ModelState.AddModelError("GameExists", "A game already exists with this venue, sport, and time.");
+                PopulateDropdownValues();
+                return View(model);
+            }
+
             // Get venue by ID and business hours for that venue
             Venue venue = _context.Venues.Find(model.VenueId);
             List<BusinessHours> venueHours = _context.BusinessHours.Where(b => b.VenueId == venue.VenueId).ToList();
@@ -99,10 +112,61 @@ namespace PickUpSports.Controllers
             _context.Games.Add(newGame);
             _context.SaveChanges();
 
-
+            ViewBag.GameCreated = true;
             PopulateDropdownValues();
             return View();
         }
+        
+        [HttpGet]
+        public PartialViewResult BusinessHoursByVenueId(int id)
+        {
+            // Map business hours
+            List<BusinessHours> businessHours = _context.BusinessHours.Where(b => b.VenueId == id).ToList();
+            List<BusinessHoursViewModel> model = new List<BusinessHoursViewModel>();
+
+            foreach (var businessHour in businessHours)
+            {
+                var closeDateTime = new DateTime() + businessHour.CloseTime;
+                var openDateTime = new DateTime() + businessHour.OpenTime;
+
+                model.Add(new BusinessHoursViewModel
+                {
+                    DayOfWeek = Enum.GetName(typeof(DayOfWeek), businessHour.DayOfWeek),
+                    CloseTime = closeDateTime.ToShortTimeString(),
+                    OpenTime = openDateTime.ToShortTimeString()
+                });
+            }
+
+            // Partial view displaying bids for specific item
+            return PartialView("_BusinessHours", model);
+        }
+
+        public ActionResult SearchGame(CreateGameViewModel model)
+        {
+            if (model == null)
+            {
+                return View();
+            }
+            PopulateDropdownValues();
+            return View();
+        }
+
+        public JsonResult GetGamesResult(int venueId)
+        {
+            string gameItem = "";
+
+            var gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+
+            if (gameList.Count > 0)
+            {
+                gameItem = JsonConvert.SerializeObject(gameList);
+            }
+            return Json(gameItem, JsonRequestBehavior.AllowGet);
+        }
+
+        /**
+         * Helper methods
+         */
 
         public void PopulateDropdownValues()
         {
@@ -125,6 +189,10 @@ namespace PickUpSports.Controllers
                 TimeSpan startTime = startDateTime.TimeOfDay;
                 TimeSpan endTime = endDateTime.TimeOfDay;
 
+                // Change midnight to 11:59 PM for accurate time comparisons
+                if (venueOpenDate.CloseTime == new TimeSpan(00, 00, 00))
+                    venueOpenDate.CloseTime = new TimeSpan(23, 59, 00);
+
                 // Ensure both start and end times are within range
                 if (startTime > venueOpenDate.OpenTime && startTime < venueOpenDate.CloseTime)
                 {
@@ -133,6 +201,34 @@ namespace PickUpSports.Controllers
             }
 
             return false;
+        }
+
+        public Game CheckForExistingGame(int venueId, int sportId, DateTime startDateTime)
+        {
+            // Check for all games that are happening at same venue
+            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId).ToList();
+            if (gamesAtVenue.Count <= 0) return null;
+
+
+            // Check for all games happening at that venue with same sport
+            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
+            if (sportsAtVenue.Count <= 0) return null;
+
+            // There are existing games with same sport and venue so check starting time
+            foreach (var game in sportsAtVenue)
+            {
+                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
+                {
+                    // If we get here, the new game will overlap with an existing game
+                    // Check if status is Open and if so, return that game
+                    if (game.GameStatusId == (int) GameStatusEnum.Open)
+                    {
+                        return game;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
