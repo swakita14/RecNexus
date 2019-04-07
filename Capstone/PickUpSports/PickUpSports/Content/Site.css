@@ -17,7 +17,7 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 1000px;
 }
 
 .header {
@@ -156,4 +156,33 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-feature-settings: "kern", "liga", "pnum";
     -webkit-font-smoothing: antialiased;
     color: #444;
+}
+
+.form-box {
+    width: 50%;
+    margin: auto;
+    padding-top:20px;
+}
+
+.form-control {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.well {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.form-box h1 {
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: black
+}
+
+.form-box h1 span {
+    font-weight: lighter;
 }

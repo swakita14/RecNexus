@@ -10,74 +10,72 @@
 {
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
-    <script>
-        $(function () {
-            $('input[name="datetimes"]').daterangepicker({
-                timePicker: true,
-                startDate: moment().startOf('hour'),
-                endDate: moment().startOf('hour').add(32, 'hour'),
-                locale: {
-                    format: 'MM/DD//YYYY hh:mm A'
-                }
-            });
-            $('#datetimes').daterangepicker({
-                timePicker: true,
-                startDate: moment().startOf('hour'),
-                endDate: moment().startOf('hour').add(32, 'hour'),
-                locale: {
-                    format: 'MM/DD/YYYY hh:mm A'
-                }
-            });
-        });
-    </script>
-}
-<h2>Start a New Game!</h2>
-
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="row">
-        <div class="col-md-12">
-            @Html.ValidationSummary(false, "Please correct the following errors", new { @class = "text-danger" })
-
-        </div>
-    </div>
+    <script src="../../Scripts/gameView.js"></script>
 }
 
 @using (Html.BeginForm("CreateGame", "Game", FormMethod.Post))
 {
-    <form>
+    <div class="container">
         <div class="row">
-            <div class="form-group col-md-3">
-                @Html.DisplayNameFor(model => model.VenueId)
-                @Html.DropDownListFor(
-                    x => x.VenueId,
-                    new SelectList(ViewBag.Venues, "Key", "Value"),
-                    "Select a Venue",
-                    new {@class = "form-control"})
-            </div>
-            <div class="form-group col-md-3">
-                @Html.DisplayNameFor(model => model.SportId)
-                @Html.DropDownListFor(
-                    x => x.SportId,
-                    new SelectList(ViewBag.Sports, "Key", "Value"),
-                    "Select a Sport",
-                    new {@class = "form-control"})
+            <div class="form-box">
+                <h1>Start a New Game</h1>
+                <form role="form" id="game-form">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.ValidationSummary(false, null, new {@class = "text-danger"})
+
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Venue field -->
+                    <div class="form-group">
+                        @Html.DropDownListFor(
+                            x => x.VenueId,
+                            new SelectList(ViewBag.Venues, "Key", "Value"),
+                            "Select a Venue",
+                            new {@class = "form-control", @onchange = "getVenueBusinessHours()"})
+                    </div>
+
+                    <div id="hours">
+                        <div class="form-group">
+                            @*Partial view updated by ajax call in gameView.js*@
+                        </div>
+                    </div>
+
+                    <!-- Sport field -->
+                    <div class="form-group" style="padding-top: 20px">
+                        @Html.DropDownListFor(
+                            x => x.SportId,
+                            new SelectList(ViewBag.Sports, "Key", "Value"),
+                            "Select a Sport",
+                            new {@class = "form-control"})
+                    </div>
+
+                    <!-- Date field -->
+                    <div class="form-group" style="padding-top: 20px">
+                        @Html.DisplayNameFor(x => x.DateRange)
+                        @Html.EditorFor(x => x.DateRange, new {htmlAttributes = new {@class = "form-control", name = "datetimes", @id = "datetimes"}})
+                    </div>
+
+                    <div class="form-group">
+                        <center>
+                            <button type="submit" class="btn btn-default">Create Your Game</button>
+                        </center>
+                    </div>
+                    
+                        @if (ViewBag.GameCreated != null && ViewBag.GameCreated)
+                        {
+                            <div class="form-group">
+                                <center>
+                                    <p><span class="glyphicon glyphicon-ok"></span> Game created successfully!</p>
+                                </center>
+                            </div>
+                        }
+                </form>
             </div>
         </div>
-
-        <div class="row">
-            <div class="form-group col-md-3">
-
-                @Html.DisplayNameFor(model => model.DateRange)
-                @Html.EditorFor(x => x.DateRange, new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" } })
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="form-group col-md-3">
-                <button type="submit" class="btn btn-default">Create Your Game</button>
-            </div>
-        </div>
-    </form>
+    </div>
 }
