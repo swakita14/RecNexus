@@ -300,6 +300,7 @@
     <Content Include="Scripts\errors.json" />
     <None Include="Properties\PublishProfiles\PickupSports-Development - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\gameView.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -366,6 +367,7 @@
     <Content Include="Views\SportPreferences\Edit.cshtml" />
     <Content Include="Web_deploy.config" />
     <Content Include="Views\Game\SearchGame.cshtml" />
+    <Content Include="Views\Game\_BusinessHours.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
