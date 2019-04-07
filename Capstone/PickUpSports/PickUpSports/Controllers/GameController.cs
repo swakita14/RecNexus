@@ -151,15 +151,32 @@ namespace PickUpSports.Controllers
 
         public JsonResult GetGamesResult(int venueId)
         {
-            string gameItem = "";
+            //list of games found using venue ID
+            List<Game> gameList = new List<Game>();
+            gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
 
-            var gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+            //List using ViewModel to format how I like 
+            List<ViewGameViewModel> newList = new List<ViewGameViewModel>();
 
-            if (gameList.Count > 0)
+            
+            //Find right data for each variable 
+            foreach (var game in gameList)
             {
-                gameItem = JsonConvert.SerializeObject(gameList);
+                ViewGameViewModel model = new ViewGameViewModel
+                {
+                    ContactPerson = _context.Contacts.Find(game.ContactId),
+                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    StartTime = game.StartTime.ToString("yyyy-M-dd hh:mm"),
+                    EndTime = game.EndTime.ToString("yyyy-M-dd hh:mm")
+                };
+
+               //Adding it to list 
+               newList.Add(model);
+
             }
-            return Json(gameItem, JsonRequestBehavior.AllowGet);
+
+            //returning it back to my Ajax js method
+            return Json(JsonConvert.SerializeObject(newList), JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -6,7 +6,7 @@
 <h2>Search Games by Venue</h2>
 <br />
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-3">
         <h2>Select Venue:</h2>
         @Html.DropDownListFor(
             x => x.VenueId,
@@ -14,36 +14,30 @@
             "Select a Venue",
             new { @class = "form-control" })
     </div>
-
-    <div class="col-md-6">
+    <div class="col-md-9">
         <h2>List of Games:</h2>
-        <table class="table-striped" id="game-list">
+        <table class="container" id="game-list">
             <thead>
-                <tr>
-                    <th>
-                         Contact Person:   
-                    </th>
-                    <th>
-                         Game Status:    
-                    </th>
-                    <th>
-                         Start Time:
-                    </th>
-                    <th>
-                         End Time:   
-                    </th>
-                </tr>
+            <tr>
+                <th>Username</th>
+                <th>Game Status</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
             </thead>
             <tbody>
-            
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
 
+                </tr>
             </tbody>
-            
-            
-
         </table>
-
     </div>
+
+    
 
 </div>
 

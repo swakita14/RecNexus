@@ -266,6 +266,7 @@
     <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\ViewGameViewModel.cs" />
     <Compile Include="Models\ViewModel\SelectSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\SportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
