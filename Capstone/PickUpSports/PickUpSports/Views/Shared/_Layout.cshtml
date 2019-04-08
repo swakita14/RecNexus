@@ -11,8 +11,6 @@
     @Scripts.Render("~/bundles/angular")
     @Scripts.Render("~/bundles/angularapp")
     @Scripts.Render("~/Content/responsive.css")
-
-
 </head>
 <body>
     <div class="w3-top">
@@ -23,6 +21,7 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Pick-Up Sports Application", "Index", "Home", new { area = "" }, new { @class = "w3-button w3-red" })</li>
                     <li>@Html.ActionLink("Venues", "Index", "Venue")</li>
+                    <li>@Html.ActionLink("Pick Up Games", "GameList", "Game")</li>
                     <li>@Html.ActionLink("Start a Game", "CreateGame", "Game")</li>
                     <li>@Html.ActionLink("Search Games", "SearchGame", "Game")</li>
                     <li>@Html.ActionLink("Search Games by Sports", "SearchBySports", "Game")</li>
