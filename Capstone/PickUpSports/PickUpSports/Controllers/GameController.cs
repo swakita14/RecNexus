@@ -216,6 +216,7 @@ namespace PickUpSports.Controllers
                 {
                     ContactPerson = _context.Contacts.Find(game.ContactId),
                     Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    GameId = game.VenueId,
                     StartTime = game.StartTime.ToString("yyyy-M-dd hh:mm"),
                     EndTime = game.EndTime.ToString("yyyy-M-dd hh:mm")
                 };
