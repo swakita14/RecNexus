@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -250,5 +252,86 @@ namespace PickUpSports.Controllers
             return Json(JsonConvert.SerializeObject(newList), JsonRequestBehavior.AllowGet);
 
         }
+
+        [HttpGet]
+        public ActionResult SearchBySports()
+        {
+            GameBySportViewModel model = new GameBySportViewModel();
+            model.Sports = FetchSports();
+            return View(model);
+        }
+
+        private static List<SelectListItem> FetchSports()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            string constr = ConfigurationManager.ConnectionStrings["PickUpContext"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                string query = " SELECT SportName, SportID FROM Sport";
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            items.Add(new SelectListItem
+                            {
+                                Text = sdr["SportName"].ToString(),
+                                Value = sdr["SportID"].ToString()
+                            });
+                        }
+                    }
+                    con.Close();
+                }
+            }
+
+            return items;
+        }
+
+        [HttpPost]
+        public ActionResult SearchBySports(GameBySportViewModel model)
+        {
+            model.Sports = FetchSports();
+            var selectedItem = model.Sports.Find(p => p.Value == model.SportId.ToString());
+
+            int selectedSportId = Convert.ToInt32(selectedItem.Value);
+
+            if (selectedItem != null)
+            {
+                selectedItem.Selected = true;
+                List<int> GameIdList = new List<int>();
+                List<string> VenueNameList = new List<string>();
+                List<DateTime> StartTimeList = new List<DateTime>();
+                List<DateTime> EndTimeList = new List<DateTime>();
+                List<string> ContactNameList = new List<string>();
+                List<string> GameStatusList = new List<string>();
+
+                List<Game> games = _context.Games.Where(s => s.SportId == selectedSportId).ToList();
+
+                foreach (var item in games)
+                {
+                    GameIdList.Add(item.GameId);
+                    VenueNameList.Add(_context.Venues.First(s => s.VenueId == item.VenueId).Name);
+                    StartTimeList.Add(item.StartTime);
+                    EndTimeList.Add(item.StartTime);                    
+                    ContactNameList.Add( _context.Contacts.First(s => s.ContactId == item.ContactId).Username);
+                    GameStatusList.Add(_context.GameStatuses.First(s => s.GameStatusId == item.GameStatusId).Status);
+                    
+                }
+                model.GameId = GameIdList;
+                model.VenueName = VenueNameList;
+                model.StartTime = StartTimeList;
+                model.EndTime = EndTimeList;
+                model.ContactName = ContactNameList;
+                model.GameStatus = GameStatusList;
+
+                ViewBag.Message = "True";
+            }
+
+            return View(model);
+        }
     }
+    
 }
