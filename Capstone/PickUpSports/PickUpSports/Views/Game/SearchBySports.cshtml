@@ -5,13 +5,22 @@
 @using (Html.BeginForm("SearchBySports", "Game", FormMethod.Post))
 {
     <div class="row">
-
-        <div class="col-md-6">
+        
+        <div class="col-md-12">
             <h2>Select Sports:</h2>
-            @Html.DropDownListFor(m => m.SportId, Model.Sports)
-            <input type="submit" value="Submit" />
+            <form>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        @Html.DropDownListFor(m => m.SportId, Model.Sports, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Search" class="btn btn-default" />
+                    </div>
+                </div>                
+            </form>                       
         </div>
-
     </div>
 }
 
@@ -22,7 +31,7 @@
             <div class="well well-sm">
 
                 <fieldset>
-                    <legend class="text-center header">List of Games:</legend>
+                    <legend class="text-left header">List of Games:</legend>
 
                     <dt>
                         Contact Person:
@@ -31,7 +40,7 @@
                         End Time:
                         Game Status:
                     </dt>
-                    @for (int i =0; i<Model.GameId.Count();i++)
+                    @for (int i = 0; i < Model.GameId.Count(); i++)
                     {
                         <dd>
                             @Model.ContactName.GetRange(i, 1).First()
@@ -41,7 +50,8 @@
                             @Model.GameStatus.GetRange(i, 1).First()
                         </dd>
                     }
-               </fieldset>
+                </fieldset>
+
             </div>
         </div>
     </div>
