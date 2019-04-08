@@ -267,6 +267,7 @@
     <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\GameListViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\ViewGameViewModel.cs" />
     <Compile Include="Models\ViewModel\SelectSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\SportPreferenceViewModel.cs" />
@@ -372,6 +373,7 @@
     <Content Include="Views\Game\SearchGame.cshtml" />
     <Content Include="Views\Game\_BusinessHours.cshtml" />
     <Content Include="Views\Game\SearchBySports.cshtml" />
+    <Content Include="Views\Game\GameList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
