@@ -153,19 +153,6 @@ namespace PickUpSports.Controllers
             return View();
         }
 
-        public JsonResult GetGamesResult(int venueId)
-        {
-            string gameItem = "";
-
-            var gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
-
-            if (gameList.Count > 0)
-            {
-                gameItem = JsonConvert.SerializeObject(gameList);
-            }
-            return Json(gameItem, JsonRequestBehavior.AllowGet);
-        }
-
         /**
          * Helper methods
          */
@@ -211,7 +198,6 @@ namespace PickUpSports.Controllers
             List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId).ToList();
             if (gamesAtVenue.Count <= 0) return null;
 
-
             // Check for all games happening at that venue with same sport
             List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
             if (sportsAtVenue.Count <= 0) return null;
@@ -223,7 +209,7 @@ namespace PickUpSports.Controllers
                 {
                     // If we get here, the new game will overlap with an existing game
                     // Check if status is Open and if so, return that game
-                    if (game.GameStatusId == (int) GameStatusEnum.Open)
+                    if (game.GameStatusId == (int)GameStatusEnum.Open)
                     {
                         return game;
                     }
@@ -231,6 +217,39 @@ namespace PickUpSports.Controllers
             }
 
             return null;
+               
+        }
+
+
+        public JsonResult GetGamesResult(int venueId)
+        {
+            //list of games found using venue ID
+            List<Game> gameList = new List<Game>();
+            gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+
+            //List using ViewModel to format how I like 
+            List<ViewGameViewModel> newList = new List<ViewGameViewModel>();
+
+            
+            //Find right data for each variable 
+            foreach (var game in gameList)
+            {
+                ViewGameViewModel model = new ViewGameViewModel
+                {
+                    ContactPerson = _context.Contacts.Find(game.ContactId),
+                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    StartTime = game.StartTime.ToString("yyyy-M-dd hh:mm"),
+                    EndTime = game.EndTime.ToString("yyyy-M-dd hh:mm")
+                };
+
+               //Adding it to list 
+               newList.Add(model);
+
+            }
+
+            //returning it back to my Ajax js method
+            return Json(JsonConvert.SerializeObject(newList), JsonRequestBehavior.AllowGet);
+
         }
 
         [HttpGet]
