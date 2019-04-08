@@ -25,6 +25,9 @@ namespace PickUpSports.Controllers
             _context = context;
         }
 
+        /**
+         * Routes user to page that contains Create Game form
+         */
         public ActionResult CreateGame()
         {
             ViewBag.GameCreated = false;
@@ -43,6 +46,9 @@ namespace PickUpSports.Controllers
             return View();
         }
 
+        /**
+         * Handles input from Create Game form 
+         */
         [HttpPost]
         public ActionResult CreateGame(CreateGameViewModel model)
         {
@@ -118,7 +124,47 @@ namespace PickUpSports.Controllers
             PopulateDropdownValues();
             return View();
         }
-        
+
+        /**
+         * Routes user to page that shows a list of all current, open games
+         */
+        public ActionResult GameList()
+        {
+            // Get games that are open and that have not already passed and
+            // order by games happening soonest
+            List<Game> games = _context.Games
+                .Where(g => g.GameStatusId == (int) GameStatusEnum.Open && g.StartTime > DateTime.Now)
+                .OrderBy(g => g.StartTime).ToList();
+            
+            List<GameListViewModel> model = new List<GameListViewModel>();
+            foreach (var game in games)
+            {
+                model.Add(new GameListViewModel
+                {
+                    GameId = game.GameId,
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    StartDate = game.StartTime.ToString(),
+                    EndDate = game.EndTime.ToString()
+                });
+            }
+
+            return View(model);
+        }
+
+        /**
+         * Routes user to GameDetails page to show details for single game
+         */
+        public ActionResult GameDetails(int id)
+        {
+            // TODO: This needs completing
+            return View();
+        }
+
+        /**
+         * Partial view that to display business hours on CreateGame page
+         */
         [HttpGet]
         public PartialViewResult BusinessHoursByVenueId(int id)
         {
@@ -153,74 +199,6 @@ namespace PickUpSports.Controllers
             return View();
         }
 
-        /**
-         * Helper methods
-         */
-
-        public void PopulateDropdownValues()
-        {
-            ViewBag.Venues = _context.Venues.ToList().ToDictionary(v => v.VenueId, v => v.Name);
-            ViewBag.Sports = _context.Sports.ToList().ToDictionary(s => s.SportID, s => s.SportName);
-        }
-
-        public bool IsVenueAvailable(List<BusinessHours> venueHours, DateTime startDateTime, DateTime endDateTime)
-        {
-            // If no business hours then venue has no hours and is therefore not available
-            if (venueHours == null) return false;
-
-            // Only checking start date because games should not span over a day 
-            DayOfWeek startDate = startDateTime.DayOfWeek;
-            BusinessHours venueOpenDate = venueHours.FirstOrDefault(x => x.DayOfWeek == (int) startDate);
-
-            // Venue is open that date, check timeframes
-            if (venueOpenDate != null)
-            {
-                TimeSpan startTime = startDateTime.TimeOfDay;
-                TimeSpan endTime = endDateTime.TimeOfDay;
-
-                // Change midnight to 11:59 PM for accurate time comparisons
-                if (venueOpenDate.CloseTime == new TimeSpan(00, 00, 00))
-                    venueOpenDate.CloseTime = new TimeSpan(23, 59, 00);
-
-                // Ensure both start and end times are within range
-                if (startTime > venueOpenDate.OpenTime && startTime < venueOpenDate.CloseTime)
-                {
-                    if (endTime > venueOpenDate.OpenTime && endTime < venueOpenDate.CloseTime) return true;
-                }
-            }
-
-            return false;
-        }
-
-        public Game CheckForExistingGame(int venueId, int sportId, DateTime startDateTime)
-        {
-            // Check for all games that are happening at same venue
-            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId).ToList();
-            if (gamesAtVenue.Count <= 0) return null;
-
-            // Check for all games happening at that venue with same sport
-            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
-            if (sportsAtVenue.Count <= 0) return null;
-
-            // There are existing games with same sport and venue so check starting time
-            foreach (var game in sportsAtVenue)
-            {
-                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
-                {
-                    // If we get here, the new game will overlap with an existing game
-                    // Check if status is Open and if so, return that game
-                    if (game.GameStatusId == (int)GameStatusEnum.Open)
-                    {
-                        return game;
-                    }
-                }
-            }
-
-            return null;
-               
-        }
-
-
         public JsonResult GetGamesResult(int venueId)
         {
             //list of games found using venue ID
@@ -238,6 +216,7 @@ namespace PickUpSports.Controllers
                 {
                     ContactPerson = _context.Contacts.Find(game.ContactId),
                     Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    GameId = game.VenueId,
                     StartTime = game.StartTime.ToString("yyyy-M-dd hh:mm"),
                     EndTime = game.EndTime.ToString("yyyy-M-dd hh:mm")
                 };
@@ -331,6 +310,75 @@ namespace PickUpSports.Controllers
 
             return View(model);
         }
+
+
+
+        /**
+ * Helper methods
+ */
+
+        public void PopulateDropdownValues()
+        {
+            ViewBag.Venues = _context.Venues.ToList().ToDictionary(v => v.VenueId, v => v.Name);
+            ViewBag.Sports = _context.Sports.ToList().ToDictionary(s => s.SportID, s => s.SportName);
+        }
+
+        public bool IsVenueAvailable(List<BusinessHours> venueHours, DateTime startDateTime, DateTime endDateTime)
+        {
+            // If no business hours then venue has no hours and is therefore not available
+            if (venueHours == null) return false;
+
+            // Only checking start date because games should not span over a day 
+            DayOfWeek startDate = startDateTime.DayOfWeek;
+            BusinessHours venueOpenDate = venueHours.FirstOrDefault(x => x.DayOfWeek == (int)startDate);
+
+            // Venue is open that date, check timeframes
+            if (venueOpenDate != null)
+            {
+                TimeSpan startTime = startDateTime.TimeOfDay;
+                TimeSpan endTime = endDateTime.TimeOfDay;
+
+                // Change midnight to 11:59 PM for accurate time comparisons
+                if (venueOpenDate.CloseTime == new TimeSpan(00, 00, 00))
+                    venueOpenDate.CloseTime = new TimeSpan(23, 59, 00);
+
+                // Ensure both start and end times are within range
+                if (startTime > venueOpenDate.OpenTime && startTime < venueOpenDate.CloseTime)
+                {
+                    if (endTime > venueOpenDate.OpenTime && endTime < venueOpenDate.CloseTime) return true;
+                }
+            }
+
+            return false;
+        }
+
+        public Game CheckForExistingGame(int venueId, int sportId, DateTime startDateTime)
+        {
+            // Check for all games that are happening at same venue
+            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId).ToList();
+            if (gamesAtVenue.Count <= 0) return null;
+
+            // Check for all games happening at that venue with same sport
+            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
+            if (sportsAtVenue.Count <= 0) return null;
+
+            // There are existing games with same sport and venue so check starting time
+            foreach (var game in sportsAtVenue)
+            {
+                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
+                {
+                    // If we get here, the new game will overlap with an existing game
+                    // Check if status is Open and if so, return that game
+                    if (game.GameStatusId == (int)GameStatusEnum.Open)
+                    {
+                        return game;
+                    }
+                }
+            }
+
+            return null;
+
+        }
+
     }
-    
 }

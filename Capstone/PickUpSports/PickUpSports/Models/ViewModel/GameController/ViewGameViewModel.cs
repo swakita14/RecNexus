@@ -15,5 +15,7 @@ namespace PickUpSports.Models.ViewModel.GameController
         public string StartTime { get; set; }
 
         public string EndTime { get; set; }
+
+        public int GameId { get; set; }
     }
 }

@@ -20,6 +20,9 @@ namespace PickUpSportsTests
             _sut = new GameController(contextMock.Object);
         }
 
+        /**
+         * PBI 252 - Shayna Conner
+         */
         [Test]
         public void IsVenueAvailable_GivenValidDateRange_ReturnsTrue()
         {
@@ -42,6 +45,9 @@ namespace PickUpSportsTests
             Assert.AreEqual(isVenueAvailable, true);
         }
 
+        /**
+         * PBI 252 - Shayna Conner
+         */
         [Test]
         public void IsVenueAvailable_GivenUnavailableDayOfWeek_ReturnsFalse()
         {
@@ -62,6 +68,9 @@ namespace PickUpSportsTests
             Assert.AreEqual(isVenueAvailable, false);
         }
 
+        /**
+         * PBI 252 - Shayna Conner
+         */
         [Test]
         public void IsVenueAvailable_GivenNonBusinessStartTime_ReturnsFalse()
         {
@@ -84,6 +93,9 @@ namespace PickUpSportsTests
             Assert.AreEqual(isVenueAvailable, false);
         }
 
+        /**
+         * PBI 252 - Shayna Conner
+         */
         [Test]
         public void IsVenueAvailable_GivenNonBusinessEndTime_ReturnsFalse()
         {
@@ -106,6 +118,9 @@ namespace PickUpSportsTests
             Assert.AreEqual(isVenueAvailable, false);
         }
 
+        /**
+         * PBI 252 - Shayna Conner
+         */
         [Test]
         public void IsVenueAvailable_BusinessDoesNotHaveHours_ReturnsFalse()
         {

@@ -6,10 +6,11 @@ function gameList(results) {
 	    $.each(JSON.parse(results),
 		    function(key, item) {
                 console.log(item);
-                var gameItem = "<tr><td>" + item.ContactPerson.Username +
-                    "</td><td>" + item.Status + 
+                var gameItem = "<tr><td><a href=mailto:" + item.ContactPerson.Email + ">" + item.ContactPerson.Username +
+                    "</a></td><td>" + item.Status + 
                     "</td><td>" + item.StartTime + 
-                    "</td><td>" + item.EndTime + "</td></tr>";
+                    "</td><td>" + item.EndTime +
+                    "</td><td><a href=../Game/Details/" + item.GameId + ">Game Details</a></td></tr>";
 
                 $("#game-list").find("tbody").append(gameItem);
 
