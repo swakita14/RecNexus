@@ -1,12 +1,13 @@
-﻿function gameList(results) {
+﻿/*getting results and manipulating the DOM */
+function gameList(results) {
     $("#game-list").find("tbody").empty(); 
 
     if (results !== "") {
 	    $.each(JSON.parse(results),
 		    function(key, item) {
                 console.log(item);
-                var gameItem = "<tr><td>" + item.ContactId +
-                    "</td><td>" + item.GameStatusId + 
+                var gameItem = "<tr><td>" + item.ContactPerson.Username +
+                    "</td><td>" + item.Status + 
                     "</td><td>" + item.StartTime + 
                     "</td><td>" + item.EndTime + "</td></tr>";
 
@@ -19,6 +20,7 @@
 
 }
 
+/* error on AJAX in case something goes wrong*/
 function errorOnAjax() {
 	console.log("error");
 }
