@@ -1,23 +1,9 @@
-﻿/*getting results and manipulating the DOM */
-function gameList(results) {
-    $("#game-list").find("tbody").empty(); 
+﻿
 
-    if (results !== "") {
-	    $.each(JSON.parse(results),
-		    function(key, item) {
-                console.log(item);
-                var gameItem = "<tr><td><a href=mailto:" + item.ContactPerson.Email + ">" + item.ContactPerson.Username +
-                    "</a></td><td>" + item.Status + 
-                    "</td><td>" + item.StartTime + 
-                    "</td><td>" + item.EndTime +
-                    "</td><td><a href=../Game/Details/" + item.GameId + ">Game Details</a></td></tr>";
-
-                $("#game-list").find("tbody").append(gameItem);
-
-		    });
-
-    }
-
+/*getting results and manipulating the DOM */
+function gameList(result) {
+	$("#myList").empty();
+	$("#myList").html(result);
 
 }
 
@@ -27,26 +13,20 @@ function errorOnAjax() {
 }
 
 /*main method, performs AJAX with dropdown list */
-function main() {
+function getGamesByVenue() {
 
-    console.log("loaded!");
+	console.log("loaded!");
 
-    $("#VenueId").on("change",
-	    function(e) {
-		    var venueId = this.value;
+			var id = $("#venueList").val();
 
-		    $.ajax({
-			    type: "GET",
-			    dataType: "json",
-			    url: "/Game/GetGamesResult",
-			    data: { "venueId": venueId },
-                success: gameList,
-                error: errorOnAjax
-                
-		    });
-	    });
+			$.ajax({
+				type: "GET",
+				url: "../../Game/GetGamesResult/",
+				data: { "venueId": id },
+				success: gameList
+
+			});
 
 }
 
-/*When the Page loads, run the main method */
-$(document).ready(main);
+

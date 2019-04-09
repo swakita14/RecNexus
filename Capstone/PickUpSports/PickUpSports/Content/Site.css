@@ -183,6 +183,18 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     color: black
 }
 
+.form-box h2 {
+    text-align: center;
+    text-transform: uppercase;
+    color: black
+}
+
 .form-box h1 span {
     font-weight: lighter;
+}
+
+#warning {
+    text-align: center;
+    font-weight: bold;
+    color: red
 }

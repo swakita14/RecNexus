@@ -374,6 +374,7 @@
     <Content Include="Views\Game\_BusinessHours.cshtml" />
     <Content Include="Views\Game\SearchBySports.cshtml" />
     <Content Include="Views\Game\GameList.cshtml" />
+    <Content Include="Views\Game\_SearchByVenue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

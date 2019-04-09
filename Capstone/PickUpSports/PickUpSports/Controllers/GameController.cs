@@ -130,6 +130,7 @@ namespace PickUpSports.Controllers
          */
         public ActionResult GameList()
         {
+            ViewBag.Games = new SelectList(_context.Venues, "VenueId", "Name");
             // Get games that are open and that have not already passed and
             // order by games happening soonest
             List<Game> games = _context.Games
@@ -195,39 +196,43 @@ namespace PickUpSports.Controllers
             {
                 return View();
             }
-            PopulateDropdownValues();
+
+            ViewBag.Games = new SelectList(_context.Venues, "VenueId", "SearchVenue");
+            //PopulateDropdownValues();
             return View();
         }
 
-        public JsonResult GetGamesResult(int venueId)
+        public PartialViewResult GetGamesResult(int venueId)
         {
             //list of games found using venue ID
-            List<Game> gameList = new List<Game>();
-            gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+            List<Game> gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+
+            if (gameList.Count == 0)
+            {
+                ViewBag.ErrorMsg = "There are no games in the selected Venue";
+            }
 
             //List using ViewModel to format how I like 
-            List<ViewGameViewModel> newList = new List<ViewGameViewModel>();
+            List<GameListViewModel> model = new List<GameListViewModel>();
 
-            
+
             //Find right data for each variable 
             foreach (var game in gameList)
             {
-                ViewGameViewModel model = new ViewGameViewModel
+                model.Add(new GameListViewModel
                 {
-                    ContactPerson = _context.Contacts.Find(game.ContactId),
-                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                    GameId = game.VenueId,
-                    StartTime = game.StartTime.ToString("yyyy-M-dd hh:mm"),
-                    EndTime = game.EndTime.ToString("yyyy-M-dd hh:mm")
-                };
-
-               //Adding it to list 
-               newList.Add(model);
-
+                    GameId = game.GameId,
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    VenueId = venueId,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    StartDate = game.StartTime.ToString(),
+                    EndDate = game.EndTime.ToString()
+                });
             }
 
             //returning it back to my Ajax js method
-            return Json(JsonConvert.SerializeObject(newList), JsonRequestBehavior.AllowGet);
+            return PartialView("_SearchByVenue", model);
 
         }
 
