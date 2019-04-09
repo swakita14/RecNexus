@@ -311,7 +311,39 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
+        public ActionResult TimeFilter()
+        {
+            string newContactEmail = User.Identity.GetUserName();
 
+            Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
+
+            List<TimePreference> timePreferencesList = new List<TimePreference>();
+
+            timePreferencesList = _context.TimePreferences.Where(x => x.ContactID == contact.ContactId).ToList();
+
+            List<GameListViewModel> gameList = new List<GameListViewModel>();
+
+            foreach (var game in _context.Games)
+            {
+                foreach (var time in timePreferencesList)
+                {
+                    if (game.StartTime.DayOfWeek.Equals(time.DayOfWeek)&&game.StartTime.TimeOfDay>time.BeginTime
+                        && game.EndTime.TimeOfDay<time.EndTime)
+                    {
+                        gameList.Add(new GameListViewModel
+                        {
+                            GameId = game.GameId,
+                            ContactName = _context.Contacts.Find(game.ContactId).Username,
+                            Sport = _context.Sports.Find(game.SportId).SportName,
+                            Venue = _context.Venues.Find(game.VenueId).Name,
+                            StartDate = game.StartTime.ToString(),
+                            EndDate = game.EndTime.ToString()
+                        });
+                    }                    
+                }                   
+            }
+            return View("GameList", gameList);
+        }
 
         /**
  * Helper methods
