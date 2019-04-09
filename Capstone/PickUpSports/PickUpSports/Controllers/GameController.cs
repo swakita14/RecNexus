@@ -190,17 +190,6 @@ namespace PickUpSports.Controllers
             return PartialView("_BusinessHours", model);
         }
 
-        public ActionResult SearchGame(CreateGameViewModel model)
-        {
-            if (model == null)
-            {
-                return View();
-            }
-
-            ViewBag.Games = new SelectList(_context.Venues, "VenueId", "SearchVenue");
-            //PopulateDropdownValues();
-            return View();
-        }
 
         public PartialViewResult GetGamesResult(int venueId)
         {
