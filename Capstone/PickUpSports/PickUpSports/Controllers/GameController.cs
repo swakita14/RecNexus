@@ -258,6 +258,9 @@ namespace PickUpSports.Controllers
 
         public ActionResult TimeFilter()
         {
+            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
+
             string newContactEmail = User.Identity.GetUserName();
 
             Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);

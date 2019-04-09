@@ -14,12 +14,10 @@
     @Html.DropDownList("Venue", null, "Select Venue", new { @class = "form-control", @id = "venueList", @onchange = "getGamesByVenue()" })
     <br />
     <h5>----- or -----</h5>
-    <br/>
+    <br />
     <h4>By Sport:</h4>
     @Html.DropDownList("Sport", null, "Select Sport", new { @class = "form-control", @id = "sportList", @onchange = "getGamesBySport()" })
     <br />
-
-
 
     <ul class="rolldown-list" id="myList">
         <li>
@@ -50,7 +48,7 @@
     </ul>
 </div>
 
-@using (Html.BeginForm("TimeFilter", "Game", FormMethod.Get))
+@using (Html.BeginForm("TimeFilter", "Game", FormMethod.Post))
 {
     <div class="row">
         <div class="col-md-12">
