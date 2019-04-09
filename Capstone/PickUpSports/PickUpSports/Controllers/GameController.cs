@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using PickUpSports.DAL;
@@ -130,6 +131,8 @@ namespace PickUpSports.Controllers
          */
         public ActionResult GameList()
         {
+            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId",  "SportName");
             // Get games that are open and that have not already passed and
             // order by games happening soonest
             List<Game> games = _context.Games
@@ -189,126 +192,68 @@ namespace PickUpSports.Controllers
             return PartialView("_BusinessHours", model);
         }
 
-        public ActionResult SearchGame(CreateGameViewModel model)
-        {
-            if (model == null)
-            {
-                return View();
-            }
-            PopulateDropdownValues();
-            return View();
-        }
 
-        public JsonResult GetGamesResult(int venueId)
+        public PartialViewResult GetGamesResult(int venueId)
         {
             //list of games found using venue ID
-            List<Game> gameList = new List<Game>();
-            gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+            List<Game> gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+
+            if (gameList.Count == 0)
+            {
+                ViewBag.ErrorMsg = "There are no games in the selected Venue";
+            }
 
             //List using ViewModel to format how I like 
-            List<ViewGameViewModel> newList = new List<ViewGameViewModel>();
+            List<GameListViewModel> model = new List<GameListViewModel>();
 
-            
+
             //Find right data for each variable 
             foreach (var game in gameList)
             {
-                ViewGameViewModel model = new ViewGameViewModel
+                model.Add(new GameListViewModel
                 {
-                    ContactPerson = _context.Contacts.Find(game.ContactId),
-                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                    GameId = game.VenueId,
-                    StartTime = game.StartTime.ToString("yyyy-M-dd hh:mm"),
-                    EndTime = game.EndTime.ToString("yyyy-M-dd hh:mm")
-                };
-
-               //Adding it to list 
-               newList.Add(model);
-
+                    GameId = game.GameId,
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    StartDate = game.StartTime.ToString(),
+                    EndDate = game.EndTime.ToString()
+                });
             }
 
             //returning it back to my Ajax js method
-            return Json(JsonConvert.SerializeObject(newList), JsonRequestBehavior.AllowGet);
+            return PartialView("_SearchByVenue", model);
 
         }
 
-        [HttpGet]
-        public ActionResult SearchBySports()
+        public PartialViewResult SearchBySport(int sportId)
         {
-            GameBySportViewModel model = new GameBySportViewModel();
-            model.Sports = FetchSports();
-            return View(model);
-        }
+            //list of games found using venue ID
+            List<Game> gameList = _context.Games.Where(x => x.SportId == sportId).ToList();
 
-        private static List<SelectListItem> FetchSports()
-        {
-            List<SelectListItem> items = new List<SelectListItem>();
-            string constr = ConfigurationManager.ConnectionStrings["PickUpContext"].ConnectionString;
-            using (SqlConnection con = new SqlConnection(constr))
+            if (gameList.Count == 0)
             {
-                string query = " SELECT SportName, SportID FROM Sport";
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    con.Open();
-                    using (SqlDataReader sdr = cmd.ExecuteReader())
-                    {
-                        while (sdr.Read())
-                        {
-                            items.Add(new SelectListItem
-                            {
-                                Text = sdr["SportName"].ToString(),
-                                Value = sdr["SportID"].ToString()
-                            });
-                        }
-                    }
-                    con.Close();
-                }
+                ViewBag.ErrorMsg = "There are no games with the Selected Sport";
             }
 
-            return items;
-        }
+            //List using ViewModel to format how I like 
+            List<GameListViewModel> model = new List<GameListViewModel>();
 
-        [HttpPost]
-        public ActionResult SearchBySports(GameBySportViewModel model)
-        {
-            model.Sports = FetchSports();
-            var selectedItem = model.Sports.Find(p => p.Value == model.SportId.ToString());
 
-            int selectedSportId = Convert.ToInt32(selectedItem.Value);
-
-            if (selectedItem != null)
+            //Find right data for each variable 
+            foreach (var game in gameList)
             {
-                selectedItem.Selected = true;
-                List<int> GameIdList = new List<int>();
-                List<string> VenueNameList = new List<string>();
-                List<DateTime> StartTimeList = new List<DateTime>();
-                List<DateTime> EndTimeList = new List<DateTime>();
-                List<string> ContactNameList = new List<string>();
-                List<string> GameStatusList = new List<string>();
-
-                List<Game> games = _context.Games.Where(s => s.SportId == selectedSportId).ToList();
-
-                foreach (var item in games)
+                model.Add(new GameListViewModel
                 {
-                    GameIdList.Add(item.GameId);
-                    VenueNameList.Add(_context.Venues.First(s => s.VenueId == item.VenueId).Name);
-                    StartTimeList.Add(item.StartTime);
-                    EndTimeList.Add(item.StartTime);                    
-                    ContactNameList.Add( _context.Contacts.First(s => s.ContactId == item.ContactId).Username);
-                    GameStatusList.Add(_context.GameStatuses.First(s => s.GameStatusId == item.GameStatusId).Status);
-                    
-                }
-                model.GameId = GameIdList;
-                model.VenueName = VenueNameList;
-                model.StartTime = StartTimeList;
-                model.EndTime = EndTimeList;
-                model.ContactName = ContactNameList;
-                model.GameStatus = GameStatusList;
-
-                ViewBag.Message = "True";
+                    GameId = game.GameId,
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    StartDate = game.StartTime.ToString(),
+                    EndDate = game.EndTime.ToString()
+                });
             }
-
-            return View(model);
+            return PartialView("_SearchBySport", model);
         }
 
         public ActionResult TimeFilter()
@@ -323,6 +268,7 @@ namespace PickUpSports.Controllers
 
             List<GameListViewModel> gameList = new List<GameListViewModel>();
 
+<<<<<<< HEAD
             foreach (var game in _context.Games)
             {
                 foreach (var time in timePreferencesList)
@@ -346,6 +292,8 @@ namespace PickUpSports.Controllers
             return View("GameList",gameList);
         }
 
+=======
+>>>>>>> 8c797acad0e252e3e12033d5bdba55896e6c3092
         /**
  * Helper methods
  */

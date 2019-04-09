@@ -19,6 +19,8 @@
 
 function getVenueBusinessHours() {
     var id = document.getElementById("VenueId").value;
+    
+
     $.ajax({
             type: "GET",
             url: "../../Game/BusinessHoursByVenueId/" + id

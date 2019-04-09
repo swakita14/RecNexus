@@ -370,10 +370,10 @@
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
     <Content Include="Web_deploy.config" />
-    <Content Include="Views\Game\SearchGame.cshtml" />
     <Content Include="Views\Game\_BusinessHours.cshtml" />
-    <Content Include="Views\Game\SearchBySports.cshtml" />
     <Content Include="Views\Game\GameList.cshtml" />
+    <Content Include="Views\Game\_SearchByVenue.cshtml" />
+    <Content Include="Views\Game\_SearchBySport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
