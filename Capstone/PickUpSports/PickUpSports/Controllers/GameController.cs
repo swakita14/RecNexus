@@ -326,9 +326,10 @@ namespace PickUpSports.Controllers
             foreach (var game in _context.Games)
             {
                 foreach (var time in timePreferencesList)
-                {
-                    if (game.StartTime.DayOfWeek.Equals(time.DayOfWeek)&&game.StartTime.TimeOfDay>time.BeginTime
-                        && game.EndTime.TimeOfDay<time.EndTime)
+                {                   
+                    if ((int)game.StartTime.DayOfWeek==time.DayOfWeek&&game.StartTime.TimeOfDay>time.BeginTime
+                        && game.EndTime.TimeOfDay<time.EndTime&&game.StartTime > DateTime.Now
+                        &&game.GameStatusId== (int)GameStatusEnum.Open)
                     {
                         gameList.Add(new GameListViewModel
                         {
@@ -342,7 +343,7 @@ namespace PickUpSports.Controllers
                     }                    
                 }                   
             }
-            return View("GameList", gameList);
+            return View("GameList",gameList);
         }
 
         /**

@@ -34,3 +34,18 @@
         </li>
     </ul>
 </div>
+
+@using (Html.BeginForm("TimeFilter", "Game", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Games During My Time" class="btn btn-default" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
