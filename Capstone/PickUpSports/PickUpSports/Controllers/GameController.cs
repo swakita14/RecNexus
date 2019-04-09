@@ -268,7 +268,6 @@ namespace PickUpSports.Controllers
 
             List<GameListViewModel> gameList = new List<GameListViewModel>();
 
-<<<<<<< HEAD
             foreach (var game in _context.Games)
             {
                 foreach (var time in timePreferencesList)
@@ -292,8 +291,6 @@ namespace PickUpSports.Controllers
             return View("GameList",gameList);
         }
 
-=======
->>>>>>> 8c797acad0e252e3e12033d5bdba55896e6c3092
         /**
  * Helper methods
  */
