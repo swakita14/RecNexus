@@ -29,4 +29,20 @@ function getGamesByVenue() {
 
 }
 
+function getGamesBySport() {
+
+	console.log("loaded!");
+
+	var id = $("#sportList").val();
+
+	$.ajax({
+		type: "GET",
+		url: "../../Game/SearchBySport/",
+		data: { "sportId": id },
+		success: gameList
+
+	});
+
+}
+
 

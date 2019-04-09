@@ -8,14 +8,19 @@
 
 <div class="form-box">
     <h1>Open Games</h1>
+    <br />
+
+    <h4>By Venue:</h4>
+    @Html.DropDownList("Venue", null, "Select Venue", new { @class = "form-control", @id = "venueList", @onchange = "getGamesByVenue()" })
+    <br />
+    <h5>----- or -----</h5>
     <br/>
-    
-    <h2>Search Games by Venues:</h2>
-    @Html.DropDownList("Games",null , "Select Venue", new { @class = "form-control", @id="venueList", @onchange="getGamesByVenue()" })
-    <br/>
-    
-    
-        
+    <h4>By Sport:</h4>
+    @Html.DropDownList("Sport", null, "Select Sport", new { @class = "form-control", @id = "sportList", @onchange = "getGamesBySport()" })
+    <br />
+
+
+
     <ul class="rolldown-list" id="myList">
         <li>
 
