@@ -160,6 +160,7 @@ namespace PickUpSports.Controllers
         /**
          * Routes user to GameDetails page to show details for single game
          */
+        [Authorize]
         public ActionResult GameDetails(int? id)
         {
 
@@ -169,12 +170,18 @@ namespace PickUpSports.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+            //getting current logged in user information in case they want to join game
+            string email = User.Identity.GetUserName();
+            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+            PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.ContactId == contact.ContactId);
+
             //find the game 
             Game game = _context.Games.Find(id);
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
             
+            //creating view model for the page
             ViewGameViewModel model = new ViewGameViewModel()
             {
                 ContactName = _context.Contacts.Find(game.ContactId).Username,
@@ -184,9 +191,52 @@ namespace PickUpSports.Controllers
                 Sport = _context.Sports.Find(game.SportId).SportName,
                 StartDate = game.StartTime.ToString(),
                 Venue = _context.Venues.Find(game.VenueId).Name,
+                PickUpGameId = pickUpGame.PickUpGameId,
+                ContactId = contact.ContactId,
+
             };
 
+            //returning model to the view
             return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult GameDetails(ViewGameViewModel model)
+        {
+            //check if the person is already signed up for the game 
+            if(IsAlreadySignedUpForGames(model.ContactId, model.GameId))
+            {
+                ViewBag.Error = "You are already signed up for this game";
+                return View(model);
+            }
+
+            //add new person to the pickupgame table
+            PickUpGame newPickUpGame = new PickUpGame()
+            {
+                ContactId = model.ContactId,
+                GameId = model.GameId,
+                PickUpGameId = model.PickUpGameId
+            };
+
+            //save it 
+            _context.PickUpGames.Add(newPickUpGame);
+            _context.SaveChanges();
+
+            //redirect to the gamedetails page so that they could see that they are signed on
+            return RedirectToAction("GameDetails", new { id = model.GameId });
+        }
+
+        public bool IsAlreadySignedUpForGames(int contactId, int gameId)
+        {
+            if (contactId == 0 || gameId == 0) return true;
+
+            if (_context.PickUpGames.Any(x => x.ContactId == contactId && x.GameId == gameId))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /**
@@ -340,10 +390,15 @@ namespace PickUpSports.Controllers
 
             return PartialView("_PlayerList", model);
         }
-        /**
- * Helper methods
- */
 
+        public ActionResult EditGame(int gameId)
+        {
+            return View();
+        }
+
+        /**
+         * Helper methods
+        */
         public void PopulateDropdownValues()
         {
             ViewBag.Venues = _context.Venues.ToList().ToDictionary(v => v.VenueId, v => v.Name);

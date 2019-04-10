@@ -263,6 +263,7 @@
     <Compile Include="Models\DatabaseModels\Venue.cs" />
     <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\CreatePickUpViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
@@ -377,6 +378,7 @@
     <Content Include="Views\Game\_GameSearch.cshtml" />
     <Content Include="Views\Game\GameDetails.cshtml" />
     <Content Include="Views\Game\_PlayerList.cshtml" />
+    <Content Include="Views\Game\JoinGame.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

@@ -1,4 +1,6 @@
-﻿namespace PickUpSports.Models.DatabaseModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PickUpSports.Models.DatabaseModels
 {
     public class PickUpGame
     {
