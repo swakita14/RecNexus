@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using PickUpSports.Models.DatabaseModels;
@@ -8,14 +10,25 @@ namespace PickUpSports.Models.ViewModel.GameController
 {
     public class ViewGameViewModel
     {
-        public Contact ContactPerson { get; set; }
+      
+        public int GameId { get; set; }
 
+        [DisplayName("Venue:")]
+        public string Venue { get; set; }
+
+        [DisplayName("Sport:")]
+        public string Sport { get; set; }
+
+        [DisplayName("Status:")]
         public string Status { get; set; }
 
-        public string StartTime { get; set; }
+        [DisplayName("Start Date:")]
+        public string StartDate { get; set; }
 
-        public string EndTime { get; set; }
+        [DisplayName("End Date:")]
+        public string EndDate { get; set; }
 
-        public int GameId { get; set; }
+        [DisplayName("Contact Name:")]
+        public string ContactName { get; set; }
     }
 }

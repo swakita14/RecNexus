@@ -204,3 +204,14 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-weight: bold;
     color: red
 }
+
+
+#header {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: black;
+}
+
+#timePref {
+    text-align: center;
+}

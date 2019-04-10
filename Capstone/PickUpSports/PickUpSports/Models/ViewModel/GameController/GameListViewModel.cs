@@ -4,8 +4,6 @@
     {
         public int GameId { get; set; }
 
-        public int VenueId { get; set; }
-
         public string Venue { get; set; }
 
         public string Sport { get; set; }

@@ -267,6 +267,7 @@
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\GameListViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\PickUpGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\ViewGameViewModel.cs" />
     <Compile Include="Models\ViewModel\SelectSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\SportPreferenceViewModel.cs" />
@@ -286,6 +287,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\gameTable.css" />
+    <Content Include="Content\playerTable.css" />
     <Content Include="Content\responsive.css" />
     <Content Include="Content\w3-theme.css" />
     <Content Include="Content\w3.css" />
@@ -314,6 +316,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\pickUpGameView.js" />
     <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
     <Content Include="Web.config">
@@ -371,8 +374,9 @@
     <Content Include="Web_deploy.config" />
     <Content Include="Views\Game\_BusinessHours.cshtml" />
     <Content Include="Views\Game\GameList.cshtml" />
-    <Content Include="Views\Game\_SearchByVenue.cshtml" />
-    <Content Include="Views\Game\_SearchBySport.cshtml" />
+    <Content Include="Views\Game\_GameSearch.cshtml" />
+    <Content Include="Views\Game\GameDetails.cshtml" />
+    <Content Include="Views\Game\_PlayerList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
