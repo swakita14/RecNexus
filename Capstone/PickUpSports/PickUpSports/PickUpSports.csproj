@@ -289,8 +289,6 @@
     <Content Include="Content\gameTable.css" />
     <Content Include="Content\playerTable.css" />
     <Content Include="Content\responsive.css" />
-    <Content Include="Content\w3-theme.css" />
-    <Content Include="Content\w3.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
