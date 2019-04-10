@@ -3,6 +3,7 @@
     ViewBag.Title = "Sports Venues";
 }
 
+<<<<<<< HEAD
 <div class="page-header">
     <h3>Sports Venues and Fields</h3>
     <p>Find local venues to play your favorite sports at here!</p>
@@ -10,7 +11,10 @@
 
 <h2>Map</h2>
 <div id="map"></div>
+
 <p>
+    <div class="form-box">
+    <h2>Sports Venues and Fields</h2>
     <div class="row">
         <center class="form-inline">
             <form class="form-inline">
@@ -23,14 +27,17 @@
                     @Html.DropDownList("day", new SelectList(Enum.GetValues(typeof(DayOfWeek))), new { @class = "form-control" }) &nbsp;
                 </div>
                 <button type="submit" class="btn btn-danger">Find Available Venues</button> &nbsp;
-<p style="color: red">@ViewBag.Message</p>
+                <p style="color: red">@ViewBag.Message</p>
             </form>
-<br />
-@Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" })
-@Html.ActionLink("Sort Venues by Distance", "Index", new { sortBy = ViewBag.DistanceSort }, new { @class = "btn btn-danger" })
+
+            <br />
+            @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" })
+            @Html.ActionLink("Sort Venues by Distance", "Index", new { sortBy = ViewBag.DistanceSort }, new { @class = "btn btn-danger" })
         </center>
     </div>
+    </div>
 </p>
+
 <ul class="rolldown-list" id="myList">
     <li>
         @foreach (var venue in Model)
@@ -57,6 +64,7 @@
         }
     </li>
 </ul>
+
 
 
 <script>

@@ -216,6 +216,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
@@ -225,7 +226,10 @@
     <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
+    <Compile Include="DAL\Configurations\GameConfiguration.cs" />
+    <Compile Include="DAL\Configurations\GameStatusConfiguration.cs" />
     <Compile Include="DAL\Configurations\LocationConfiguration.cs" />
+    <Compile Include="DAL\Configurations\PickUpGameConfiguration.cs" />
     <Compile Include="DAL\Configurations\ReviewConfiguration.cs" />
     <Compile Include="DAL\Configurations\SportConfiguration.cs" />
     <Compile Include="DAL\Configurations\SportPreferenceConfiguration.cs" />
@@ -242,10 +246,14 @@
     <Compile Include="Models\CaptchaResponse.cs" />
     <Compile Include="Models\DatabaseModels\Contact.cs" />
     <Compile Include="DAL\PickUpContext.cs" />
+    <Compile Include="Models\DatabaseModels\Game.cs" />
+    <Compile Include="Models\DatabaseModels\GameStatus.cs" />
+    <Compile Include="Models\DatabaseModels\PickUpGame.cs" />
     <Compile Include="Models\DatabaseModels\Sport.cs" />
     <Compile Include="Models\DatabaseModels\SportPreference.cs" />
     <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\DayOfWeek.cs" />
+    <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceSearchResponse.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -255,8 +263,12 @@
     <Compile Include="Models\DatabaseModels\Venue.cs" />
     <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\GameListViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\PickUpGameViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\ViewGameViewModel.cs" />
     <Compile Include="Models\ViewModel\SelectSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\SportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
@@ -274,9 +286,9 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\gameTable.css" />
+    <Content Include="Content\playerTable.css" />
     <Content Include="Content\responsive.css" />
-    <Content Include="Content\w3-theme.css" />
-    <Content Include="Content\w3.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -291,6 +303,7 @@
     <Content Include="Scripts\errors.json" />
     <None Include="Properties\PublishProfiles\PickupSports-Development - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\gameView.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -301,6 +314,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\pickUpGameView.js" />
+    <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -354,6 +369,19 @@
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
+    <Content Include="Web_deploy.config" />
+    <Content Include="Views\Game\_BusinessHours.cshtml" />
+    <Content Include="Views\Game\GameList.cshtml" />
+    <Content Include="Views\Game\_GameSearch.cshtml" />
+    <Content Include="Views\Game\GameDetails.cshtml" />
+    <Content Include="Views\Game\_PlayerList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
+      <Project>{67E10F34-47F7-4373-BAA8-AAF116C8683C}</Project>
+      <Name>PickUpSports.Data.GoogleAPI</Name>
+    </ProjectReference>
+    <Content Include="Views\Game\CreateGame.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

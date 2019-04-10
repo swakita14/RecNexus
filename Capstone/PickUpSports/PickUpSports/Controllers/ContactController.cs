@@ -20,7 +20,6 @@ namespace PickUpSports.Controllers
             _context = context;
         }
 
-        // GET: Contact/Details/5
         public ActionResult Details(int? id)
         {
             string newContactEmail = User.Identity.GetUserName();
@@ -33,7 +32,6 @@ namespace PickUpSports.Controllers
             return View(contact);
         }
 
-        // GET: Contacts/Create
         public ActionResult Create()
         {
             return View();

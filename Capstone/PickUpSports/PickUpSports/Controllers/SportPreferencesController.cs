@@ -44,7 +44,7 @@ namespace PickUpSports.Controllers
                 foreach (var sport in sports)
                 {
                     sportNameList.Add(sport.SportName);
-                }              
+                }
             }
             //add all the sport name to the list back to the view
             model.SportName=sportNameList;
