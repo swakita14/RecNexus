@@ -1,0 +1,34 @@
+﻿
+@model List<PickUpSports.Models.ViewModel.GameController.PickUpGameViewModel>
+@{
+    ViewBag.Title = "_PlayerList";
+}
+
+<h4 id="warning">@ViewBag.ErrorMsg</h4>
+
+<table class="table rwd-table" id="playerTable">
+    <tr>
+        <th>@Html.DisplayName("Username:")</th>
+        <th>@Html.DisplayName("Email:")</th>
+        <th>@Html.DisplayName("Phone Number:")</th>
+    </tr>
+
+
+    @foreach (var player in Model)
+    {
+        @Html.HiddenFor(model => player.GameId)
+        @Html.HiddenFor(model => player.PickUpGameId)
+
+        <tr>
+            <td>@Html.DisplayFor(model => player.Username)</td>
+            <td><a href="mailto:@Html.DisplayFor(model => player.Email)">@Html.DisplayFor(model => player.Email)</a></td>
+            <td>@Html.DisplayFor(model => player.PhoneNumber)</td>
+        </tr>
+    }
+
+
+</table>
+
+
+
+

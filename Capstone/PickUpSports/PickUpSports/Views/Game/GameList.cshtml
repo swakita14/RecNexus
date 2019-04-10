@@ -18,15 +18,15 @@
     <h4>By Sport:</h4>
     @Html.DropDownList("Sport", null, "Select Sport", new { @class = "form-control", @id = "sportList", @onchange = "getGamesBySport()" })
     <br />
-    
-    @using (Html.BeginForm("TimeFilter", "Game", FormMethod.Post, new{@id="timePref"}))
-{
-    <div class="row">
-        <div class="form-group">
-            <input type="submit" value="Games During My Time Preference" class="btn btn-default"/>
+
+    @using (Html.BeginForm("TimeFilter", "Game", FormMethod.Post, new { @id = "timePref" }))
+    {
+        <div class="row">
+            <div class="form-group">
+                <input type="submit" value="Games During My Time Preferece" class="btn btn-default" />
+            </div>
         </div>
-    </div>
-}
+    }
 
     <ul class="rolldown-list" id="myList">
         <li>
