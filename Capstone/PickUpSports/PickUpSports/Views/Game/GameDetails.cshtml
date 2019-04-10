@@ -1,0 +1,43 @@
+﻿@model PickUpSports.Models.ViewModel.GameController.ViewGameViewModel
+@{
+    ViewBag.Title = "GameDetails";
+}
+
+    <div class="container">
+        <div class="row">
+            <div class="well well-sm">
+
+                <fieldset>
+                    <legend class="text-center header" id="header">Game Detail</legend>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ContactName)
+                        @Html.DisplayFor(model => model.ContactName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venue)
+                        @Html.DisplayFor(model => model.Venue)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Status)
+                        @Html.DisplayFor(model => model.Status)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Sport)
+                        @Html.DisplayFor(model => model.Sport)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.StartDate)
+                        @Html.DisplayFor(model => model.StartDate)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.EndDate)
+                        @Html.DisplayFor(model => model.EndDate)
+                    </div>
+                </fieldset>
+                @Html.HiddenFor(model => model.GameId)
+
+            </div>
+        </div>
+        <div></div>
+    </div>
+

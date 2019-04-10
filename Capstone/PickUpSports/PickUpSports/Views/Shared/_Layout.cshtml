@@ -13,26 +13,29 @@
     @Scripts.Render("~/Content/responsive.css")
 </head>
 <body>
-    <div class="w3-top">
-        <div class="w3-bar w3-theme-d2 w3-left-align">
-            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+<div class="w3-top">
+    <div class="w3-bar w3-theme-d2 w3-left-align">
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
 
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Pick-Up Sports Application", "Index", "Home", new { area = "" }, new { @class = "w3-button w3-red" })</li>
-                    <li>@Html.ActionLink("Venues", "Index", "Venue")</li>
-                    <li>@Html.ActionLink("Pick Up Games", "GameList", "Game")</li>
-                    <li>@Html.ActionLink("Start a Game", "CreateGame", "Game")</li>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Pick-Up Sports Application", "Index", "Home", new { area = "" }, new { @class = "w3-button w3-red" })</li>
+                <li>@Html.ActionLink("Venues", "Index", "Venue")</li>
+                <li>@Html.ActionLink("Pick Up Games", "GameList", "Game")</li>
+                <li>@Html.ActionLink("Start a Game", "CreateGame", "Game")</li>
                     
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+            </ul>
+            @Html.Partial("_LoginPartial")
         </div>
+
     </div>
-    <div class="w3-container">
-        @RenderBody()
-        @RenderSection("PageScript", required:false)
-    </div>
+</div>
+<br />
+<div class="w3-container">
+    @RenderBody()
+    @RenderSection("PageScript", required:false)
+</div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
