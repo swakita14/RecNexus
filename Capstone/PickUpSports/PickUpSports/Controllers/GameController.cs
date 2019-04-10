@@ -160,21 +160,21 @@ namespace PickUpSports.Controllers
         /**
          * Routes user to GameDetails page to show details for single game
          */
-        public ActionResult GameDetails(int? gameId)
+        public ActionResult GameDetails(int? id)
         {
-            //check if the gameId coming is null or not if it is: bad request
-            if (gameId == null)
+
+            //validating the id to make sure its not null
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            //find the game by the id
-            Game game = _context.Games.Find(gameId);
+            //find the game 
+            Game game = _context.Games.Find(id);
 
-            //if none found: 
+            //if there are no games then return: 
             if (game == null) return HttpNotFound();
-
-            //pass in values to the view model
+            
             ViewGameViewModel model = new ViewGameViewModel()
             {
                 ContactName = _context.Contacts.Find(game.ContactId).Username,
@@ -186,7 +186,6 @@ namespace PickUpSports.Controllers
                 Venue = _context.Venues.Find(game.VenueId).Name,
             };
 
-            //pass the view model back into the view
             return View(model);
         }
 
