@@ -256,6 +256,43 @@ namespace PickUpSports.Controllers
             return PartialView("_SearchBySport", model);
         }
 
+        public ActionResult TimeFilter()
+        {
+            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
+
+            string newContactEmail = User.Identity.GetUserName();
+
+            Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
+
+            List<TimePreference> timePreferencesList = new List<TimePreference>();
+
+            timePreferencesList = _context.TimePreferences.Where(x => x.ContactID == contact.ContactId).ToList();
+
+            List<GameListViewModel> gameList = new List<GameListViewModel>();
+
+            foreach (var game in _context.Games)
+            {
+                foreach (var time in timePreferencesList)
+                {                   
+                    if ((int)game.StartTime.DayOfWeek==time.DayOfWeek&&game.StartTime.TimeOfDay>time.BeginTime
+                        && game.EndTime.TimeOfDay<time.EndTime&&game.StartTime > DateTime.Now
+                        &&game.GameStatusId== (int)GameStatusEnum.Open)
+                    {
+                        gameList.Add(new GameListViewModel
+                        {
+                            GameId = game.GameId,
+                            ContactName = _context.Contacts.Find(game.ContactId).Username,
+                            Sport = _context.Sports.Find(game.SportId).SportName,
+                            Venue = _context.Venues.Find(game.VenueId).Name,
+                            StartDate = game.StartTime.ToString(),
+                            EndDate = game.EndTime.ToString()
+                        });
+                    }                    
+                }                   
+            }
+            return View("GameList",gameList);
+        }
 
         /**
  * Helper methods
