@@ -3,6 +3,15 @@
     ViewBag.Title = "Sports Venues";
 }
 
+<<<<<<< HEAD
+<div class="page-header">
+    <h3>Sports Venues and Fields</h3>
+    <p>Find local venues to play your favorite sports at here!</p>
+</div>
+
+<h2>Map</h2>
+<div id="map"></div>
+
 <p>
     <div class="form-box">
     <h2>Sports Venues and Fields</h2>
@@ -20,8 +29,9 @@
                 <button type="submit" class="btn btn-danger">Find Available Venues</button> &nbsp;
                 <p style="color: red">@ViewBag.Message</p>
             </form>
+
             <br />
-            @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" }) 
+            @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" })
             @Html.ActionLink("Sort Venues by Distance", "Index", new { sortBy = ViewBag.DistanceSort }, new { @class = "btn btn-danger" })
         </center>
     </div>
@@ -32,6 +42,7 @@
     <li>
         @foreach (var venue in Model)
         {
+            <input type="hidden" value="@venue.VenueId" id="mapIn" />
             <div class="container">
                 <div class="row">
                     @Html.DisplayFor(model => venue.Name)
@@ -42,7 +53,7 @@
                 <div class="row">
                     @Html.DisplayFor(model => venue.Phone)
                 </div>
-               
+
 
                 <div class="row">
                     <br />@Html.ActionLink("Click here for details", "Details", new { id = venue.VenueId })
@@ -83,10 +94,75 @@
                 alert(errMsg);
             }
         });
+
+
     }
 
     getLocation();
 
 </script>
+<script>
+
+
+
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'),
+            {
+                center: { lat: -25.344, lng: 131.036 },
+                zoom: 10
+            });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                map.setCenter(pos);
+            });
+        }
+
+
+
+    }
+
+
+
+    function ajax_call() {
+        var id = document.getElementById("mapIn").value;
+        $.ajax({
+            type: 'GET',
+            datType: 'json',
+            url: '/Venue/MapResult/' + id,
+            data: { id: id },
+            success: displayResults ,
+            error: errorOnAjax
+
+
+        });
+        console.log(id);
+    }
+
+    
+    function displayResults(data) {
+        var marker, i;
+        for(i=0; i <data.length; i++)
+         {
+             marker = new google.maps.Marker({
+                position: new google.maps.LatLng(data[1], data[0]),
+                map: map
+            });
+            console.log(marker);
+        };
+
+        console.log(data);
+    }
+    function errorOnAjax() {
+        console.log("Ajax Error");
+    }
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5bwiGQe1zyt3pWzQ9scBzcwOJyFJDsMQ&callback=initMap"></script>
+
 
 

@@ -530,6 +530,12 @@ html {
     text-align: center;
 }
 
+#map {
+    height: 400px;
+    width: 100%;
+}
+
+
 .my-nav .nav-justified.mnav > .dropdown.mnav .dropdown-menu.mnav {
     left: auto;
     top: auto;
@@ -1118,3 +1124,4 @@ html {
 }
 
 .my-nav .navbar-toggle:hover .icon-bar, .my-nav .navbar-toggle:focus .icon-bar { background: #fff; }
+
