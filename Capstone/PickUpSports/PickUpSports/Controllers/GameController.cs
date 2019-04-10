@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
@@ -159,10 +160,21 @@ namespace PickUpSports.Controllers
         /**
          * Routes user to GameDetails page to show details for single game
          */
-        public ActionResult GameDetails(int id)
+        public ActionResult GameDetails(int? gameId)
         {
-            Game game = _context.Games.Find(id);
+            //check if the gameId coming is null or not if it is: bad request
+            if (gameId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
+            //find the game by the id
+            Game game = _context.Games.Find(gameId);
+
+            //if none found: 
+            if (game == null) return HttpNotFound();
+
+            //pass in values to the view model
             ViewGameViewModel model = new ViewGameViewModel()
             {
                 ContactName = _context.Contacts.Find(game.ContactId).Username,
@@ -174,6 +186,7 @@ namespace PickUpSports.Controllers
                 Venue = _context.Venues.Find(game.VenueId).Name,
             };
 
+            //pass the view model back into the view
             return View(model);
         }
 
@@ -233,7 +246,7 @@ namespace PickUpSports.Controllers
                 });
             }
 
-            //returning it back to my Ajax js method
+            
             //returning it back to my Ajax js method
             return PartialView("_GameSearch", model);
 
