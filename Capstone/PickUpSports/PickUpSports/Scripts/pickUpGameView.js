@@ -20,8 +20,9 @@ function main() {
 	    });
     };
 
-    var interval = 1000 * 5;
+    window.onload = ajaxCall;
 
+    var interval = 1000 * 5;
     window.setInterval(ajaxCall, interval);
 
 }

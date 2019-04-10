@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
-using Newtonsoft.Json;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
