@@ -161,8 +161,20 @@ namespace PickUpSports.Controllers
          */
         public ActionResult GameDetails(int id)
         {
-            // TODO: This needs completing
-            return View();
+            Game game = _context.Games.Find(id);
+
+            ViewGameViewModel model = new ViewGameViewModel()
+            {
+                ContactName = _context.Contacts.Find(game.ContactId).Username,
+                EndDate = game.EndTime.ToString(),
+                GameId = game.GameId,
+                Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                Sport = _context.Sports.Find(game.SportId).SportName,
+                StartDate = game.StartTime.ToString(),
+                Venue = _context.Venues.Find(game.VenueId).Name,
+            };
+
+            return View(model);
         }
 
         /**
@@ -222,7 +234,8 @@ namespace PickUpSports.Controllers
             }
 
             //returning it back to my Ajax js method
-            return PartialView("_SearchByVenue", model);
+            //returning it back to my Ajax js method
+            return PartialView("_GameSearch", model);
 
         }
 
@@ -253,7 +266,7 @@ namespace PickUpSports.Controllers
                     EndDate = game.EndTime.ToString()
                 });
             }
-            return PartialView("_SearchBySport", model);
+            return PartialView("_GameSearch", model);
         }
 
 
