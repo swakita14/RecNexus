@@ -203,8 +203,7 @@ namespace PickUpSports.Controllers
             //check if the person is already signed up for the game 
             if(IsAlreadySignedUpForGames(model.ContactId, model.GameId))
             {
-                ViewBag.Error = "You are already signed up for this game";
-                return View(model);
+                return RedirectToAction("GameDetails", new {id = model.GameId});
             }
 
             //add new person to the pickupgame table
