@@ -319,6 +319,27 @@ namespace PickUpSports.Controllers
             return View("GameList",gameList);
         }
 
+        public PartialViewResult PlayerList(int gameId)
+        {
+            List<PickUpGame> playerList = _context.PickUpGames.Where(x => x.GameId == gameId).ToList();
+
+            List<PickUpGameViewModel> model = new List<PickUpGameViewModel>();
+
+            foreach (var player in playerList)
+            {
+                model.Add(new PickUpGameViewModel
+                {
+                    PickUpGameId = player.PickUpGameId,
+                    GameId = gameId,
+                    Username = _context.Contacts.Find(player.ContactId).Username,
+                    Email = _context.Contacts.Find(player.ContactId).Email,
+                    PhoneNumber = _context.Contacts.Find(player.ContactId).PhoneNumber                
+                });
+
+            }
+
+            return PartialView("_PlayerList", model);
+        }
         /**
  * Helper methods
  */
