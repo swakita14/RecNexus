@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
@@ -200,10 +202,29 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult GameDetails(ViewGameViewModel model)
         {
+            Debug.Write(model);
             //check if the person is already signed up for the game 
-            if(IsAlreadySignedUpForGames(model.ContactId, model.GameId))
+            if (!IsNotSignedUpForGame(model.ContactId, model.GameId))
             {
-                return RedirectToAction("GameDetails", new {id = model.GameId});
+                //error message
+                ViewBag.Error = "You are already signed up for this Game";
+
+                //finding game
+                Game game = _context.Games.Find(model.GameId);
+
+                //sending model back so values dont blank out
+                ViewGameViewModel returnModel = new ViewGameViewModel()
+                {
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    EndDate = game.EndTime.ToString(),
+                    GameId = game.GameId,
+                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    StartDate = game.StartTime.ToString(),
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                };
+
+                return View(returnModel);
             }
 
             //add new person to the pickupgame table
@@ -214,6 +235,7 @@ namespace PickUpSports.Controllers
                 PickUpGameId = model.PickUpGameId
             };
 
+
             //save it 
             _context.PickUpGames.Add(newPickUpGame);
             _context.SaveChanges();
@@ -222,16 +244,22 @@ namespace PickUpSports.Controllers
             return RedirectToAction("GameDetails", new { id = model.GameId });
         }
 
-        public bool IsAlreadySignedUpForGames(int contactId, int gameId)
+        /***
+         * Helper method to see if user is already signed up for a game or not
+         */
+        public bool IsNotSignedUpForGame(int contactId, int gameId)
         {
-            if (contactId == 0 || gameId == 0) return true;
+            //Just in case a null "0" comes in stop it from coming in
+            if (contactId == 0 || gameId == 0) return false;
 
-            if (_context.PickUpGames.Any(x => x.ContactId == contactId && x.GameId == gameId))
+            //If there is a combination of the two then return false
+            if (_context.PickUpGames.Any(x => x.GameId == gameId && x.ContactId == contactId))
             {
-                return true;
+                return false;
             }
 
-            return false;
+            // else this person hasn't signed up yet
+            return true;
         }
 
         /**
