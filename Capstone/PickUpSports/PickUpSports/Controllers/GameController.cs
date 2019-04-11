@@ -428,9 +428,7 @@ namespace PickUpSports.Controllers
         public ActionResult EditGame(int id)
         {
             //populating dropdown 
-            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
-            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
-            ViewBag.Status = new SelectList(_context.GameStatuses, "GameStatusId", "Status");
+            PopulateMethod();
 
             ////find the game by id
             Game game = _context.Games.Find(id);
@@ -454,12 +452,24 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
+        public void PopulateMethod()
+        {
+            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
+            ViewBag.Status = new SelectList(_context.GameStatuses, "GameStatusId", "Status");
+        }
+
         [Authorize]
         [HttpPost]
         public ActionResult EditGame(EditGameViewModel model)
         {
+            PopulateMethod();
 
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                PopulateMethod();
+                return View(model);
+            }
 
 
             var dates = model.DateRange.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
