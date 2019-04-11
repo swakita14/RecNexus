@@ -244,15 +244,21 @@ namespace PickUpSports.Controllers
             return RedirectToAction("GameDetails", new { id = model.GameId });
         }
 
+        /***
+         * Helper method to see if user is already signed up for a game or not
+         */
         public bool IsNotSignedUpForGame(int contactId, int gameId)
         {
+            //Just in case a null "0" comes in stop it from coming in
             if (contactId == 0 || gameId == 0) return false;
 
+            //If there is a combination of the two then return false
             if (_context.PickUpGames.Any(x => x.GameId == gameId && x.ContactId == contactId))
             {
                 return false;
             }
 
+            // else this person hasn't signed up yet
             return true;
         }
 
