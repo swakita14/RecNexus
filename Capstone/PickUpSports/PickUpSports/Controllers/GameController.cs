@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -110,7 +111,7 @@ namespace PickUpSports.Controllers
             Game newGame = new Game
             {
                 ContactId = contact.ContactId,
-                GameStatusId = (int) GameStatusEnum.Open,
+                GameStatusId = (int)GameStatusEnum.Open,
                 VenueId = model.VenueId,
                 SportId = model.SportId,
                 StartTime = startDateTime,
@@ -131,13 +132,13 @@ namespace PickUpSports.Controllers
         public ActionResult GameList()
         {
             ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
-            ViewBag.Sport = new SelectList(_context.Sports, "SportId",  "SportName");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
             // Get games that are open and that have not already passed and
             // order by games happening soonest
             List<Game> games = _context.Games
-                .Where(g => g.GameStatusId == (int) GameStatusEnum.Open && g.StartTime > DateTime.Now)
+                .Where(g => g.GameStatusId == (int)GameStatusEnum.Open && g.StartTime > DateTime.Now)
                 .OrderBy(g => g.StartTime).ToList();
-            
+
             List<GameListViewModel> model = new List<GameListViewModel>();
             foreach (var game in games)
             {
@@ -159,11 +160,12 @@ namespace PickUpSports.Controllers
          * Routes user to GameDetails page to show details for single game
          */
         [Authorize]
-        public ActionResult GameDetails(int? id)
+        public ActionResult GameDetails(int id)
         {
+            ViewBag.IsCreator = false;
 
             //validating the id to make sure its not null
-            if (id == null)
+            if (id == 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -173,12 +175,17 @@ namespace PickUpSports.Controllers
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
             PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.ContactId == contact.ContactId);
 
+            if (IsCreatorOfGame(email, id))
+            {
+                ViewBag.IsCreator = true;
+            }
+
             //find the game 
             Game game = _context.Games.Find(id);
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
-            
+
             //creating view model for the page
             ViewGameViewModel model = new ViewGameViewModel()
             {
@@ -202,7 +209,9 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult GameDetails(ViewGameViewModel model)
         {
-            Debug.Write(model);
+            ViewBag.IsCreator = false;
+
+
             //check if the person is already signed up for the game 
             if (!IsNotSignedUpForGame(model.ContactId, model.GameId))
             {
@@ -318,7 +327,7 @@ namespace PickUpSports.Controllers
                 });
             }
 
-            
+
             //returning it back to my Ajax js method
             return PartialView("_GameSearch", model);
 
@@ -372,10 +381,10 @@ namespace PickUpSports.Controllers
             foreach (var game in _context.Games)
             {
                 foreach (var time in timePreferencesList)
-                {                   
-                    if ((int)game.StartTime.DayOfWeek==time.DayOfWeek&&game.StartTime.TimeOfDay>time.BeginTime
-                        && game.EndTime.TimeOfDay<time.EndTime&&game.StartTime > DateTime.Now
-                        &&game.GameStatusId== (int)GameStatusEnum.Open)
+                {
+                    if ((int)game.StartTime.DayOfWeek == time.DayOfWeek && game.StartTime.TimeOfDay > time.BeginTime
+                        && game.EndTime.TimeOfDay < time.EndTime && game.StartTime > DateTime.Now
+                        && game.GameStatusId == (int)GameStatusEnum.Open)
                     {
                         gameList.Add(new GameListViewModel
                         {
@@ -386,10 +395,10 @@ namespace PickUpSports.Controllers
                             StartDate = game.StartTime.ToString(),
                             EndDate = game.EndTime.ToString()
                         });
-                    }                    
-                }                   
+                    }
+                }
             }
-            return View("GameList",gameList);
+            return View("GameList", gameList);
         }
 
         public PartialViewResult PlayerList(int gameId)
@@ -406,7 +415,7 @@ namespace PickUpSports.Controllers
                     GameId = gameId,
                     Username = _context.Contacts.Find(player.ContactId).Username,
                     Email = _context.Contacts.Find(player.ContactId).Email,
-                    PhoneNumber = _context.Contacts.Find(player.ContactId).PhoneNumber                
+                    PhoneNumber = _context.Contacts.Find(player.ContactId).PhoneNumber
                 });
 
             }
@@ -414,9 +423,86 @@ namespace PickUpSports.Controllers
             return PartialView("_PlayerList", model);
         }
 
-        public ActionResult EditGame(int gameId)
+        [Authorize]
+        [HttpGet]
+        public ActionResult EditGame(int id)
         {
-            return View();
+            //populating dropdown 
+            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
+            ViewBag.Status = new SelectList(_context.GameStatuses, "GameStatusId", "Status");
+
+            ////find the game by id
+            Game game = _context.Games.Find(id);
+
+
+            string dateRange = game.StartTime.ToString("MM/dd/yyyy hh:mm tt") + " - " + game.EndTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            ////Create own View Model
+            EditGameViewModel model = new EditGameViewModel()
+            { 
+                GameId = id,
+                ContactId = game.ContactId,   
+                GameStatusId = game.GameStatusId,
+                SportsId = game.SportId,
+                VenueId = game.VenueId,
+                Sport = _context.Sports.Find(game.SportId).SportName,
+                Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                Venue = _context.Venues.Find(game.VenueId).Name,
+                DateRange = dateRange,
+
+            };
+
+            //pass it back
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditGame(EditGameViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+
+            var dates = model.DateRange.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var startDateTime = DateTime.Parse(dates[0], CultureInfo.InvariantCulture);
+            var endDateTime = DateTime.Parse(dates[1], CultureInfo.CurrentCulture);
+
+            Game existing = new Game()
+            {
+                GameId = model.GameId,
+                ContactId = model.ContactId,
+                GameStatusId = model.GameStatusId,
+                SportId = model.SportsId,
+                VenueId = model.VenueId,
+                StartTime = startDateTime,
+                EndTime = endDateTime,
+            };
+
+            _context.Entry(existing).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return RedirectToAction("GameDetails", new {id = model.GameId});
+        }
+
+        public bool IsCreatorOfGame(string email, int gameId)
+        {
+            //if blank value then return false
+            if (email.Equals("") || gameId == 0) return false;
+
+            //find the contact by the email
+            Contact creator = _context.Contacts.FirstOrDefault(x => x.Email.Equals(email));
+
+            //find the game by the id
+            Game currentGame = _context.Games.Find(gameId);
+
+            //see if it matches, if so then the contact is the creator
+            if (creator.ContactId == currentGame.ContactId)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /**

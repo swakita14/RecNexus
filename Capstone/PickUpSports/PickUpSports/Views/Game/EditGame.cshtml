@@ -1,0 +1,63 @@
+﻿@model PickUpSports.Models.ViewModel.GameController.EditGameViewModel
+@{
+    ViewBag.Title = "EditGame";
+}
+
+@Styles.Render("https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css")
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="../../Scripts/gameView.js"></script>
+}
+
+@using (Html.BeginForm("EditGame", "Game", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="row">
+            <div class="well well-sm">
+
+                <fieldset>
+                    @Html.HiddenFor(model => model.ContactId)
+                    @Html.HiddenFor(model => model.GameId)
+                    @Html.HiddenFor(model => model.SportsId)
+                    @Html.HiddenFor(model => model.GameStatusId)
+                    @Html.HiddenFor(model => model.VenueId)
+
+                    <legend class="text-center header" id="header">Game Detail</legend>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Venue)
+                        @Html.DropDownList("Venue", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Status)
+                        @Html.DropDownList("Status", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Sport)
+                        @Html.DropDownList("Sport", null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group" style="padding-top: 20px">
+                        @Html.DisplayNameFor(x => x.DateRange)
+                        @Html.EditorFor(x => x.DateRange, new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" } })
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Edit Information</button>
+
+
+                    <h4 id="warning">@ViewBag.Error</h4>
+
+                </fieldset>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+}
