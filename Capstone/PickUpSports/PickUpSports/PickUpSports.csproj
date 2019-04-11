@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit3TestAdapter.3.13.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.3.13.0\build\net35\NUnit3TestAdapter.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -263,9 +264,11 @@
     <Compile Include="Models\DatabaseModels\Venue.cs" />
     <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\CreatePickUpViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\GameController\EditGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\GameListViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\PickUpGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\ViewGameViewModel.cs" />
@@ -375,6 +378,8 @@
     <Content Include="Views\Game\_GameSearch.cshtml" />
     <Content Include="Views\Game\GameDetails.cshtml" />
     <Content Include="Views\Game\_PlayerList.cshtml" />
+    <Content Include="Views\Game\JoinGame.cshtml" />
+    <Content Include="Views\Game\EditGame.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
@@ -431,6 +436,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.13.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.13.0\build\net35\NUnit3TestAdapter.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

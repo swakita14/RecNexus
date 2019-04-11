@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace PickUpSports.Models.ViewModel.GameController
+namespace PickUpSports.Models.ViewModel
 {
-    public class PickUpGameViewModel
+    public class CreatePickUpViewModel
     {
-        public int GameId { get; set; }
-
-        public int ContactId { get; set; }
-
         public int PickUpGameId { get; set; }
+
+        public int GameId { get; set; }
 
         public string Username { get; set; }
 
