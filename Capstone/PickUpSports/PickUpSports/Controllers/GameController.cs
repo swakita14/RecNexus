@@ -443,9 +443,6 @@ namespace PickUpSports.Controllers
             { 
                 GameId = id,
                 ContactId = game.ContactId,   
-                GameStatusId = game.GameStatusId,
-                SportsId = game.SportId,
-                VenueId = game.VenueId,
                 Sport = _context.Sports.Find(game.SportId).SportName,
                 Status = _context.GameStatuses.Find(game.GameStatusId).Status,
                 Venue = _context.Venues.Find(game.VenueId).Name,
@@ -461,6 +458,7 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult EditGame(EditGameViewModel model)
         {
+
             if (!ModelState.IsValid) return View(model);
 
 
@@ -472,9 +470,9 @@ namespace PickUpSports.Controllers
             {
                 GameId = model.GameId,
                 ContactId = model.ContactId,
-                GameStatusId = model.GameStatusId,
-                SportId = model.SportsId,
-                VenueId = model.VenueId,
+                GameStatusId = int.Parse(model.Status),
+                SportId = int.Parse(model.Sport),
+                VenueId = int.Parse(model.Venue),
                 StartTime = startDateTime,
                 EndTime = endDateTime,
             };
@@ -484,6 +482,8 @@ namespace PickUpSports.Controllers
 
             return RedirectToAction("GameDetails", new {id = model.GameId});
         }
+
+        public void PopulateEditDropdown() { }
 
         public bool IsCreatorOfGame(string email, int gameId)
         {
