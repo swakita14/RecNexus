@@ -363,66 +363,37 @@ namespace PickUpSports.Controllers
             return PartialView("_GameSearch", model);
         }
 
-        public ActionResult TimeFilter()
+        public PartialViewResult TimeFilter(string dateRange)
         {
-            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
-            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
 
-            string newContactEmail = User.Identity.GetUserName();
+            var dates = dateRange.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var startDateTime = DateTime.Parse(dates[0], CultureInfo.InvariantCulture);
+            var endDateTime = DateTime.Parse(dates[1], CultureInfo.CurrentCulture);
 
-                Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
+            List<GameListViewModel> model = new List<GameListViewModel>();
 
-                List<TimePreference> timePreferencesList = new List<TimePreference>();
-
-                timePreferencesList = _context.TimePreferences.Where(x => x.ContactID == contact.ContactId).ToList();
-
-                List<GameListViewModel> gameList = new List<GameListViewModel>();
-
-<<<<<<< HEAD
-                foreach (var game in _context.Games)
-                {
-                    foreach (var time in timePreferencesList)
-=======
             foreach (var game in _context.Games)
             {
-                foreach (var time in timePreferencesList)
+                
+
+                if (game.StartTime >= startDateTime && game.EndTime <= endDateTime)
                 {
-                    if ((int)game.StartTime.DayOfWeek == time.DayOfWeek && game.StartTime.TimeOfDay > time.BeginTime
-                        && game.EndTime.TimeOfDay < time.EndTime && game.StartTime > DateTime.Now
-                        && game.GameStatusId == (int)GameStatusEnum.Open)
->>>>>>> 71ffdb3ed5a6e2a0cc026699fead6781c9f4b435
+                    model.Add(new GameListViewModel
                     {
-                        if ((int)game.StartTime.DayOfWeek == time.DayOfWeek && game.StartTime.TimeOfDay > time.BeginTime
-                            && game.EndTime.TimeOfDay < time.EndTime && game.StartTime > DateTime.Now
-                            && game.GameStatusId == (int)GameStatusEnum.Open)
-                        {
-<<<<<<< HEAD
-                            gameList.Add(new GameListViewModel
-                            {
-                                GameId = game.GameId,
-                                ContactName = _context.Contacts.Find(game.ContactId).Username,
-                                Sport = _context.Sports.Find(game.SportId).SportName,
-                                Venue = _context.Venues.Find(game.VenueId).Name,
-                                StartDate = game.StartTime.ToString(),
-                                EndDate = game.EndTime.ToString()
-                            });
-                        }
-                    }
-                }
-                return View("GameList", gameList);      
-=======
-                            GameId = game.GameId,
-                            ContactName = _context.Contacts.Find(game.ContactId).Username,
-                            Sport = _context.Sports.Find(game.SportId).SportName,
-                            Venue = _context.Venues.Find(game.VenueId).Name,
-                            StartDate = game.StartTime.ToString(),
-                            EndDate = game.EndTime.ToString()
-                        });
-                    }
+                        GameId = game.GameId,
+                        ContactName = _context.Contacts.Find(game.ContactId).Username,
+                        Sport = _context.Sports.Find(game.SportId).SportName,
+                        Venue = _context.Venues.Find(game.VenueId).Name,
+                        StartDate = game.StartTime.ToString(),
+                        EndDate = game.EndTime.ToString()
+                    });
                 }
             }
-            return View("GameList", gameList);
->>>>>>> 71ffdb3ed5a6e2a0cc026699fead6781c9f4b435
+            if (model.Count == 0)
+            {
+                ViewBag.ErrorMsg = "There are no games with the selected Time";
+            }
+            return PartialView("_GameSearch", model);
         }
 
         public PartialViewResult PlayerList(int gameId)
