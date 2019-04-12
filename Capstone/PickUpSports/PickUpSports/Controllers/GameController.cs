@@ -374,7 +374,18 @@ namespace PickUpSports.Controllers
 
             foreach (var game in _context.Games)
             {
-                
+                if (endDateTime.Date != startDateTime.Date)
+                {
+                    model.Add(new GameListViewModel
+                    {
+                        GameId = game.GameId,
+                        ContactName = _context.Contacts.Find(game.ContactId).Username,
+                        Sport = _context.Sports.Find(game.SportId).SportName,
+                        Venue = _context.Venues.Find(game.VenueId).Name,
+                        StartDate = game.StartTime.ToString(),
+                        EndDate = game.EndTime.ToString()
+                    });
+                }
 
                 if (game.StartTime >= startDateTime && game.EndTime <= endDateTime)
                 {
