@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
@@ -108,7 +111,7 @@ namespace PickUpSports.Controllers
             Game newGame = new Game
             {
                 ContactId = contact.ContactId,
-                GameStatusId = (int) GameStatusEnum.Open,
+                GameStatusId = (int)GameStatusEnum.Open,
                 VenueId = model.VenueId,
                 SportId = model.SportId,
                 StartTime = startDateTime,
@@ -129,13 +132,13 @@ namespace PickUpSports.Controllers
         public ActionResult GameList()
         {
             ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
-            ViewBag.Sport = new SelectList(_context.Sports, "SportId",  "SportName");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
             // Get games that are open and that have not already passed and
             // order by games happening soonest
             List<Game> games = _context.Games
-                .Where(g => g.GameStatusId == (int) GameStatusEnum.Open && g.StartTime > DateTime.Now)
+                .Where(g => g.GameStatusId == (int)GameStatusEnum.Open && g.StartTime > DateTime.Now)
                 .OrderBy(g => g.StartTime).ToList();
-            
+
             List<GameListViewModel> model = new List<GameListViewModel>();
             foreach (var game in games)
             {
@@ -157,11 +160,12 @@ namespace PickUpSports.Controllers
          * Routes user to GameDetails page to show details for single game
          */
         [Authorize]
-        public ActionResult GameDetails(int? id)
+        public ActionResult GameDetails(int id)
         {
+            ViewBag.IsCreator = false;
 
             //validating the id to make sure its not null
-            if (id == null)
+            if (id == 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -171,12 +175,17 @@ namespace PickUpSports.Controllers
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
             PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.ContactId == contact.ContactId);
 
+            if (IsCreatorOfGame(email, id))
+            {
+                ViewBag.IsCreator = true;
+            }
+
             //find the game 
             Game game = _context.Games.Find(id);
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
-            
+
             //creating view model for the page
             ViewGameViewModel model = new ViewGameViewModel()
             {
@@ -200,10 +209,31 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult GameDetails(ViewGameViewModel model)
         {
+            ViewBag.IsCreator = false;
+
+
             //check if the person is already signed up for the game 
-            if(IsAlreadySignedUpForGames(model.ContactId, model.GameId))
+            if (!IsNotSignedUpForGame(model.ContactId, model.GameId))
             {
-                return RedirectToAction("GameDetails", new {id = model.GameId});
+                //error message
+                ViewBag.Error = "You are already signed up for this Game";
+
+                //finding game
+                Game game = _context.Games.Find(model.GameId);
+
+                //sending model back so values dont blank out
+                ViewGameViewModel returnModel = new ViewGameViewModel()
+                {
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    EndDate = game.EndTime.ToString(),
+                    GameId = game.GameId,
+                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    StartDate = game.StartTime.ToString(),
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                };
+
+                return View(returnModel);
             }
 
             //add new person to the pickupgame table
@@ -214,6 +244,7 @@ namespace PickUpSports.Controllers
                 PickUpGameId = model.PickUpGameId
             };
 
+
             //save it 
             _context.PickUpGames.Add(newPickUpGame);
             _context.SaveChanges();
@@ -222,16 +253,22 @@ namespace PickUpSports.Controllers
             return RedirectToAction("GameDetails", new { id = model.GameId });
         }
 
-        public bool IsAlreadySignedUpForGames(int contactId, int gameId)
+        /***
+         * Helper method to see if user is already signed up for a game or not
+         */
+        public bool IsNotSignedUpForGame(int contactId, int gameId)
         {
-            if (contactId == 0 || gameId == 0) return true;
+            //Just in case a null "0" comes in stop it from coming in
+            if (contactId == 0 || gameId == 0) return false;
 
-            if (_context.PickUpGames.Any(x => x.ContactId == contactId && x.GameId == gameId))
+            //If there is a combination of the two then return false
+            if (_context.PickUpGames.Any(x => x.GameId == gameId && x.ContactId == contactId))
             {
-                return true;
+                return false;
             }
 
-            return false;
+            // else this person hasn't signed up yet
+            return true;
         }
 
         /**
@@ -290,7 +327,7 @@ namespace PickUpSports.Controllers
                 });
             }
 
-            
+
             //returning it back to my Ajax js method
             return PartialView("_GameSearch", model);
 
@@ -341,14 +378,25 @@ namespace PickUpSports.Controllers
 
                 List<GameListViewModel> gameList = new List<GameListViewModel>();
 
+<<<<<<< HEAD
                 foreach (var game in _context.Games)
                 {
                     foreach (var time in timePreferencesList)
+=======
+            foreach (var game in _context.Games)
+            {
+                foreach (var time in timePreferencesList)
+                {
+                    if ((int)game.StartTime.DayOfWeek == time.DayOfWeek && game.StartTime.TimeOfDay > time.BeginTime
+                        && game.EndTime.TimeOfDay < time.EndTime && game.StartTime > DateTime.Now
+                        && game.GameStatusId == (int)GameStatusEnum.Open)
+>>>>>>> 71ffdb3ed5a6e2a0cc026699fead6781c9f4b435
                     {
                         if ((int)game.StartTime.DayOfWeek == time.DayOfWeek && game.StartTime.TimeOfDay > time.BeginTime
                             && game.EndTime.TimeOfDay < time.EndTime && game.StartTime > DateTime.Now
                             && game.GameStatusId == (int)GameStatusEnum.Open)
                         {
+<<<<<<< HEAD
                             gameList.Add(new GameListViewModel
                             {
                                 GameId = game.GameId,
@@ -362,6 +410,19 @@ namespace PickUpSports.Controllers
                     }
                 }
                 return View("GameList", gameList);      
+=======
+                            GameId = game.GameId,
+                            ContactName = _context.Contacts.Find(game.ContactId).Username,
+                            Sport = _context.Sports.Find(game.SportId).SportName,
+                            Venue = _context.Venues.Find(game.VenueId).Name,
+                            StartDate = game.StartTime.ToString(),
+                            EndDate = game.EndTime.ToString()
+                        });
+                    }
+                }
+            }
+            return View("GameList", gameList);
+>>>>>>> 71ffdb3ed5a6e2a0cc026699fead6781c9f4b435
         }
 
         public PartialViewResult PlayerList(int gameId)
@@ -378,7 +439,7 @@ namespace PickUpSports.Controllers
                     GameId = gameId,
                     Username = _context.Contacts.Find(player.ContactId).Username,
                     Email = _context.Contacts.Find(player.ContactId).Email,
-                    PhoneNumber = _context.Contacts.Find(player.ContactId).PhoneNumber                
+                    PhoneNumber = _context.Contacts.Find(player.ContactId).PhoneNumber
                 });
 
             }
@@ -386,9 +447,96 @@ namespace PickUpSports.Controllers
             return PartialView("_PlayerList", model);
         }
 
-        public ActionResult EditGame(int gameId)
+        [Authorize]
+        [HttpGet]
+        public ActionResult EditGame(int id)
         {
-            return View();
+            //populating dropdown 
+            PopulateMethod();
+
+            ////find the game by id
+            Game game = _context.Games.Find(id);
+
+
+            string dateRange = game.StartTime.ToString("MM/dd/yyyy hh:mm tt") + " - " + game.EndTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            ////Create own View Model
+            EditGameViewModel model = new EditGameViewModel()
+            { 
+                GameId = id,
+                ContactId = game.ContactId,   
+                Sport = _context.Sports.Find(game.SportId).SportName,
+                Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                Venue = _context.Venues.Find(game.VenueId).Name,
+                DateRange = dateRange,
+
+            };
+
+            //pass it back
+            return View(model);
+        }
+
+        public void PopulateMethod()
+        {
+            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
+            ViewBag.Status = new SelectList(_context.GameStatuses, "GameStatusId", "Status");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditGame(EditGameViewModel model)
+        {
+            PopulateMethod();
+
+            if (!ModelState.IsValid)
+            {
+                PopulateMethod();
+                return View(model);
+            }
+
+
+            var dates = model.DateRange.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var startDateTime = DateTime.Parse(dates[0], CultureInfo.InvariantCulture);
+            var endDateTime = DateTime.Parse(dates[1], CultureInfo.CurrentCulture);
+
+            Game existing = new Game()
+            {
+                GameId = model.GameId,
+                ContactId = model.ContactId,
+                GameStatusId = int.Parse(model.Status),
+                SportId = int.Parse(model.Sport),
+                VenueId = int.Parse(model.Venue),
+                StartTime = startDateTime,
+                EndTime = endDateTime,
+            };
+
+            _context.Entry(existing).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return RedirectToAction("GameDetails", new {id = model.GameId});
+        }
+
+        public void PopulateEditDropdown() { }
+
+        public bool IsCreatorOfGame(string email, int gameId)
+        {
+            //if blank value then return false
+            if (email.Equals("") || gameId == 0) return false;
+
+            //find the contact by the email
+            Contact creator = _context.Contacts.FirstOrDefault(x => x.Email.Equals(email));
+
+            //find the game by the id
+            Game currentGame = _context.Games.Find(gameId);
+
+            //see if it matches, if so then the contact is the creator
+            if (creator.ContactId == currentGame.ContactId)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /**

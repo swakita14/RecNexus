@@ -46,8 +46,12 @@
 
                 <center>
                     <p>
-                        <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'" />
+                        @if (ViewBag.IsCreator)
+                        {
+                            <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'" />
+                        }
                         &nbsp;
+
                         @using (Html.BeginForm("GameDetails", "Game", FormMethod.Post))
                         {
                             @Html.HiddenFor(model => model.GameId)
@@ -55,7 +59,7 @@
                             @Html.HiddenFor(model => model.PickUpGameId)
                             <input type="submit" value="Join Game" class="btn btn-default" />
                         }
-                        &nbsp;
+
 
                     </p>
                 </center>
