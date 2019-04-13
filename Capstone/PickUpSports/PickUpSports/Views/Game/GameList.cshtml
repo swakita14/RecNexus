@@ -37,6 +37,7 @@
             {
 
                 <div class="container">
+
                     <div class="row">
                         @Html.DisplayFor(model => game.Sport) at @Html.DisplayFor(model => game.Venue)
                     </div>
@@ -49,7 +50,7 @@
 
 
                     <div class="row">
-                        <br />@Html.ActionLink("Click here for more details on game", "GameDetails", new { id = game.GameId })
+                        <br/>@Html.ActionLink("Click here for more details on game", "GameDetails", new {id = game.GameId})
                     </div>
 
                 </div>

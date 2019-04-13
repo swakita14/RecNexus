@@ -217,7 +217,7 @@ namespace PickUpSports.Controllers
             if (!IsNotSignedUpForGame(model.ContactId, model.GameId))
             {
                 //error message
-                ViewBag.Error = "You are already signed up for this Game";
+                ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
 
                 //finding game
                 Game game = _context.Games.Find(model.GameId);
@@ -307,7 +307,7 @@ namespace PickUpSports.Controllers
 
             if (gameList.Count == 0)
             {
-                ViewBag.ErrorMsg = "There are no games in the selected Venue";
+                ViewData.ModelState.AddModelError("GameSearch", "There are no games that matches your search");
             }
 
             //List using ViewModel to format how I like 
@@ -341,7 +341,7 @@ namespace PickUpSports.Controllers
 
             if (gameList.Count == 0)
             {
-                ViewBag.ErrorMsg = "There are no games with the Selected Sport";
+                ViewData.ModelState.AddModelError("GameSearch", "There are no games that matches your search");
             }
 
             //List using ViewModel to format how I like 
@@ -434,11 +434,20 @@ namespace PickUpSports.Controllers
         [HttpGet]
         public ActionResult EditGame(int id)
         {
+            //find the game by id
+            Game game = _context.Games.Find(id);
+
+            string currContactEmail = User.Identity.GetUserName();
+
+            Contact currContact = _context.Contacts.FirstOrDefault(x => x.Email == currContactEmail);
+
+            if (!IsCreatorOfGame(currContact.ContactId, game))
+            {
+                return RedirectToAction("GameDetails", new {id = id});
+            }
+
             //populating dropdown 
             PopulateMethod();
-
-            ////find the game by id
-            Game game = _context.Games.Find(id);
 
 
             string dateRange = game.StartTime.ToString("MM/dd/yyyy hh:mm tt") + " - " + game.EndTime.ToString("MM/dd/yyyy hh:mm tt");
