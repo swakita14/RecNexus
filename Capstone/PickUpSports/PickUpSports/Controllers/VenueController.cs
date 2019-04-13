@@ -447,13 +447,6 @@ namespace PickUpSports.Controllers
             return dDistance;
         }
 
-        public JsonResult MapResult(int? id)
-        {
-            var coords = _context.Venues.Where(i => i.VenueId == id).Select(v => v.Locations).FirstOrDefault()
-                .Select(v => new {v.Latitude, v.Longitude}).OrderByDescending(v => v.Latitude).ToList();
-
-            return Json(coords, JsonRequestBehavior.AllowGet);
-        }
 
         protected override void Dispose(bool disposing)
         {
