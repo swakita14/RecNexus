@@ -45,4 +45,19 @@ function getGamesBySport() {
 
 }
 
+function getGamesByTime() {
+
+    console.log("loaded!");
+
+    var id = $("#datetimes").val();
+
+    $.ajax({
+        type: "GET",
+        url: "../../Game/TimeFilter/",
+        data: { "dateRange": id },
+        success: gameList
+
+    });
+}
+
 
