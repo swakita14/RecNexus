@@ -14,51 +14,21 @@ namespace PickUpSports.Controllers
 {
     public class VenueController : Controller
     {
-        private readonly IPlacesApiClient _placesApi;
         private readonly PickUpContext _context;
+        private readonly IVenueService _venueService;
 
-        public VenueController(IPlacesApiClient placesApi, PickUpContext context)
+        public VenueController(PickUpContext context, IVenueService venueService)
         {
-            _placesApi = placesApi;
             _context = context;
+            _venueService = venueService;
         }
-
-
+        
         public ActionResult Index(string sortBy, string curLat, string curLong, string time, string day)
         {
-            // Only want to update Venues database once a week
-            Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
+            _venueService.UpdateVenues();
+            _venueService.UpdateVenueDetails();
 
-            // If there is no update or if most recent update was more than two weeks ago
-            // search places and update Venues database
-            if (mostRecentUpdate == null || mostRecentUpdate.DateUpdated < DateTime.Now.AddDays(-14))
-            {
-                // Get list of places 
-                List<PlaceSearchResult> places = _placesApi.GetVenues().Result;
-                
-                foreach (var place in places)
-                {
-                    // Check if we already have this venue in database
-                     Venue existingVenue = _context.Venues.FirstOrDefault(v => v.GooglePlaceId == place.PlaceId);
-
-                    // If not in database, add it
-                    if (existingVenue == null)
-                    {
-                        Venue venue = new Venue
-                        {
-                            GooglePlaceId = place.PlaceId,
-                            Name = place.Name,
-                            DateUpdated = DateTime.Now
-                        };
-
-                        _context.Venues.Add(venue);
-                        _context.SaveChanges();
-                    }
-                }
-
-                UpdatePlaceDetails();
-            }
-
+            // Create view model for list of venues
             List<VenueViewModel> model = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
 
@@ -75,7 +45,7 @@ namespace PickUpSports.Controllers
                 double venLong = Convert.ToDouble(location.Longitude);
                 
                 //Calculate the distance from user to venue. Method at the bottom
-                double distance = Calc(userLat, userLong, venLat, venLong);
+                double distance = _venueService.CalculateVenueDistance(userLat, userLong, venLat, venLong);
 
 
                 // get the rating 
@@ -117,8 +87,9 @@ namespace PickUpSports.Controllers
                 //convert user input string to a TimeSpan
                 TimeSpan hs = TimeSpan.Parse(time);
 
+                var dayOfWeek = Enum.Parse(typeof(DayOfWeek), day);
                 //First filter out using the days
-                List<BusinessHours> day_available = hours.Where(x => x.DayOfWeek == ConvertDay(day)).ToList();
+                List<BusinessHours> day_available = hours.Where(x => x.DayOfWeek == (int) dayOfWeek).ToList();
 
                 //Then use that list and filter the closed times
                 List<BusinessHours> closed_from = day_available.Where(x => x.CloseTime >= hs).ToList();
@@ -180,41 +151,6 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
-       
-        /**
-         * This is helper method that converts the string from the user input to an int
-         */
-        public int ConvertDay(string day) 
-        {
-            int day_num = 0;
-
-            switch (day)
-            {
-                case "Monday":
-                    day_num = 1;
-                    break;
-                case "Tuesday":
-                    day_num = 2;
-                    break;
-                case "Wednesday":
-                    day_num = 3;
-                    break;
-                case "Thursday":
-                    day_num = 4;
-                    break;
-                case "Friday":
-                    day_num = 5;
-                    break;
-                case "Saturday":
-                    day_num = 6;
-                    break;
-                case "Sunday":
-                    day_num = 0;
-                    break;
-            }
-
-            return day_num;
-        }
 
         public ActionResult Map()
         {
@@ -300,154 +236,7 @@ namespace PickUpSports.Controllers
             model.Reviews = tempList.OrderByDescending(r => r.Timestamp).ToList();
             return View(model);
         }
-
-        /**
-         * Method that checks which Venues have missing details and updates those
-         * details with details from Google Place API. Uses API response to update Venue
-         * details and BusinessHours table data 
-         */
-        private void UpdatePlaceDetails()
-        {
-            // Get all venues 
-            List<Venue> venues = _context.Venues.ToList();
-
-            // Get only venues that don't have details
-            List<Venue> venuesWithoutDetails = venues.Where(v => v.Address1 == null).ToList();
-
-            foreach (var venue in venuesWithoutDetails)
-            {
-                // Get Place details from Google API using GooglePlaceId
-                PlaceDetailsResponse venueDetails = _placesApi.GetPlaceDetailsById(venue.GooglePlaceId).Result;
-
-                // Map response data to database model properties
-                venue.Phone = venueDetails.Result.FormattedPhoneNumber;
-                string streetAddress = null;
-                foreach (var addressComponent in venueDetails.Result.AddressComponents)
-                {
-                    // Map Address from response to database model
-                    var type = addressComponent.Types.FirstOrDefault();
-                    switch (type)
-                    {
-                        case "street_number":
-                            streetAddress += addressComponent.ShortName + " ";
-                            break;
-                        case "route":
-                            streetAddress += addressComponent.ShortName;
-                            break;
-                        case "locality":
-                            venue.City = addressComponent.ShortName;
-                            break;
-                        case "administrative_area_level_1":
-                            venue.State = addressComponent.ShortName;
-                            break;
-                        case "postal_code":
-                            venue.ZipCode = addressComponent.ShortName;
-                            break;
-                        default:
-                            continue;
-                    }
-
-                    venue.Address1 = streetAddress;
-                }
-                
-                // Update Venue entity
-                _context.Entry(venue).State = EntityState.Modified;
-                _context.SaveChanges();
-                
-                // Map OpeningHours API response to BusinessHours entity
-                if (venueDetails.Result.OpeningHours != null)
-                {
-                    // Initialize new BusinessHours entity using VenueID as foreign key
-                    BusinessHours hours = new BusinessHours { VenueId = venue.VenueId };
-
-                    foreach (var period in venueDetails.Result.OpeningHours.Periods)
-                    {
-                        hours.DayOfWeek = period.Open.Day;
-
-                        string openTime = period.Open?.Time.Insert(2, ":");
-                        if (!string.IsNullOrEmpty(openTime)) hours.OpenTime = DateTime.Parse(openTime).TimeOfDay;
-
-                        string closeTime = period.Close?.Time.Insert(2, ":");
-                        if (!string.IsNullOrEmpty(closeTime)) hours.CloseTime = DateTime.Parse(closeTime).TimeOfDay;
-
-                        // Add BusinessHours entity
-                        _context.BusinessHours.Add(hours);
-                        _context.SaveChanges();
-                    }
-                }
-
-                // Map Review API response to Review database entity
-                if (venueDetails.Result.Reviews != null)
-                {
-                    foreach (var review in venueDetails.Result.Reviews)
-                    {
-                        DateTime timestamp = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
-                        Review reviewEntity = new Review
-                        {
-                            IsGoogleReview = true,
-                            GoogleAuthor = review.AuthorName,
-                            VenueId = venue.VenueId,
-                            Comments = review.Text,
-                            Rating = review.Rating,
-                            
-                            Timestamp = timestamp.AddSeconds(review.Time).ToLocalTime()
-                        };
-
-                        _context.Reviews.Add(reviewEntity);
-                    }
-
-                    _context.SaveChanges();
-                }
-
-                // Map Location API response to Location database entity
-                if (venueDetails.Result.Geometry != null)
-                {
-                    Location locationEntity = new Location
-                    {
-                        Latitude =
-                            venueDetails.Result.Geometry.GeometryLocation.Latitude.ToString(CultureInfo.InvariantCulture),
-                        Longitude =
-                            venueDetails.Result.Geometry.GeometryLocation.Longitude.ToString(CultureInfo.InvariantCulture),
-                        VenueId = venue.VenueId
-                    };
-
-                    // Add Location entity
-                    _context.Locations.Add(locationEntity);
-                    _context.SaveChanges();
-                }
-            }
-        }
-
-
-        /**
-         * Method to  calculate distance via Haversine formula.
-         */
-        public static double Calc(double lat1, double long1, double lat2, double long2)
-        {
-            double dDistance = Double.MinValue;
-            double dLat1InRad = lat1 * (Math.PI / 180.0);
-            double dLong1InRad = long1 * (Math.PI / 180);
-            double dLat2InRad = lat2 * (Math.PI / 180.0);
-            double dLong2InRad = long2 * (Math.PI / 180.0);
-
-            double dLongitude = dLong2InRad - dLong1InRad;
-            double dLatitude = dLat2InRad - dLat1InRad;
-
-            // Intermediate result a.
-            double a = Math.Pow(Math.Sin(dLatitude / 2.0), 2.0) +
-                       Math.Cos(dLat1InRad) * Math.Cos(dLat2InRad) *
-                       Math.Pow(Math.Sin(dLongitude / 2.0), 2.0);
-            //Intermediate result c 
-            double c = 2.0 * Math.Asin(Math.Sqrt(a));
-            
-            //Distance (using approximate radius of earth in miles)
-            const Double kEarthRadiusMiles = 3958.8;
-            dDistance = kEarthRadiusMiles * c;
-            return dDistance;
-        }
-
-
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

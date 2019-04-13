@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using PickUpSports.Models.DatabaseModels;
-using DayOfWeek = PickUpSports.Models.Enums.DayOfWeek;
 
 namespace PickUpSports.Models.ViewModel
 {
     public class CreateTimePreferenceViewModel
-
     {
-
         public int TimePrefID { get; set; }
 
         public DayOfWeek DayOfWeek { get; set; }
