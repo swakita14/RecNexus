@@ -463,31 +463,50 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult EditGame(EditGameViewModel model)
         {
-            PopulateMethod();
 
-            if (!ModelState.IsValid)
-            {
-                PopulateMethod();
-                return View(model);
-            }
-
-
+            //Parse the date ranges
             var dates = model.DateRange.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
             var startDateTime = DateTime.Parse(dates[0], CultureInfo.InvariantCulture);
             var endDateTime = DateTime.Parse(dates[1], CultureInfo.CurrentCulture);
 
-            Game existing = new Game()
-            {
-                GameId = model.GameId,
-                ContactId = model.ContactId,
-                GameStatusId = int.Parse(model.Status),
-                SportId = int.Parse(model.Sport),
-                VenueId = int.Parse(model.Venue),
-                StartTime = startDateTime,
-                EndTime = endDateTime,
-            };
+            //find the existing game
+            Game existingGame = _context.Games.Find(model.GameId);
 
-            _context.Entry(existing).State = EntityState.Modified;
+            //checking
+            if (ModelState.IsValid) return View(model);
+
+            //if any values in either the Venue, sport, or status changes this will change the values:
+            if (model.Venue != null)
+            {
+                ViewBag.Venue = new SelectList(_context.Venues, model.Venue, _context.Venues.Find(int.Parse(model.Venue)).Name);
+                existingGame.VenueId = int.Parse(model.Venue);
+            }
+            else if (model.Sport != null)
+            {
+                ViewBag.Sport = new SelectList(_context.Sports, model.Sport, _context.Sports.Find(int.Parse(model.Sport)).SportName);
+                existingGame.SportId = int.Parse(model.Sport);
+            }
+            else if (model.Status != null)
+            {
+                ViewBag.Status = new SelectList(_context.GameStatuses, model.Status, _context.GameStatuses.Find(int.Parse(model.Status)).Status);
+                existingGame.GameStatusId = int.Parse(model.Status);
+            }
+            else
+            {
+                //if no changes just place the original values
+                existingGame.VenueId = existingGame.VenueId;
+                existingGame.SportId = existingGame.SportId;
+                existingGame.GameStatusId = existingGame.GameStatusId;                           
+            }
+
+            //assigning rest of the values
+            existingGame.GameId = model.GameId;
+            existingGame.ContactId = model.ContactId;
+            existingGame.StartTime = startDateTime;
+            existingGame.EndTime = endDateTime;
+
+            //save changes
+            _context.Entry(existingGame).State = EntityState.Modified;
             _context.SaveChanges();
 
             return RedirectToAction("GameDetails", new {id = model.GameId});
