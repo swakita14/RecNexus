@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Mapping;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -175,13 +176,13 @@ namespace PickUpSports.Controllers
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
             PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.ContactId == contact.ContactId);
 
-            if (IsCreatorOfGame(email, id))
+            //find the game 
+            Game game = _context.Games.Find(id);
+
+            if (IsCreatorOfGame(contact.ContactId, game))
             {
                 ViewBag.IsCreator = true;
             }
-
-            //find the game 
-            Game game = _context.Games.Find(id);
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
@@ -520,19 +521,15 @@ namespace PickUpSports.Controllers
 
         public void PopulateEditDropdown() { }
 
-        public bool IsCreatorOfGame(string email, int gameId)
+        public bool IsCreatorOfGame(int contactId, Game game)
         {
             //if blank value then return false
-            if (email.Equals("") || gameId == 0) return false;
+            if (contactId == 0 || game.ContactId == 0) return false;
 
-            //find the contact by the email
-            Contact creator = _context.Contacts.FirstOrDefault(x => x.Email.Equals(email));
-
-            //find the game by the id
-            Game currentGame = _context.Games.Find(gameId);
+            if (game == null) return false;
 
             //see if it matches, if so then the contact is the creator
-            if (creator.ContactId == currentGame.ContactId)
+            if (contactId == game.ContactId)
             {
                 return true;
             }
