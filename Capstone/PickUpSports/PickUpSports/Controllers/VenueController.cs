@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.GoogleApiModels;
 using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.VenueController;
 
 namespace PickUpSports.Controllers
 {
@@ -23,29 +21,31 @@ namespace PickUpSports.Controllers
             _venueService = venueService;
         }
         
-        public ActionResult Index(string sortBy, string curLat, string curLong, string time, string day)
+        /**
+         * Show a list of venues
+         */
+        public ActionResult Index()
         {
             _venueService.UpdateVenues();
-            _venueService.UpdateVenueDetails();
 
             // Create view model for list of venues
-            List<VenueViewModel> model = new List<VenueViewModel>();
+            SearchVenueViewModel model = new SearchVenueViewModel();
+            model.Venues = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
 
             foreach (var venue in venues)
             {
                 //get location of venue
-                Location location = _context.Locations
-                    .FirstOrDefault(l => l.VenueId == venue.VenueId);
+                Location location = _context.Locations.FirstOrDefault(l => l.VenueId == venue.VenueId);
 
-                //converted coordinates from strings to doubles
-                double userLat = Convert.ToDouble(curLat);
-                double userLong = Convert.ToDouble(curLong);
-                double venLat = Convert.ToDouble(location.Latitude);
-                double venLong = Convert.ToDouble(location.Longitude);
+                ////converted coordinates from strings to doubles
+                //double userLat = Convert.ToDouble(curLat);
+                //double userLong = Convert.ToDouble(curLong);
+                //double venLat = Convert.ToDouble(location.Latitude);
+                //double venLong = Convert.ToDouble(location.Longitude);
                 
                 //Calculate the distance from user to venue. Method at the bottom
-                double distance = _venueService.CalculateVenueDistance(userLat, userLong, venLat, venLong);
+                //double distance = _venueService.CalculateVenueDistance(userLat, userLong, venLat, venLong);
 
 
                 // get the rating 
@@ -59,7 +59,7 @@ namespace PickUpSports.Controllers
                 else avgRating = null;
 
 
-                model.Add(new VenueViewModel
+                model.Venues.Add(new VenueViewModel
                 {
                     Address1 = venue.Address1,
                     Address2 = venue.Address2,
@@ -73,7 +73,7 @@ namespace PickUpSports.Controllers
                     AverageRating = avgRating,
                     LatitudeCoord = location.Latitude,
                     LongitudeCoord = location.Longitude,
-                    Distance = distance
+                    // = distance
                 });
 
             }
@@ -82,75 +82,203 @@ namespace PickUpSports.Controllers
             List<BusinessHours> hours = _context.BusinessHours.ToList();
 
             //lets wait till time is NOT null
-            if (time != null)
-            {
-                //convert user input string to a TimeSpan
-                TimeSpan hs = TimeSpan.Parse(time);
+            //if (time != null)
+            //{
+            //    //convert user input string to a TimeSpan
+            //    TimeSpan hs = TimeSpan.Parse(time);
 
-                var dayOfWeek = Enum.Parse(typeof(DayOfWeek), day);
-                //First filter out using the days
-                List<BusinessHours> day_available = hours.Where(x => x.DayOfWeek == (int) dayOfWeek).ToList();
+            //    var dayOfWeek = Enum.Parse(typeof(DayOfWeek), day);
+            //    //First filter out using the days
+            //    List<BusinessHours> day_available = hours.Where(x => x.DayOfWeek == (int) dayOfWeek).ToList();
 
-                //Then use that list and filter the closed times
-                List<BusinessHours> closed_from = day_available.Where(x => x.CloseTime >= hs).ToList();
+            //    //Then use that list and filter the closed times
+            //    List<BusinessHours> closed_from = day_available.Where(x => x.CloseTime >= hs).ToList();
 
-                //Finally filter the list above and you have the remaning few which maches the days and the closing time
-                List<BusinessHours> open_from = closed_from.Where(x => x.OpenTime <= hs).ToList();
+            //    //Finally filter the list above and you have the remaning few which maches the days and the closing time
+            //    List<BusinessHours> open_from = closed_from.Where(x => x.OpenTime <= hs).ToList();
 
-                //If there are some in the list that matches the user input - else it didnt match
-                if (open_from.Count > 0)
-                {
-                    // Clear current list so can add only venues that will be open during chosen time
-                    model.Clear();
+            //    //If there are some in the list that matches the user input - else it didnt match
+            //    if (open_from.Count > 0)
+            //    {
+            //        // Clear current list so can add only venues that will be open during chosen time
+            //        model.Clear();
 
-                    foreach (var v in open_from)
-                    {
-                        Venue venue = _context.Venues.Find(v.VenueId);
+            //        foreach (var v in open_from)
+            //        {
+            //            Venue venue = _context.Venues.Find(v.VenueId);
                         
-                        // Add venue to model
-                        model.Add(new VenueViewModel
-                        {
-                            Address1 = venue.Address1,
-                            Address2 = venue.Address2,
-                            City = venue.City,
-                            Name = venue.Name,
-                            Phone = venue.Phone,
-                            State = venue.State,
-                            VenueId = venue.VenueId,
-                            ZipCode = venue.ZipCode
-                        });
-                    }
+            //            // Add venue to model
+            //            model.Add(new VenueViewModel
+            //            {
+            //                Address1 = venue.Address1,
+            //                Address2 = venue.Address2,
+            //                City = venue.City,
+            //                Name = venue.Name,
+            //                Phone = venue.Phone,
+            //                State = venue.State,
+            //                VenueId = venue.VenueId,
+            //                ZipCode = venue.ZipCode
+            //            });
+            //        }
 
-                    return View(model);
+            //        return View(model);
 
-                }
-                else
-                {
-                    //Error Message shows 
-                    ViewBag.Message = "No Match Available";
-                }
-            }
+            //    }
+            //    else
+            //    {
+            //        //Error Message shows 
+            //        ViewBag.Message = "No Match Available";
+            //    }
+            //}
 
 
-            ViewBag.DistanceSort = string.IsNullOrEmpty(sortBy) ? "Distance" : "";
-            //implement sorting by rate fuction
-            ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
+            //ViewBag.DistanceSort = string.IsNullOrEmpty(sortBy) ? "Distance" : "";
+            ////implement sorting by rate fuction
+            //ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
 
-            switch (sortBy)
-            {
-                case "RatingDesc":
-                    model=model.OrderByDescending(x=>x.AverageRating).ToList();
-                    break;
-                case "Distance":
-                    model = model.OrderBy(x => x.Distance).ToList();
-                    break;
-                default:
-                    model=model.OrderBy(x => x.VenueId).ToList();
-                    break;
-            }
+            //switch (sortBy)
+            //{
+            //    case "RatingDesc":
+            //        model=model.OrderByDescending(x=>x.AverageRating).ToList();
+            //        break;
+            //    case "Distance":
+            //        model = model.OrderBy(x => x.Distance).ToList();
+            //        break;
+            //    default:
+            //        model=model.OrderBy(x => x.VenueId).ToList();
+            //        break;
+            //}
             return View(model);
         }
 
+        /**
+         * Venue search and filter results
+         */
+        [HttpPost]
+        public ActionResult Filter(SearchVenueViewModel model)
+        {
+            // Create new model to send to view
+            SearchVenueViewModel viewModel = new SearchVenueViewModel();
+            viewModel.Venues = new List<VenueViewModel>();
+
+            // User entered a search string
+            if (!string.IsNullOrEmpty(model.Search))
+            {
+                // Search venue names and cities
+                viewModel.Venues.AddRange(model.Venues.Where(x => x.Name.Contains(model.Search)).ToList());
+                viewModel.Venues.AddRange(model.Venues.Where(x => x.City.Contains(model.Search)));
+            }
+
+            if (!string.IsNullOrEmpty(model.Filter))
+            {
+
+
+                // User chose to sort by rating
+                if (model.Filter.Equals("Rating"))
+                    viewModel.Venues = model.Venues.OrderByDescending(x => x.AverageRating).ToList();
+
+                // User chose to filter by time
+                if (model.Filter.Equals("Time"))
+                {
+                    //get all the buiness hours for all the venues
+                    List<BusinessHours> hours = _context.BusinessHours.ToList();
+
+                    //lets wait till time is NOT null
+                    if (model.Time != null)
+                    {
+                        //convert user input string to a TimeSpan
+                        TimeSpan hs = TimeSpan.Parse(model.Time);
+
+                        var dayOfWeek = Enum.Parse(typeof(DayOfWeek), model.Day);
+                        //First filter out using the days
+                        List<BusinessHours> day_available = hours.Where(x => x.DayOfWeek == (int) dayOfWeek).ToList();
+
+                        //Then use that list and filter the closed times
+                        List<BusinessHours> closed_from = day_available.Where(x => x.CloseTime >= hs).ToList();
+
+                        //Finally filter the list above and you have the remaning few which maches the days and the closing time
+                        List<BusinessHours> open_from = closed_from.Where(x => x.OpenTime <= hs).ToList();
+
+                        //If there are some in the list that matches the user input - else it didnt match
+                        if (open_from.Count > 0)
+                        {
+                            foreach (var businessHour in open_from)
+                            {
+                                // Only keep venues that are in open_from
+                                var venue = model.Venues.FirstOrDefault(x => x.VenueId == businessHour.VenueId);
+                                if (venue != null && !viewModel.Venues.Contains(venue)) viewModel.Venues.Add(venue);
+                            }
+                        }
+                    }
+                }
+            }
+            //foreach (var venue in model.Venues)
+            //{
+            //    //get location of venue
+            //    Location location = _context.Locations.FirstOrDefault(l => l.VenueId == venue.VenueId);
+
+            //    ////converted coordinates from strings to doubles
+            //    //double userLat = Convert.ToDouble(curLat);
+            //    //double userLong = Convert.ToDouble(curLong);
+            //    //double venLat = Convert.ToDouble(location.Latitude);
+            //    //double venLong = Convert.ToDouble(location.Longitude);
+
+            //    //Calculate the distance from user to venue. Method at the bottom
+            //    //double distance = _venueService.CalculateVenueDistance(userLat, userLong, venLat, venLong);
+
+
+
+            //    model.Venues.Add(new VenueViewModel
+            //    {
+            //        Address1 = venue.Address1,
+            //        Address2 = venue.Address2,
+            //        City = venue.City,
+            //        Name = venue.Name,
+            //        Phone = venue.Phone,
+            //        State = venue.State,
+            //        VenueId = venue.VenueId,
+            //        ZipCode = venue.ZipCode,
+            //        // add rating to the model so can sort by rating
+            //        //AverageRating = avgRating,
+            //        LatitudeCoord = location.Latitude,
+            //        LongitudeCoord = location.Longitude,
+            //        // = distance
+            //    });
+            //}
+
+           
+
+
+            //ViewBag.DistanceSort = string.IsNullOrEmpty(sortBy) ? "Distance" : "";
+            ////implement sorting by rate fuction
+            //ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
+
+            //switch (sortBy)
+            //{
+            //    case "RatingDesc":
+            //        model=model.OrderByDescending(x=>x.AverageRating).ToList();
+            //        break;
+            //    case "Distance":
+            //        model = model.OrderBy(x => x.Distance).ToList();
+            //        break;
+            //    default:
+            //        model=model.OrderBy(x => x.VenueId).ToList();
+            //        break;
+            //}
+
+            if (viewModel.Venues.Count == 0)
+            {
+                ViewBag.Error = "No search results matching given filters";
+            }
+
+            // Preserve search/filter values
+            viewModel.Day = model.Day;
+            viewModel.Time = model.Time;
+            viewModel.Search = model.Search;
+            viewModel.CurrentLatitude = model.CurrentLatitude;
+            viewModel.CurrentLongitude = model.CurrentLongitude;
+            return View("Index", viewModel);
+        }
 
         public ActionResult Map()
         {

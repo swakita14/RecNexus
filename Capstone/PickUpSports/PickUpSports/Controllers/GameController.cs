@@ -299,7 +299,6 @@ namespace PickUpSports.Controllers
             return PartialView("_BusinessHours", model);
         }
 
-
         public PartialViewResult GetGamesResult(int venueId)
         {
             //list of games found using venue ID
