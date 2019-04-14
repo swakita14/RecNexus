@@ -23,37 +23,51 @@ namespace PickUpSports.GoogleApi
          */
         public Task<List<PlaceSearchResult>> GetVenues()
         {
+            List<GeometryLocation> cities = new List<GeometryLocation>();
+
+            // Salem
+            cities.Add(new GeometryLocation{Latitude = 44.9429, Longitude = -123.0351});
+
+            // Independence
+            cities.Add(new GeometryLocation { Latitude = 44.8512, Longitude = -123.1868 });
+
+            //Monmouth
+            cities.Add(new GeometryLocation { Latitude = 44.8485, Longitude = -123.2340 });
+
             // Initialize list to store all venue results
             List<PlaceSearchResult> results = new List<PlaceSearchResult>();
 
-            // Get basketball venues
-            PlaceSearchResponse basketballVenues = GetPlaces("basketball", "park").Result;
-            foreach (var venue in basketballVenues.Results) results.Add(venue);
+            foreach (var city in cities)
+            {
+                // Get basketball venues
+                PlaceSearchResponse basketballVenues = GetPlaces("basketball", "park", city).Result;
+                foreach (var venue in basketballVenues.Results) results.Add(venue);
 
-            // Get football venues
-            PlaceSearchResponse footballVenues = GetPlaces("football", "school").Result;
-            foreach (var venue in footballVenues.Results) results.Add(venue);
+                // Get football venues
+                PlaceSearchResponse footballVenues = GetPlaces("football", "school", city).Result;
+                foreach (var venue in footballVenues.Results) results.Add(venue);
 
-            // Get tennis venues
-            PlaceSearchResponse tennisVenues = GetPlaces("tennis", "park").Result;
-            foreach (var venue in tennisVenues.Results) results.Add(venue);
+                // Get tennis venues
+                PlaceSearchResponse tennisVenues = GetPlaces("tennis", "park", city).Result;
+                foreach (var venue in tennisVenues.Results) results.Add(venue);
 
-            // Get baseball venues
-            PlaceSearchResponse baseballVenues = GetPlaces("baseball", "park").Result;
-            foreach (var venue in baseballVenues.Results) results.Add(venue);
+                // Get baseball venues
+                PlaceSearchResponse baseballVenues = GetPlaces("baseball", "park", city).Result;
+                foreach (var venue in baseballVenues.Results) results.Add(venue);
 
-            // Get softball venues
-            PlaceSearchResponse softballVenues = GetPlaces("softball", "park").Result;
-            foreach (var venue in softballVenues.Results) results.Add(venue);
+                // Get softball venues
+                PlaceSearchResponse softballVenues = GetPlaces("softball", "park", city).Result;
+                foreach (var venue in softballVenues.Results) results.Add(venue);
 
-            // Get golf venues
-            PlaceSearchResponse golfVenues = GetPlaces("golf", "park").Result;
-            foreach (var venue in golfVenues.Results) results.Add(venue);
+                // Get golf venues
+                PlaceSearchResponse golfVenues = GetPlaces("golf", "park", city).Result;
+                foreach (var venue in golfVenues.Results) results.Add(venue);
 
-            // Get volleyball venues
-            PlaceSearchResponse volleyballVenues = GetPlaces("volleyball", "park").Result;
-            foreach (var venue in volleyballVenues.Results) results.Add(venue);
-
+                // Get volleyball venues
+                PlaceSearchResponse volleyballVenues = GetPlaces("volleyball", "park", city).Result;
+                foreach (var venue in volleyballVenues.Results) results.Add(venue);
+            }
+           
             return Task.FromResult(results);
         }
 
@@ -64,7 +78,7 @@ namespace PickUpSports.GoogleApi
          * including but not limited to name, type, and address</param>
          * <param name="type">Used to indicate status.</param>
          */
-        public Task<PlaceSearchResponse> GetPlaces(string keyword, string type)
+        public Task<PlaceSearchResponse> GetPlaces(string keyword, string type, GeometryLocation location)
         {
             // Initialize API request with URL and API key
             RestRequest request = new RestRequest("/nearbysearch/json?", Method.GET);
@@ -72,7 +86,7 @@ namespace PickUpSports.GoogleApi
 
             // Add parameters to API request, these will need to be changed
             request.AddQueryParameter("keyword", keyword);
-            request.AddQueryParameter("location", "44.9429, -123.0351");
+            request.AddQueryParameter("location", $"{location.Latitude}, {location.Longitude}");
             request.AddQueryParameter("radius", "10000");
             request.AddQueryParameter("type", type);
 

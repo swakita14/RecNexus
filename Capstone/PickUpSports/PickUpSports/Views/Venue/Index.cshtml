@@ -1,75 +1,136 @@
-﻿@model List<PickUpSports.Models.ViewModel.VenueViewModel>
+﻿@model PickUpSports.Models.ViewModel.VenueController.SearchVenueViewModel
 @{
     ViewBag.Title = "Sports Venues";
 }
 
-<div class="page-header">
-    <h3>Sports Venues and Fields</h3>
-    <p>Find local venues to play your favorite sports at here!</p>
-</div>
-
-<h2>Map</h2>
 <div id="map"></div>
 
-<p>
-    <div class="form-box">
-        <h2>Sports Venues and Fields</h2>
+@using (Html.BeginForm("Filter", "Venue", FormMethod.Post))
+{
+    <div class="container">
         <div class="row">
-            <center class="form-inline">
-                <form class="form-inline">
+            <div class="form-box">
+                <h2>Sports Venues and Fields</h2>
+                <form role="form">
+
+                    @* Store all venues *@
+                    @for (var i = 0; i < Model.Venues.Count; i++)
+                    {
+                        @Html.HiddenFor(x => x.Venues[i].VenueId)
+                        @Html.HiddenFor(x => x.Venues[i].Name)
+                        @Html.HiddenFor(x => x.Venues[i].Address1)
+                        @Html.HiddenFor(x => x.Venues[i].City)
+                        @Html.HiddenFor(x => x.Venues[i].State)
+                        @Html.HiddenFor(x => x.Venues[i].ZipCode)
+                        @Html.HiddenFor(x => x.Venues[i].AverageRating)
+                        @Html.HiddenFor(x => x.Venues[i].Phone)
+                        @Html.HiddenFor(x => x.Venues[i].LatitudeCoord)
+                        @Html.HiddenFor(x => x.Venues[i].LongitudeCoord)
+                    }
+                    
+                    @* Store user's current position *@
+                    @Html.HiddenFor(x => x.CurrentLatitude)
+                    @Html.HiddenFor(x => x.CurrentLongitude)
+
+                    @* Search field *@
                     <div class="form-group">
-                        <label for="endtime">Starting Time:</label>
-                        <input type="text" class="form-control" id="time" name="time" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" required> &nbsp;
+                        <div class="input-group">
+                            @if (String.IsNullOrEmpty(Model.Search))
+                            {
+                                <input type="text" class="form-control" name="Search" placeholder="Search Venues">
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" name="Search" placeholder="@Model.Search">
+                            }
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">Search</button>
+                            </span>
+                        </div>
                     </div>
+
+                    @* Date and time field *@
                     <div class="form-group">
-                        <label for="day">Day of Week:</label>
-                        @Html.DropDownList("day", new SelectList(Enum.GetValues(typeof(DayOfWeek))), new { @class = "form-control" }) &nbsp;
+                        <div class="row">
+                            <div class="col-sm-3">
+                                @Html.DropDownList("Day", new SelectList(Enum.GetValues(typeof(DayOfWeek)), Model.Day), new { @class = "form-control" })
+                            </div>
+                            <div class="col-sm-6">
+                                @if (string.IsNullOrEmpty(Model.Time))
+                                {
+                                    <input type="text" class="form-control" placeholder="Enter time (Ex: 09:00)" name="Time" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" placeholder="@Model.Time" name="Time" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
+                                }
+                            </div>
+                            <div class="col-sm-3">
+                                <button class="btn btn-default btn-block" type="submit" name="Filter" value="Time">Filter by Time</button>
+                            </div>
+                        </div>
+
                     </div>
-                    <button type="submit" class="btn btn-danger">Find Available Venues</button> &nbsp;
-<p style="color: red">@ViewBag.Message</p>
-            </form>
 
-<br />
-@Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" })
-@Html.ActionLink("Sort Venues by Distance", "Index", new { sortBy = ViewBag.DistanceSort }, new { @class = "btn btn-danger" })
-        </center>
-    </div>
-    </div>
-</p>
+                    @* Other filter fields *@
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <button class="btn btn-default btn-block" type="submit" name="Filter" value="Distance">Filter by Distance</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button class="btn btn-default btn-block" type="submit" name="Filter" value="Rating">Filter by Rating</button>
+                            </div>
+                        </div>
+                    </div>
 
-<ul class="rolldown-list" id="myList">
-    <li>
-        @foreach (var venue in Model)
-        {
-            <input type="hidden" value="@venue.VenueId" id="mapIn" />
-            <div class="container">
-                <div class="row">
-                    @Html.DisplayFor(model => venue.Name)
-                </div>
-                <div class="row">
-                    @Html.DisplayFor(model => venue.Address1), @Html.DisplayFor(model => venue.City), @Html.DisplayFor(model => venue.State), @Html.DisplayFor(model => venue.ZipCode)
-                </div>
-                <div class="row">
-                    @Html.DisplayFor(model => venue.Phone)
-                </div>
-
-
-                <div class="row">
-                    <br />@Html.ActionLink("Click here for details", "Details", new { id = venue.VenueId })
-                </div>
-
+                    <div class="form-group">
+                        <center>
+                            @Html.ActionLink("Reset all filters", "Index")
+                        </center>
+                    </div>
+                </form>
             </div>
-            <hr />
-        }
-    </li>
-</ul>
+        </div>
+    </div>
+}
 
+@* Venue list *@
+<h4 id="warning">@ViewBag.Error</h4>
+@if (Model.Venues.Count > 0)
+{
+    <ul class="rolldown-list" id="myList">
+        <li>
+            @foreach (var venue in Model.Venues)
+            {
+                <input type="hidden" value="@venue.VenueId" id="mapIn"/>
+                <div class="container">
+                    <div class="row">
+                        @Html.DisplayFor(model => venue.Name)
+                    </div>
+                    <div class="row">
+                        @Html.DisplayFor(model => venue.Address1), @Html.DisplayFor(model => venue.City), @Html.DisplayFor(model => venue.State), @Html.DisplayFor(model => venue.ZipCode)
+                    </div>
+                    <div class="row">
+                        @Html.DisplayFor(model => venue.Phone)
+                    </div>
+                    <div class="row">
+                        Average rating: @Html.DisplayFor(model => venue.AverageRating)
+                    </div>
 
+                    <div class="row">
+                        <br/>@Html.ActionLink("Click here for details", "Details", new {id = venue.VenueId})
+                    </div>
+
+                </div>
+                <hr/>
+            }
+        </li>
+    </ul>
+}
 
 <script>
-    var x = document.getElementById("demo");
-
-    function getLocation() {
+    var update = function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
@@ -78,28 +139,13 @@
     }
 
     function showPosition(position) {
-        var lat = position.coords.latitude;
-        var long = position.coords.longitude;
-        jQuery.ajax({
-            type: "POST",
-            url: "@Url.Action("Index", "Venue")",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ curLat: lat, curLong: long, sortBy: "Distance" }),
-            success: function (data) {
-                alert(data);
-            },
-            failure: function (errMsg) {
-                alert(errMsg);
-            }
-        });
-
-
+        document.getElementById('CurrentLatitude').value = position.coords.latitude;
+        document.getElementById('CurrentLongitude').value = position.coords.longitude;
     }
 
-    getLocation();
-
+    window.onload = update;
 </script>
+
 <script>
 
 
@@ -121,7 +167,7 @@
         }
 
        
-        @foreach (var venue in Model)
+        @foreach (var venue in Model.Venues)
         {
             <text>
                 var URL = "https://pickupsports-production.azurewebsites.net/Venue/Details/" + "@venue.VenueId";
@@ -132,23 +178,13 @@
                     url: URL
                 });
 
-
-             google.maps.event.addListener(marker, 'click', function() {
+                google.maps.event.addListener(marker, 'click', function() {
                     window.location.href = this.url;
                 });
                  
             </text>
         }
-       
-
-       
-
-       
-
-
     }
-
-
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5bwiGQe1zyt3pWzQ9scBzcwOJyFJDsMQ&callback=initMap"></script>
 
