@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
+using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.VenueController;
 
@@ -37,17 +38,7 @@ namespace PickUpSports.Controllers
             {
                 //get location of venue
                 Location location = _context.Locations.FirstOrDefault(l => l.VenueId == venue.VenueId);
-
-                ////converted coordinates from strings to doubles
-                //double userLat = Convert.ToDouble(curLat);
-                //double userLong = Convert.ToDouble(curLong);
-                //double venLat = Convert.ToDouble(location.Latitude);
-                //double venLong = Convert.ToDouble(location.Longitude);
                 
-                //Calculate the distance from user to venue. Method at the bottom
-                //double distance = _venueService.CalculateVenueDistance(userLat, userLong, venLat, venLong);
-
-
                 // get the rating 
                 List<Review> reviews = _context.Reviews.Where(r => r.VenueId == venue.VenueId).ToList();
 
@@ -69,13 +60,10 @@ namespace PickUpSports.Controllers
                     State = venue.State,
                     VenueId = venue.VenueId,
                     ZipCode = venue.ZipCode,
-                    // add rating to the model so can sort by rating
                     AverageRating = avgRating,
                     LatitudeCoord = location.Latitude,
                     LongitudeCoord = location.Longitude,
-                    // = distance
                 });
-
             }
 
             //get all the buiness hours for all the venues
@@ -161,21 +149,23 @@ namespace PickUpSports.Controllers
             SearchVenueViewModel viewModel = new SearchVenueViewModel();
             viewModel.Venues = new List<VenueViewModel>();
 
+            if (model.Venues.Count == 0)
+            {
+                ViewBag.Error("No results to filter. Please click \"Reset all filters\"");
+                return View("Index", viewModel);
+            }
             // User entered a search string
             if (!string.IsNullOrEmpty(model.Search))
             {
                 // Search venue names and cities
-                viewModel.Venues.AddRange(model.Venues.Where(x => x.Name.Contains(model.Search)).ToList());
-                viewModel.Venues.AddRange(model.Venues.Where(x => x.City.Contains(model.Search)));
+                viewModel.Venues.AddRange(model.Venues.Where(x => x.Name.CaseInsensitiveContains(model.Search)).ToList());
+                viewModel.Venues.AddRange(model.Venues.Where(x => x.City.CaseInsensitiveContains(model.Search)));
             }
 
             if (!string.IsNullOrEmpty(model.Filter))
             {
-
-
                 // User chose to sort by rating
-                if (model.Filter.Equals("Rating"))
-                    viewModel.Venues = model.Venues.OrderByDescending(x => x.AverageRating).ToList();
+                if (model.Filter.Equals("Rating")) viewModel.Venues = model.Venues.OrderByDescending(x => x.AverageRating).ToList();
 
                 // User chose to filter by time
                 if (model.Filter.Equals("Time"))
@@ -211,61 +201,31 @@ namespace PickUpSports.Controllers
                         }
                     }
                 }
+
+                // User chose to filter by distance
+                if (model.Filter.Equals("Distance"))
+                {
+                    foreach (var venue in model.Venues)
+                    {
+                        //get location of venue
+                        Location location = _context.Locations.FirstOrDefault(l => l.VenueId == venue.VenueId);
+
+                        //converted coordinates from strings to doubles
+                        double userLat = Convert.ToDouble(model.CurrentLatitude);
+                        double userLong = Convert.ToDouble(model.CurrentLongitude);
+                        double venLat = Convert.ToDouble(location.Latitude);
+                        double venLong = Convert.ToDouble(location.Longitude);
+
+                        //Calculate the distance from user to venue. Method at the bottom
+                        venue.Distance = _venueService.CalculateVenueDistance(userLat, userLong, venLat, venLong);
+                        viewModel.Venues.Add(venue);
+                    }
+
+                    viewModel.Venues = viewModel.Venues.OrderBy(x => x.Distance).ToList();
+
+                }
             }
-            //foreach (var venue in model.Venues)
-            //{
-            //    //get location of venue
-            //    Location location = _context.Locations.FirstOrDefault(l => l.VenueId == venue.VenueId);
-
-            //    ////converted coordinates from strings to doubles
-            //    //double userLat = Convert.ToDouble(curLat);
-            //    //double userLong = Convert.ToDouble(curLong);
-            //    //double venLat = Convert.ToDouble(location.Latitude);
-            //    //double venLong = Convert.ToDouble(location.Longitude);
-
-            //    //Calculate the distance from user to venue. Method at the bottom
-            //    //double distance = _venueService.CalculateVenueDistance(userLat, userLong, venLat, venLong);
-
-
-
-            //    model.Venues.Add(new VenueViewModel
-            //    {
-            //        Address1 = venue.Address1,
-            //        Address2 = venue.Address2,
-            //        City = venue.City,
-            //        Name = venue.Name,
-            //        Phone = venue.Phone,
-            //        State = venue.State,
-            //        VenueId = venue.VenueId,
-            //        ZipCode = venue.ZipCode,
-            //        // add rating to the model so can sort by rating
-            //        //AverageRating = avgRating,
-            //        LatitudeCoord = location.Latitude,
-            //        LongitudeCoord = location.Longitude,
-            //        // = distance
-            //    });
-            //}
-
            
-
-
-            //ViewBag.DistanceSort = string.IsNullOrEmpty(sortBy) ? "Distance" : "";
-            ////implement sorting by rate fuction
-            //ViewBag.RateSort = string.IsNullOrEmpty(sortBy) ? "RatingDesc" : "";
-
-            //switch (sortBy)
-            //{
-            //    case "RatingDesc":
-            //        model=model.OrderByDescending(x=>x.AverageRating).ToList();
-            //        break;
-            //    case "Distance":
-            //        model = model.OrderBy(x => x.Distance).ToList();
-            //        break;
-            //    default:
-            //        model=model.OrderBy(x => x.VenueId).ToList();
-            //        break;
-            //}
-
             if (viewModel.Venues.Count == 0)
             {
                 ViewBag.Error = "No search results matching given filters";
@@ -278,11 +238,6 @@ namespace PickUpSports.Controllers
             viewModel.CurrentLatitude = model.CurrentLatitude;
             viewModel.CurrentLongitude = model.CurrentLongitude;
             return View("Index", viewModel);
-        }
-
-        public ActionResult Map()
-        {
-            return View();
         }
 
         /**

@@ -12,6 +12,7 @@
             <div class="form-box">
                 <h2>Sports Venues and Fields</h2>
                 <form role="form">
+
                     @* Store all venues *@
                     @for (var i = 0; i < Model.Venues.Count; i++)
                     {
@@ -23,7 +24,13 @@
                         @Html.HiddenFor(x => x.Venues[i].ZipCode)
                         @Html.HiddenFor(x => x.Venues[i].AverageRating)
                         @Html.HiddenFor(x => x.Venues[i].Phone)
+                        @Html.HiddenFor(x => x.Venues[i].LatitudeCoord)
+                        @Html.HiddenFor(x => x.Venues[i].LongitudeCoord)
                     }
+                    
+                    @* Store user's current position *@
+                    @Html.HiddenFor(x => x.CurrentLatitude)
+                    @Html.HiddenFor(x => x.CurrentLongitude)
 
                     @* Search field *@
                     <div class="form-group">
@@ -31,7 +38,6 @@
                             @if (String.IsNullOrEmpty(Model.Search))
                             {
                                 <input type="text" class="form-control" name="Search" placeholder="Search Venues">
-
                             }
                             else
                             {
@@ -77,7 +83,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <center>
                             @Html.ActionLink("Reset all filters", "Index")
@@ -124,9 +130,7 @@
 }
 
 <script>
-    var x = document.getElementById("demo");
-
-    function getLocation() {
+    var update = function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
@@ -135,33 +139,21 @@
     }
 
     function showPosition(position) {
-        var lat = position.coords.latitude;
-        var long = position.coords.longitude;
-        jQuery.ajax({
-            type: "POST",
-            url: "@Url.Action("Index", "Venue")",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ curLat: lat, curLong: long, sortBy: "Distance" }),
-            success: function(data) {
-                alert(data);
-            },
-            failure: function(errMsg) {
-                alert(errMsg);
-            }
-        });
+        document.getElementById('CurrentLatitude').value = position.coords.latitude;
+        document.getElementById('CurrentLongitude').value = position.coords.longitude;
     }
 
-    getLocation();
-
+    window.onload = update;
 </script>
+
 <script>
-    
+
+
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'),
             {
                 center: { lat: -25.344, lng: 131.036 },
-                zoom: 10
+                zoom: 15
             });
 
         if (navigator.geolocation) {
@@ -173,40 +165,26 @@
                 map.setCenter(pos);
             });
         }
+
+       
+        @foreach (var venue in Model.Venues)
+        {
+            <text>
+                var URL = "https://pickupsports-production.azurewebsites.net/Venue/Details/" + "@venue.VenueId";
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: new google.maps.LatLng(@venue.LatitudeCoord, @venue.LongitudeCoord),
+                    title: "@venue.Name",
+                    url: URL
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    window.location.href = this.url;
+                });
+                 
+            </text>
+        }
     }
-    
-    function ajax_call() {
-        var id = document.getElementById("mapIn").value;
-        $.ajax({
-            type: 'GET',
-            datType: 'json',
-            url: '/Venue/MapResult/' + id,
-            data: { id: id },
-            success: displayResults,
-            error: errorOnAjax
-
-
-        });
-        console.log(id);
-    }
-
-    function displayResults(data) {
-        var marker, i;
-        for (i = 0; i < data.length; i++) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(data[1], data[0]),
-                map: map
-            });
-            console.log(marker);
-        };
-
-        console.log(data);
-    }
-
-    function errorOnAjax() {
-        console.log("Ajax Error");
-    }
-
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5bwiGQe1zyt3pWzQ9scBzcwOJyFJDsMQ&callback=initMap"></script>
 
