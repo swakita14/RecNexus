@@ -27,15 +27,14 @@
 
                         @if (Request.IsAuthenticated)
                         {
-                            <li>
-                                @Html.ActionLink("View your profile", "Details", "Contact", routeValues: null, htmlAttributes: new { title = "Manage" })
-                            </li>
-                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            @Html.AntiForgeryToken()
+                            <li>@Html.ActionLink("View your profile", "Details", "Contact", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li>@Html.ActionLink("Log off", "LogOut", "Account", routeValues: null, htmlAttributes: new { id = "logoutLink" })</li>
                         }
                         else
                         {
-                                <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                                <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
                         }
 
                     </ul>
@@ -43,8 +42,8 @@
             </div>
         </div>
     </div>
-
-    @RenderBody()
+   
+@RenderBody()
     @RenderSection("PageScript", required: false)
 
 
@@ -52,5 +51,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     @RenderSection("search_games", required: false)
+
 </body>
 </html>
