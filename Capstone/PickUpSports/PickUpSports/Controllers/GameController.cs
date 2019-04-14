@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -438,22 +439,27 @@ namespace PickUpSports.Controllers
         [HttpGet]
         public ActionResult EditGame(int id)
         {
-            //find the game by id
-            Game game = _context.Games.Find(id);
-
+            //Get current users email
             string currContactEmail = User.Identity.GetUserName();
 
+            //Find user by their email
             Contact currContact = _context.Contacts.FirstOrDefault(x => x.Email == currContactEmail);
 
+            //Find Game
+            Game game = _context.Games.Find(id);
+
+            //Populate dropdown using the current values of the existing game
+            PopulateEditDropDownMethod(game);
+
+            //check if the user is the creator of the game
             if (!IsCreatorOfGame(currContact.ContactId, game))
             {
                 return RedirectToAction("GameDetails", new {id = id});
             }
 
-            //populating dropdown 
-            PopulateMethod();
+            Debug.Write(game);
 
-
+            //Convert the strings so it matches
             string dateRange = game.StartTime.ToString("MM/dd/yyyy hh:mm tt") + " - " + game.EndTime.ToString("MM/dd/yyyy hh:mm tt");
 
             ////Create own View Model
@@ -472,17 +478,23 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
-        public void PopulateMethod()
+        /**
+         * Helper method that takes in the game object and creates a dropdown with the current game values
+         */
+        public void PopulateEditDropDownMethod(Game game)
         {
-            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
-            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
-            ViewBag.Status = new SelectList(_context.GameStatuses, "GameStatusId", "Status");
+            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name", game.VenueId);
+            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName", game.SportId);
+            ViewBag.Status = new SelectList(_context.GameStatuses, "GameStatusId", "Status", game.GameStatusId);
         }
+
 
         [Authorize]
         [HttpPost]
         public ActionResult EditGame(EditGameViewModel model)
         {
+            //checking model state
+            if (!ModelState.IsValid) return View(model);
 
             //Parse the date ranges
             var dates = model.DateRange.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
@@ -492,34 +504,44 @@ namespace PickUpSports.Controllers
             //find the existing game
             Game existingGame = _context.Games.Find(model.GameId);
 
-            //checking
-            if (ModelState.IsValid) return View(model);
+            //populating dropdown with the existing game
+            PopulateEditDropDownMethod(existingGame);
 
-            //if any values in either the Venue, sport, or status changes this will change the values:
-            if (model.Venue != null)
+            //check if the dates match - Can't have games that start and end on different dates 
+            if (!IsSelectedTimeValid(startDateTime, endDateTime))
             {
-                ViewBag.Venue = new SelectList(_context.Venues, model.Venue, _context.Venues.Find(int.Parse(model.Venue)).Name);
-                existingGame.VenueId = int.Parse(model.Venue);
-            }
-            else if (model.Sport != null)
-            {
-                ViewBag.Sport = new SelectList(_context.Sports, model.Sport, _context.Sports.Find(int.Parse(model.Sport)).SportName);
-                existingGame.SportId = int.Parse(model.Sport);
-            }
-            else if (model.Status != null)
-            {
-                ViewBag.Status = new SelectList(_context.GameStatuses, model.Status, _context.GameStatuses.Find(int.Parse(model.Status)).Status);
-                existingGame.GameStatusId = int.Parse(model.Status);
-            }
-            else
-            {
-                //if no changes just place the original values
-                existingGame.VenueId = existingGame.VenueId;
-                existingGame.SportId = existingGame.SportId;
-                existingGame.GameStatusId = existingGame.GameStatusId;                           
+                ViewData.ModelState.AddModelError("DateRange", "Start date and end date must be same date.");
+                PopulateEditDropDownMethod(existingGame);
+                return View(model);
             }
 
-            //assigning rest of the values
+            //check for existing games
+            Game gameCheck = CheckForExistingGame(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime);
+            if (gameCheck != null)
+            {
+                // TODO - Add link to existing game details later when that page is created
+                ViewData.ModelState.AddModelError("GameExists", "A game already exists with this venue, sport, and time.");
+                PopulateEditDropDownMethod(existingGame);
+                return View(model);
+            }
+
+            // Get venue by ID and business hours for that venue
+            Venue venue = _context.Venues.Find(int.Parse(model.Venue));
+            List<BusinessHours> venueHours = _context.BusinessHours.Where(b => b.VenueId == venue.VenueId).ToList();
+
+            // Return error to View if the venue is not available
+            bool isVenueAvailable = IsVenueAvailable(venueHours, startDateTime, endDateTime);
+            if (!isVenueAvailable)
+            {
+                ViewData.ModelState.AddModelError("DateRange", $"Unfortunately, {venue.Name} is not available during the hours you chose.");
+                PopulateEditDropDownMethod(existingGame);
+                return View(model);
+            }
+
+            //if all the checks passed, then pass the values into the existing game
+            existingGame.VenueId = int.Parse(model.Venue);
+            existingGame.SportId = int.Parse(model.Sport);
+            existingGame.GameStatusId = int.Parse(model.Status);
             existingGame.GameId = model.GameId;
             existingGame.ContactId = model.ContactId;
             existingGame.StartTime = startDateTime;
@@ -529,6 +551,7 @@ namespace PickUpSports.Controllers
             _context.Entry(existingGame).State = EntityState.Modified;
             _context.SaveChanges();
 
+            //redirect them back to the changed game detail
             return RedirectToAction("GameDetails", new {id = model.GameId});
         }
 
