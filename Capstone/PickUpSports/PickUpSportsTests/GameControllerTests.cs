@@ -175,5 +175,27 @@ namespace PickUpSportsTests
             Assert.AreEqual(isCreatorOfGameTest2, true);
 
         }
+
+        // Kexin Pan
+        [Test]
+        public void IsSelectedTimeValid_TimeIsValid_ReturnsTrue()
+        {
+            var startDateTime = DateTime.Parse("2019-04-11 09:00 PM");
+            var endDateTime = DateTime.Parse("2019-04-11 10:00 PM");
+
+            var isSelectedTimeValideTest = _sut.IsSelectedTimeValid(startDateTime, endDateTime);
+            Assert.AreEqual(isSelectedTimeValideTest, true);
+        }
+
+        [Test]
+        public void IsSelectedTimeValid_TimeIsNotValid_ReturnsFalse()
+        {
+            var startDateTime = DateTime.Parse("2019-04-12 09:00 PM");
+            var endDateTime = DateTime.Parse("2019-04-22 10:00 PM");
+
+            var isSelectedTimeValideTest = _sut.IsSelectedTimeValid(startDateTime, endDateTime);
+            Assert.AreEqual(isSelectedTimeValideTest, false);
+        }
+
     }
 }

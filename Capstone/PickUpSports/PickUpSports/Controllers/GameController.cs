@@ -372,10 +372,24 @@ namespace PickUpSports.Controllers
             var endDateTime = DateTime.Parse(dates[1], CultureInfo.CurrentCulture);
 
             List<GameListViewModel> model = new List<GameListViewModel>();
-
             foreach (var game in _context.Games)
             {
-                if (endDateTime.Date != startDateTime.Date)
+                if (IsSelectedTimeValid(startDateTime, endDateTime))
+                {
+                    if (game.StartTime >= startDateTime && game.EndTime <= endDateTime)
+                    {
+                        model.Add(new GameListViewModel
+                        {
+                            GameId = game.GameId,
+                            ContactName = _context.Contacts.Find(game.ContactId).Username,
+                            Sport = _context.Sports.Find(game.SportId).SportName,
+                            Venue = _context.Venues.Find(game.VenueId).Name,
+                            StartDate = game.StartTime.ToString(),
+                            EndDate = game.EndTime.ToString()
+                        });
+                    }
+                }
+                else
                 {
                     model.Add(new GameListViewModel
                     {
@@ -387,20 +401,7 @@ namespace PickUpSports.Controllers
                         EndDate = game.EndTime.ToString()
                     });
                 }
-
-                if (game.StartTime >= startDateTime && game.EndTime <= endDateTime)
-                {
-                    model.Add(new GameListViewModel
-                    {
-                        GameId = game.GameId,
-                        ContactName = _context.Contacts.Find(game.ContactId).Username,
-                        Sport = _context.Sports.Find(game.SportId).SportName,
-                        Venue = _context.Venues.Find(game.VenueId).Name,
-                        StartDate = game.StartTime.ToString(),
-                        EndDate = game.EndTime.ToString()
-                    });
-                }
-            }
+            }                         
             if (model.Count == 0)
             {
                 ViewBag.ErrorMsg = "There are no games with the selected Time";
@@ -544,6 +545,20 @@ namespace PickUpSports.Controllers
             }
 
             return false;
+        }
+
+        public bool IsSelectedTimeValid(DateTime startDateTime,DateTime endDataTime)
+        {
+            if(startDateTime == null|| endDataTime == null)
+            {
+                return false;
+            }
+            if (endDataTime.Date!=startDateTime.Date)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /**
