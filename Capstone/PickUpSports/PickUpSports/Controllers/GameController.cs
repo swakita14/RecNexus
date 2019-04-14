@@ -407,7 +407,7 @@ namespace PickUpSports.Controllers
             }                         
             if (model.Count == 0)
             {
-                ViewBag.ErrorMsg = "There are no games with the selected Time";
+                ViewData.ModelState.AddModelError("GameSearch", "There are no games that matches your search");
             }
             return PartialView("_GameSearch", model);
         }

@@ -1,6 +1,4 @@
-﻿
-
-/*getting results and manipulating the DOM */
+﻿/*getting results and manipulating the DOM */
 function gameList(result) {
 	$("#myList").empty();
 	$("#myList").html(result);
@@ -45,19 +43,16 @@ function getGamesBySport() {
 
 }
 
-function getGamesByTime() {
+$('#datetimes').on('apply.daterangepicker', function (ev, picker) {
 
     console.log("loaded!");
 
     var id = $("#datetimes").val();
-
     $.ajax({
         type: "GET",
         url: "../../Game/TimeFilter/",
-        data: { "dateRange": id },
+        data: { "dateRange": id},
         success: gameList
-
     });
-}
 
-
+})
