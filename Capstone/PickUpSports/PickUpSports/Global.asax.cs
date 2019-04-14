@@ -6,6 +6,7 @@ using Autofac.Integration.Mvc;
 using PickUpSports.DAL;
 using PickUpSports.GoogleApi;
 using PickUpSports.Interface;
+using PickUpSports.Services;
 using RestSharp;
 
 namespace PickUpSports
@@ -41,6 +42,9 @@ namespace PickUpSports
             builder.Register(context => new PickUpContext())
                 .AsSelf()
                 .InstancePerRequest();
+
+            // Register services
+            builder.RegisterType<VenueService>().As<IVenueService>();
 
             var container = builder.Build();
 

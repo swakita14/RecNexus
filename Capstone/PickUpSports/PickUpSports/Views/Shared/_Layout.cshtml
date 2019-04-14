@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <div class="my-nav">
+    <div class="my-nav"  style="margin-bottom: 30px;">
         <div class="navbar navbar-default navbar-fixed-top scrollspy_menu mnav navbar__initial" role="navigation">
             <div class="container">
                 <div class="navbar-header mnav">
@@ -27,20 +27,14 @@
 
                         @if (Request.IsAuthenticated)
                         {
-                            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-                            {
-                                @Html.AntiForgeryToken()
-
-                                    <li>
-                                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Details", "Contact", routeValues: null, htmlAttributes: new { title = "Manage" })
-                                    </li>
-                                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-                            }
+                            @Html.AntiForgeryToken()
+                            <li>@Html.ActionLink("View your profile", "Details", "Contact", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li>@Html.ActionLink("Log off", "LogOut", "Account", routeValues: null, htmlAttributes: new { id = "logoutLink" })</li>
                         }
                         else
                         {
-                                <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                                <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
                         }
 
                     </ul>
@@ -48,8 +42,8 @@
             </div>
         </div>
     </div>
-
-    @RenderBody()
+   
+@RenderBody()
     @RenderSection("PageScript", required: false)
 
 
@@ -57,5 +51,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     @RenderSection("search_games", required: false)
+
 </body>
 </html>

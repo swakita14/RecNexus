@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Core.Mapping;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
@@ -135,6 +131,7 @@ namespace PickUpSports.Controllers
         {
             ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
             ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
+
             // Get games that are open and that have not already passed and
             // order by games happening soonest
             List<Game> games = _context.Games
@@ -305,7 +302,6 @@ namespace PickUpSports.Controllers
             // Partial view displaying bids for specific item
             return PartialView("_BusinessHours", model);
         }
-
 
         public PartialViewResult GetGamesResult(int venueId)
         {
@@ -632,6 +628,15 @@ namespace PickUpSports.Controllers
 
             return null;
 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
     }
