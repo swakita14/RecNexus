@@ -418,7 +418,14 @@ namespace PickUpSports.Controllers
                 }
             }
         }
+        public JsonResult MapResult(int? venueId)
+        {
+            var result = _context.Venues.Where(i => i.VenueId == venueId).Select(v => v.Locations).FirstOrDefault()
+                .Select(v => new { v.VenueId, v.Latitude, v.Longitude }).ToList();
 
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         /**
          * Method to  calculate distance via Haversine formula.

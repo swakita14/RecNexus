@@ -3,6 +3,9 @@
     ViewBag.Title = "Sports Venues";
 }
 
+
+
+
 <div class="page-header">
     <h3>Sports Venues and Fields</h3>
     <p>Find local venues to play your favorite sports at here!</p>
@@ -27,21 +30,21 @@
                     </div>
                     <button type="submit" class="btn btn-danger">Find Available Venues</button> &nbsp;
 <p style="color: red">@ViewBag.Message</p>
-            </form>
+    </form>
 
 <br />
 @Html.ActionLink("SortByRating", "Index", new { sortBy = ViewBag.RateSort }, new { @class = "btn btn-danger" })
 @Html.ActionLink("Sort Venues by Distance", "Index", new { sortBy = ViewBag.DistanceSort }, new { @class = "btn btn-danger" })
-        </center>
+    </center>
     </div>
     </div>
-</p>
+    </p>
 
 <ul class="rolldown-list" id="myList">
     <li>
         @foreach (var venue in Model)
         {
-            <input type="hidden" value="@venue.VenueId" id="mapIn" />
+
             <div class="container">
                 <div class="row">
                     @Html.DisplayFor(model => venue.Name)
@@ -64,93 +67,50 @@
     </li>
 </ul>
 
+@section PageScript{
+    <script type="text/javascript" src="../../Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/orderByDistance.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5bwiGQe1zyt3pWzQ9scBzcwOJyFJDsMQ&callback=initMap"></script>
 
-
-<script>
-    var x = document.getElementById("demo");
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-    }
-
-    function showPosition(position) {
-        var lat = position.coords.latitude;
-        var long = position.coords.longitude;
-        jQuery.ajax({
-            type: "POST",
-            url: "@Url.Action("Index", "Venue")",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ curLat: lat, curLong: long, sortBy: "Distance" }),
-            success: function (data) {
-                alert(data);
-            },
-            failure: function (errMsg) {
-                alert(errMsg);
+    <script type="text/javascript">
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'),
+                {
+                    center: { lat: -25.344, lng: 131.036 },
+                    zoom: 15
+                });
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    map.setCenter(pos);
+                });
             }
-        });
-
-
-    }
-
-    getLocation();
-
-</script>
-<script>
-
-
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'),
+            @foreach (var venue in Model)
             {
-                center: { lat: -25.344, lng: 131.036 },
-                zoom: 15
-            });
+                <text>
+                    //var map = new google.maps.Map(document.getElementById("map"));
+                    var URL = "https://pickupsports-production.azurewebsites.net/Venue/Details/" + @venue.VenueId;
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: new google.maps.LatLng(@venue.LatitudeCoord, @venue.LongitudeCoord),
+                        title:"@venue.Name",
+                        url: URL
+                    });
+                    google.maps.event.addListener(marker,'click',function() {
+                            window.location.href = this.url;
+                        });
+                </text>
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                map.setCenter(pos);
-            });
+            }
         }
-
-       
-        @foreach (var venue in Model)
-        {
-            <text>
-                var URL = "https://pickupsports-production.azurewebsites.net/Venue/Details/" + "@venue.VenueId";
-                marker = new google.maps.Marker({
-                    map: map,
-                    position: new google.maps.LatLng(@venue.LatitudeCoord, @venue.LongitudeCoord),
-                    title: "@venue.Name",
-                    url: URL
-                });
+    </script>
+}
 
 
-             google.maps.event.addListener(marker, 'click', function() {
-                    window.location.href = this.url;
-                });
-                 
-            </text>
-        }
-       
 
-       
-
-       
-
-
-    }
-
-
-</script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5bwiGQe1zyt3pWzQ9scBzcwOJyFJDsMQ&callback=initMap"></script>
 
 
 
