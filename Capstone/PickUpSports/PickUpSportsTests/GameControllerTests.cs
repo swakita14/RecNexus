@@ -137,6 +137,9 @@ namespace PickUpSportsTests
             Assert.AreEqual(isVenueAvailable, false);
         }
 
+        /**
+         * PBI 142 - Shion Wakita
+         */
         [Test]
         public void IsCreatorOfGame_UserIsNotCreator_ReturnsFalse()
         {
@@ -156,6 +159,9 @@ namespace PickUpSportsTests
             Assert.AreEqual(isCreatorOfGameTest2, false);
         }
 
+        /**
+         * PBI 142 - Shion Wakita
+         */
         [Test]
         public void IsCreatorOfGame_UserIsCreator_ReturnsTrue()
         {
@@ -197,5 +203,43 @@ namespace PickUpSportsTests
             Assert.AreEqual(isSelectedTimeValideTest, false);
         }
 
+
+        /**
+         * PBI 254 - Shion Wakita
+         */
+        [Test]
+        public void IsNotSignedUpForGame_UserIsNotSignedUp_ReturnsTrue()
+        {
+            //Arrange
+            List<PickUpGame> playerList = new List<PickUpGame>();
+            playerList.Add(new PickUpGame()
+                { ContactId = 1, GameId = 2, PickUpGameId = 1} );
+            playerList.Add(new PickUpGame()
+                { ContactId = 2, GameId = 2, PickUpGameId = 2 });
+
+            //Act
+            var isNotSignedUpForGameTest = _sut.IsNotSignedUpForGame(3, playerList);
+
+            //Assert
+            Assert.AreEqual(isNotSignedUpForGameTest, true);
+
+        }
+
+        [Test]
+        public void IsNotSignedUpForGame_UserIsSignedUp_ReturnsFalse()
+        {
+            //Arrange
+            List<PickUpGame> playerList = new List<PickUpGame>();
+            playerList.Add(new PickUpGame()
+                { ContactId = 1, GameId = 2, PickUpGameId = 1 });
+            playerList.Add(new PickUpGame()
+                { ContactId = 2, GameId = 2, PickUpGameId = 2 });
+
+            //Act
+            var isNotSignedUpForGameTest = _sut.IsNotSignedUpForGame(1, playerList);
+
+            //Assert
+            Assert.AreEqual(isNotSignedUpForGameTest, false);
+        }
     }
 }

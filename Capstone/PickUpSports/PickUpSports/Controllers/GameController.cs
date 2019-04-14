@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using Microsoft.AspNet.Identity;
@@ -212,9 +213,10 @@ namespace PickUpSports.Controllers
         {
             ViewBag.IsCreator = false;
 
+            List<PickUpGame> checkGames = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
 
             //check if the person is already signed up for the game 
-            if (!IsNotSignedUpForGame(model.ContactId, model.GameId))
+            if (!IsNotSignedUpForGame(model.ContactId, checkGames))
             {
                 //error message
                 ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
@@ -257,15 +259,20 @@ namespace PickUpSports.Controllers
         /***
          * Helper method to see if user is already signed up for a game or not
          */
-        public bool IsNotSignedUpForGame(int contactId, int gameId)
+        public bool IsNotSignedUpForGame(int contactId, List<PickUpGame> games)
         {
             //Just in case a null "0" comes in stop it from coming in
-            if (contactId == 0 || gameId == 0) return false;
+            if (contactId == 0) return false;
 
-            //If there is a combination of the two then return false
-            if (_context.PickUpGames.Any(x => x.GameId == gameId && x.ContactId == contactId))
+            if (games == null) return false;
+
+            foreach (var game in games)
             {
-                return false;
+                if (game.ContactId == contactId)
+                {
+                    return false;
+                }
+                
             }
 
             // else this person hasn't signed up yet
