@@ -1125,3 +1125,8 @@ html {
 
 .my-nav .navbar-toggle:hover .icon-bar, .my-nav .navbar-toggle:focus .icon-bar { background: #fff; }
 
+#error-msg {
+    text-align: center;
+    padding-right: 40px;
+}
+

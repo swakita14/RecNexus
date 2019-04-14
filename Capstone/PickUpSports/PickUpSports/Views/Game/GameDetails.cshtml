@@ -43,6 +43,15 @@
                     @Html.LabelFor(model => model.EndDate)
                     @Html.DisplayFor(model => model.EndDate)
                 </div>
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.ValidationSummary(false, null, new {@class = "text-danger", @id ="error-msg"})
+
+                        </div>
+                    </div>
+                }
 
                 <center>
                     <p>

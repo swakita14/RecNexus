@@ -3,11 +3,21 @@
     ViewBag.Title = "_SearchByVenue";
 }
 
-<h4 id="warning">@ViewBag.ErrorMsg</h4>
+
 <li>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                @Html.ValidationSummary(false, null, new {@class = "text-danger", @id ="error-msg"})
+
+            </div>
+        </div>
+    }
     @foreach (var game in Model)
     {
         <div class="container">
+
             <div class="row">
                 @Html.DisplayFor(model => game.Sport) at @Html.DisplayFor(model => game.Venue)
             </div>
@@ -20,10 +30,10 @@
 
 
             <div class="row">
-                <br />@Html.ActionLink("Click here for more details on game", "GameDetails", new { id = game.GameId })
+                <br/>@Html.ActionLink("Click here for more details on game", "GameDetails", new {id = game.GameId})
             </div>
 
         </div>
-        <hr />
+        <hr/>
     }
 </li>
