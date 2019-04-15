@@ -130,10 +130,6 @@
 }
 
 @section PageScript{
-    <script type="text/javascript" src="../../Scripts/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="../../Scripts/orderByDistance.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5bwiGQe1zyt3pWzQ9scBzcwOJyFJDsMQ&callback=initMap"></script>
-
     <script type="text/javascript">
         function initMap() {
             var map = new google.maps.Map(document.getElementById('map'),
@@ -162,13 +158,18 @@
                         url: URL
                     });
                     google.maps.event.addListener(marker,'click',function() {
-                            window.location.href = this.url;
-                        });
+                        window.location.href = this.url;
+                    });
                 </text>
 
             }
         }
     </script>
+    <script type="text/javascript" src="../../Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/orderByDistance.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5bwiGQe1zyt3pWzQ9scBzcwOJyFJDsMQ&callback=initMap"></script>
+
+   
 }
 
 
