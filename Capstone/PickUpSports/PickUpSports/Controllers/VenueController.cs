@@ -34,6 +34,10 @@ namespace PickUpSports.Controllers
             model.Venues = new List<VenueViewModel>();
             List<Venue> venues = _context.Venues.ToList();
 
+            // Set default coordinates for map on venue page
+            model.CurrentLatitude = "44.942898";
+            model.CurrentLongitude = "-123.035095";
+
             foreach (var venue in venues)
             {
                 //get location of venue
@@ -90,13 +94,26 @@ namespace PickUpSports.Controllers
                 // Search venue names and cities
                 viewModel.Venues.AddRange(model.Venues.Where(x => x.Name.CaseInsensitiveContains(model.Search)).ToList());
                 viewModel.Venues.AddRange(model.Venues.Where(x => x.City.CaseInsensitiveContains(model.Search)));
+
+
+                // Get first venue on list and assign coordinates to map center
+                var firstVenue = viewModel.Venues.First();
+                viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
+                viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
             }
 
             if (!string.IsNullOrEmpty(model.Filter))
             {
                 // User chose to sort by rating
-                if (model.Filter.Equals("Rating")) viewModel.Venues = model.Venues.OrderByDescending(x => x.AverageRating).ToList();
+                if (model.Filter.Equals("Rating"))
+                {
+                    viewModel.Venues = model.Venues.OrderByDescending(x => x.AverageRating).ToList();
 
+                    // Get first venue on list and assign coordinates to map center
+                    var firstVenue = viewModel.Venues.First();
+                    viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
+                    viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
+                }
                 // User chose to filter by time
                 if (model.Filter.Equals("Time"))
                 {
@@ -130,6 +147,11 @@ namespace PickUpSports.Controllers
                             }
                         }
                     }
+
+                    // Get first venue on list and assign coordinates to map center
+                    var firstVenue = viewModel.Venues.First();
+                    viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
+                    viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
                 }
 
                 // User chose to filter by distance
@@ -153,6 +175,11 @@ namespace PickUpSports.Controllers
 
                     viewModel.Venues = viewModel.Venues.OrderBy(x => x.Distance).ToList();
 
+                    // Get closest venue to user and assign coordinates to map center
+                    var closest = viewModel.Venues.First();
+                    viewModel.CurrentLatitude = closest.LatitudeCoord;
+                    viewModel.CurrentLongitude = closest.LongitudeCoord;
+
                 }
             }
            
@@ -165,8 +192,6 @@ namespace PickUpSports.Controllers
             viewModel.Day = model.Day;
             viewModel.Time = model.Time;
             viewModel.Search = model.Search;
-            viewModel.CurrentLatitude = model.CurrentLatitude;
-            viewModel.CurrentLongitude = model.CurrentLongitude;
             return View("Index", viewModel);
         }
 
