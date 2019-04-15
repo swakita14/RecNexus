@@ -542,5 +542,11 @@ namespace PickUpSports.Controllers
             }
         }
         #endregion
+
+        public ActionResult LogOut()
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

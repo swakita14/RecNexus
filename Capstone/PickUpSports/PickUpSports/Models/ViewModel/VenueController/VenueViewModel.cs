@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using PickUpSports.Models.DatabaseModels;
 
-namespace PickUpSports.Models.ViewModel
+namespace PickUpSports.Models.ViewModel.VenueController
 {
     public class VenueViewModel
     {

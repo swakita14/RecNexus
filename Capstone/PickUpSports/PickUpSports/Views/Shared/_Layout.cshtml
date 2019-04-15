@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,35 +8,49 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    @Styles.Render("~/Content/w3.css")
-    @Styles.Render("~/Content/w3-theme.css")
-    @Scripts.Render("~/bundles/angular")
-    @Scripts.Render("~/bundles/angularapp")
-    @Scripts.Render("~/Content/responsive.css")
-
-
 </head>
 <body>
-    <div class="w3-top">
-        <div class="w3-bar w3-theme-d2 w3-left-align">
-            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
 
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Pick-Up Sports Application", "Index", "Home", new { area = "" }, new { @class = "w3-button w3-red" })</li>
-                    <li>@Html.ActionLink("Venues", "Index", "Venue")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+    <div class="my-nav"  style="margin-bottom: 30px;">
+        <div class="navbar navbar-default navbar-fixed-top scrollspy_menu mnav navbar__initial" role="navigation">
+            <div class="container">
+                <div class="navbar-header mnav">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                    <a class="navbar-brand mnav" href="#">Pick Up Sports</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="fullpage__nav nav navbar-nav navbar-right mnav">
+                        <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                        <li><a href="@Url.Action("Index", "Venue")">Venues</a></li>
+                        <li><a href="@Url.Action("GameList", "Game")">Pick Up Games</a></li>
+                        <li><a href="@Url.Action("CreateGame", "Game")">Start a Game</a></li>
+
+                        @if (Request.IsAuthenticated)
+                        {
+                            @Html.AntiForgeryToken()
+                            <li>@Html.ActionLink("View your profile", "Details", "Contact", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                            <li>@Html.ActionLink("Log off", "LogOut", "Account", routeValues: null, htmlAttributes: new { id = "logoutLink" })</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                            <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                        }
+
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-    <div class="w3-container">
-        @RenderBody()
-        @RenderSection("PageScript", required:false)
-    </div>
+   
+@RenderBody()
+    @RenderSection("PageScript", required: false)
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    @RenderSection("search_games", required: false)
+
 </body>
 </html>

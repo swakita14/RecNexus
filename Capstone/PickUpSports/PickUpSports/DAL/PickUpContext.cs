@@ -16,6 +16,10 @@ namespace PickUpSports.DAL
         public DbSet<Sport> Sports { get; set; }
         public DbSet<SportPreference> SportPreferences { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<GameStatus> GameStatuses { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<PickUpGame> PickUpGames { get; set; }
+        
         protected override void OnModelCreating(DbModelBuilder builder)
         {
             builder.Configurations.Add(new ContactConfiguration());
@@ -26,6 +30,11 @@ namespace PickUpSports.DAL
             builder.Configurations.Add(new SportConfiguration());
             builder.Configurations.Add(new SportPreferenceConfiguration());
             builder.Configurations.Add(new LocationConfiguration());
+            builder.Configurations.Add(new GameStatusConfiguration());
+            builder.Configurations.Add(new GameConfiguration());
+            builder.Configurations.Add(new PickUpGameConfiguration());
         }
+
+        //public System.Data.Entity.DbSet<PickUpSports.Models.TimePreference> TimePreferences { get; set; }
     }
 }

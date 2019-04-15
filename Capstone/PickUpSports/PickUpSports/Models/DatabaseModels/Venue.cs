@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace PickUpSports.Models.DatabaseModels
 {
@@ -23,6 +25,8 @@ namespace PickUpSports.Models.DatabaseModels
         public DateTime? DateUpdated { get; set; }
 
         public string GooglePlaceId { get; set; }
+
+        public virtual ICollection<Location> Locations { get; set; }
     }
 
 }

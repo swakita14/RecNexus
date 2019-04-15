@@ -1,32 +1,29 @@
-﻿using PickUpSports.Interface;
-using PickUpSports.Models.DatabaseModels;
-using System;
+﻿using PickUpSports.Models.DatabaseModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Http;
-using System.Web.Mvc;
+using PickUpSports.DAL;
 
 namespace PickUpSports.Controllers
 {
     public class VenueMapController : ApiController
-    { 
+    {
+        private readonly PickUpContext _context;
 
-        private IVenueServices _venuesServices;
-
-        public VenueMapController(IVenueServices venueService)
+        public VenueMapController(PickUpContext context)
         {
-            _venuesServices = venueService;
+            _context = context;
         }
+
 
         public IEnumerable<Venue> Get()
         {
-            return _venuesServices.Get();
+            return _context.Venues.ToList();
         }
 
         public Venue Get(int id)
         {
-            return _venuesServices.Get().Where(v => v.VenueId == id).FirstOrDefault();
+            return _context.Venues.Find(id);
         }
         // POST: api/Events
         public void Post([FromBody]string value)
