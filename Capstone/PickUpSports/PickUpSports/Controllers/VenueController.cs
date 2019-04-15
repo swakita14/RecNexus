@@ -79,6 +79,8 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult Filter(SearchVenueViewModel model)
         {
+            model.Venues = (List<VenueViewModel>) TempData["Venues"];
+
             // Create new model to send to view
             SearchVenueViewModel viewModel = new SearchVenueViewModel();
             viewModel.Venues = new List<VenueViewModel>();
@@ -212,6 +214,8 @@ namespace PickUpSports.Controllers
                 viewModel.CurrentLatitude = model.CurrentLatitude;
                 viewModel.CurrentLongitude = model.CurrentLongitude;
             }
+
+            model.Venues.Clear();
             return View("Index", viewModel);
         }
 
