@@ -26,7 +26,7 @@
     <br />
     <h4>By Time:</h4>
     <div class="form-group">
-        @Html.Editor("Time Filter", new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes", @onchange = "getGamesByTime()" } })
+        @Html.Editor("Time Filter", new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" } })
     </div>
 
 
@@ -50,7 +50,7 @@
 
 
                     <div class="row">
-                        <br/>@Html.ActionLink("Click here for more details on game", "GameDetails", new {id = game.GameId})
+                        <br />@Html.ActionLink("Click here for more details on game", "GameDetails", new { id = game.GameId })
                     </div>
 
                 </div>

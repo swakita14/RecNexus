@@ -10,7 +10,7 @@
 {
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="../../Scripts/gameView.js"></script>
+    <script src="../../Scripts/gameEdit.js"></script>
 }
 
 @using (Html.BeginForm("EditGame", "Game", FormMethod.Post))
@@ -25,27 +25,35 @@
                     @Html.HiddenFor(model => model.ContactId)
                     @Html.HiddenFor(model => model.GameId)
 
-                    <legend class="text-center header" id="header">Game Detail</legend>
+                    <legend class="text-center header" id="header">Edit Game Detail</legend>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Venue)
-                        @Html.DropDownList("Venue", null, Model.Venue, new { @class = "form-control" })
+                        @Html.DropDownList("Venue", null, new { @class = "form-control" })
+                    </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Status)
-                        @Html.DropDownList("Status", null, Model.Status, new { @class = "form-control" })
+                        @Html.DropDownList("Status", null, new { @class = "form-control" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Sport)
-                        @Html.DropDownList("Sport", null,  Model.Sport, new { @class = "form-control" })
+                        @Html.DropDownList("Sport", null, new { @class = "form-control" })
                     </div>
                     <div class="form-group" style="padding-top: 20px">
                         @Html.DisplayNameFor(x => x.DateRange)
-                        @Html.EditorFor(x => x.DateRange, new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" } })
+                        @Html.EditorFor(x => x.DateRange, new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" }})
                     </div>
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.ValidationSummary(false, null, new {@class = "text-danger"})
+
+                            </div>
+                        </div>
+                    }
 
                     <button type="submit" class="btn btn-primary">Edit Information</button>
 
-
-                    <h4 id="warning">@ViewBag.Error</h4>
 
                 </fieldset>
 
