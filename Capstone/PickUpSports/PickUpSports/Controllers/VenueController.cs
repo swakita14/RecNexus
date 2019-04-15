@@ -87,7 +87,7 @@ namespace PickUpSports.Controllers
 
             if (model.Venues.Count == 0)
             {
-                ViewBag.Error("No results to filter. Please click \"Reset all filters\"");
+                ViewBag.Error = "No results to filter. Please click \"Reset all filters\"";
                 return View("Index", viewModel);
             }
             // User entered a search string
