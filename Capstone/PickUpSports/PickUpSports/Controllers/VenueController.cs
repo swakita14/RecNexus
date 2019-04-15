@@ -97,9 +97,12 @@ namespace PickUpSports.Controllers
 
 
                 // Get first venue on list and assign coordinates to map center
-                var firstVenue = viewModel.Venues.First();
-                viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
-                viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
+                var firstVenue = viewModel.Venues.FirstOrDefault();
+                if (firstVenue != null)
+                {
+                    viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
+                    viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
+                }
             }
 
             if (!string.IsNullOrEmpty(model.Filter))
@@ -109,10 +112,18 @@ namespace PickUpSports.Controllers
                 {
                     viewModel.Venues = model.Venues.OrderByDescending(x => x.AverageRating).ToList();
 
+                    if (viewModel.Venues.Count == 0)
+                    {
+                        ViewBag.Error = "No search results matching given filters";
+                    }
+
                     // Get first venue on list and assign coordinates to map center
-                    var firstVenue = viewModel.Venues.First();
-                    viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
-                    viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
+                    var firstVenue = viewModel.Venues.FirstOrDefault();
+                    if (firstVenue != null)
+                    {
+                        viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
+                        viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
+                    }
                 }
                 // User chose to filter by time
                 if (model.Filter.Equals("Time"))
@@ -149,9 +160,12 @@ namespace PickUpSports.Controllers
                     }
 
                     // Get first venue on list and assign coordinates to map center
-                    var firstVenue = viewModel.Venues.First();
-                    viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
-                    viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
+                    var firstVenue = viewModel.Venues.FirstOrDefault();
+                    if (firstVenue != null)
+                    {
+                        viewModel.CurrentLatitude = firstVenue.LatitudeCoord;
+                        viewModel.CurrentLongitude = firstVenue.LongitudeCoord;
+                    }
                 }
 
                 // User chose to filter by distance
@@ -192,6 +206,12 @@ namespace PickUpSports.Controllers
             viewModel.Day = model.Day;
             viewModel.Time = model.Time;
             viewModel.Search = model.Search;
+
+            if (string.IsNullOrEmpty(viewModel.CurrentLatitude))
+            {
+                viewModel.CurrentLatitude = model.CurrentLatitude;
+                viewModel.CurrentLongitude = model.CurrentLongitude;
+            }
             return View("Index", viewModel);
         }
 
