@@ -1,0 +1,34 @@
+﻿@model PickUpSports.Models.DatabaseModels.Friend
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Friend</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FriendContactID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FriendContactID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.FriendID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
