@@ -173,15 +173,25 @@ namespace PickUpSports.Controllers
             //getting current logged in user information in case they want to join game
             string email = User.Identity.GetUserName();
             Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
-            PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.ContactId == contact.ContactId);
-
+            
             //find the game 
             Game game = _context.Games.Find(id);
+
+            PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.GameId == game.GameId);
+           
+
+
+
 
             if (IsCreatorOfGame(contact.ContactId, game))
             {
                 ViewBag.IsCreator = true;
             }
+
+            Debug.Write(id);
+            Debug.Write(contact);
+            Debug.Write(game);
+            
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
@@ -196,8 +206,9 @@ namespace PickUpSports.Controllers
                 Sport = _context.Sports.Find(game.SportId).SportName,
                 StartDate = game.StartTime.ToString(),
                 Venue = _context.Venues.Find(game.VenueId).Name,
-                PickUpGameId = pickUpGame.PickUpGameId,
                 ContactId = contact.ContactId,
+                //PickUpGameId = pickUpGame.PickUpGameId,
+
 
             };
 
@@ -242,7 +253,6 @@ namespace PickUpSports.Controllers
             {
                 ContactId = model.ContactId,
                 GameId = model.GameId,
-                PickUpGameId = model.PickUpGameId
             };
 
 

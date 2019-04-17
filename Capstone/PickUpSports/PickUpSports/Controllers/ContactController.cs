@@ -55,7 +55,7 @@ namespace PickUpSports.Controllers
                 Username = model.Username,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email = email,
+                Email = User.Identity.GetUserName(),
                 PhoneNumber = model.PhoneNumber,
                 Address1 = model.Address1,
                 Address2 = model.Address2,
@@ -72,7 +72,7 @@ namespace PickUpSports.Controllers
 
             _context.Contacts.Add(newContact);
             _context.SaveChanges();
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", new {id = model.ContactId});
 
         }
 
