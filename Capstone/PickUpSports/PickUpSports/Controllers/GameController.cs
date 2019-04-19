@@ -218,46 +218,77 @@ namespace PickUpSports.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult GameDetails(ViewGameViewModel model)
+        public ActionResult GameDetails(ViewGameViewModel model, string button)
         {
             ViewBag.IsCreator = false;
 
             List<PickUpGame> checkGames = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
 
-            //check if the person is already signed up for the game 
-            if (!IsNotSignedUpForGame(model.ContactId, checkGames))
+            if (button.Equals("Join Game"))
             {
-                //error message
-                ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
-
-                //finding game
-                Game game = _context.Games.Find(model.GameId);
-
-                //sending model back so values dont blank out
-                ViewGameViewModel returnModel = new ViewGameViewModel()
+                //check if the person is already signed up for the game 
+                if (!IsNotSignedUpForGame(model.ContactId, checkGames))
                 {
-                    ContactName = _context.Contacts.Find(game.ContactId).Username,
-                    EndDate = game.EndTime.ToString(),
-                    GameId = game.GameId,
-                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                    Sport = _context.Sports.Find(game.SportId).SportName,
-                    StartDate = game.StartTime.ToString(),
-                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    //error message
+                    ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
+
+                    //finding game
+                    Game game = _context.Games.Find(model.GameId);
+
+                    //sending model back so values dont blank out
+                    ViewGameViewModel returnModel = new ViewGameViewModel()
+                    {
+                        ContactName = _context.Contacts.Find(game.ContactId).Username,
+                        EndDate = game.EndTime.ToString(),
+                        GameId = game.GameId,
+                        Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                        Sport = _context.Sports.Find(game.SportId).SportName,
+                        StartDate = game.StartTime.ToString(),
+                        Venue = _context.Venues.Find(game.VenueId).Name,
+                    };
+
+                    return View(returnModel);
+                }
+
+                //add new person to the pickupgame table
+                PickUpGame newPickUpGame = new PickUpGame()
+                {
+                    ContactId = model.ContactId,
+                    GameId = model.GameId,
                 };
 
-                return View(returnModel);
+                //save it       
+                _context.PickUpGames.Add(newPickUpGame);
+            }
+            if (button.Equals("Quit Game"))
+            {
+                //check if the person is already signed up for the game 
+                if (IsNotSignedUpForGame(model.ContactId, checkGames))
+                {
+                    //error message
+                    ViewData.ModelState.AddModelError("SignedUp", "You have not signed up for this game");
+
+                    //finding game
+                    Game game = _context.Games.Find(model.GameId);
+
+                    //sending model back so values dont blank out
+                    ViewGameViewModel returnModel = new ViewGameViewModel()
+                    {
+                        ContactName = _context.Contacts.Find(game.ContactId).Username,
+                        EndDate = game.EndTime.ToString(),
+                        GameId = game.GameId,
+                        Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                        Sport = _context.Sports.Find(game.SportId).SportName,
+                        StartDate = game.StartTime.ToString(),
+                        Venue = _context.Venues.Find(game.VenueId).Name,
+                    };
+
+                    return View(returnModel);
+                }
+
+                _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == model.ContactId));
             }
 
-            //add new person to the pickupgame table
-            PickUpGame newPickUpGame = new PickUpGame()
-            {
-                ContactId = model.ContactId,
-                GameId = model.GameId,
-            };
-
-
-            //save it 
-            _context.PickUpGames.Add(newPickUpGame);
             _context.SaveChanges();
 
             //redirect to the gamedetails page so that they could see that they are signed on
