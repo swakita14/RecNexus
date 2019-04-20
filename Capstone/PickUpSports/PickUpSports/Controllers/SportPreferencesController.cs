@@ -124,7 +124,7 @@ namespace PickUpSports.Controllers
             }
 
             return RedirectToAction("Details", "SportPreferences");
-        }             
+        }          
         protected override void Dispose(bool disposing)
         {
             if (disposing)
