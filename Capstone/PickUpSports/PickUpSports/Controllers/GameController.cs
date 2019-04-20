@@ -5,11 +5,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
+using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
 using DayOfWeek = System.DayOfWeek;
@@ -287,6 +289,18 @@ namespace PickUpSports.Controllers
                 }
 
                 _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == model.ContactId));
+
+                //Send notification to the creator when other users out of the game 
+                GMailer.GMailUsername = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"]+"@gmail.com";
+                GMailer.GMailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
+                Game game1 = _context.Games.Find(model.GameId);
+                GMailer mailer = new GMailer();                
+                mailer.ToEmail = _context.Contacts.Find(game1.ContactId).Email;
+                mailer.Subject = "PICK UP GAMES";
+                mailer.Body = "There is a person who left your game, there are " + _context.PickUpGames.Where(x => x.GameId == model.GameId).Count() + " people in your game now.(include yourself)";
+                mailer.IsHtml = true;
+                mailer.Send();
+
             }
 
             _context.SaveChanges();
