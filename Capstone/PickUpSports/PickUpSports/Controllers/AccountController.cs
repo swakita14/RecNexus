@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Validation;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
@@ -9,9 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
-using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models;
-using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Controllers
 {
@@ -20,18 +17,13 @@ namespace PickUpSports.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private readonly PickUpContext _context;
+        private readonly IContactService _contactService;
 
-        public AccountController(PickUpContext context)
-        {
-            _context = context;
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, PickUpContext context)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IContactService contactService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
-            _context = context;
+            _contactService = contactService;
         }
 
         public ApplicationSignInManager SignInManager
@@ -216,42 +208,13 @@ namespace PickUpSports.Controllers
 
         public async Task<ActionResult> RemoveAccount(int id)
         {
-            Contact contact = _context.Contacts.Find(id);
-            
+            var contact = _contactService.GetContactById(id);
+
             // Remove from AspNet tables
             ApplicationUser user = UserManager.Users.FirstOrDefault(u => u.Email == contact.Email);
             IdentityResult result = await UserManager.DeleteAsync(user);
 
-            if (result.Succeeded)
-            {
-                // Delete any SportPreferences related to Contact
-                List<SportPreference> sportPrefs =
-                    _context.SportPreferences.Where(s => s.ContactID == contact.ContactId).ToList();
-                if (sportPrefs.Count > 0) _context.SportPreferences.RemoveRange(sportPrefs);
-
-                // Delete any TimePreferences related to Contact
-                List<TimePreference> timePrefs =
-                    _context.TimePreferences.Where(s => s.ContactID == contact.ContactId).ToList();
-                if (timePrefs.Count > 0) _context.TimePreferences.RemoveRange(timePrefs);
-
-                // Set ContactID for any Reviews to null
-                List<Review> reviews =
-                    _context.Reviews.Where(s => s.ContactId == contact.ContactId).ToList();
-
-                if (reviews.Count > 0)
-                {
-                    foreach (var review in reviews)
-                    {
-                        review.ContactId = null;
-                    }
-
-                    _context.SaveChanges();
-                }
-
-                // Remove from Contact table
-                _context.Contacts.Remove(contact);
-                _context.SaveChanges();
-            }
+            if (result.Succeeded) _contactService.DeleteUser(contact);
 
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");

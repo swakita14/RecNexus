@@ -1,10 +1,9 @@
 ﻿using System.Data.Entity;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel;
 
@@ -13,18 +12,19 @@ namespace PickUpSports.Controllers
     [Authorize]
     public class ContactController : Controller
     {
-        private readonly PickUpContext _context;
+        private readonly IContactService _contactService;
 
-        public ContactController(PickUpContext context)
+        public ContactController(IContactService contactService)
         {
-            _context = context;
+            _contactService = contactService;
         }
+
 
         public ActionResult Details(int? id)
         {
             string newContactEmail = User.Identity.GetUserName();
 
-            Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == newContactEmail);
+            Contact contact = _contactService.GetContactByEmail(newContactEmail);
 
             // If username is null, profile was never set up
             if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
@@ -64,14 +64,13 @@ namespace PickUpSports.Controllers
                 ZipCode = model.ZipCode
             };
 
-            if (_context.Contacts.Any(u => u.Username == model.Username))
+            if (_contactService.UsernameIsTaken(model.Username))
             {
                 ViewBag.Message = "Username Already Taken";
                 return View(model);
             }
 
-            _context.Contacts.Add(newContact);
-            _context.SaveChanges();
+            _contactService.CreateContact(newContact);
             return RedirectToAction("Details", new {id = model.ContactId});
 
         }
@@ -83,7 +82,8 @@ namespace PickUpSports.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Contact contact = _context.Contacts.Find(id);
+
+            Contact contact = _contactService.GetContactById((int) id);
 
             if (contact == null) return HttpNotFound();
 
@@ -116,7 +116,7 @@ namespace PickUpSports.Controllers
 
             string email = User.Identity.GetUserName();
 
-            Contact existing = _context.Contacts.FirstOrDefault(c => c.Email == email);
+            Contact existing = _contactService.GetContactByEmail(email);
 
             existing.FirstName = model.FirstName;
             existing.LastName = model.LastName;
@@ -127,8 +127,7 @@ namespace PickUpSports.Controllers
             existing.State = model.State;
             existing.ZipCode = model.ZipCode;
 
-            _context.Entry(existing).State = EntityState.Modified;
-            _context.SaveChanges();
+            _contactService.EditContact(existing);
 
             return RedirectToAction("Details");
         }
@@ -139,15 +138,6 @@ namespace PickUpSports.Controllers
         public ActionResult Delete(EditContactViewModel model)
         {
             return RedirectToAction("RemoveAccount", "Account", new { id = model.ContactId});
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _context.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
