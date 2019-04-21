@@ -2,9 +2,10 @@
 
 namespace PickUpSports.Models.ViewModel
 {
-    public class SportPreferenceViewModel
+    public class TimePreferenceListViewModel
     {
         public int ContactId { get; set; }
-        public List<string> SportName { get; set; }
+
+        public List<TimePreferenceViewModel> TimePreferences { get; set; }
     }
 }

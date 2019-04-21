@@ -3,6 +3,8 @@ body {
     background-color: #FDFAFC;
     padding-bottom: 20px;
     padding-top: 70px;
+    font: 1.2em/1.4 'Arial', sans-serif !important;
+    color: #00144B;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 

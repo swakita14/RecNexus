@@ -311,12 +311,23 @@
     <Compile Include="DAL\Configurations\SportPreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\TimePreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\VenueConfiguration.cs" />
+    <Compile Include="DAL\Repositories\ContactRepository.cs" />
+    <Compile Include="DAL\Repositories\ReviewRepository.cs" />
+    <Compile Include="DAL\Repositories\SportPreferenceRepository.cs" />
+    <Compile Include="DAL\Repositories\SportRepository.cs" />
+    <Compile Include="DAL\Repositories\TimePreferenceRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GoogleApi\PlacesApiClient.cs" />
+    <Compile Include="Interface\IContactService.cs" />
     <Compile Include="Interface\IPlacesApiClient.cs" />
+    <Compile Include="Interface\Repositories\IContactRepository.cs" />
     <Compile Include="Interface\IVenueService.cs" />
+    <Compile Include="Interface\Repositories\IReviewRepository.cs" />
+    <Compile Include="Interface\Repositories\ISportPreferenceRepository.cs" />
+    <Compile Include="Interface\Repositories\ITimePreferenceRepository.cs" />
+    <Compile Include="Interface\Repositories\ISportRepository.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DatabaseModels\BusinessHours.cs" />
     <Compile Include="Models\CaptchaResponse.cs" />
@@ -355,9 +366,12 @@
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateTimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\TimePreferenceListViewModel.cs" />
+    <Compile Include="Models\ViewModel\TimePreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\SearchVenueViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\VenueViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ContactService.cs" />
     <Compile Include="Services\VenueService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -449,7 +463,7 @@
     <Content Include="Views\TimePreferences\Delete.cshtml" />
     <Content Include="Views\TimePreferences\Details.cshtml" />
     <Content Include="Views\TimePreferences\Edit.cshtml" />
-    <Content Include="Views\SportPreferences\Create.cshtml" />
+    <Content Include="Views\SportPreferences\ModifySportPreferences.cshtml" />
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
@@ -461,6 +475,8 @@
     <Content Include="Views\Game\_PlayerList.cshtml" />
     <Content Include="Views\Game\JoinGame.cshtml" />
     <Content Include="Views\Game\EditGame.cshtml" />
+    <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
+    <Content Include="Views\TimePreferences\_TimePreferences.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

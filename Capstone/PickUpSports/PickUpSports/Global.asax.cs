@@ -4,8 +4,10 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
 using PickUpSports.DAL;
+using PickUpSports.DAL.Repositories;
 using PickUpSports.GoogleApi;
 using PickUpSports.Interface;
+using PickUpSports.Interface.Repositories;
 using PickUpSports.Services;
 using RestSharp;
 
@@ -45,7 +47,15 @@ namespace PickUpSports
 
             // Register services
             builder.RegisterType<VenueService>().As<IVenueService>();
+            builder.RegisterType<ContactService>().As<IContactService>();
 
+            // Register repositories
+            builder.RegisterType<ContactRepository>().As<IContactRepository>();
+            builder.RegisterType<TimePreferenceRepository>().As<ITimePreferenceRepository>();
+            builder.RegisterType<SportPreferenceRepository>().As<ISportPreferenceRepository>();
+            builder.RegisterType<ReviewRepository>().As<IReviewRepository>();
+            builder.RegisterType<SportRepository>().As<ISportRepository>();
+            
             var container = builder.Build();
 
             // Resolve all registrations above 
