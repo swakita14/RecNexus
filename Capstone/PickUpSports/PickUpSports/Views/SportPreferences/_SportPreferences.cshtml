@@ -1,10 +1,20 @@
 ﻿@model PickUpSports.Models.ViewModel.SportPreferenceViewModel
 
+@Html.HiddenFor(x => x.ContactId)
+@if (Model.SportName.Count > 0)
+{
+    <ul class="list-group">
+        @foreach (var sport in Model.SportName)
+        {
+            <li class="list-group-item"><center>@Html.DisplayFor(x => sport)</center></li>
 
-<ul class="list-group">
-    @foreach (var sport in Model.SportName)
-    {
-        <li class="list-group-item">@Html.DisplayFor(x => sport)</li>
+        }
+    </ul>
+}
+else
+{
+    <h4>You do not have any sport preferences set yet.</h4>
+}
 
-    }
-</ul>
+
+ <center>@Html.ActionLink("Edit", "Details", "SportPreferences")</center>

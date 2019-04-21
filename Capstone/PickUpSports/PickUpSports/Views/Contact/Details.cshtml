@@ -32,9 +32,28 @@
     </div>
 </div>
 
-@{
-    Html.RenderAction("GetSportPreferences", new {contactId = Model.ContactId});
-}
+<center>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-6">
+                <center><b >Your Sport Preferences</b></center>
+                <br/>
+                @{
+                    Html.RenderAction("GetSportPreferences", new {contactId = Model.ContactId});
+                }
+            </div>
+        
+            <div class="col-md-6">
+                <center><b >Your Time Preferences</b></center>
+                <br/>
+                @{
+                    Html.RenderAction("GetTimePreferences", new {contactId = Model.ContactId});
+                }
+            </div>
+        </div>
+    </div>
+</center>
+
 
 
 @using (Html.BeginForm("Delete", "Contact", FormMethod.Post))

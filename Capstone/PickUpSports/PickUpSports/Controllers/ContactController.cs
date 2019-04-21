@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Net;
@@ -153,6 +154,29 @@ namespace PickUpSports.Controllers
 
             return PartialView("../SportPreferences/_SportPreferences", model);
         }
+
+        public ActionResult GetTimePreferences(int contactId)
+        {
+            var model = new TimePreferenceListViewModel
+            {
+                ContactId = contactId,
+                TimePreferences = new List<TimePreferenceViewModel>()           
+            };
+
+            var timePreferences = _contactService.GetTimePreferences(contactId);
+            foreach (var timePreference in timePreferences)
+            {
+                model.TimePreferences.Add(new TimePreferenceViewModel
+                {
+                    DayOfWeek = (DayOfWeek) timePreference.DayOfWeek,
+                    BeginTime = timePreference.BeginTime,
+                    EndTime = timePreference.EndTime
+                });
+            }
+
+            return PartialView("../TimePreferences/_TimePreferences", model);
+        }
+
         private Dictionary<string, string> PopulateStatesDropdown()
         {
             var states = new Dictionary<string, string>();

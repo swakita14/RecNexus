@@ -1,0 +1,19 @@
+﻿@model PickUpSports.Models.ViewModel.TimePreferenceListViewModel
+
+@Html.HiddenFor(x => x.ContactId)
+@if (Model.TimePreferences.Count > 0)
+{
+    <ul class="list-group">
+        @foreach (var timePreference in Model.TimePreferences)
+        {
+            <li class="list-group-item"><center>@Html.DisplayFor(x => timePreference.DayOfWeek), @Html.DisplayFor(x => timePreference.BeginTime) - @Html.DisplayFor(x => timePreference.EndTime)</center></li>
+
+        }
+    </ul>
+}
+else
+{
+    <h4>You do not have any time preferences set yet.</h4>
+}
+
+<center>@Html.ActionLink("Edit", "Details", "TimePreferences")</center>

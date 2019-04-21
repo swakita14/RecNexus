@@ -366,6 +366,8 @@
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateTimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\TimePreferenceListViewModel.cs" />
+    <Compile Include="Models\ViewModel\TimePreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\SearchVenueViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\VenueViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -474,6 +476,7 @@
     <Content Include="Views\Game\JoinGame.cshtml" />
     <Content Include="Views\Game\EditGame.cshtml" />
     <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
+    <Content Include="Views\TimePreferences\_TimePreferences.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
