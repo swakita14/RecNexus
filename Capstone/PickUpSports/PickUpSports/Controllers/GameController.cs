@@ -228,12 +228,27 @@ namespace PickUpSports.Controllers
 
             if (button.Equals("Join Game"))
             {
+                //finding game
+                Game game = _context.Games.Find(model.GameId);
+
+                //sending model back so values dont blank out
+                ViewGameViewModel returnModel = new ViewGameViewModel()
+                {
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    EndDate = game.EndTime.ToString(),
+                    GameId = game.GameId,
+                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    StartDate = game.StartTime.ToString(),
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                };
+
                 //if the game is cancelled, users are prevent to join this game
-                if (_context.Games.First(x => x.GameId == model.GameId).GameStatusId == 2)
+                if (game.GameStatusId == 2)
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "Sorry, this game is canceled, you can not join this game");
-                    return View(model);
+                    return View(returnModel);
                 }
 
                 //check if the person is already signed up for the game 
@@ -241,21 +256,6 @@ namespace PickUpSports.Controllers
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
-
-                    //finding game
-                    Game game = _context.Games.Find(model.GameId);
-
-                    //sending model back so values dont blank out
-                    ViewGameViewModel returnModel = new ViewGameViewModel()
-                    {
-                        ContactName = _context.Contacts.Find(game.ContactId).Username,
-                        EndDate = game.EndTime.ToString(),
-                        GameId = game.GameId,
-                        Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                        Sport = _context.Sports.Find(game.SportId).SportName,
-                        StartDate = game.StartTime.ToString(),
-                        Venue = _context.Venues.Find(game.VenueId).Name,
-                    };
 
                     return View(returnModel);
                 }
@@ -579,7 +579,7 @@ namespace PickUpSports.Controllers
             }
 
             //check for existing games
-            Game gameCheck = CheckForExistingGame(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime);
+            Game gameCheck = CheckForExistingGameExceptItself(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime, model.GameId);
             if (gameCheck != null)
             {
                 // TODO - Add link to existing game details later when that page is created
@@ -622,7 +622,7 @@ namespace PickUpSports.Controllers
                     _context.PickUpGames.Remove(pickupGame);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("GameList");
+                return RedirectToAction("GameDetails", new { id = model.GameId });
             }
 
             _context.SaveChanges();
