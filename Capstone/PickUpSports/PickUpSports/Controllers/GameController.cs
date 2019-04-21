@@ -228,6 +228,14 @@ namespace PickUpSports.Controllers
 
             if (button.Equals("Join Game"))
             {
+                //if the game is cancelled, users are prevent to join this game
+                if (_context.Games.First(x => x.GameId == model.GameId).GameStatusId == 2)
+                {
+                    //error message
+                    ViewData.ModelState.AddModelError("SignedUp", "Sorry, this game is canceled, you can not join this game");
+                    return View(model);
+                }
+
                 //check if the person is already signed up for the game 
                 if (!IsNotSignedUpForGame(model.ContactId, checkGames))
                 {
@@ -604,6 +612,19 @@ namespace PickUpSports.Controllers
 
             //save changes
             _context.Entry(existingGame).State = EntityState.Modified;
+
+            //if the game status is cancelled, remove it from pickup games and send email to all users who used in that game
+            if (int.Parse(model.Status) == 2)
+            {
+                List<PickUpGame> pickUpGameList = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
+                foreach (var pickupGame in pickUpGameList)
+                {
+                    _context.PickUpGames.Remove(pickupGame);
+                    _context.SaveChanges();
+                }
+                return RedirectToAction("GameList");
+            }
+
             _context.SaveChanges();
 
             //redirect them back to the changed game detail
@@ -708,6 +729,34 @@ namespace PickUpSports.Controllers
 
         }
 
+        // Added by Kexin, because the above method CheckForExistingGame is also used by creating games, there is no gameID to compare
+        // make sure the existing game is not itself, user can save the game without any edition
+        public Game CheckForExistingGameExceptItself(int venueId, int sportId, DateTime startDateTime, int gameId)
+        {
+            // Check for all games that are happening at same venue
+            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId && g.GameId != gameId).ToList();
+            if (gamesAtVenue.Count <= 0) return null;
+
+            // Check for all games happening at that venue with same sport
+            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
+            if (sportsAtVenue.Count <= 0) return null;
+
+            // There are existing games with same sport and venue so check starting time
+            foreach (var game in sportsAtVenue)
+            {
+                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
+                {
+                    // If we get here, the new game will overlap with an existing game
+                    // Check if status is Open and if so, return that game
+                    if (game.GameStatusId == (int)GameStatusEnum.Open)
+                    {
+                        return game;
+                    }
+                }
+            }
+
+            return null;
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
