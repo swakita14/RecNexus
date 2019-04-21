@@ -19,6 +19,10 @@ namespace PickUpSports.Controllers
         private ApplicationUserManager _userManager;
         private readonly IContactService _contactService;
 
+        public AccountController(IContactService contactService)
+        {
+            _contactService = contactService;
+        }
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IContactService contactService)
         {
             UserManager = userManager;
