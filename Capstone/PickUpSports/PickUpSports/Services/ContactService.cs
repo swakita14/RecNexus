@@ -11,16 +11,18 @@ namespace PickUpSports.Services
         private readonly ITimePreferenceRepository _timePreferenceRepository;
         private readonly ISportPreferenceRepository _sportPreferenceRepository;
         private readonly IReviewRepository _reviewRepository;
+        private readonly ISportRepository _sportRepository;
 
         public ContactService(IContactRepository contactRepository, 
             ITimePreferenceRepository timePreferenceRepository, 
             ISportPreferenceRepository sportPreferenceRepository, 
-            IReviewRepository reviewRepository)
+            IReviewRepository reviewRepository, ISportRepository sportRepository)
         {
             _contactRepository = contactRepository;
             _timePreferenceRepository = timePreferenceRepository;
             _sportPreferenceRepository = sportPreferenceRepository;
             _reviewRepository = reviewRepository;
+            _sportRepository = sportRepository;
         }
 
         public Contact GetContactByEmail(string email)
@@ -39,7 +41,6 @@ namespace PickUpSports.Services
             if (existing == null) return false;
             return true;
         }
-
 
         public Contact CreateContact(Contact contact)
         {
@@ -87,6 +88,24 @@ namespace PickUpSports.Services
 
             // Remove from Contact table
             _contactRepository.DeleteContact(contact);
+        }
+
+        public List<string> GetSportPreferences(int contactId)
+        {
+            var sportPreferences = _sportPreferenceRepository.GetUsersSportPreferencesByContactId(contactId);
+            var results = new List<string>();
+            foreach (var sportPreference in sportPreferences)
+            {
+                var name = _sportRepository.GetSportNameById(sportPreference.SportID);
+                results.Add(name);
+            }
+            return results;
+        }
+
+        public List<TimePreference> GetTimePreferences(int contactId)
+        {
+            var results = _timePreferenceRepository.GetUsersTimePreferencesByContactId(contactId);
+            return results;
         }
     }
 }

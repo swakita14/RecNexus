@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
@@ -29,8 +28,8 @@ namespace PickUpSports.Controllers
 
             SportPreferenceViewModel model = new SportPreferenceViewModel();
 
-            model.ContactID = contact.ContactId;
-            model.ContactUsername = contact.Username;
+            model.ContactId = contact.ContactId;
+           // model.ContactUsername = contact.Username;
 
             // find the sportpreferences for the user
             List<SportPreference> sportPrefs = _context.SportPreferences.Where(s => s.ContactID == contact.ContactId).ToList();
@@ -124,7 +123,8 @@ namespace PickUpSports.Controllers
             }
 
             return RedirectToAction("Details", "SportPreferences");
-        }          
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

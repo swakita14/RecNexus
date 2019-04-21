@@ -1,0 +1,10 @@
+﻿@model PickUpSports.Models.ViewModel.SportPreferenceViewModel
+
+
+<ul class="list-group">
+    @foreach (var sport in Model.SportName)
+    {
+        <li class="list-group-item">@Html.DisplayFor(x => sport)</li>
+
+    }
+</ul>

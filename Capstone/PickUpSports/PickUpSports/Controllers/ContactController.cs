@@ -80,6 +80,8 @@ namespace PickUpSports.Controllers
         // GET: Contacts/Edit/5
         public ActionResult Edit(int? id)
         {
+            ViewBag.States = PopulateStatesDropdown();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -115,10 +117,7 @@ namespace PickUpSports.Controllers
         public ActionResult Edit(EditContactViewModel model)
         {
             if (ModelState.IsValid) return View(model);
-
-            string email = User.Identity.GetUserName();
-
-            Contact existing = _contactService.GetContactByEmail(email);
+            Contact existing = _contactService.GetContactById(model.ContactId);
 
             existing.FirstName = model.FirstName;
             existing.LastName = model.LastName;
@@ -142,6 +141,18 @@ namespace PickUpSports.Controllers
             return RedirectToAction("RemoveAccount", "Account", new { id = model.ContactId});
         }
 
+        public ActionResult GetSportPreferences(int contactId)
+        {
+            var model = new SportPreferenceViewModel
+            {
+                ContactId = contactId
+            };
+
+            var results = _contactService.GetSportPreferences(contactId);
+            model.SportName = results;
+
+            return PartialView("../SportPreferences/_SportPreferences", model);
+        }
         private Dictionary<string, string> PopulateStatesDropdown()
         {
             var states = new Dictionary<string, string>();

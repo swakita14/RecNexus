@@ -314,6 +314,7 @@
     <Compile Include="DAL\Repositories\ContactRepository.cs" />
     <Compile Include="DAL\Repositories\ReviewRepository.cs" />
     <Compile Include="DAL\Repositories\SportPreferenceRepository.cs" />
+    <Compile Include="DAL\Repositories\SportRepository.cs" />
     <Compile Include="DAL\Repositories\TimePreferenceRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -326,6 +327,7 @@
     <Compile Include="Interface\Repositories\IReviewRepository.cs" />
     <Compile Include="Interface\Repositories\ISportPreferenceRepository.cs" />
     <Compile Include="Interface\Repositories\ITimePreferenceRepository.cs" />
+    <Compile Include="Interface\Repositories\ISportRepository.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DatabaseModels\BusinessHours.cs" />
     <Compile Include="Models\CaptchaResponse.cs" />
@@ -471,6 +473,7 @@
     <Content Include="Views\Game\_PlayerList.cshtml" />
     <Content Include="Views\Game\JoinGame.cshtml" />
     <Content Include="Views\Game\EditGame.cshtml" />
+    <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
