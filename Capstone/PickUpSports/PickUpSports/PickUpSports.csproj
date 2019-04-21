@@ -463,7 +463,7 @@
     <Content Include="Views\TimePreferences\Delete.cshtml" />
     <Content Include="Views\TimePreferences\Details.cshtml" />
     <Content Include="Views\TimePreferences\Edit.cshtml" />
-    <Content Include="Views\SportPreferences\Create.cshtml" />
+    <Content Include="Views\SportPreferences\ModifySportPreferences.cshtml" />
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
