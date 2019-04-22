@@ -3,6 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+AppSettingsSecrets.config
 Web_deploy.config
 
 # User-specific files
@@ -185,7 +186,7 @@ PublishScripts/
 # NuGet Packages
 *.nupkg
 # The packages folder can be ignored because of Package Restore
-**/[Pp]ackages/*
+packages*/
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
@@ -219,7 +220,7 @@ _pkginfo.txt
 ClientBin/
 ~$*
 *~
-*.dbmdl
+*.dbmdln
 *.dbproj.schemaview
 *.jfm
 *.pfx
@@ -341,3 +342,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database 
 healthchecksdb
+

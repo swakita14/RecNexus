@@ -1,0 +1,47 @@
+﻿@model PickUpSports.Models.DatabaseModels.TimePreference
+
+@{
+    ViewBag.Title = "Delete";
+}
+<br/>
+
+<div class="container">
+    <div class="row">
+        <div class="well well-sm">
+
+            <fieldset>
+                <legend class="text-center header">Time Preference Detail</legend>
+                <div class="form-group">
+                    @Html.Label("Day of Week:")
+                    @if(Model.DayOfWeek == 0){ <p>Sunday</p>}
+                    else if(Model.DayOfWeek == 1){ <p>Monday</p>}
+                    else if(Model.DayOfWeek == 2){ <p>Tuesday</p>}
+                    else if(Model.DayOfWeek == 3){ <p>Wednesday</p>}
+                    else if(Model.DayOfWeek == 4){ <p>Thursday</p>}
+                    else if(Model.DayOfWeek == 5){ <p>Friday</p>}
+                    @if(Model.DayOfWeek == 6){ <p>Saturday</p>}
+                </div>
+                <div class="form-group">
+                    @Html.Label("Beginning Time:")
+                    @Html.DisplayFor(model => model.BeginTime)
+                </div>
+                <div class="form-group">
+                    @Html.Label("Ending Time:")
+                    @Html.DisplayFor(model => model.EndTime)
+                </div>
+                @using (Html.BeginForm()) {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-actions no-color">
+                        <button type="submit" class="btn btn-danger" name="Button">Delete</button> |
+                        @Html.ActionLink("Back to List", "Details")
+                    </div>
+                }
+            </fieldset>
+            @Html.HiddenFor(model => model.TimePrefID)
+
+        </div>
+    </div>
+</div>
+
+

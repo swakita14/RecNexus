@@ -1,1 +1,9 @@
-﻿DROP TABLE [dbo].[Contacts];
+﻿DROP TABLE Contact;
+DROP TABLE TimePreference;
+DROP TABLE BusinessHours;
+DROP TABLE Review;
+DROP TABLE Location;
+DROP TABLE Venue;
+DROP TABLE PickUpGame;
+DROP TABLE Game;
+DROP TABLE GameStatus;

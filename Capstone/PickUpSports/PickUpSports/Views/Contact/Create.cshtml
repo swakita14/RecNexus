@@ -1,0 +1,124 @@
+﻿@model PickUpSports.Models.ViewModel.CreateContactViewModel
+
+@{
+    ViewBag.Title = "Initialize Your Information";
+}
+
+@using (Html.BeginForm("Create", "Contact", FormMethod.Post))
+{
+    <div class="container">
+        <div class="row">
+            <div class="form-box">
+                <h2>Initialize Your Information</h2>
+                <form role="form" id="game-form">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </div>
+                            <input type="text" class="form-control" name="Username" placeholder="Username">
+                        </div>  
+                    </div>
+                   
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </div>
+                            <input type="text" class="form-control" name="FirstName" placeholder="First Name">
+                        </div>  
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </div>
+                            <input type="text" class="form-control" name="LastName" placeholder="Last Name">
+                        </div>  
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                            </div>
+                            <input type="text" class="form-control" name="Email" placeholder="Email Address">
+                        </div>  
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-earphone"></span>
+                            </div>
+                            <input type="text" class="form-control" name="PhoneNumber" placeholder="Phone Number">
+                        </div>  
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-home"></span>
+                            </div>
+                            <input type="text" class="form-control" name="Address1" placeholder="Address Line 1">
+                        </div>  
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-home"></span>
+                            </div>
+                            <input type="text" class="form-control" name="Addres2" placeholder="Address Line 2">
+                        </div>  
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="City" placeholder="City">
+                            </div>
+                            <div class="col-sm-4">
+                                @Html.DropDownListFor(
+                                    x => x.State,
+                                    new SelectList(ViewBag.States, "Key", "Value"),
+                                    "State",
+                                    new {@class = "form-control"})
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="ZipCode" placeholder="Zip Code">
+                            </div>
+                        </div>  
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <center>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </center>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

@@ -1,13 +1,12 @@
 {
   "ExpandedNodes": [
     "",
+    "\\Capstone",
+    "\\Capstone\\PickUpSports",
+    "\\Capstone\\PickUpSports\\PickUpSports",
+    "\\Capstone\\PickUpSports\\PickUpSports\\bin",
     "\\Milestones",
-    "\\Milestones\\Milestone3",
-    "\\Milestones\\Milestone3\\DiscussionHub",
-    "\\Milestones\\Milestone3\\DiscussionHub\\DiscussionHub",
-    "\\Milestones\\Milestone3\\DiscussionHub\\DiscussionHub\\Views",
-    "\\Milestones\\Milestone3\\DiscussionHub\\DiscussionHub\\Views\\Discussions"
+    "\\Milestones\\Milestone3"
   ],
-  "SelectedNode": "\\Milestones\\Milestone3\\DiscussionHub\\DiscussionHub\\Views\\Discussions\\Create.cshtml",
   "PreviewInSolutionExplorer": false
 }

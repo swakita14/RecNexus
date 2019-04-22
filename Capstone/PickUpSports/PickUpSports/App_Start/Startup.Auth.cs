@@ -45,28 +45,10 @@ namespace PickUpSports
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
-            // Uncomment the following lines to enable logging in with third party login providers
-            //app.UseMicrosoftAccountAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
-
-            //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
-
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
-
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
 
             app.UseGoogleAuthentication(
-                clientId: "327183668515-f7fgea4nk9vu4179tjqcppjd7i674vsn.apps.googleusercontent.com",
-                clientSecret: "6db_swJrqIn55AU4mRxy8SBQ");
+                clientId: System.Web.Configuration.WebConfigurationManager.AppSettings["GoogleClientId"],
+                clientSecret: System.Web.Configuration.WebConfigurationManager.AppSettings["GoogleClientSecret"]);
         }
     }
 }
