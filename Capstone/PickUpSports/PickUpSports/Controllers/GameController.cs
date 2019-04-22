@@ -613,16 +613,26 @@ namespace PickUpSports.Controllers
             //save changes
             _context.Entry(existingGame).State = EntityState.Modified;
 
-            //if the game status is cancelled, remove it from pickup games and send email to all users who used in that game
+            //send email to users once the game is cancelled
             if (int.Parse(model.Status) == 2)
             {
+                //Send notification to all users in this game if the game is canceled
+                GMailer.GMailUsername = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"] + "@gmail.com";
+                GMailer.GMailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
+                Game game = _context.Games.First(x => x.GameId == model.GameId);
+                GMailer mailer = new GMailer();
+
                 List<PickUpGame> pickUpGameList = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
-                foreach (var pickupGame in pickUpGameList)
+                foreach (var item in pickUpGameList)
                 {
-                    _context.PickUpGames.Remove(pickupGame);
-                    _context.SaveChanges();
-                }
-                return RedirectToAction("GameDetails", new { id = model.GameId });
+                    mailer.ToEmail = _context.Contacts.First(x => x.ContactId == item.ContactId).Email;
+                    mailer.Subject = "PICK UP GAMES";
+                    mailer.Body = "Sorry, this game is canceled by the creator. Venue: " + _context.Venues.First(x => x.VenueId == game.VenueId).Name
+                                    + "; Sport: " + _context.Sports.First(x => x.SportID == game.SportId).SportName 
+                                    + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
+                    mailer.IsHtml = true;
+                    mailer.Send();
+                }                              
             }
 
             _context.SaveChanges();
