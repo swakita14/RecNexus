@@ -228,26 +228,34 @@ namespace PickUpSports.Controllers
 
             if (button.Equals("Join Game"))
             {
+                //finding game
+                Game game = _context.Games.Find(model.GameId);
+
+                //sending model back so values dont blank out
+                ViewGameViewModel returnModel = new ViewGameViewModel()
+                {
+                    ContactName = _context.Contacts.Find(game.ContactId).Username,
+                    EndDate = game.EndTime.ToString(),
+                    GameId = game.GameId,
+                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    StartDate = game.StartTime.ToString(),
+                    Venue = _context.Venues.Find(game.VenueId).Name,
+                };
+
+                //if the game is cancelled, users are prevent to join this game
+                if (game.GameStatusId == 2)
+                {
+                    //error message
+                    ViewData.ModelState.AddModelError("SignedUp", "Sorry, this game is canceled, you can not join this game");
+                    return View(returnModel);
+                }
+
                 //check if the person is already signed up for the game 
                 if (!IsNotSignedUpForGame(model.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
-
-                    //finding game
-                    Game game = _context.Games.Find(model.GameId);
-
-                    //sending model back so values dont blank out
-                    ViewGameViewModel returnModel = new ViewGameViewModel()
-                    {
-                        ContactName = _context.Contacts.Find(game.ContactId).Username,
-                        EndDate = game.EndTime.ToString(),
-                        GameId = game.GameId,
-                        Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                        Sport = _context.Sports.Find(game.SportId).SportName,
-                        StartDate = game.StartTime.ToString(),
-                        Venue = _context.Venues.Find(game.VenueId).Name,
-                    };
 
                     return View(returnModel);
                 }
@@ -571,7 +579,7 @@ namespace PickUpSports.Controllers
             }
 
             //check for existing games
-            Game gameCheck = CheckForExistingGame(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime);
+            Game gameCheck = CheckForExistingGameExceptItself(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime, model.GameId);
             if (gameCheck != null)
             {
                 // TODO - Add link to existing game details later when that page is created
@@ -604,6 +612,29 @@ namespace PickUpSports.Controllers
 
             //save changes
             _context.Entry(existingGame).State = EntityState.Modified;
+
+            //send email to users once the game is cancelled
+            if (int.Parse(model.Status) == 2)
+            {
+                //Send notification to all users in this game if the game is canceled
+                GMailer.GMailUsername = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"] + "@gmail.com";
+                GMailer.GMailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
+                Game game = _context.Games.First(x => x.GameId == model.GameId);
+                GMailer mailer = new GMailer();
+
+                List<PickUpGame> pickUpGameList = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
+                foreach (var item in pickUpGameList)
+                {
+                    mailer.ToEmail = _context.Contacts.First(x => x.ContactId == item.ContactId).Email;
+                    mailer.Subject = "PICK UP GAMES";
+                    mailer.Body = "Sorry, this game is canceled by the creator. Venue: " + _context.Venues.First(x => x.VenueId == game.VenueId).Name
+                                    + "; Sport: " + _context.Sports.First(x => x.SportID == game.SportId).SportName 
+                                    + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
+                    mailer.IsHtml = true;
+                    mailer.Send();
+                }                              
+            }
+
             _context.SaveChanges();
 
             //redirect them back to the changed game detail
@@ -708,6 +739,34 @@ namespace PickUpSports.Controllers
 
         }
 
+        // Added by Kexin, because the above method CheckForExistingGame is also used by creating games, there is no gameID to compare
+        // make sure the existing game is not itself, user can save the game without any edition
+        public Game CheckForExistingGameExceptItself(int venueId, int sportId, DateTime startDateTime, int gameId)
+        {
+            // Check for all games that are happening at same venue
+            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId && g.GameId != gameId).ToList();
+            if (gamesAtVenue.Count <= 0) return null;
+
+            // Check for all games happening at that venue with same sport
+            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
+            if (sportsAtVenue.Count <= 0) return null;
+
+            // There are existing games with same sport and venue so check starting time
+            foreach (var game in sportsAtVenue)
+            {
+                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
+                {
+                    // If we get here, the new game will overlap with an existing game
+                    // Check if status is Open and if so, return that game
+                    if (game.GameStatusId == (int)GameStatusEnum.Open)
+                    {
+                        return game;
+                    }
+                }
+            }
+
+            return null;
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
