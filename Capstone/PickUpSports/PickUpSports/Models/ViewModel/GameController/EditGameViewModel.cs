@@ -11,7 +11,7 @@ namespace PickUpSports.Models.ViewModel.GameController
     {
         public int GameId { get; set; }
 
-        public int? ContactId { get; set; }
+        public int ContactId { get; set; }
 
         [Required]
         [DisplayName("Venue:")]

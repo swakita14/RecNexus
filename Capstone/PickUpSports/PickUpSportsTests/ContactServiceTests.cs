@@ -15,6 +15,7 @@ namespace PickUpSportsTests
         private readonly Mock<ISportPreferenceRepository> _sportPrefRepositoryMock;
         private readonly Mock<IReviewRepository> _reviewRepository;
         private readonly Mock<ISportRepository> _sportRepository;
+        private readonly Mock<IPickUpGameRepository> _pickUpGameRepository;
         private readonly ContactService _sut;
 
         public ContactServiceTests()
@@ -24,8 +25,9 @@ namespace PickUpSportsTests
             _sportPrefRepositoryMock = new Mock<ISportPreferenceRepository>();
             _reviewRepository = new Mock<IReviewRepository>();
             _sportRepository = new Mock<ISportRepository>();
+            _pickUpGameRepository = new Mock<IPickUpGameRepository>();
 
-            _sut = new ContactService(_contactRepositoryMock.Object, _timeRepositoryMock.Object, _sportPrefRepositoryMock.Object, _reviewRepository.Object, _sportRepository.Object);
+            _sut = new ContactService(_contactRepositoryMock.Object, _timeRepositoryMock.Object, _sportPrefRepositoryMock.Object, _reviewRepository.Object, _sportRepository.Object, _pickUpGameRepository.Object);
         }
 
         [Test]

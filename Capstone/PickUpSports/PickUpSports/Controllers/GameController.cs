@@ -9,6 +9,8 @@ using System.Net.Mail;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
+using PickUpSports.Interface;
+using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
 using PickUpSports.Models.Extensions;
@@ -21,10 +23,17 @@ namespace PickUpSports.Controllers
     public class GameController : Controller
     {
         private readonly PickUpContext _context;
+        private readonly IContactService _contactService;
 
         public GameController(PickUpContext context)
         {
             _context = context;
+        }
+
+        public GameController(PickUpContext context, IContactService contactService)
+        {
+            _context = context;
+            _contactService = contactService;
         }
 
         /**
@@ -35,7 +44,7 @@ namespace PickUpSports.Controllers
             ViewBag.GameCreated = false;
             // Confirm user is logged in (visitors can't create game)
             string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+            Contact contact = _contactService.GetContactByEmail(email);
 
             if (contact == null)
             {
@@ -56,7 +65,7 @@ namespace PickUpSports.Controllers
         {
             // Confirm user is logged in (visitors can't create game)
             string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+            Contact contact = _contactService.GetContactByEmail(email);
 
             if (contact == null)
             {
@@ -174,25 +183,15 @@ namespace PickUpSports.Controllers
 
             //getting current logged in user information in case they want to join game
             string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
-            
+            Contact contact = _contactService.GetContactByEmail(email);
+
             //find the game 
             Game game = _context.Games.Find(id);
-
-            PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.GameId == game.GameId);
            
-
-
-
-
             if (IsCreatorOfGame(contact.ContactId, game))
             {
                 ViewBag.IsCreator = true;
             }
-
-            Debug.Write(id);
-            Debug.Write(contact);
-            Debug.Write(game);
             
 
             //if there are no games then return: 
@@ -209,9 +208,6 @@ namespace PickUpSports.Controllers
                 StartDate = game.StartTime.ToString(),
                 Venue = _context.Venues.Find(game.VenueId).Name,
                 ContactId = contact.ContactId,
-                //PickUpGameId = pickUpGame.PickUpGameId,
-
-
             };
 
             //returning model to the view
@@ -224,12 +220,19 @@ namespace PickUpSports.Controllers
         {
             ViewBag.IsCreator = false;
 
-            List<PickUpGame> checkGames = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
+            //Find all the players that are currently signed up for the game
+            List<PickUpGame> checkGames = _contactService.GetPickUpGameListByGameId(model.GameId);
 
+            //finding game
+            Game game = _context.Games.Find(model.GameId);
+
+            //find the current logged-on user
+            string email = User.Identity.GetUserName();
+            Contact currContactUser = _contactService.GetContactByEmail(email);
+
+            //If the Join Game button was pressed 
             if (button.Equals("Join Game"))
             {
-                //finding game
-                Game game = _context.Games.Find(model.GameId);
 
                 //sending model back so values dont blank out
                 ViewGameViewModel returnModel = new ViewGameViewModel()
@@ -267,19 +270,24 @@ namespace PickUpSports.Controllers
                     GameId = model.GameId,
                 };
 
+                //Compose the body of the Message
+                string body = currContactUser.Username + " has just joined the game. ";
+
+                //Send the Email message with the following information provided
+                SendMessage(game, game.ContactId, body);
+
                 //save it       
                 _context.PickUpGames.Add(newPickUpGame);
             }
-            if (button.Equals("Quit Game"))
+
+            //If the Leave Game button was pressed 
+            if (button.Equals("Leave Game"))
             {
                 //check if the person is already signed up for the game 
                 if (IsNotSignedUpForGame(model.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You have not signed up for this game");
-
-                    //finding game
-                    Game game = _context.Games.Find(model.GameId);
 
                     //sending model back so values dont blank out
                     ViewGameViewModel returnModel = new ViewGameViewModel()
@@ -296,18 +304,16 @@ namespace PickUpSports.Controllers
                     return View(returnModel);
                 }
 
-                _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == model.ContactId));
+                Debug.Write(model);
 
-                //Send notification to the creator when other users out of the game 
-                GMailer.GMailUsername = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"]+"@gmail.com";
-                GMailer.GMailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
-                Game game1 = _context.Games.Find(model.GameId);
-                GMailer mailer = new GMailer();                
-                mailer.ToEmail = _context.Contacts.Find(game1.ContactId).Email;
-                mailer.Subject = "PICK UP GAMES";
-                mailer.Body = "There is a person who left your game, there are " + _context.PickUpGames.Where(x => x.GameId == model.GameId).Count() + " people in your game now.(include yourself)";
-                mailer.IsHtml = true;
-                mailer.Send();
+                //Creating body for the mail notification
+                string body = currContactUser.Username + " has just left the game. ";
+
+                //Send the Email with the following information and text
+                SendMessage(game, game.ContactId, body);
+
+                //Remove the Player from the Game 
+                _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == model.ContactId));
 
             }
 
@@ -315,6 +321,38 @@ namespace PickUpSports.Controllers
 
             //redirect to the gamedetails page so that they could see that they are signed on
             return RedirectToAction("GameDetails", new { id = model.GameId });
+        }
+
+        public void SendMessage(Game game, int playerId, string body)
+        {
+            //Send notification to the creator when other users out of the game 
+            GMailer.GMailUsername = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"] + "@gmail.com";
+            GMailer.GMailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
+
+            //Initialize the Gmailer Class
+            GMailer mailer = new GMailer();
+
+            //Either sending the message to the Creator of the game or the Players in the game
+            if (game.ContactId == playerId)
+            {
+                //emailing to the creator
+                mailer.ToEmail = _contactService.GetContactById(game.ContactId).Email;
+                int playerCount = _contactService.GetPickUpGameListByGameId(game.GameId).Count(); 
+                mailer.Body = body + "The current number of players on this game is: " + playerCount;
+            }
+            else
+            {
+                //emailing to the players on the game list
+                mailer.ToEmail = _contactService.GetContactById(playerId).Email;
+                mailer.Body = body;
+            }
+
+            //Add the following information to the Message
+            mailer.Subject = "Change in Your Game Information";
+            mailer.IsHtml = true;
+
+            //Send Message 
+            mailer.Send();
         }
 
         /***
@@ -478,7 +516,7 @@ namespace PickUpSports.Controllers
 
         public PartialViewResult PlayerList(int gameId)
         {
-            List<PickUpGame> playerList = _context.PickUpGames.Where(x => x.GameId == gameId).ToList();
+            List<PickUpGame> playerList = _contactService.GetPickUpGameListByGameId(gameId);
 
             List<PickUpGameViewModel> model = new List<PickUpGameViewModel>();
 
@@ -503,10 +541,10 @@ namespace PickUpSports.Controllers
         public ActionResult EditGame(int id)
         {
             //Get current users email
-            string currContactEmail = User.Identity.GetUserName();
+            string email = User.Identity.GetUserName();
 
             //Find user by their email
-            Contact currContact = _context.Contacts.FirstOrDefault(x => x.Email == currContactEmail);
+            Contact currContact = _contactService.GetContactByEmail(email);
 
             //Find Game
             Game game = _context.Games.Find(id);
@@ -616,22 +654,14 @@ namespace PickUpSports.Controllers
             //send email to users once the game is cancelled
             if (int.Parse(model.Status) == 2)
             {
-                //Send notification to all users in this game if the game is canceled
-                GMailer.GMailUsername = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"] + "@gmail.com";
-                GMailer.GMailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
-                Game game = _context.Games.First(x => x.GameId == model.GameId);
-                GMailer mailer = new GMailer();
+                string body = "Sorry, this game is canceled by the creator. Venue: " + _context.Venues.First(x => x.VenueId == existingGame.VenueId).Name
+                                                                                     + "; Sport: " + _context.Sports.First(x => x.SportID == existingGame.SportId).SportName
+                                                                                     + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
 
-                List<PickUpGame> pickUpGameList = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
-                foreach (var item in pickUpGameList)
+                List<PickUpGame> pickUpGameList = _contactService.GetPickUpGameListByGameId(existingGame.GameId);
+                foreach (var player in pickUpGameList)
                 {
-                    mailer.ToEmail = _context.Contacts.First(x => x.ContactId == item.ContactId).Email;
-                    mailer.Subject = "PICK UP GAMES";
-                    mailer.Body = "Sorry, this game is canceled by the creator. Venue: " + _context.Venues.First(x => x.VenueId == game.VenueId).Name
-                                    + "; Sport: " + _context.Sports.First(x => x.SportID == game.SportId).SportName 
-                                    + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
-                    mailer.IsHtml = true;
-                    mailer.Send();
+                    SendMessage(existingGame, player.ContactId, body);
                 }                              
             }
 
