@@ -220,6 +220,8 @@ namespace PickUpSports.Controllers
         {
             ViewBag.IsCreator = false;
 
+            string body = "";
+
             //Find all the players that are currently signed up for the game
             List<PickUpGame> checkGames = _contactService.GetPickUpGameListByGameId(model.GameId);
 
@@ -271,13 +273,11 @@ namespace PickUpSports.Controllers
                 };
 
                 //Compose the body of the Message
-                string body = currContactUser.Username + " has just joined the game. ";
-
-                //Send the Email message with the following information provided
-                SendMessage(game, game.ContactId, body);
+                body = currContactUser.Username + " has just joined the game. ";
 
                 //save it       
                 _context.PickUpGames.Add(newPickUpGame);
+
             }
 
             //If the Leave Game button was pressed 
@@ -307,17 +307,16 @@ namespace PickUpSports.Controllers
                 Debug.Write(model);
 
                 //Creating body for the mail notification
-                string body = currContactUser.Username + " has just left the game. ";
-
-                //Send the Email with the following information and text
-                SendMessage(game, game.ContactId, body);
+                body = currContactUser.Username + " has just left the game. ";
 
                 //Remove the Player from the Game 
                 _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == model.ContactId));
-
+                
             }
 
             _context.SaveChanges();
+
+            SendMessage(game, game.ContactId, body);
 
             //redirect to the gamedetails page so that they could see that they are signed on
             return RedirectToAction("GameDetails", new { id = model.GameId });
