@@ -55,7 +55,8 @@ namespace PickUpSports
             builder.RegisterType<SportPreferenceRepository>().As<ISportPreferenceRepository>();
             builder.RegisterType<ReviewRepository>().As<IReviewRepository>();
             builder.RegisterType<SportRepository>().As<ISportRepository>();
-            
+            builder.RegisterType<PickUpGameRepository>().As<IPickUpGameRepository>();
+
             var container = builder.Build();
 
             // Resolve all registrations above 

@@ -55,26 +55,27 @@
 
                 <center>
                     <p>
-                        @if (ViewBag.IsCreator)
-                        {
-                            <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'" />
-                        }
-                        &nbsp;
-
                         @using (Html.BeginForm("GameDetails", "Game", FormMethod.Post))
                         {
                             @Html.HiddenFor(model => model.GameId)
                             @Html.HiddenFor(model => model.ContactId)
                             @Html.HiddenFor(model => model.PickUpGameId)
-                            <input type="submit" name ="button" value="Join Game" class="btn btn-default" />
-                            <input type="submit" name ="button" value="Quit Game" class="btn btn-default" />
-                        }
 
+                             if (ViewBag.IsCreator)
+                             {
+                                 <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'"/>
+                             }
+                             else
+                             {
+
+                                 <input type="submit" name="button" value="Join Game" class="btn btn-default"/>
+                                 <input type="submit" name="button" value="Leave Game" class="btn btn-default"/>
+                             }
+
+                        }
 
                     </p>
                 </center>
-
-                <h4 id="warning">@ViewBag.Error</h4>
 
             </fieldset>
             

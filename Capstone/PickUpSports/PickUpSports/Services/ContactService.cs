@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
@@ -12,17 +13,19 @@ namespace PickUpSports.Services
         private readonly ISportPreferenceRepository _sportPreferenceRepository;
         private readonly IReviewRepository _reviewRepository;
         private readonly ISportRepository _sportRepository;
+        private readonly IPickUpGameRepository _pickUpGameRepository;
 
         public ContactService(IContactRepository contactRepository, 
             ITimePreferenceRepository timePreferenceRepository, 
             ISportPreferenceRepository sportPreferenceRepository, 
-            IReviewRepository reviewRepository, ISportRepository sportRepository)
+            IReviewRepository reviewRepository, ISportRepository sportRepository, IPickUpGameRepository pickUpGameRepository)
         {
             _contactRepository = contactRepository;
             _timePreferenceRepository = timePreferenceRepository;
             _sportPreferenceRepository = sportPreferenceRepository;
             _reviewRepository = reviewRepository;
             _sportRepository = sportRepository;
+            _pickUpGameRepository = pickUpGameRepository;
         }
 
         public Contact GetContactByEmail(string email)
@@ -105,6 +108,12 @@ namespace PickUpSports.Services
         public List<TimePreference> GetTimePreferences(int contactId)
         {
             var results = _timePreferenceRepository.GetUsersTimePreferencesByContactId(contactId);
+            return results;
+        }
+
+        public List<PickUpGame> GetPickUpGameListByGameId(int gameId)
+        {
+            var results = _pickUpGameRepository.GetPickUpGameListByGameId(gameId);
             return results;
         }
     }
