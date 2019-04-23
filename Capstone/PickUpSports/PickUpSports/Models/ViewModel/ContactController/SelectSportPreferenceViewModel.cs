@@ -1,4 +1,4 @@
-﻿namespace PickUpSports.Models.ViewModel
+﻿namespace PickUpSports.Models.ViewModel.ContactController
 {
     public class SelectSportPreferenceViewModel
     {

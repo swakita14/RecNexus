@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.Enums;
-using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.ContactController;
 
 namespace PickUpSports.Controllers
 {

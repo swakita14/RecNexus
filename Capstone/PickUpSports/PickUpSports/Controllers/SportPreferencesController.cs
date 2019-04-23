@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.ContactController;
 
 namespace PickUpSports.Controllers
 {
