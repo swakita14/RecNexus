@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace PickUpSports.Models.ViewModel
+namespace PickUpSports.Models.ViewModel.ContactController
 {
     public class EditContactViewModel
     {
