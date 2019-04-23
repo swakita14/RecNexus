@@ -18,6 +18,7 @@ namespace PickUpSports.DAL.Repositories
         public List<PickUpGame> GetPickUpGameListByGameId(int gameId)
         { 
             List<PickUpGame> pickUpGameList = _context.PickUpGames.Where(x => x.GameId == gameId).ToList();
+            if (pickUpGameList == null) return null;
 
             return pickUpGameList;
         }

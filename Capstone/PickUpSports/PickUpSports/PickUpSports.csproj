@@ -352,6 +352,7 @@
     <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\Extensions\Extensions.cs" />
     <Compile Include="Models\Extensions\GMailer.cs" />
+    <Compile Include="Interface\IGMailer.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceSearchResponse.cs" />
     <Compile Include="Models\IdentityModels.cs" />
