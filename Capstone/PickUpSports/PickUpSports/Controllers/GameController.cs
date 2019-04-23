@@ -607,6 +607,14 @@ namespace PickUpSports.Controllers
             //populating dropdown with the existing game
             PopulateEditDropDownMethod(existingGame);
 
+            //check if the game will happen in one hour
+            if (startDateTime.AddHours(-1) < DateTime.Now)
+            {
+                ViewData.ModelState.AddModelError("GameStart", "Sorry, you can only edit the game at least 1 hour long before it starts.");
+                PopulateEditDropDownMethod(existingGame);
+                return View(model);
+            }
+
             //check if the dates match - Can't have games that start and end on different dates 
             if (!IsSelectedTimeValid(startDateTime, endDateTime))
             {
