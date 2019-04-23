@@ -429,6 +429,8 @@
     <Content Include="Scripts\pickUpGameView.js" />
     <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
+    <Content Include="Scripts\Tests\qunit-2.9.2.css" />
+    <Content Include="Scripts\Tests\qunit-2.9.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
