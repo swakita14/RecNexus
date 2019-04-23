@@ -4,46 +4,54 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
+using PickUpSports.Interface;
 
 namespace PickUpSports.Models.Extensions
 {
-    public class GMailer
+    public class GMailer : IGMailer
     {
-        public static string GMailUsername { get; set; }
-        public static string GMailPassword { get; set; }
-        public static string GmailHost { get; set; }
-        public static int GmailPort { get; set; }
-        public static bool GmailSSL { get; set; }
+        private readonly SmtpClient _smtpClient;
+        private readonly NetworkCredential _networkCredential;
+        private bool _hasSent;
 
-        public string ToEmail { get; set; }
-        public string Subject { get; set; }
-        public string Body { get; set; }
-        public bool IsHtml { get; set; }
-
-        static GMailer()
+        public GMailer(SmtpClient smtpClient, NetworkCredential networkCredential)
         {
-            GmailHost = "smtp.gmail.com";
-            GmailPort = 587;
-            GmailSSL = true;
+            _smtpClient = smtpClient;
+            _networkCredential = networkCredential;
+            _hasSent = false;
         }
 
-        public void Send()
+        public string GetEmailAddress()
         {
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = GmailHost;
-            smtp.Port = GmailPort;
-            smtp.EnableSsl = GmailSSL;
-            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential(GMailUsername, GMailPassword);
+            return System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"] + "@gmail.com";
+        }
 
-            using (var message = new MailMessage(GMailUsername, ToEmail))
+        /**
+         * This Method will send the message with the message content(body) and the email address passed in
+         */
+        public bool Send(string body, string toEmailAddress)
+        {
+            //Creating new Message with information passed in
+            var message = new MailMessage(GetEmailAddress(), toEmailAddress)
             {
-                message.Subject = Subject;
-                message.Body = Body;
-                message.IsBodyHtml = IsHtml;
-                smtp.Send(message);
-            }
+                Subject = "Change in Game Information",
+                Body = body
+            };
+
+            //Checking it to true make sure its in html format
+            message.IsBodyHtml = true;
+
+            //Enabling credentials and ssl
+            _smtpClient.Credentials = _networkCredential;
+            _smtpClient.EnableSsl = true;
+
+            //Send the message with the credentials 
+            _smtpClient.Send(message);
+
+            //Method reached here, so assuming message has been sent
+            _hasSent = true;
+
+            return _hasSent;
         }
     }
 }

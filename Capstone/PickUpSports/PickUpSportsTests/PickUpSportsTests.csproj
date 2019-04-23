@@ -92,7 +92,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContactServiceTests.cs" />
-    <Compile Include="EmailNotificationTests.cs" />
     <Compile Include="GameControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
