@@ -5,11 +5,15 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
+using PickUpSports.Interface;
+using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
+using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
 using DayOfWeek = System.DayOfWeek;
@@ -19,10 +23,19 @@ namespace PickUpSports.Controllers
     public class GameController : Controller
     {
         private readonly PickUpContext _context;
+        private readonly IContactService _contactService;
+        private readonly IGMailer _gMailer;
 
         public GameController(PickUpContext context)
         {
             _context = context;
+        }
+
+        public GameController(PickUpContext context, IContactService contactService, IGMailer gMailer)
+        {
+            _context = context;
+            _contactService = contactService;
+            _gMailer = gMailer;
         }
 
         /**
@@ -33,7 +46,7 @@ namespace PickUpSports.Controllers
             ViewBag.GameCreated = false;
             // Confirm user is logged in (visitors can't create game)
             string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+            Contact contact = _contactService.GetContactByEmail(email);
 
             if (contact == null)
             {
@@ -54,7 +67,7 @@ namespace PickUpSports.Controllers
         {
             // Confirm user is logged in (visitors can't create game)
             string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+            Contact contact = _contactService.GetContactByEmail(email);
 
             if (contact == null)
             {
@@ -172,16 +185,16 @@ namespace PickUpSports.Controllers
 
             //getting current logged in user information in case they want to join game
             string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
-            PickUpGame pickUpGame = _context.PickUpGames.FirstOrDefault(x => x.ContactId == contact.ContactId);
+            Contact contact = _contactService.GetContactByEmail(email);
 
             //find the game 
             Game game = _context.Games.Find(id);
-
+           
             if (IsCreatorOfGame(contact.ContactId, game))
             {
                 ViewBag.IsCreator = true;
             }
+            
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
@@ -196,9 +209,7 @@ namespace PickUpSports.Controllers
                 Sport = _context.Sports.Find(game.SportId).SportName,
                 StartDate = game.StartTime.ToString(),
                 Venue = _context.Venues.Find(game.VenueId).Name,
-                PickUpGameId = pickUpGame.PickUpGameId,
                 ContactId = contact.ContactId,
-
             };
 
             //returning model to the view
@@ -207,20 +218,25 @@ namespace PickUpSports.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult GameDetails(ViewGameViewModel model)
+        public ActionResult GameDetails(ViewGameViewModel model, string button)
         {
             ViewBag.IsCreator = false;
 
-            List<PickUpGame> checkGames = _context.PickUpGames.Where(x => x.GameId == model.GameId).ToList();
+            string body = "";
 
-            //check if the person is already signed up for the game 
-            if (!IsNotSignedUpForGame(model.ContactId, checkGames))
+            //Find all the players that are currently signed up for the game
+            List<PickUpGame> checkGames = _contactService.GetPickUpGameListByGameId(model.GameId);
+
+            //finding game
+            Game game = _context.Games.Find(model.GameId);
+
+            //find the current logged-on user
+            string email = User.Identity.GetUserName();
+            Contact currContactUser = _contactService.GetContactByEmail(email);
+
+            //If the Join Game button was pressed 
+            if (button.Equals("Join Game"))
             {
-                //error message
-                ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
-
-                //finding game
-                Game game = _context.Games.Find(model.GameId);
 
                 //sending model back so values dont blank out
                 ViewGameViewModel returnModel = new ViewGameViewModel()
@@ -234,24 +250,103 @@ namespace PickUpSports.Controllers
                     Venue = _context.Venues.Find(game.VenueId).Name,
                 };
 
-                return View(returnModel);
+                //if the game is cancelled, users are prevent to join this game
+                if (game.GameStatusId == 2)
+                {
+                    //error message
+                    ViewData.ModelState.AddModelError("SignedUp", "Sorry, this game is canceled, you can not join this game");
+                    return View(returnModel);
+                }
+
+                //check if the person is already signed up for the game 
+                if (!IsNotSignedUpForGame(model.ContactId, checkGames))
+                {
+                    //error message
+                    ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
+
+                    return View(returnModel);
+                }
+
+                //add new person to the pickupgame table
+                PickUpGame newPickUpGame = new PickUpGame()
+                {
+                    ContactId = model.ContactId,
+                    GameId = model.GameId,
+                };
+
+                //Compose the body of the Message
+                body = currContactUser.Username + " has just joined the game. ";
+
+                //save it       
+                _context.PickUpGames.Add(newPickUpGame);
+
             }
 
-            //add new person to the pickupgame table
-            PickUpGame newPickUpGame = new PickUpGame()
+            //If the Leave Game button was pressed 
+            if (button.Equals("Leave Game"))
             {
-                ContactId = model.ContactId,
-                GameId = model.GameId,
-                PickUpGameId = model.PickUpGameId
-            };
+                //check if the person is already signed up for the game 
+                if (IsNotSignedUpForGame(model.ContactId, checkGames))
+                {
+                    //error message
+                    ViewData.ModelState.AddModelError("SignedUp", "You have not signed up for this game");
 
+                    //sending model back so values dont blank out
+                    ViewGameViewModel returnModel = new ViewGameViewModel()
+                    {
+                        ContactName = _context.Contacts.Find(game.ContactId).Username,
+                        EndDate = game.EndTime.ToString(),
+                        GameId = game.GameId,
+                        Status = _context.GameStatuses.Find(game.GameStatusId).Status,
+                        Sport = _context.Sports.Find(game.SportId).SportName,
+                        StartDate = game.StartTime.ToString(),
+                        Venue = _context.Venues.Find(game.VenueId).Name,
+                    };
 
-            //save it 
-            _context.PickUpGames.Add(newPickUpGame);
+                    return View(returnModel);
+                }
+
+                Debug.Write(model);
+
+                //Creating body for the mail notification
+                body = currContactUser.Username + " has just left the game. ";
+
+                //Remove the Player from the Game 
+                _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == model.ContactId));
+                
+            }
+
             _context.SaveChanges();
+
+            SendMessage(game, game.ContactId, body);
 
             //redirect to the gamedetails page so that they could see that they are signed on
             return RedirectToAction("GameDetails", new { id = model.GameId });
+        }
+
+        public void SendMessage(Game game, int playerId, string body)
+        {
+            //Initializing Message Details 
+            string sendingToEmail = "";
+            string messageContent = "";
+            int playerCount = _contactService.GetPickUpGameListByGameId(game.GameId).Count();
+
+            //Either sending the message to the Creator of the game or the Players in the game
+            if (game.ContactId == playerId)
+            {
+                sendingToEmail = _contactService.GetContactById(game.ContactId).Email;
+                messageContent = body + "The current number of players on this game is: " + playerCount;
+
+            }
+            else
+            {
+                //emailing to the players on the game list
+               sendingToEmail = _contactService.GetContactById(playerId).Email;
+               messageContent = body;
+            }
+
+            //Send the Message
+            _gMailer.Send(messageContent, sendingToEmail);
         }
 
         /***
@@ -415,7 +510,7 @@ namespace PickUpSports.Controllers
 
         public PartialViewResult PlayerList(int gameId)
         {
-            List<PickUpGame> playerList = _context.PickUpGames.Where(x => x.GameId == gameId).ToList();
+            List<PickUpGame> playerList = _contactService.GetPickUpGameListByGameId(gameId);
 
             List<PickUpGameViewModel> model = new List<PickUpGameViewModel>();
 
@@ -440,10 +535,10 @@ namespace PickUpSports.Controllers
         public ActionResult EditGame(int id)
         {
             //Get current users email
-            string currContactEmail = User.Identity.GetUserName();
+            string email = User.Identity.GetUserName();
 
             //Find user by their email
-            Contact currContact = _context.Contacts.FirstOrDefault(x => x.Email == currContactEmail);
+            Contact currContact = _contactService.GetContactByEmail(email);
 
             //Find Game
             Game game = _context.Games.Find(id);
@@ -507,6 +602,14 @@ namespace PickUpSports.Controllers
             //populating dropdown with the existing game
             PopulateEditDropDownMethod(existingGame);
 
+            //check if the game will happen in one hour
+            if (startDateTime.AddHours(-1) < DateTime.Now)
+            {
+                ViewData.ModelState.AddModelError("GameStart", "Sorry, you can only edit the game at least 1 hour long before it starts.");
+                PopulateEditDropDownMethod(existingGame);
+                return View(model);
+            }
+
             //check if the dates match - Can't have games that start and end on different dates 
             if (!IsSelectedTimeValid(startDateTime, endDateTime))
             {
@@ -516,7 +619,7 @@ namespace PickUpSports.Controllers
             }
 
             //check for existing games
-            Game gameCheck = CheckForExistingGame(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime);
+            Game gameCheck = CheckForExistingGameExceptItself(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime, model.GameId);
             if (gameCheck != null)
             {
                 // TODO - Add link to existing game details later when that page is created
@@ -549,6 +652,21 @@ namespace PickUpSports.Controllers
 
             //save changes
             _context.Entry(existingGame).State = EntityState.Modified;
+
+            //send email to users once the game is cancelled
+            if (int.Parse(model.Status) == 2)
+            {
+                string body = "Sorry, this game is canceled by the creator. Venue: " + _context.Venues.First(x => x.VenueId == existingGame.VenueId).Name
+                                                                                     + "; Sport: " + _context.Sports.First(x => x.SportID == existingGame.SportId).SportName
+                                                                                     + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
+
+                List<PickUpGame> pickUpGameList = _contactService.GetPickUpGameListByGameId(existingGame.GameId);
+                foreach (var player in pickUpGameList)
+                {
+                    SendMessage(existingGame, player.ContactId, body);
+                }                              
+            }
+
             _context.SaveChanges();
 
             //redirect them back to the changed game detail
@@ -653,6 +771,34 @@ namespace PickUpSports.Controllers
 
         }
 
+        // Added by Kexin, because the above method CheckForExistingGame is also used by creating games, there is no gameID to compare
+        // make sure the existing game is not itself, user can save the game without any edition
+        public Game CheckForExistingGameExceptItself(int venueId, int sportId, DateTime startDateTime, int gameId)
+        {
+            // Check for all games that are happening at same venue
+            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId && g.GameId != gameId).ToList();
+            if (gamesAtVenue.Count <= 0) return null;
+
+            // Check for all games happening at that venue with same sport
+            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
+            if (sportsAtVenue.Count <= 0) return null;
+
+            // There are existing games with same sport and venue so check starting time
+            foreach (var game in sportsAtVenue)
+            {
+                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
+                {
+                    // If we get here, the new game will overlap with an existing game
+                    // Check if status is Open and if so, return that game
+                    if (game.GameStatusId == (int)GameStatusEnum.Open)
+                    {
+                        return game;
+                    }
+                }
+            }
+
+            return null;
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

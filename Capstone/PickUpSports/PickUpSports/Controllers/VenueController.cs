@@ -7,6 +7,7 @@ using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.GameController;
 using PickUpSports.Models.ViewModel.VenueController;
 
 namespace PickUpSports.Controllers
@@ -296,6 +297,26 @@ namespace PickUpSports.Controllers
 
             // Order reviews newest to oldest
             model.Reviews = tempList.OrderByDescending(r => r.Timestamp).ToList();
+
+            // Map Games
+            List<Game> games = _context.Games.Where(x => x.VenueId == id).ToList();
+            List<GameListViewModel> gameList = new List<GameListViewModel>();
+            foreach (var item in games)
+            {
+                GameListViewModel gameListViewModel = new GameListViewModel
+                {
+                    GameId = item.GameId,
+                    ContactName = _context.Contacts.First(x => x.ContactId == item.ContactId).Username,
+                    Sport = _context.Sports.First(x => x.SportID == item.SportId).SportName,
+                    StartDate = item.StartTime.ToString(),
+                    EndDate = item.EndTime.ToString()
+                };
+                gameList.Add(gameListViewModel);
+            }
+
+
+            model.Games = gameList.OrderByDescending(x => x.StartDate).ToList();
+
             return View(model);
         }
         

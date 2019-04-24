@@ -1,4 +1,4 @@
-﻿@model PickUpSports.Models.ViewModel.SportPreferenceViewModel
+﻿@model PickUpSports.Models.ViewModel.ContactController.SportPreferenceViewModel
 @{
     ViewBag.Title = "Details";
 }
@@ -10,13 +10,6 @@
 
             <fieldset>
                 <legend class="text-center header">Your Sports Preferences</legend>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.ContactUsername)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.ContactUsername)
-                </dd>
 
                 <dt>
                     @Html.DisplayNameFor(model => model.SportName)

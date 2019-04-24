@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.ContactController;
 
 namespace PickUpSports.Controllers
 {
@@ -18,41 +17,8 @@ namespace PickUpSports.Controllers
             _context = context;
         }        
 
-        // GET: SportPreferences/Details
-        public ActionResult Details()
-        {
-            //Identify the person using email
-            string email = User.Identity.GetUserName();
-
-            //find the contact
-            Contact contact = _context.Contacts.FirstOrDefault(x => x.Email == email);
-
-            SportPreferenceViewModel model = new SportPreferenceViewModel();
-
-            model.ContactID = contact.ContactId;
-            model.ContactUsername = contact.Username;
-
-            // find the sportpreferences for the user
-            List<SportPreference> sportPrefs = _context.SportPreferences.Where(s => s.ContactID == contact.ContactId).ToList();
-            
-            //for each preference of the user, get the sport name
-            List<string> sportNameList = new List<string>();
-
-            foreach (var sportPref in sportPrefs)
-            {
-                List<Sport> sports = _context.Sports.Where(x => x.SportID == sportPref.SportID).ToList();
-                foreach (var sport in sports)
-                {
-                    sportNameList.Add(sport.SportName);
-                }
-            }
-            //add all the sport name to the list back to the view
-            model.SportName=sportNameList;
-            return View(model);
-        }
         [HttpGet]
-        // GET: SportPreferences/Create    
-        public ActionResult Create()
+        public ActionResult ModifySportPreferences()
         {
             //Identify the person using email
             string newContactEmail = User.Identity.GetUserName();
@@ -96,7 +62,7 @@ namespace PickUpSports.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(CreateSportPreferenceViewModel model)
+        public ActionResult ModifySportPreferences(CreateSportPreferenceViewModel model)
         {
             // Update database with any updated values from checkboxes
             foreach (var preference in model.SportPreferenceCheckboxes)
@@ -123,8 +89,9 @@ namespace PickUpSports.Controllers
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Details", "SportPreferences");
-        }             
+            return RedirectToAction("Details", "Contact");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

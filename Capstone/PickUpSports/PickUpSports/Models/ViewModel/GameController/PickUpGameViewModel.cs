@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace PickUpSports.Models.ViewModel.GameController
+﻿namespace PickUpSports.Models.ViewModel.GameController
 {
     public class PickUpGameViewModel
     {

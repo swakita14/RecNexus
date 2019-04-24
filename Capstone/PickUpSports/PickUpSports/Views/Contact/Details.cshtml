@@ -1,71 +1,60 @@
 ﻿@model PickUpSports.Models.DatabaseModels.Contact
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Your Profile";
 }
 
 <div class="container">
     <div class="row">
-        <div class="well well-sm">
+        <div class="form-box">
+            <h2>@Model.Username</h2>
+            <div class="well">
+                <p>@Html.DisplayFor(x => x.FirstName) @Html.DisplayFor(x => x.LastName)</p>
+                <p>@Html.DisplayFor(x => x.Email)</p>
+                @if (string.IsNullOrEmpty(Model.Address2))
+                {
+                    <p>@Html.DisplayFor(x => x.Address1), @Html.DisplayFor(x => x.City), @Html.DisplayFor(x => x.State) @Html.DisplayFor(x => x.ZipCode)</p>
+                }
+                else
+                {
+                    <p>@Html.DisplayFor(x => x.Address1), @Html.DisplayFor(x => x.Address2), @Html.DisplayFor(x => x.City), @Html.DisplayFor(x => x.State) @Html.DisplayFor(x => x.ZipCode)</p>
 
-            <fieldset>
-                <legend class="text-center header">Your Current Information</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Username):
-                    @Html.DisplayFor(model => model.Username)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.FirstName):
-                    @Html.DisplayFor(model => model.FirstName)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Email):
-                    @Html.DisplayFor(model => model.Email)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Address1):
-                    @Html.DisplayFor(model => model.Address1)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Address2):
-                    @Html.DisplayFor(model => model.Address2)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.City):
-                    @Html.DisplayFor(model => model.City)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.State):
-                    @Html.DisplayFor(model => model.State)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ZipCode):
-                    @Html.DisplayFor(model => model.ZipCode)
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.PhoneNumber):
-                    @Html.DisplayFor(model => model.PhoneNumber)
-                </div>
-            </fieldset>
-            @Html.HiddenFor(model => model.ContactId)
+                }
+                <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
+                <p>
+                    <center>
+                        @Html.ActionLink("Edit Information", "Edit", new { id = Model.ContactId }) | @Html.ActionLink("Change Password", "ChangePassword", "Manage") | <a href="#" data-toggle="modal" data-target="#confirm">Delete Account</a>
+                    </center>
+                </p>
 
+            </div>
         </div>
     </div>
 </div>
 
-<p>
-    <center>
-        <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href='@Url.Action("Edit", "Contact", new { id = Model.ContactId})'" />
-        &nbsp;
-        <input type="button" class="btn btn-default" value="Change Password" onclick="location.href='@Url.Action("ChangePassword", "Manage")'" />
-        &nbsp;
-        <input type="button" class="btn btn-default" value="Manage Time Preferences" onclick="location.href = '@Url.Action("Details", "TimePreferences")'" />
-        &nbsp;
-        <input type="button" class="btn btn-default" value="Manage Sport Preferences" onclick="location.href='@Url.Action("Details", "SportPreferences")'" />
-        &nbsp;
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm">Delete Account</button>
-    </center>
-</p>
+<center>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-6">
+                <center><b >Your Sport Preferences</b></center>
+                <br/>
+                @{
+                    Html.RenderAction("GetSportPreferences", new {contactId = Model.ContactId});
+                }
+            </div>
+        
+            <div class="col-md-6">
+                <center><b >Your Time Preferences</b></center>
+                <br/>
+                @{
+                    Html.RenderAction("GetTimePreferences", new {contactId = Model.ContactId});
+                }
+            </div>
+        </div>
+    </div>
+</center>
+
+
 
 @using (Html.BeginForm("Delete", "Contact", FormMethod.Post))
 {

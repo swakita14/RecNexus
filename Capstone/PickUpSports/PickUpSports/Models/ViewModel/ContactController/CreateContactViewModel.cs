@@ -1,11 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
-namespace PickUpSports.Models.ViewModel
+namespace PickUpSports.Models.ViewModel.ContactController
 {
     public class CreateContactViewModel
     {

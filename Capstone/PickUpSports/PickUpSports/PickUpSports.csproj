@@ -48,6 +48,24 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.2.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.2\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.38.2\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.38.2\lib\net45\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.38.2\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.2.1.4\lib\net45\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.1\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.0.1\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
@@ -277,6 +295,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
+    <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
+    <Compile Include="Models\ChatHub\ChatHub.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\FriendsController.cs" />
@@ -300,12 +321,23 @@
     <Compile Include="DAL\Configurations\SportPreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\TimePreferenceConfiguration.cs" />
     <Compile Include="DAL\Configurations\VenueConfiguration.cs" />
+    <Compile Include="DAL\Repositories\ContactRepository.cs" />
+    <Compile Include="DAL\Repositories\ReviewRepository.cs" />
+    <Compile Include="DAL\Repositories\SportPreferenceRepository.cs" />
+    <Compile Include="DAL\Repositories\SportRepository.cs" />
+    <Compile Include="DAL\Repositories\TimePreferenceRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="GoogleApi\PlacesApiClient.cs" />
+    <Compile Include="Interface\IContactService.cs" />
     <Compile Include="Interface\IPlacesApiClient.cs" />
+    <Compile Include="Interface\Repositories\IContactRepository.cs" />
     <Compile Include="Interface\IVenueService.cs" />
+    <Compile Include="Interface\Repositories\IReviewRepository.cs" />
+    <Compile Include="Interface\Repositories\ISportPreferenceRepository.cs" />
+    <Compile Include="Interface\Repositories\ITimePreferenceRepository.cs" />
+    <Compile Include="Interface\Repositories\ISportRepository.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DatabaseModels\BusinessHours.cs" />
     <Compile Include="Models\CaptchaResponse.cs" />
@@ -320,6 +352,8 @@
     <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\Extensions\Extensions.cs" />
+    <Compile Include="Models\Extensions\GMailer.cs" />
+    <Compile Include="Interface\IGMailer.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceSearchResponse.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -328,24 +362,28 @@
     <Compile Include="Models\DatabaseModels\TimePreference.cs" />
     <Compile Include="Models\DatabaseModels\Venue.cs" />
     <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
-    <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\CreateContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\ProfileViewModel.cs" />
     <Compile Include="Models\ViewModel\CreatePickUpViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
-    <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\CreateSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\EditGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\GameListViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\PickUpGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\ViewGameViewModel.cs" />
-    <Compile Include="Models\ViewModel\SelectSportPreferenceViewModel.cs" />
-    <Compile Include="Models\ViewModel\SportPreferenceViewModel.cs" />
-    <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\SelectSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\SportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\EditContactViewModel.cs" />
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
-    <Compile Include="Models\ViewModel\CreateTimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\CreateTimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\TimePreferenceListViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\TimePreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\SearchVenueViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\VenueViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ContactService.cs" />
     <Compile Include="Services\VenueService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -356,6 +394,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Scripts\ChatInit.js" />
     <Content Include="Content\gameTable.css" />
     <Content Include="Content\playerTable.css" />
     <Content Include="Content\responsive.css" />
@@ -380,6 +419,8 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.1.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -389,6 +430,8 @@
     <Content Include="Scripts\pickUpGameView.js" />
     <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
+    <Content Include="Scripts\Tests\qunit-2.9.2.css" />
+    <Content Include="Scripts\Tests\qunit-2.9.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -437,7 +480,7 @@
     <Content Include="Views\TimePreferences\Delete.cshtml" />
     <Content Include="Views\TimePreferences\Details.cshtml" />
     <Content Include="Views\TimePreferences\Edit.cshtml" />
-    <Content Include="Views\SportPreferences\Create.cshtml" />
+    <Content Include="Views\SportPreferences\ModifySportPreferences.cshtml" />
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
@@ -454,6 +497,10 @@
     <Content Include="Views\Friends\Details.cshtml" />
     <Content Include="Views\Friends\Edit.cshtml" />
     <Content Include="Views\Friends\Index.cshtml" />
+    <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
+    <Content Include="Views\TimePreferences\_TimePreferences.cshtml" />
+    <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Contact\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
