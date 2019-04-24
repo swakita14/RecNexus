@@ -8,63 +8,102 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.ContactController;
 
 namespace PickUpSports.Controllers
 {
     public class FriendsController : Controller
     {
         private readonly PickUpContext _context;
+        private readonly IContactService _contactService;
 
-        public FriendsController(PickUpContext context)
+        public FriendsController(PickUpContext context, IContactService contactService)
         {
             _context = context;
+            _contactService = contactService;
         }
 
         // GET: Friends
-        public ActionResult FriendList()
-        {
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult AddFriend(ProfileViewModel model)
+{
+            //Get the current users email
             string email = User.Identity.GetUserName();
 
-            Contact contact = _context.Contacts.FirstOrDefault(x => x.Email.Equals(email));
+            //Find the user using the email
+            Contact contact = _contactService.GetContactByEmail(email);
 
-            Contact contactFriend = _context.Contacts.Find(contactId);
+            //find the friend
+            Contact contactFriend = _contactService.GetContactByUsername(model.Username);
 
+            //find the list of friends of the current logged-in user
             List<Friend> friendList = _context.Friends.Where(x => x.ContactID == contact.ContactId).ToList();
 
-            if (isAlreadyAFriend(contact.ContactId, contactFriend, friendList))
+            //check if the current logged-on user has the person already added as a friend
+            if (IsAlreadyAFriend(contact.ContactId, contactFriend, friendList))
             {
-                return RedirectToAction("FriendList", "Friends");
+                ViewData.ModelState.AddModelError("CurrentFriend", "You have already added them to the list");
+                return RedirectToAction("FriendList", "Friends", new { contactId = contact.ContactId });
             }
 
+            //if the person's not on the list, initialize a friend object
+            Friend friend = new Friend
+            {
+                ContactID = contact.ContactId,
+                FriendContactID = contactFriend.ContactId
+            };
+        
+            //add them into the db and save changes
+            _context.Friends.Add(friend);
+            _context.SaveChanges();
 
+            //redirect them to the list with the friend added 
+            return RedirectToAction("FriendList", "Friends", new { contactId = contact.ContactId });
 
-
-
-
-
-
-
-
-
-
-
-
-            return View(_context.Friends.ToList());
         }
 
-        public ActionResult FriendList(ViewContactFriendList model)
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult FriendList(int contactId)
         {
-            return RedirectToAction()
+            //Find the list of friends using the contactId
+            List<Friend> friendList = _context.Friends.Where(x => x.ContactID == contactId).ToList();
+
+            //initializing list of ViewModel
+            List<ViewFriendsViewModel> model = new List<ViewFriendsViewModel>();
+
+            //assigning each value from the list to the ViewModel
+            foreach (var friend in friendList)
+            {
+                model.Add(new ViewFriendsViewModel
+                {
+                    FriendId = friend.FriendID,
+                    ContactId = contactId,
+                    ContactFriendId = friend.FriendContactID,
+                    FriendName = _context.Contacts.Find(friend.ContactID).Username,
+                    FriendEmail = _context.Contacts.Find(friend.ContactID).Email,
+                    FriendNumber = _context.Contacts.Find(friend.ContactID).PhoneNumber
+                });
+            }
+
+            return View(model);
+
         }
 
-        public bool isAlreadyAFriend(int contactId, Contact friend, List<Friend> FriendList)
+        public bool IsAlreadyAFriend(int contactId, Contact friend, List<Friend> friendList)
         { 
 
             Contact contact = _context.Contacts.Find(contactId);
+            if (contact == null) return false;
 
-            foreach (var person in FriendList)
+
+            foreach (var person in friendList)
             {
                 if (person.FriendID == friend.ContactId && person.ContactID == contact.ContactId)
                 {
@@ -74,102 +113,6 @@ namespace PickUpSports.Controllers
 
             return false;
 
-
-        }
-
-        // GET: Friends/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Friend friend = _context.Friends.Find(id);
-            if (friend == null)
-            {
-                return HttpNotFound();
-            }
-            return View(friend);
-        }
-
-        // GET: Friends/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Friends/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "FriendID,ContactID,FriendContactID")] Friend friend)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Friends.Add(friend);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(friend);
-        }
-
-        // GET: Friends/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Friend friend = _context.Friends.Find(id);
-            if (friend == null)
-            {
-                return HttpNotFound();
-            }
-            return View(friend);
-        }
-
-        // POST: Friends/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "FriendID,ContactID,FriendContactID")] Friend friend)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Entry(friend).State = EntityState.Modified;
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(friend);
-        }
-
-        // GET: Friends/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Friend friend = _context.Friends.Find(id);
-            if (friend == null)
-            {
-                return HttpNotFound();
-            }
-            return View(friend);
-        }
-
-        // POST: Friends/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Friend friend = _context.Friends.Find(id);
-            _context.Friends.Remove(friend);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

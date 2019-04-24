@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PickUpSports.Models.ViewModel
 {
-    public class ViewContactFriendList
+    public class ViewFriendsViewModel
     {
 
         public int FriendId { get; set; }
