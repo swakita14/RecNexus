@@ -70,10 +70,10 @@ namespace PickUpSports.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult FriendList(int contactId)
+        public ActionResult FriendList(int id)
         {
             //Find the list of friends using the contactId
-            List<Friend> friendList = _context.Friends.Where(x => x.ContactID == contactId).ToList();
+            List<Friend> friendList = _context.Friends.Where(x => x.ContactID == id).ToList();
 
             //initializing list of ViewModel
             List<ViewFriendsViewModel> model = new List<ViewFriendsViewModel>();
@@ -84,11 +84,11 @@ namespace PickUpSports.Controllers
                 model.Add(new ViewFriendsViewModel
                 {
                     FriendId = friend.FriendID,
-                    ContactId = contactId,
+                    ContactId = id,
                     ContactFriendId = friend.FriendContactID,
-                    FriendName = _context.Contacts.Find(friend.ContactID).Username,
-                    FriendEmail = _context.Contacts.Find(friend.ContactID).Email,
-                    FriendNumber = _context.Contacts.Find(friend.ContactID).PhoneNumber
+                    FriendName = _context.Contacts.Find(friend.FriendContactID).Username,
+                    FriendEmail = _context.Contacts.Find(friend.FriendContactID).Email,
+                    FriendNumber = _context.Contacts.Find(friend.FriendContactID).PhoneNumber
                 });
             }
 
