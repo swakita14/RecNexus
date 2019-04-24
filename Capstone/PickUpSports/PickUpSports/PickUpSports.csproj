@@ -493,11 +493,6 @@
     <Content Include="Views\Game\_PlayerList.cshtml" />
     <Content Include="Views\Game\JoinGame.cshtml" />
     <Content Include="Views\Game\EditGame.cshtml" />
-    <Content Include="Views\Friends\Create.cshtml" />
-    <Content Include="Views\Friends\Delete.cshtml" />
-    <Content Include="Views\Friends\Details.cshtml" />
-    <Content Include="Views\Friends\Edit.cshtml" />
-    <Content Include="Views\Friends\Index.cshtml" />
     <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
     <Content Include="Views\TimePreferences\_TimePreferences.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
