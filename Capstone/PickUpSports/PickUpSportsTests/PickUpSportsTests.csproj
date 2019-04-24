@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="ContactServiceTests.cs" />
     <Compile Include="GameControllerTests.cs" />
+    <Compile Include="GmailServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

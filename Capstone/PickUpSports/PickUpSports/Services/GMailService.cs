@@ -6,15 +6,15 @@ using System.Net.Mail;
 using System.Web;
 using PickUpSports.Interface;
 
-namespace PickUpSports.Models.Extensions
+namespace PickUpSports.Services
 {
-    public class GMailer : IGMailer
+    public class GMailService : IGMailService
     {
         private readonly SmtpClient _smtpClient;
         private readonly NetworkCredential _networkCredential;
         private bool _hasSent;
 
-        public GMailer(SmtpClient smtpClient, NetworkCredential networkCredential)
+        public GMailService(SmtpClient smtpClient, NetworkCredential networkCredential)
         {
             _smtpClient = smtpClient;
             _networkCredential = networkCredential;
