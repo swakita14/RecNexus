@@ -300,6 +300,7 @@
     <Compile Include="Models\ChatHub\ChatHub.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\FriendsController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -381,6 +382,7 @@
     <Compile Include="Models\ViewModel\ContactController\TimePreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\SearchVenueViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\VenueViewModel.cs" />
+    <Compile Include="Models\ViewModel\ViewFriendsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContactService.cs" />
     <Compile Include="Services\VenueService.cs" />
@@ -491,10 +493,16 @@
     <Content Include="Views\Game\_PlayerList.cshtml" />
     <Content Include="Views\Game\JoinGame.cshtml" />
     <Content Include="Views\Game\EditGame.cshtml" />
+    <Content Include="Views\Friends\Create.cshtml" />
+    <Content Include="Views\Friends\Delete.cshtml" />
+    <Content Include="Views\Friends\Details.cshtml" />
+    <Content Include="Views\Friends\Edit.cshtml" />
+    <Content Include="Views\Friends\Index.cshtml" />
     <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
     <Content Include="Views\TimePreferences\_TimePreferences.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
     <Content Include="Views\Contact\Profile.cshtml" />
+    <Content Include="Views\Friends\FriendList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
