@@ -69,7 +69,7 @@ namespace PickUpSports
             // Register services
             builder.RegisterType<VenueService>().As<IVenueService>();
             builder.RegisterType<ContactService>().As<IContactService>();
-            builder.RegisterType<GMailer>().As<IGMailer>();
+            builder.RegisterType<GMailService>().As<IGMailService>();
 
             // Register repositories
             builder.RegisterType<ContactRepository>().As<IContactRepository>();

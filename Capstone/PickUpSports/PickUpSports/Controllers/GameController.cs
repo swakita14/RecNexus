@@ -24,14 +24,14 @@ namespace PickUpSports.Controllers
     {
         private readonly PickUpContext _context;
         private readonly IContactService _contactService;
-        private readonly IGMailer _gMailer;
+        private readonly IGMailService _gMailer;
 
         public GameController(PickUpContext context)
         {
             _context = context;
         }
 
-        public GameController(PickUpContext context, IContactService contactService, IGMailer gMailer)
+        public GameController(PickUpContext context, IContactService contactService, IGMailService gMailer)
         {
             _context = context;
             _contactService = contactService;
