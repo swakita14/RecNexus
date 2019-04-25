@@ -300,6 +300,7 @@
     <Compile Include="Models\ChatHub\ChatHub.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\FriendsController.cs" />
     <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -352,6 +353,7 @@
     <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\Extensions\Extensions.cs" />
     <Compile Include="Models\Extensions\GMailer.cs" />
+    <Compile Include="Interface\IGMailer.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceSearchResponse.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -360,25 +362,27 @@
     <Compile Include="Models\DatabaseModels\TimePreference.cs" />
     <Compile Include="Models\DatabaseModels\Venue.cs" />
     <Compile Include="Models\ViewModel\BusinessHoursViewModel.cs" />
-    <Compile Include="Models\ViewModel\CreateContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\CreateContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\ProfileViewModel.cs" />
     <Compile Include="Models\ViewModel\CreatePickUpViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
     <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
-    <Compile Include="Models\ViewModel\CreateSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\CreateSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\EditGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\GameListViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\PickUpGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\ViewGameViewModel.cs" />
-    <Compile Include="Models\ViewModel\SelectSportPreferenceViewModel.cs" />
-    <Compile Include="Models\ViewModel\SportPreferenceViewModel.cs" />
-    <Compile Include="Models\ViewModel\EditContactViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\SelectSportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\SportPreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\EditContactViewModel.cs" />
     <Compile Include="Models\ViewModel\ManageUserViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewViewModel.cs" />
-    <Compile Include="Models\ViewModel\CreateTimePreferenceViewModel.cs" />
-    <Compile Include="Models\ViewModel\TimePreferenceListViewModel.cs" />
-    <Compile Include="Models\ViewModel\TimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\CreateTimePreferenceViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\TimePreferenceListViewModel.cs" />
+    <Compile Include="Models\ViewModel\ContactController\TimePreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\SearchVenueViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\VenueViewModel.cs" />
+    <Compile Include="Models\ViewModel\ViewFriendsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContactService.cs" />
     <Compile Include="Services\VenueService.cs" />
@@ -427,6 +431,8 @@
     <Content Include="Scripts\pickUpGameView.js" />
     <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
+    <Content Include="Scripts\Tests\qunit-2.9.2.css" />
+    <Content Include="Scripts\Tests\qunit-2.9.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -490,6 +496,8 @@
     <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
     <Content Include="Views\TimePreferences\_TimePreferences.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Contact\Profile.cshtml" />
+    <Content Include="Views\Friends\FriendList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

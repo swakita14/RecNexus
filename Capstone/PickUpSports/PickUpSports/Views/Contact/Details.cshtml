@@ -23,7 +23,7 @@
                 <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
                 <p>
                     <center>
-                        @Html.ActionLink("Edit Information", "Edit", new { id = Model.ContactId }) | @Html.ActionLink("Change Password", "ChangePassword", "Manage") | <a href="#" data-toggle="modal" data-target="#confirm">Delete Account</a>
+                        @Html.ActionLink("Edit Information", "Edit", new { id = Model.ContactId }) | @Html.ActionLink("Change Password", "ChangePassword", "Manage") | <a href="#" data-toggle="modal" data-target="#confirm">Delete Account</a> |  @Html.ActionLink("View Friends", "../Friends/FriendList", new { id = Model.ContactId })
                     </center>
                 </p>
 

@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.ContactController;
 
 namespace PickUpSports.Controllers
 {
@@ -140,6 +141,18 @@ namespace PickUpSports.Controllers
         public ActionResult Delete(EditContactViewModel model)
         {
             return RedirectToAction("RemoveAccount", "Account", new { id = model.ContactId});
+        }
+
+        /**
+         * Endpoint that routes to public profile view. Should take in a Contact ID 
+         */
+        [HttpGet]
+        public ActionResult Profile(int id)
+        {
+            var model = new ProfileViewModel();
+            var contact = _contactService.GetContactById(id);
+            model.Username = contact.Username;
+            return View(model);
         }
 
         public ActionResult GetSportPreferences(int contactId)

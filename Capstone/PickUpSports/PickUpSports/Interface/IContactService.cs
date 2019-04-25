@@ -9,6 +9,8 @@ namespace PickUpSports.Interface
 
         Contact GetContactById(int id);
 
+        Contact GetContactByUsername(string username);
+
         bool UsernameIsTaken(string username);
 
         Contact CreateContact(Contact contact);
@@ -22,5 +24,6 @@ namespace PickUpSports.Interface
         List<TimePreference> GetTimePreferences(int contactId);
 
         List<PickUpGame> GetPickUpGameListByGameId(int gameId);
+
     }
 }

@@ -24,16 +24,18 @@ namespace PickUpSports.Controllers
     {
         private readonly PickUpContext _context;
         private readonly IContactService _contactService;
+        private readonly IGMailer _gMailer;
 
         public GameController(PickUpContext context)
         {
             _context = context;
         }
 
-        public GameController(PickUpContext context, IContactService contactService)
+        public GameController(PickUpContext context, IContactService contactService, IGMailer gMailer)
         {
             _context = context;
             _contactService = contactService;
+            _gMailer = gMailer;
         }
 
         /**
@@ -324,34 +326,27 @@ namespace PickUpSports.Controllers
 
         public void SendMessage(Game game, int playerId, string body)
         {
-            //Send notification to the creator when other users out of the game 
-            GMailer.GMailUsername = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"] + "@gmail.com";
-            GMailer.GMailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
-
-            //Initialize the Gmailer Class
-            GMailer mailer = new GMailer();
+            //Initializing Message Details 
+            string sendingToEmail = "";
+            string messageContent = "";
+            int playerCount = _contactService.GetPickUpGameListByGameId(game.GameId).Count();
 
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
-                //emailing to the creator
-                mailer.ToEmail = _contactService.GetContactById(game.ContactId).Email;
-                int playerCount = _contactService.GetPickUpGameListByGameId(game.GameId).Count(); 
-                mailer.Body = body + "The current number of players on this game is: " + playerCount;
+                sendingToEmail = _contactService.GetContactById(game.ContactId).Email;
+                messageContent = body + "The current number of players on this game is: " + playerCount;
+
             }
             else
             {
                 //emailing to the players on the game list
-                mailer.ToEmail = _contactService.GetContactById(playerId).Email;
-                mailer.Body = body;
+               sendingToEmail = _contactService.GetContactById(playerId).Email;
+               messageContent = body;
             }
 
-            //Add the following information to the Message
-            mailer.Subject = "Change in Your Game Information";
-            mailer.IsHtml = true;
-
-            //Send Message 
-            mailer.Send();
+            //Send the Message
+            _gMailer.Send(messageContent, sendingToEmail);
         }
 
         /***
