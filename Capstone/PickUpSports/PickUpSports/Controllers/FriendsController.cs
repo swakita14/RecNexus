@@ -20,6 +20,11 @@ namespace PickUpSports.Controllers
         private readonly PickUpContext _context;
         private readonly IContactService _contactService;
 
+        public FriendsController(PickUpContext context)
+        {
+            _context = context;
+        }
+
         public FriendsController(PickUpContext context, IContactService contactService)
         {
             _context = context;
@@ -99,13 +104,13 @@ namespace PickUpSports.Controllers
         public bool IsAlreadyAFriend(int contactId, Contact friend, List<Friend> friendList)
         { 
 
-            Contact contact = _context.Contacts.Find(contactId);
-            if (contact == null) return false;
+            
+            if (friend == null) return false;
 
 
             foreach (var person in friendList)
             {
-                if (person.FriendID == friend.ContactId && person.ContactID == contact.ContactId)
+                if (person.FriendContactID == friend.ContactId && person.ContactID == contactId)
                 {
                     return true;
                 }
