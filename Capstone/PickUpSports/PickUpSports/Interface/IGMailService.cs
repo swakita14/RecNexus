@@ -2,7 +2,7 @@
 
 namespace PickUpSports.Interface
 {
-    public interface IGMailer
+    public interface IGMailService
     {
         bool Send(string body, string toEmailAddress);
 

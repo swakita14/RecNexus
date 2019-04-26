@@ -45,6 +45,11 @@ namespace PickUpSports.Services
             return true;
         }
 
+        public Contact GetContactByUsername(string username)
+        {
+            return _contactRepository.GetContactByUsername(username);
+        }
+
         public Contact CreateContact(Contact contact)
         {
             return _contactRepository.CreateContact(contact);
@@ -116,5 +121,7 @@ namespace PickUpSports.Services
             var results = _pickUpGameRepository.GetPickUpGameListByGameId(gameId);
             return results;
         }
+
+
     }
 }
