@@ -1,7 +1,7 @@
 ﻿@model PickUpSports.Models.ViewModel.ContactController.SportPreferenceViewModel
 
 @Html.HiddenFor(x => x.ContactId)
-@if (Model != null)
+@if (Model.SportName != null && Model.SportName.Count > 0) 
 {
     <ul class="list-group">
         @foreach (var sport in Model.SportName)
@@ -13,8 +13,17 @@
 }
 else
 {
-    <h4>You do not have any sport preferences set yet.</h4>
+    if (Model.IsPublicProfileView)
+    {
+        <h4>This user doesn't have any sport preferences set yet.</h4>
+    }
+    else
+    {
+        <h4>You do not have any sport preferences set yet.</h4>
+    }
 }
 
-
- <center>@Html.ActionLink("Edit", "ModifySportPreferences", "SportPreferences")</center>
+@if (!Model.IsPublicProfileView)
+{
+    <center>@Html.ActionLink("Edit", "ModifySportPreferences", "SportPreferences")</center>
+}

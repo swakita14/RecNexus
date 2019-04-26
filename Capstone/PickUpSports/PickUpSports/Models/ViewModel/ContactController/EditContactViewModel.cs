@@ -42,5 +42,7 @@ namespace PickUpSports.Models.ViewModel.ContactController
         [Required]
         [DisplayName("Zip Code")]
         public string ZipCode { get; set; }
+
+        public bool HasPublicProfile { get; set; }
     }
 }

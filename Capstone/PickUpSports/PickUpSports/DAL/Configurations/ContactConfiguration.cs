@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity.ModelConfiguration;
-using PickUpSports.Models;
 using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.DAL.Configurations
@@ -53,10 +52,10 @@ namespace PickUpSports.DAL.Configurations
                 .IsOptional();
 
             Property(x => x.Address2)
-               .HasColumnName("Address2")
-               .HasColumnType("nvarchar")
-               .HasMaxLength(256)
-               .IsOptional();
+                .HasColumnName("Address2")
+                .HasColumnType("nvarchar")
+                .HasMaxLength(256)
+                .IsOptional();
 
             Property(x => x.City)
                 .HasColumnName("City")
@@ -65,17 +64,21 @@ namespace PickUpSports.DAL.Configurations
                 .IsOptional();
 
             Property(x => x.State)
-               .HasColumnName("State")
-               .HasColumnType("nvarchar")
-               .HasMaxLength(256)
-               .IsOptional();
+                .HasColumnName("State")
+                .HasColumnType("nvarchar")
+                .HasMaxLength(256)
+                .IsOptional();
 
             Property(x => x.ZipCode)
-              .HasColumnName("ZipCode")
-              .HasColumnType("nvarchar")
-              .HasMaxLength(256)
-              .IsOptional();
-        }
+                .HasColumnName("ZipCode")
+                .HasColumnType("nvarchar")
+                .HasMaxLength(256)
+                .IsOptional();
 
+            Property(x => x.HasPublicProfile)
+                .HasColumnName("HasPublicProfile")
+                .HasColumnType("bit")
+                .IsOptional();
+        }
     }
 }
