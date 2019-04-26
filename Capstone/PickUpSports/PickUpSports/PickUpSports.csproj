@@ -295,6 +295,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="DAL\Repositories\GameRepository.cs" />
+    <Compile Include="Interface\IGameService.cs" />
+    <Compile Include="Interface\Repositories\IGameRepository.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
     <Compile Include="Models\ChatHub\ChatHub.cs" />
@@ -352,6 +355,7 @@
     <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\Extensions\Extensions.cs" />
+    <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\GMailService.cs" />
     <Compile Include="Interface\IGMailService.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />

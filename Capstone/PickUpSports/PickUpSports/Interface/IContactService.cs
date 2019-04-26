@@ -19,11 +19,8 @@ namespace PickUpSports.Interface
 
         void DeleteUser(Contact contact);
 
-        List<string> GetSportPreferences(int contactId);
+        List<string> GetUserSportPreferences(int contactId);
 
-        List<TimePreference> GetTimePreferences(int contactId);
-
-        List<PickUpGame> GetPickUpGameListByGameId(int gameId);
-
+        List<TimePreference> GetUserTimePreferences(int contactId);
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model PickUpSports.Models.ViewModel.ContactController.SportPreferenceViewModel
 
 @Html.HiddenFor(x => x.ContactId)
-@if (Model.SportName.Count > 0)
+@if (Model != null)
 {
     <ul class="list-group">
         @foreach (var sport in Model.SportName)

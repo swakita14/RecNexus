@@ -5,29 +5,38 @@
 }
 
 <h4 id="warning">@ViewBag.ErrorMsg</h4>
-
-<table class="table rwd-table" id="playerTable">
-    <tr>
-        <th>@Html.DisplayName("Username:")</th>
-        <th>@Html.DisplayName("Email:")</th>
-        <th>@Html.DisplayName("Phone Number:")</th>
-    </tr>
-
-
-    @foreach (var player in Model)
-    {
-        @Html.HiddenFor(model => player.GameId)
-        @Html.HiddenFor(model => player.PickUpGameId)
-
+@if (Model == null)
+{
+<center>
+    <h4>No players have joined this game yet.</h4>
+</center>
+}
+else
+{
+    <table class="table rwd-table" id="playerTable">
         <tr>
-            <td>@Html.DisplayFor(model => player.Username)</td>
-            <td><a href="mailto:@Html.DisplayFor(model => player.Email)">@Html.DisplayFor(model => player.Email)</a></td>
-            <td>@Html.DisplayFor(model => player.PhoneNumber)</td>
+            <th>@Html.DisplayName("Username:")</th>
+            <th>@Html.DisplayName("Email:")</th>
+            <th>@Html.DisplayName("Phone Number:")</th>
         </tr>
-    }
 
 
-</table>
+        @foreach (var player in Model)
+        {
+            @Html.HiddenFor(model => player.GameId)
+            @Html.HiddenFor(model => player.PickUpGameId)
+
+            <tr>
+                <td>@Html.DisplayFor(model => player.Username)</td>
+                <td><a href="mailto:@Html.DisplayFor(model => player.Email)">@Html.DisplayFor(model => player.Email)</a></td>
+                <td>@Html.DisplayFor(model => player.PhoneNumber)</td>
+            </tr>
+        }
+
+
+    </table>
+}
+
 
 
 
