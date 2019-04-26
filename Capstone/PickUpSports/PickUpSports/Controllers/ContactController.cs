@@ -156,26 +156,31 @@ namespace PickUpSports.Controllers
         {
             var model = new ProfileViewModel();
             var contact = _contactService.GetContactById(id);
+            if (contact == null) throw new ArgumentNullException($"Contact ID {id} does not exist.");
+
             model.Username = contact.Username;
+            model.ContactId = contact.ContactId;
+            model.UserAllowsPublicProfile = contact.HasPublicProfile;
             return View(model);
         }
 
-        public ActionResult GetSportPreferences(int contactId)
+        public ActionResult GetSportPreferences(int contactId, bool isPublicProfileView)
         {
             var model = new SportPreferenceViewModel
             {
                 ContactId = contactId
             };
 
+            model.IsPublicProfileView = isPublicProfileView;
+
             var results = _contactService.GetUserSportPreferences(contactId);
-            if (results == null) return PartialView("../SportPreferences/_SportPreferences");
+            if (results == null) return PartialView("../SportPreferences/_SportPreferences", model);
 
             model.SportName = results;
-
             return PartialView("../SportPreferences/_SportPreferences", model);
         }
 
-        public ActionResult GetTimePreferences(int contactId)
+        public ActionResult GetTimePreferences(int contactId, bool isPublicProfileView)
         {
             var model = new TimePreferenceListViewModel
             {
@@ -183,8 +188,10 @@ namespace PickUpSports.Controllers
                 TimePreferences = new List<TimePreferenceViewModel>()           
             };
 
+            model.IsPublicProfileView = isPublicProfileView;
+
             var timePreferences = _contactService.GetUserTimePreferences(contactId);
-            if (timePreferences == null) return PartialView("../TimePreferences/_TimePreferences");
+            if (timePreferences == null) return PartialView("../TimePreferences/_TimePreferences", model);
 
             foreach (var timePreference in timePreferences)
             {
