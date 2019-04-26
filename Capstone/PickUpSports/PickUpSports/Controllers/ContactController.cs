@@ -47,19 +47,23 @@ namespace PickUpSports.Controllers
         public ActionResult Create(CreateContactViewModel model)
         {
             ViewBag.Error = "";
-            if (ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.States = PopulateStatesDropdown();
+                return View(model);
+            }
 
             //create user 
             string email = User.Identity.GetUserName();
             Debug.Write(email);
 
-            Contact newContact = new Contact()
+            Contact newContact = new Contact
             {
                 ContactId = model.ContactId,
                 Username = model.Username,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email = User.Identity.GetUserName(),
+                Email = email,
                 PhoneNumber = model.PhoneNumber,
                 Address1 = model.Address1,
                 Address2 = model.Address2,
@@ -70,7 +74,8 @@ namespace PickUpSports.Controllers
 
             if (_contactService.UsernameIsTaken(model.Username))
             {
-                ViewBag.Message = "Username Already Taken";
+                ModelState.AddModelError("Username", "Username already taken");
+                ViewBag.States = PopulateStatesDropdown();
                 return View(model);
             }
 
@@ -162,7 +167,9 @@ namespace PickUpSports.Controllers
                 ContactId = contactId
             };
 
-            var results = _contactService.GetSportPreferences(contactId);
+            var results = _contactService.GetUserSportPreferences(contactId);
+            if (results == null) return PartialView("../SportPreferences/_SportPreferences");
+
             model.SportName = results;
 
             return PartialView("../SportPreferences/_SportPreferences", model);
@@ -176,7 +183,9 @@ namespace PickUpSports.Controllers
                 TimePreferences = new List<TimePreferenceViewModel>()           
             };
 
-            var timePreferences = _contactService.GetTimePreferences(contactId);
+            var timePreferences = _contactService.GetUserTimePreferences(contactId);
+            if (timePreferences == null) return PartialView("../TimePreferences/_TimePreferences");
+
             foreach (var timePreference in timePreferences)
             {
                 model.TimePreferences.Add(new TimePreferenceViewModel

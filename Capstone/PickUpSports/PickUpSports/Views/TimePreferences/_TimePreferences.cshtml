@@ -1,7 +1,7 @@
 ﻿@model PickUpSports.Models.ViewModel.ContactController.TimePreferenceListViewModel
 
 @Html.HiddenFor(x => x.ContactId)
-@if (Model.TimePreferences.Count > 0)
+@if (Model != null)
 {
     <ul class="list-group">
         @foreach (var timePreference in Model.TimePreferences)

@@ -1,4 +1,4 @@
-﻿using System.CodeDom.Compiler;
+﻿using System;
 using System.Collections.Generic;
 using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
@@ -14,11 +14,14 @@ namespace PickUpSports.Services
         private readonly IReviewRepository _reviewRepository;
         private readonly ISportRepository _sportRepository;
         private readonly IPickUpGameRepository _pickUpGameRepository;
+        private readonly IGameRepository _gameRepository;
 
         public ContactService(IContactRepository contactRepository, 
             ITimePreferenceRepository timePreferenceRepository, 
             ISportPreferenceRepository sportPreferenceRepository, 
-            IReviewRepository reviewRepository, ISportRepository sportRepository, IPickUpGameRepository pickUpGameRepository)
+            IReviewRepository reviewRepository, 
+            ISportRepository sportRepository, 
+            IPickUpGameRepository pickUpGameRepository, IGameRepository gameRepository)
         {
             _contactRepository = contactRepository;
             _timePreferenceRepository = timePreferenceRepository;
@@ -26,6 +29,7 @@ namespace PickUpSports.Services
             _reviewRepository = reviewRepository;
             _sportRepository = sportRepository;
             _pickUpGameRepository = pickUpGameRepository;
+            _gameRepository = gameRepository;
         }
 
         public Contact GetContactByEmail(string email)
@@ -62,7 +66,7 @@ namespace PickUpSports.Services
 
         public void DeleteUser(Contact contact)
         {
-                // Delete any SportPreferences related to Contact
+            // Delete any SportPreferences related to Contact
             var sportPreferences = _sportPreferenceRepository.GetUsersSportPreferencesByContactId(contact.ContactId);
             if (sportPreferences.Count > 0)
             {
@@ -94,13 +98,50 @@ namespace PickUpSports.Services
                 }
             }
 
+            // Delete any pick up games that the user joined but did not create
+            var pickUpGames = _pickUpGameRepository.GetPickUpGameListByContactId(contact.ContactId);
+
+            if (pickUpGames != null)
+            {
+                foreach (var pickUpGame in pickUpGames)
+                {
+                    _pickUpGameRepository.DeletePickUpGame(pickUpGame);
+                }
+            }
+
+            // Find any games that the user created. 
+            // If no users in the games they created then delete them 
+            // If there are joined users then set ContactID to null
+            var games = _gameRepository.GetGameListByContactId(contact.ContactId);
+
+            if (games != null)
+            {
+                foreach (var game in games)
+                {
+                    var players = _pickUpGameRepository.GetPickUpGameListByGameId(game.GameId);
+                    if (players != null)
+                    {
+                        // There are people that joined game, set contact ID to null
+                        game.ContactId = null;
+                        _gameRepository.EditGame(game);
+                    }
+                    else
+                    {
+                        // No users, delete game
+                        _gameRepository.DeleteGame(game);
+                    }
+                }
+            }
+
             // Remove from Contact table
             _contactRepository.DeleteContact(contact);
         }
 
-        public List<string> GetSportPreferences(int contactId)
+        public List<string> GetUserSportPreferences(int contactId)
         {
             var sportPreferences = _sportPreferenceRepository.GetUsersSportPreferencesByContactId(contactId);
+            if (sportPreferences.Count == 0) return null;
+
             var results = new List<string>();
             foreach (var sportPreference in sportPreferences)
             {
@@ -110,18 +151,12 @@ namespace PickUpSports.Services
             return results;
         }
 
-        public List<TimePreference> GetTimePreferences(int contactId)
+        public List<TimePreference> GetUserTimePreferences(int contactId)
         {
             var results = _timePreferenceRepository.GetUsersTimePreferencesByContactId(contactId);
+            if (results.Count == 0) return null;
+
             return results;
         }
-
-        public List<PickUpGame> GetPickUpGameListByGameId(int gameId)
-        {
-            var results = _pickUpGameRepository.GetPickUpGameListByGameId(gameId);
-            return results;
-        }
-
-
     }
 }

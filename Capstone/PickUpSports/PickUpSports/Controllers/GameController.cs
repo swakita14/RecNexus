@@ -5,15 +5,12 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Net.Mail;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Interface;
-using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
-using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
 using DayOfWeek = System.DayOfWeek;
@@ -25,17 +22,15 @@ namespace PickUpSports.Controllers
         private readonly PickUpContext _context;
         private readonly IContactService _contactService;
         private readonly IGMailService _gMailer;
+        private readonly IGameService _gameService;
 
-        public GameController(PickUpContext context)
-        {
-            _context = context;
-        }
 
-        public GameController(PickUpContext context, IContactService contactService, IGMailService gMailer)
+        public GameController(PickUpContext context, IContactService contactService, IGMailService gMailer, IGameService gameService)
         {
             _context = context;
             _contactService = contactService;
             _gMailer = gMailer;
+            _gameService = gameService;
         }
 
         /**
@@ -155,15 +150,17 @@ namespace PickUpSports.Controllers
             List<GameListViewModel> model = new List<GameListViewModel>();
             foreach (var game in games)
             {
-                model.Add(new GameListViewModel
-                {
-                    GameId = game.GameId,
-                    ContactName = _context.Contacts.Find(game.ContactId).Username,
-                    Sport = _context.Sports.Find(game.SportId).SportName,
-                    Venue = _context.Venues.Find(game.VenueId).Name,
-                    StartDate = game.StartTime.ToString(),
-                    EndDate = game.EndTime.ToString()
-                });
+                var gameViewModel = new GameListViewModel();
+                gameViewModel.GameId = game.GameId;
+                gameViewModel.Sport = _context.Sports.Find(game.SportId).SportName;
+                gameViewModel.Venue = _context.Venues.Find(game.VenueId).Name;
+                gameViewModel.StartDate = game.StartTime.ToString();
+                gameViewModel.EndDate = game.EndTime.ToString();
+
+                if (game.ContactId == null) gameViewModel.ContactName = "- User no longer exists -";
+                else gameViewModel.ContactName = _contactService.GetContactById((int) game.ContactId).Username;
+
+                model.Add(gameViewModel);
             }
 
             return View(model);
@@ -225,7 +222,7 @@ namespace PickUpSports.Controllers
             string body = "";
 
             //Find all the players that are currently signed up for the game
-            List<PickUpGame> checkGames = _contactService.GetPickUpGameListByGameId(model.GameId);
+            List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
 
             //finding game
             Game game = _context.Games.Find(model.GameId);
@@ -318,7 +315,7 @@ namespace PickUpSports.Controllers
 
             _context.SaveChanges();
 
-            SendMessage(game, game.ContactId, body);
+            SendMessage(game, (int) game.ContactId, body);
 
             //redirect to the gamedetails page so that they could see that they are signed on
             return RedirectToAction("GameDetails", new { id = model.GameId });
@@ -329,12 +326,12 @@ namespace PickUpSports.Controllers
             //Initializing Message Details 
             string sendingToEmail = "";
             string messageContent = "";
-            int playerCount = _contactService.GetPickUpGameListByGameId(game.GameId).Count();
+            int playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
 
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
-                sendingToEmail = _contactService.GetContactById(game.ContactId).Email;
+                sendingToEmail = _contactService.GetContactById((int) game.ContactId).Email;
                 messageContent = body + "The current number of players on this game is: " + playerCount;
 
             }
@@ -510,9 +507,11 @@ namespace PickUpSports.Controllers
 
         public PartialViewResult PlayerList(int gameId)
         {
-            List<PickUpGame> playerList = _contactService.GetPickUpGameListByGameId(gameId);
+            List<PickUpGame> playerList = _gameService.GetPickUpGameListByGameId(gameId);
 
             List<PickUpGameViewModel> model = new List<PickUpGameViewModel>();
+
+            if (playerList == null) return PartialView("_PlayerList", null);
 
             foreach (var player in playerList)
             {
@@ -561,7 +560,7 @@ namespace PickUpSports.Controllers
             EditGameViewModel model = new EditGameViewModel()
             { 
                 GameId = id,
-                ContactId = game.ContactId,   
+                ContactId = (int) game.ContactId,   
                 Sport = _context.Sports.Find(game.SportId).SportName,
                 Status = _context.GameStatuses.Find(game.GameStatusId).Status,
                 Venue = _context.Venues.Find(game.VenueId).Name,
@@ -660,7 +659,7 @@ namespace PickUpSports.Controllers
                                                                                      + "; Sport: " + _context.Sports.First(x => x.SportID == existingGame.SportId).SportName
                                                                                      + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
 
-                List<PickUpGame> pickUpGameList = _contactService.GetPickUpGameListByGameId(existingGame.GameId);
+                List<PickUpGame> pickUpGameList = _gameService.GetPickUpGameListByGameId(existingGame.GameId);
                 foreach (var player in pickUpGameList)
                 {
                     SendMessage(existingGame, player.ContactId, body);
