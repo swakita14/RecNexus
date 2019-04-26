@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 

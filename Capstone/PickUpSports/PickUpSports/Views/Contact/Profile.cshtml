@@ -8,3 +8,34 @@
         </div>
     </div>
 </div>
+
+@if (Model.UserAllowsPublicProfile)
+{
+    <center>
+        <div class="container" style="padding-top: 30px">
+            <div class="row">
+                <div class="col-md-6">
+                    <center><b>@Model.Username's Sport Preferences</b></center>
+                    <br />
+                    @{
+                        Html.RenderAction("GetSportPreferences", new { contactId = Model.ContactId, isPublicProfileView = true });
+                    }
+                </div>
+
+                <div class="col-md-6">
+                    <center><b>@Model.Username's Time Preferences</b></center>
+                    <br />
+                    @{
+                        Html.RenderAction("GetTimePreferences", new { contactId = Model.ContactId, isPublicProfileView = true });
+                    }
+                </div>
+            </div>
+        </div>
+    </center>
+}
+else
+{
+    <center>
+        Unfortunately this user does not have a public profile.
+    </center>
+}

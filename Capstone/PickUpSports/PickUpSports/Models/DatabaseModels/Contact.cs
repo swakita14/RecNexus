@@ -23,5 +23,7 @@ namespace PickUpSports.Models.DatabaseModels
         public string State { get; set; }
 
         public string ZipCode { get; set; }
+
+        public bool HasPublicProfile { get; set; }
     }
 }

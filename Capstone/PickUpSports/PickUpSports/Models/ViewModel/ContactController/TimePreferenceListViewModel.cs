@@ -7,5 +7,8 @@ namespace PickUpSports.Models.ViewModel.ContactController
         public int ContactId { get; set; }
 
         public List<TimePreferenceViewModel> TimePreferences { get; set; }
+
+        public bool IsPublicProfileView { get; set; }
+
     }
 }

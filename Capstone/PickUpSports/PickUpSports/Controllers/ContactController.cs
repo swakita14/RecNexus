@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.ContactController;
 
 namespace PickUpSports.Controllers
@@ -47,19 +45,23 @@ namespace PickUpSports.Controllers
         public ActionResult Create(CreateContactViewModel model)
         {
             ViewBag.Error = "";
-            if (ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.States = PopulateStatesDropdown();
+                return View(model);
+            }
 
             //create user 
             string email = User.Identity.GetUserName();
             Debug.Write(email);
 
-            Contact newContact = new Contact()
+            Contact newContact = new Contact
             {
                 ContactId = model.ContactId,
                 Username = model.Username,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email = User.Identity.GetUserName(),
+                Email = email,
                 PhoneNumber = model.PhoneNumber,
                 Address1 = model.Address1,
                 Address2 = model.Address2,
@@ -70,7 +72,8 @@ namespace PickUpSports.Controllers
 
             if (_contactService.UsernameIsTaken(model.Username))
             {
-                ViewBag.Message = "Username Already Taken";
+                ModelState.AddModelError("Username", "Username already taken");
+                ViewBag.States = PopulateStatesDropdown();
                 return View(model);
             }
 
@@ -105,7 +108,8 @@ namespace PickUpSports.Controllers
                 Address2 = contact.Address2,
                 City = contact.City,
                 State = contact.State,
-                ZipCode = contact.ZipCode
+                ZipCode = contact.ZipCode,
+                HasPublicProfile = contact.HasPublicProfile
             };
 
             return View(model);
@@ -129,6 +133,7 @@ namespace PickUpSports.Controllers
             existing.City = model.City;
             existing.State = model.State;
             existing.ZipCode = model.ZipCode;
+            existing.HasPublicProfile = model.HasPublicProfile;
 
             _contactService.EditContact(existing);
 
@@ -151,24 +156,31 @@ namespace PickUpSports.Controllers
         {
             var model = new ProfileViewModel();
             var contact = _contactService.GetContactById(id);
+            if (contact == null) throw new ArgumentNullException($"Contact ID {id} does not exist.");
+
             model.Username = contact.Username;
+            model.ContactId = contact.ContactId;
+            model.UserAllowsPublicProfile = contact.HasPublicProfile;
             return View(model);
         }
 
-        public ActionResult GetSportPreferences(int contactId)
+        public ActionResult GetSportPreferences(int contactId, bool isPublicProfileView)
         {
             var model = new SportPreferenceViewModel
             {
                 ContactId = contactId
             };
 
-            var results = _contactService.GetSportPreferences(contactId);
-            model.SportName = results;
+            model.IsPublicProfileView = isPublicProfileView;
 
+            var results = _contactService.GetUserSportPreferences(contactId);
+            if (results == null) return PartialView("../SportPreferences/_SportPreferences", model);
+
+            model.SportName = results;
             return PartialView("../SportPreferences/_SportPreferences", model);
         }
 
-        public ActionResult GetTimePreferences(int contactId)
+        public ActionResult GetTimePreferences(int contactId, bool isPublicProfileView)
         {
             var model = new TimePreferenceListViewModel
             {
@@ -176,7 +188,11 @@ namespace PickUpSports.Controllers
                 TimePreferences = new List<TimePreferenceViewModel>()           
             };
 
-            var timePreferences = _contactService.GetTimePreferences(contactId);
+            model.IsPublicProfileView = isPublicProfileView;
+
+            var timePreferences = _contactService.GetUserTimePreferences(contactId);
+            if (timePreferences == null) return PartialView("../TimePreferences/_TimePreferences", model);
+
             foreach (var timePreference in timePreferences)
             {
                 model.TimePreferences.Add(new TimePreferenceViewModel
