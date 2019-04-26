@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.ContactController;
 
 namespace PickUpSports.Controllers
@@ -110,7 +108,8 @@ namespace PickUpSports.Controllers
                 Address2 = contact.Address2,
                 City = contact.City,
                 State = contact.State,
-                ZipCode = contact.ZipCode
+                ZipCode = contact.ZipCode,
+                HasPublicProfile = contact.HasPublicProfile
             };
 
             return View(model);
@@ -134,6 +133,7 @@ namespace PickUpSports.Controllers
             existing.City = model.City;
             existing.State = model.State;
             existing.ZipCode = model.ZipCode;
+            existing.HasPublicProfile = model.HasPublicProfile;
 
             _contactService.EditContact(existing);
 
