@@ -7,7 +7,7 @@ namespace PickUpSports.Interface
     {
         Contact GetContactByEmail(string email);
 
-        Contact GetContactById(int id);
+        Contact GetContactById(int? id);
 
         Contact GetContactByUsername(string username);
 
