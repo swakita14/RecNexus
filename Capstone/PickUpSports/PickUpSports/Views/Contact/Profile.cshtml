@@ -32,6 +32,30 @@
             </div>
         </div>
     </center>
+
+    <hr/>
+
+    <center>
+        <div class="container" style="padding-top: 30px">
+            <div class="row">
+                <div class="col-md-6">
+                    <center><b>Games Started by @Model.Username</b></center>
+                    <br />
+                    @{
+                        Html.RenderAction("GetGamesStartedByUser", new { contactId = Model.ContactId, isPublicProfileView = true });
+                    }
+                </div>
+
+                <div class="col-md-6">
+                    <center><b>Games @Model.Username Joined</b></center>
+                    <br />
+                    @{
+                        Html.RenderAction("GetGamesUserJoined", new { contactId = Model.ContactId, isPublicProfileView = true });
+                    }
+                </div>
+            </div>
+        </div>
+    </center>
 }
 else
 {

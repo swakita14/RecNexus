@@ -16,12 +16,14 @@ namespace PickUpSports.DAL.Repositories
             _context = context;
         }
 
-        public List<Game> GetGameListByContactId(int contactId)
+        public List<Game> GetAllGames()
         {
-            List<Game> gameList = _context.Games.Where(x => x.ContactId == contactId).ToList();
-            if (gameList.Count <= 0) return null;
+            return _context.Games.ToList();
+        }
 
-            return gameList;
+        public Game GetGameById(int id)
+        {
+            return _context.Games.Find(id);
         }
 
         public void EditGame(Game game)

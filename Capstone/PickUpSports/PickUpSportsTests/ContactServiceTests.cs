@@ -85,7 +85,7 @@ namespace PickUpSportsTests
                     new SportPreference {ContactID = 1, SportID = 1, SportPrefID = 1}
                 });
 
-            _sportRepositoryMock.Setup(x => x.GetSportNameById(1)).Returns(It.IsAny<string>());
+            _sportRepositoryMock.Setup(x => x.GetSportById(1)).Returns(new Sport{SportName = "Hi", SportID = 1});
 
             // Act
             var result = _sut.GetUserSportPreferences(It.IsAny<int>());
@@ -169,7 +169,7 @@ namespace PickUpSportsTests
                 .Returns(new List<Review>());
             _pickUpGameRepositoryMock.Setup(x => x.GetPickUpGameListByContactId(contact.ContactId))
                 .Returns(new List<PickUpGame>());
-            _gameRepositoryMock.Setup(x => x.GetGameListByContactId(contact.ContactId))
+            _gameRepositoryMock.Setup(x => x.GetAllGames())
                 .Returns(new List<Game>());
 
             // Act
@@ -201,7 +201,7 @@ namespace PickUpSportsTests
                 .Returns(new List<PickUpGame>());
 
             // Return a game that has a players
-            _gameRepositoryMock.Setup(x => x.GetGameListByContactId(contact.ContactId))
+            _gameRepositoryMock.Setup(x => x.GetAllGames())
                 .Returns(new List<Game>{new Game{ContactId = 1}});
             _pickUpGameRepositoryMock.Setup(x => x.GetPickUpGameListByGameId(It.IsAny<int>()))
                 .Returns(new List<PickUpGame> {new PickUpGame {ContactId = 2}});

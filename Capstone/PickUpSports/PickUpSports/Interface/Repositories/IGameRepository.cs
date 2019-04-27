@@ -5,7 +5,9 @@ namespace PickUpSports.Interface.Repositories
 {
     public interface IGameRepository
     {
-        List<Game> GetGameListByContactId(int contactId);
+        List<Game> GetAllGames();
+
+        Game GetGameById(int id);
 
         void EditGame(Game game);
 
