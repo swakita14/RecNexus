@@ -10,12 +10,24 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using PickUpSports.Interface;
 using PickUpSports.Models;
+using PickUpSports.Models.Extensions;
 
 namespace PickUpSports
 {
     public class EmailService : IIdentityMessageService
     {
+        private readonly IGMailService _gMailService;
+
+        public EmailService()
+        {
+
+        }
+        public EmailService(IGMailService gMailService)
+        {
+            _gMailService = gMailService;
+        }
         public async Task SendAsync(IdentityMessage message)
         {
             await configSendGridasync(message);
@@ -28,9 +40,6 @@ namespace PickUpSports
 
         void sendMail(IdentityMessage message)
         {
-            string username = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"];
-            string emailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
-
 
             #region formatter
             string text = string.Format("Please click on this link to {0}: {1}", message.Subject, message.Body);
@@ -40,17 +49,12 @@ namespace PickUpSports
             #endregion
 
             MailMessage msg = new MailMessage();
-            msg.From = new MailAddress(username + "@gmail.com");
             msg.To.Add(new MailAddress(message.Destination));
             msg.Subject = message.Subject;
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Plain));
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
 
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
-            NetworkCredential credentials = new NetworkCredential(username, emailPassword);
-            smtpClient.Credentials = credentials;
-            smtpClient.EnableSsl = true;
-            smtpClient.Send(msg);
+            _gMailService.Send(msg);
         }
     }
 
@@ -66,6 +70,7 @@ namespace PickUpSports
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+        private readonly IGMailService _gMailService;
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
@@ -107,6 +112,7 @@ namespace PickUpSports
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
             });
+            //Need to pass in parameters here?
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;

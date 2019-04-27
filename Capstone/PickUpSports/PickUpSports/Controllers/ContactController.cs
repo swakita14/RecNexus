@@ -220,7 +220,7 @@ namespace PickUpSports.Controllers
             model.ContactId = contactId;
 
             var games = _gameService.GetCurrentOrderedGamesByContactId(contactId);
-            if (!games.Any()) return PartialView("../Game/_GamesUserCreated", model);
+            if (games==null) return PartialView("../Game/_GamesUserCreated", model);
 
             model.Games = new List<GameListViewModel>();
 
