@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
@@ -32,12 +33,17 @@ namespace PickUpSports.Services
             return results;
         }
 
-        public List<Game> GetGamesByContactId(int contactId)
+        public List<Game> GetAllGamesByContactId(int contactId)
         {
             var games = _gameRepository.GetAllGames();
-            var results = games.Where(x => x.ContactId == contactId).ToList();
+            if (games == null) return null;
+ 
+            var results = from g in games
+                where g.ContactId.Equals(contactId)
+                select g;
+
             if (!results.Any()) return null;
-            return results;
+            return results.ToList();
         }
 
         public string GetSportNameById(int sportId)
@@ -50,6 +56,21 @@ namespace PickUpSports.Services
         {
             var result = _gameRepository.GetGameById(id);
             return result;
+        }
+
+        public List<Game> GetCurrentOrderedGamesByContactId(int contactId)
+        {
+            var games = _gameRepository.GetAllGames();
+            if (games == null) return null;
+
+            var results = from g in games
+                where g.ContactId == contactId &&
+                      g.EndTime > DateTime.Today.AddDays(-1)
+                      orderby g.StartTime ascending 
+                select g;
+
+            if (!results.Any()) return null;
+            return results.ToList();
         }
     }
 }

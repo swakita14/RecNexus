@@ -9,11 +9,14 @@ namespace PickUpSports.Interface
 
         List<PickUpGame> GetPickUpGamesByContactId(int contactId);
 
-        List<Game> GetGamesByContactId(int contactId);
+        List<Game> GetAllGamesByContactId(int contactId);
 
         string GetSportNameById(int sportId);
 
         Game GetGameById(int id);
+
+        List<Game> GetCurrentOrderedGamesByContactId(int contactId);
+
 
     }
 }

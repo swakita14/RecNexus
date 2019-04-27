@@ -219,14 +219,8 @@ namespace PickUpSports.Controllers
             model.IsPublicProfileView = isPublicProfileView;
             model.ContactId = contactId;
 
-            var games = _gameService.GetGamesByContactId(contactId);
+            var games = _gameService.GetCurrentOrderedGamesByContactId(contactId);
             if (!games.Any()) return PartialView("../Game/_GamesUserCreated", model);
-
-            // Get games that haven't passed
-            games = games.Where(x => x.EndTime > DateTime.Today.AddDays(-1)).ToList();
-
-            // Most recent game at top
-            games = games.OrderBy(x => x.StartTime).ToList();
 
             model.Games = new List<GameListViewModel>();
 
