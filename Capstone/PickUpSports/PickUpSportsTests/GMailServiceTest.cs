@@ -1,14 +1,8 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using Moq;
 using NUnit.Framework;
-using PickUpSports.Interface;
-using PickUpSports.Interface.Repositories;
-using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Extensions;
-using PickUpSports.Services;
 
 namespace PickUpSportsTests
 {

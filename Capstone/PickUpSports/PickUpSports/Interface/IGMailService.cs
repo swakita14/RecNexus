@@ -1,10 +1,14 @@
 ﻿
 
+using System.Net.Mail;
+
 namespace PickUpSports.Interface
 {
     public interface IGMailService
     {
-        bool Send(string body, string toEmailAddress);
+        bool Send(MailMessage message);
+
+        string GetEmailAddress();
 
     }
 }
