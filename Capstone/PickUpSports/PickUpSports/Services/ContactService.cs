@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
@@ -37,7 +38,7 @@ namespace PickUpSports.Services
             return _contactRepository.GetContactByEmail(email);
         }
 
-        public Contact GetContactById(int id)
+        public Contact GetContactById(int? id)
         {
             return _contactRepository.GetContactById(id);
         }
@@ -112,8 +113,8 @@ namespace PickUpSports.Services
             // Find any games that the user created. 
             // If no users in the games they created then delete them 
             // If there are joined users then set ContactID to null
-            var games = _gameRepository.GetGameListByContactId(contact.ContactId);
-
+            var allGames = _gameRepository.GetAllGames();
+            var games = allGames.Where(x => x.ContactId == contact.ContactId);
             if (games != null)
             {
                 foreach (var game in games)
@@ -145,8 +146,8 @@ namespace PickUpSports.Services
             var results = new List<string>();
             foreach (var sportPreference in sportPreferences)
             {
-                var name = _sportRepository.GetSportNameById(sportPreference.SportID);
-                results.Add(name);
+                var sport = _sportRepository.GetSportById(sportPreference.SportID);
+                results.Add(sport.SportName);
             }
             return results;
         }

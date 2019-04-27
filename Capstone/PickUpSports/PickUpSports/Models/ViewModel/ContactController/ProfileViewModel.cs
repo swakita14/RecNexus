@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using PickUpSports.Models.ViewModel.GameController;
-
-namespace PickUpSports.Models.ViewModel.ContactController
+﻿namespace PickUpSports.Models.ViewModel.ContactController
 {
     /**
      * Model for properties that will show on user's public profile
@@ -13,12 +10,5 @@ namespace PickUpSports.Models.ViewModel.ContactController
         public string Username { get; set; }
 
         public bool UserAllowsPublicProfile { get; set; }
-
-        public SportPreferenceViewModel  SportPreferences { get; set; }
-
-        public TimePreferenceListViewModel TimePreferences { get; set; }
-
-        public List<GameListViewModel> Games { get; set; }
-
     }
 }

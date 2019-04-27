@@ -295,11 +295,17 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
     <Compile Include="DAL\Repositories\GameRepository.cs" />
+    <Compile Include="DAL\Repositories\LocationRepository.cs" />
+    <Compile Include="DAL\Repositories\VenueRepository.cs" />
     <Compile Include="Interface\IGameService.cs" />
+    <Compile Include="Interface\Repositories\IBusinessHoursRepository.cs" />
     <Compile Include="Interface\Repositories\IGameRepository.cs" />
+    <Compile Include="Interface\Repositories\ILocationRepository.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
+    <Compile Include="Interface\Repositories\IVenueRepository.cs" />
     <Compile Include="Models\ChatHub\ChatHub.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -355,6 +361,7 @@
     <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\Extensions\Extensions.cs" />
+    <Compile Include="Models\ViewModel\ContactController\GameProfileViewModel.cs" />
     <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\GMailService.cs" />
     <Compile Include="Interface\IGMailService.cs" />
@@ -502,6 +509,8 @@
     <Content Include="Views\Home\Chat.cshtml" />
     <Content Include="Views\Contact\Profile.cshtml" />
     <Content Include="Views\Friends\FriendList.cshtml" />
+    <Content Include="Views\Game\_GamesUserJoined.cshtml" />
+    <Content Include="Views\Game\_GamesUserCreated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

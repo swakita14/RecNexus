@@ -15,6 +15,13 @@ namespace PickUpSports.DAL.Repositories
             _context = context;
         }
 
+        public Review AddReview(Review review)
+        {
+            _context.Reviews.Add(review);
+            _context.SaveChanges();
+            return review;
+        }
+
         public void EditReview(Review review)
         {
             _context.Entry(review).State = EntityState.Modified;

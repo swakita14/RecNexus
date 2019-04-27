@@ -23,7 +23,7 @@
                 <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
                 @if (Model.HasPublicProfile)
                 {
-                    <p>Your profile is <b>public</b></p>
+                    <p>Your profile is <b>@Html.ActionLink("public", "Profile", new {id = Model.ContactId })</b></p>
                 }
                 else
                 {
@@ -56,6 +56,30 @@
                 <br/>
                 @{
                     Html.RenderAction("GetTimePreferences", new {contactId = Model.ContactId, isPublicProfileView = false});
+                }
+            </div>
+        </div>
+    </div>
+</center>
+
+<hr/>
+
+<center>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-6">
+                <center><b>Games You Started</b></center>
+                <br />
+                @{
+                    Html.RenderAction("GetGamesStartedByUser", new { contactId = Model.ContactId, isPublicProfileView = false });
+                }
+            </div>
+
+            <div class="col-md-6">
+                <center><b>Games You Joined</b></center>
+                <br />
+                @{
+                    Html.RenderAction("GetGamesUserJoined", new { contactId = Model.ContactId, isPublicProfileView = false });
                 }
             </div>
         </div>

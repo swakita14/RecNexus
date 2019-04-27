@@ -22,7 +22,7 @@ namespace PickUpSports.DAL.Repositories
             return contact;
         }
 
-        public Contact GetContactById(int id)
+        public Contact GetContactById(int? id)
         {
             Contact contact = _context.Contacts.Find(id);
             if (contact == null) return null;

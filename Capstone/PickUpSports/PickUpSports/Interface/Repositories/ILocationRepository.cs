@@ -2,8 +2,8 @@
 
 namespace PickUpSports.Interface.Repositories
 {
-    public interface ISportRepository
+    public interface ILocationRepository
     {
-        Sport GetSportById(int id);
+        Location AddLocation(Location location);
     }
 }

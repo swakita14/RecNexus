@@ -1,4 +1,5 @@
 ﻿using PickUpSports.Interface.Repositories;
+using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.DAL.Repositories
 {
@@ -11,10 +12,10 @@ namespace PickUpSports.DAL.Repositories
             _context = context;
         }
 
-        public string GetSportNameById(int id)
+        public Sport GetSportById(int id)
         {
             var result = _context.Sports.Find(id);
-            return result.SportName;
+            return result;
         }
     }
 }
