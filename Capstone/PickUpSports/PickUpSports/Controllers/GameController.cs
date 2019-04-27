@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
@@ -354,19 +355,24 @@ namespace PickUpSports.Controllers
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
-                sendingToEmail = _contactService.GetContactById((int) game.ContactId).Email;
+                sendingToEmail = _contactService.GetContactById((int)game.ContactId).Email;
                 messageContent = body + "The current number of players on this game is: " + playerCount;
 
             }
             else
             {
                 //emailing to the players on the game list
-               sendingToEmail = _contactService.GetContactById(playerId).Email;
-               messageContent = body;
+                sendingToEmail = _contactService.GetContactById(playerId).Email;
+                messageContent = body;
             }
 
+            MailMessage mailMessage = new MailMessage(_gMailer.GetEmailAddress(), sendingToEmail)
+            {
+                Body = messageContent
+            };
+
             //Send the Message
-            _gMailer.Send(messageContent, sendingToEmail);
+            _gMailer.Send(mailMessage);
         }
 
         /***

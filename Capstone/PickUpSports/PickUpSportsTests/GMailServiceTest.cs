@@ -21,8 +21,9 @@ namespace PickUpSportsTests
 
         public GMailServiceTests()
         {
-            _networkCredentialsMock = new Mock<NetworkCredential>();
-            _smtpClientMock = new Mock<SmtpClient>();
+            //Before running the test, fill it in with the appsetting secret value
+            _networkCredentialsMock = new Mock<NetworkCredential>("", "");
+            _smtpClientMock = new Mock<SmtpClient>("smtp.gmail.com", 587);
 
             _sut = new GMailService(_smtpClientMock.Object, _networkCredentialsMock.Object);
         }
@@ -30,13 +31,21 @@ namespace PickUpSportsTests
         [Test]
         public void Send_SentMessage_ReturnTrue()
         {
-
-
-            var toEmailAddress = "test@gmail.com";
+            //Arrange - from value needs to be filled in with the email address 
+            var fromEmailAddress = "";
+            var toEmailAddress = "testingEmail@gmail.com";
             var body = "This is a test message";
 
-            var emailHasSent = _sut.Send(body, toEmailAddress);
+            MailMessage testMailMessage = new MailMessage(fromEmailAddress, toEmailAddress)
+            {
+                Body = body
+            };
 
+
+            //Act 
+            var emailHasSent = _sut.Send(testMailMessage);
+
+            //Assert
             Assert.AreEqual(emailHasSent, true);
         }
     }
