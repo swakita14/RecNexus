@@ -16,7 +16,7 @@ namespace PickUpSportsTests
         public GMailServiceTests()
         {
             //Before running the test, fill it in with the appsetting secret value
-            _networkCredentialsMock = new Mock<NetworkCredential>("", "");
+            _networkCredentialsMock = new Mock<NetworkCredential>("username here", "password here");
             _smtpClientMock = new Mock<SmtpClient>("smtp.gmail.com", 587);
 
             _sut = new GMailService(_smtpClientMock.Object, _networkCredentialsMock.Object);
@@ -26,7 +26,7 @@ namespace PickUpSportsTests
         public void Send_SentMessage_ReturnTrue()
         {
             //Arrange - from value needs to be filled in with the email address 
-            var fromEmailAddress = "";
+            var fromEmailAddress = "email here";
             var toEmailAddress = "testingEmail@gmail.com";
             var body = "This is a test message";
 
