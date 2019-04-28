@@ -10,6 +10,7 @@
 	[City]				   NVARCHAR (256)  NULL,
 	[State]                NVARCHAR (256)  NULL,
 	[ZipCode]              NVARCHAR (256)  NULL,
+	[HasPublicProfile]	   BIT			   NULL	
     CONSTRAINT [PK_dbo.Contacts] PRIMARY KEY CLUSTERED ([ContactId] ASC)
 );
 

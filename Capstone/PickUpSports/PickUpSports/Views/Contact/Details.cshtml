@@ -21,6 +21,14 @@
 
                 }
                 <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
+                @if (Model.HasPublicProfile)
+                {
+                    <p>Your profile is <b>@Html.ActionLink("public", "Profile", new {id = Model.ContactId })</b></p>
+                }
+                else
+                {
+                    <p>Your profile is <b>private</b></p>
+                }
                 <p>
                     <center>
                         @Html.ActionLink("Edit Information", "Edit", new { id = Model.ContactId }) | @Html.ActionLink("Change Password", "ChangePassword", "Manage") | <a href="#" data-toggle="modal" data-target="#confirm">Delete Account</a> |  @Html.ActionLink("View Friends", "../Friends/FriendList", new { id = Model.ContactId })
@@ -39,7 +47,7 @@
                 <center><b >Your Sport Preferences</b></center>
                 <br/>
                 @{
-                    Html.RenderAction("GetSportPreferences", new {contactId = Model.ContactId});
+                    Html.RenderAction("GetSportPreferences", new {contactId = Model.ContactId, isPublicProfileView = false });
                 }
             </div>
         
@@ -47,7 +55,31 @@
                 <center><b >Your Time Preferences</b></center>
                 <br/>
                 @{
-                    Html.RenderAction("GetTimePreferences", new {contactId = Model.ContactId});
+                    Html.RenderAction("GetTimePreferences", new {contactId = Model.ContactId, isPublicProfileView = false});
+                }
+            </div>
+        </div>
+    </div>
+</center>
+
+<hr/>
+
+<center>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-6">
+                <center><b>Games You Started</b></center>
+                <br />
+                @{
+                    Html.RenderAction("GetGamesStartedByUser", new { contactId = Model.ContactId, isPublicProfileView = false });
+                }
+            </div>
+
+            <div class="col-md-6">
+                <center><b>Games You Joined</b></center>
+                <br />
+                @{
+                    Html.RenderAction("GetGamesUserJoined", new { contactId = Model.ContactId, isPublicProfileView = false });
                 }
             </div>
         </div>

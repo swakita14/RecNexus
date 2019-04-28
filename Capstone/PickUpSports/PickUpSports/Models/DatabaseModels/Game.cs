@@ -14,7 +14,7 @@ namespace PickUpSports.Models.DatabaseModels
 
         public int SportId { get; set; }
 
-        public int ContactId { get; set; }
+        public int? ContactId { get; set; }
 
         public int GameStatusId { get; set; }
     }
