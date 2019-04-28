@@ -364,6 +364,7 @@
     <Compile Include="Models\Extensions\Extensions.cs" />
     <Compile Include="Services\ChatHub\QueryStringUserIdProvider.cs" />
     <Compile Include="Models\ViewModel\ContactController\GameProfileViewModel.cs" />
+    <Compile Include="Models\ViewModel\FriendInviteViewModel.cs" />
     <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\GMailService.cs" />
     <Compile Include="Interface\IGMailService.cs" />
@@ -518,6 +519,7 @@
     <Content Include="Views\Game\_GamesUserJoined.cshtml" />
     <Content Include="Views\Game\_GamesUserCreated.cshtml" />
     <Content Include="Views\Account\EmailConfirmation.cshtml" />
+    <Content Include="Views\Friends\FriendInvite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
