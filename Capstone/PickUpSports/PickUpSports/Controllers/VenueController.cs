@@ -17,12 +17,14 @@ namespace PickUpSports.Controllers
         private readonly PickUpContext _context;
         private readonly IVenueService _venueService;
         private readonly IContactService _contactService;
+        private readonly IGameService _gameService;
 
-        public VenueController(PickUpContext context, IVenueService venueService, IContactService contactService)
+        public VenueController(PickUpContext context, IVenueService venueService, IContactService contactService, IGameService gameService)
         {
             _context = context;
             _venueService = venueService;
             _contactService = contactService;
+            _gameService = gameService;
         }
         
         /**
@@ -301,7 +303,9 @@ namespace PickUpSports.Controllers
             model.Reviews = tempList.OrderByDescending(r => r.Timestamp).ToList();
 
             // Map Games
-            List<Game> games = _context.Games.Where(x => x.VenueId == id).ToList();
+            var games = _gameService.GetCurrentGamesByVenueId(id);
+            if (games == null) return View(model);
+
             List<GameListViewModel> gameList = new List<GameListViewModel>();
             foreach (var game in games)
             {

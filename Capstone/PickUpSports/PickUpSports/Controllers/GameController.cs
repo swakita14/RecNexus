@@ -659,7 +659,7 @@ namespace PickUpSports.Controllers
             PopulateEditDropDownMethod(existingGame);
 
             //check if the game will happen in one hour
-            if (startDateTime.AddHours(-1) < DateTime.Now)
+            if (!IsThisGameCanCancel(startDateTime))
             {
                 ViewData.ModelState.AddModelError("GameStart", "Sorry, you can only edit the game at least 1 hour long before it starts.");
                 PopulateEditDropDownMethod(existingGame);
@@ -862,6 +862,15 @@ namespace PickUpSports.Controllers
                 _context.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public bool IsThisGameCanCancel(DateTime dateTime)
+        {
+            if (dateTime.AddHours(-1) < DateTime.Now)
+            {
+                return false;
+            }
+            return true;
         }
 
     }
