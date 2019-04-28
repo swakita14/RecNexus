@@ -36,7 +36,7 @@ namespace PickUpSports.Controllers
         [Authorize]
         [HttpPost]
         public ActionResult AddFriend(ProfileViewModel model)
-{
+        {
             //Get the current users email
             string email = User.Identity.GetUserName();
 
@@ -44,7 +44,7 @@ namespace PickUpSports.Controllers
             Contact contact = _contactService.GetContactByEmail(email);
 
             //find the friend
-            Contact contactFriend = _contactService.GetContactByUsername(model.Username);
+            Contact contactFriend = _contactService.GetContactById(model.ContactId);
 
             //find the list of friends of the current logged-in user
             List<Friend> friendList = _context.Friends.Where(x => x.ContactID == contact.ContactId).ToList();
@@ -53,7 +53,7 @@ namespace PickUpSports.Controllers
             if (IsAlreadyAFriend(contact.ContactId, contactFriend, friendList))
             {
                 ViewData.ModelState.AddModelError("CurrentFriend", "You have already added them to the list");
-                return RedirectToAction("FriendList", "Friends", new { contactId = contact.ContactId });
+                return RedirectToAction("FriendList", "Friends", new { id = contact.ContactId });
             }
 
             //if the person's not on the list, initialize a friend object
@@ -68,7 +68,7 @@ namespace PickUpSports.Controllers
             _context.SaveChanges();
 
             //redirect them to the list with the friend added 
-            return RedirectToAction("FriendList", "Friends", new { contactId = contact.ContactId });
+            return RedirectToAction("FriendList", "Friends", new { id = contact.ContactId });
 
         }
 
