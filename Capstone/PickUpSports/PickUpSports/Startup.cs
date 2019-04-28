@@ -11,9 +11,6 @@ namespace PickUpSports
         {
             ConfigureAuth(app);
 
-            
-            GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => new CustomUserIdProvider());
-
             app.MapSignalR();
         }
     }

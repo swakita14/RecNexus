@@ -21,7 +21,7 @@ namespace PickUpSports.DAL
         public DbSet<PickUpGame> PickUpGames { get; set; }
 
         public DbSet<Friend> Friends { get; set; }
-        public DbSet<MessageConnection> MessageConnections { get; set; }
+      
         
         protected override void OnModelCreating(DbModelBuilder builder)
         {
@@ -37,7 +37,7 @@ namespace PickUpSports.DAL
             builder.Configurations.Add(new GameConfiguration());
             builder.Configurations.Add(new PickUpGameConfiguration());
             builder.Configurations.Add(new FriendConfiguration());
-            builder.Configurations.Add(new MessageConnectionConfiguration());
+           
         }
 
         //public System.Data.Entity.DbSet<PickUpSports.Models.TimePreference> TimePreferences { get; set; }

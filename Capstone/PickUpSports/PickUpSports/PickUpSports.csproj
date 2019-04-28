@@ -296,7 +296,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CustomUserIdProvider.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
     <Compile Include="Models\ViewModel\MessagesViewModel.cs" />
@@ -355,6 +354,7 @@
     <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\Extensions\Extensions.cs" />
+    <Compile Include="Services\ChatHub\QueryStringUserIdProvider.cs" />
     <Compile Include="Services\GMailService.cs" />
     <Compile Include="Interface\IGMailService.cs" />
     <Compile Include="Models\GoogleApiModels\PlaceDetailsResponse.cs" />
@@ -429,6 +429,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.5.0.debug.js" />
+    <Content Include="Scripts\knockout-3.5.0.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\orderByDistance.js" />
     <Content Include="Scripts\pickUpGameView.js" />
