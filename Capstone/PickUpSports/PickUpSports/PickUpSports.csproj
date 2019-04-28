@@ -511,6 +511,7 @@
     <Content Include="Views\Friends\FriendList.cshtml" />
     <Content Include="Views\Game\_GamesUserJoined.cshtml" />
     <Content Include="Views\Game\_GamesUserCreated.cshtml" />
+    <Content Include="Views\Account\EmailConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

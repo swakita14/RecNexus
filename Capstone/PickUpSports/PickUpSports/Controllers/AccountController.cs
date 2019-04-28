@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -18,16 +20,19 @@ namespace PickUpSports.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private readonly IContactService _contactService;
+        private readonly IGMailService _gMailService;
 
-        public AccountController(IContactService contactService)
+        public AccountController(IContactService contactService, IGMailService gMailService)
         {
             _contactService = contactService;
+            _gMailService = gMailService;
         }
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IContactService contactService)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IContactService contactService, IGMailService gMailService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
             _contactService = contactService;
+            _gMailService = gMailService;
         }
 
         public ApplicationSignInManager SignInManager
@@ -88,7 +93,7 @@ namespace PickUpSports.Controllers
                     // ViewBag.Link = callbackUrl;
                     ViewBag.errorMessage = "You must have a confirmed email to log on. "
                                            + "The confirmation token has been resent to your email account.";
-                    return View("Error");
+                    return View("EmailConfirmation");
                 }
             }
 
@@ -184,7 +189,7 @@ namespace PickUpSports.Controllers
                     ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
                                       + "before you can log in.";
 
-                    return View();
+                    return View("EmailConfirmation");
                     //return RedirectToAction("Index", "Home");
                 }
 
@@ -202,10 +207,15 @@ namespace PickUpSports.Controllers
         private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
         {
             string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
+
+            var user = await UserManager.FindByIdAsync(userID);
+
             var callbackUrl = Url.Action("ConfirmEmail", "Account",
                 new { userId = userID, code = code }, protocol: Request.Url.Scheme);
-            await UserManager.SendEmailAsync(userID, subject,
-                "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            //await UserManager.SendEmailAsync(userID, subject,
+            //    "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            SendAccountEmail(user.Email, subject, "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
             return callbackUrl;
         }
@@ -241,6 +251,7 @@ namespace PickUpSports.Controllers
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
+            
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -271,8 +282,10 @@ namespace PickUpSports.Controllers
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account",
                     new { UserId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password",
+
+                SendAccountEmail(user.Email, "Reset Password", 
                     "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+
                 return View("ForgotPasswordConfirmation");
             }
 
@@ -280,10 +293,25 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
+        public void SendAccountEmail(string emailAddress, string subject, string body)
+        {
+            var accountEmail = _gMailService.Send(new MailMessage(_gMailService.GetEmailAddress(), emailAddress)
+            {
+                Subject = subject,
+                Body = body
+            });
+        }
+
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult EmailConfirmation()
         {
             return View();
         }
