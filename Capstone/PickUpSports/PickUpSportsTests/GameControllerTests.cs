@@ -250,5 +250,21 @@ namespace PickUpSportsTests
             Assert.AreEqual(isNotSignedUpForGameTest, false);
         }
 
+        /**
+         * PBI 143 - Kexin Pan
+         */
+        [Test]
+        public void IsThisGameCanCancel_AtLeastBeforeOneHour_ReturnsTrue()
+        {            
+            var startTime = DateTime.Parse("2019-05-12 09:00 PM");
+            Assert.AreEqual(_sut.IsThisGameCanCancel(startTime), true);
+        }
+
+        [Test]
+        public void IsThisGameCanCancel_NotBeforeOneHour_ReturnsFalse()
+        {
+            var startTime = DateTime.Parse("2019-04-12 09:00 PM");
+            Assert.AreEqual(_sut.IsThisGameCanCancel(startTime), false);
+        }
     }
 }
