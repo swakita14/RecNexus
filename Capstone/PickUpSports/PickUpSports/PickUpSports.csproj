@@ -175,6 +175,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
@@ -305,8 +306,8 @@
     <Compile Include="Interface\Repositories\ILocationRepository.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
+    <Compile Include="Services\ChatHub\ChatHub.cs" />
     <Compile Include="Interface\Repositories\IVenueRepository.cs" />
-    <Compile Include="Models\ChatHub\ChatHub.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\FriendsController.cs" />
@@ -361,6 +362,7 @@
     <Compile Include="Models\DatabaseModels\Location.cs" />
     <Compile Include="Models\Enums\GameStatusEnum.cs" />
     <Compile Include="Models\Extensions\Extensions.cs" />
+    <Compile Include="Services\ChatHub\QueryStringUserIdProvider.cs" />
     <Compile Include="Models\ViewModel\ContactController\GameProfileViewModel.cs" />
     <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\GMailService.cs" />
@@ -437,11 +439,15 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.5.0.debug.js" />
+    <Content Include="Scripts\knockout-3.5.0.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\orderByDistance.js" />
     <Content Include="Scripts\pickUpGameView.js" />
     <Content Include="Scripts\searchVenues.js" />
     <Content Include="Scripts\sitemap.xml" />
+    <Content Include="Scripts\Tests\ChatTest.html" />
+    <Content Include="Scripts\Tests\ChatTest.js" />
     <Content Include="Scripts\Tests\qunit-2.9.2.css" />
     <Content Include="Scripts\Tests\qunit-2.9.2.js" />
     <Content Include="Web.config">
