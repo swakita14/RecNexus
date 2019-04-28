@@ -6,6 +6,7 @@
         this.isPrivate = ko.observable(isPrivate);
     }
 
+
     function User(name) {
 
         var self = this;
@@ -21,6 +22,7 @@
             self.isPrivateChatUser(true);
         };
     }
+   
 
     var viewModel = {
         messages: ko.observableArray([]),
