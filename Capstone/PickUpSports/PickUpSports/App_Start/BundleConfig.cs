@@ -26,10 +26,8 @@ namespace PickUpSports
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                        "~/Scripts/angular.js",
-                        "~/Scripts/angular-resource.js",
-                        "~/Scripts/angular-route.js"));
+            bundles.Add(new ScriptBundle("~/bundles/knockoutjs").Include(
+                        "~/Scripts/knockout-3.5.0.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angularapp").Include(
                         "~/Scripts/app/Sort.js",
