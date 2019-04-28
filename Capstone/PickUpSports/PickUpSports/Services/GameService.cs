@@ -72,5 +72,16 @@ namespace PickUpSports.Services
             if (!results.Any()) return null;
             return results.ToList();
         }
+
+        public List<Game> GetCurrentGamesByVenueId(int venueId)
+        {
+            var games = _gameRepository.GetAllGames();
+            if (games == null) return null;
+
+            var results = games.Where(x => x.VenueId == venueId);
+
+            if (!results.Any()) return null;
+            return results.ToList();
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace PickUpSports.Interface
 
         List<Game> GetCurrentOrderedGamesByContactId(int contactId);
 
+        List<Game> GetCurrentGamesByVenueId(int venueId);
 
     }
 }

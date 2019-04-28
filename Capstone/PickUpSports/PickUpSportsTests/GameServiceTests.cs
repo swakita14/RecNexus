@@ -147,6 +147,47 @@ namespace PickUpSportsTests
             // Assert
             Assert.IsNull(results);
         }
+
+        /**
+          * PBI 324 - Kexin Pan
+          */
+        [Test]
+        public void GetCurrentGamesByVenueId_GivenVenueId_ReturnsList()
+        {
+            // Arrange
+            var games = new List<Game>
+            {
+                new Game {ContactId = 2, GameId = 4, VenueId = 23},
+                new Game {ContactId = 3, GameId = 5, VenueId = 22},
+                new Game {ContactId = 4, GameId = 6, VenueId = 23},
+                new Game {ContactId = 1, GameId = 9, VenueId = 23},
+
+            };
+            _gameRepositoryMock.Setup(x => x.GetAllGames()).Returns(games);
+
+            // Act
+            var results = _sut.GetCurrentGamesByVenueId(23);
+
+            // Assert
+            results.Count.Should().Be(3);
+        }
+
+        /**
+          * PBI 324 - Kexin Pan
+          */
+        [Test]
+        public void GetCurrentGamesByVenueId_GivenVenueId_ReturnsNull()
+        {
+            // Arrange
+            _gameRepositoryMock.Setup(x => x.GetAllGames()).Returns((List<Game>)null);
+
+            // Act
+            var results = _sut.GetCurrentGamesByVenueId(30);
+
+            // Assert
+            Assert.IsNull(results);
+        }
+
     }
 
 }
