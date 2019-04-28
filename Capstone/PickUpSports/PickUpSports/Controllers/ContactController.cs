@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.Enums;
 using PickUpSports.Models.ViewModel.ContactController;
+using PickUpSports.Models.ViewModel.GameController;
 
 namespace PickUpSports.Controllers
 {
@@ -16,10 +17,14 @@ namespace PickUpSports.Controllers
     public class ContactController : Controller
     {
         private readonly IContactService _contactService;
+        private readonly IGameService _gameService;
+        private readonly IVenueService _venueService;
 
-        public ContactController(IContactService contactService)
+        public ContactController(IContactService contactService, IGameService gameService, IVenueService venueService)
         {
             _contactService = contactService;
+            _gameService = gameService;
+            _venueService = venueService;
         }
 
 
@@ -47,19 +52,23 @@ namespace PickUpSports.Controllers
         public ActionResult Create(CreateContactViewModel model)
         {
             ViewBag.Error = "";
-            if (ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.States = PopulateStatesDropdown();
+                return View(model);
+            }
 
             //create user 
             string email = User.Identity.GetUserName();
             Debug.Write(email);
 
-            Contact newContact = new Contact()
+            Contact newContact = new Contact
             {
                 ContactId = model.ContactId,
                 Username = model.Username,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email = User.Identity.GetUserName(),
+                Email = email,
                 PhoneNumber = model.PhoneNumber,
                 Address1 = model.Address1,
                 Address2 = model.Address2,
@@ -70,7 +79,8 @@ namespace PickUpSports.Controllers
 
             if (_contactService.UsernameIsTaken(model.Username))
             {
-                ViewBag.Message = "Username Already Taken";
+                ModelState.AddModelError("Username", "Username already taken");
+                ViewBag.States = PopulateStatesDropdown();
                 return View(model);
             }
 
@@ -105,7 +115,8 @@ namespace PickUpSports.Controllers
                 Address2 = contact.Address2,
                 City = contact.City,
                 State = contact.State,
-                ZipCode = contact.ZipCode
+                ZipCode = contact.ZipCode,
+                HasPublicProfile = contact.HasPublicProfile
             };
 
             return View(model);
@@ -129,6 +140,7 @@ namespace PickUpSports.Controllers
             existing.City = model.City;
             existing.State = model.State;
             existing.ZipCode = model.ZipCode;
+            existing.HasPublicProfile = model.HasPublicProfile;
 
             _contactService.EditContact(existing);
 
@@ -151,24 +163,31 @@ namespace PickUpSports.Controllers
         {
             var model = new ProfileViewModel();
             var contact = _contactService.GetContactById(id);
+            if (contact == null) throw new ArgumentNullException($"Contact ID {id} does not exist.");
+
             model.Username = contact.Username;
+            model.ContactId = contact.ContactId;
+            model.UserAllowsPublicProfile = contact.HasPublicProfile;
             return View(model);
         }
 
-        public ActionResult GetSportPreferences(int contactId)
+        public ActionResult GetSportPreferences(int contactId, bool isPublicProfileView)
         {
             var model = new SportPreferenceViewModel
             {
                 ContactId = contactId
             };
 
-            var results = _contactService.GetSportPreferences(contactId);
-            model.SportName = results;
+            model.IsPublicProfileView = isPublicProfileView;
 
+            var results = _contactService.GetUserSportPreferences(contactId);
+            if (results == null) return PartialView("../SportPreferences/_SportPreferences", model);
+
+            model.SportName = results;
             return PartialView("../SportPreferences/_SportPreferences", model);
         }
 
-        public ActionResult GetTimePreferences(int contactId)
+        public ActionResult GetTimePreferences(int contactId, bool isPublicProfileView)
         {
             var model = new TimePreferenceListViewModel
             {
@@ -176,7 +195,11 @@ namespace PickUpSports.Controllers
                 TimePreferences = new List<TimePreferenceViewModel>()           
             };
 
-            var timePreferences = _contactService.GetTimePreferences(contactId);
+            model.IsPublicProfileView = isPublicProfileView;
+
+            var timePreferences = _contactService.GetUserTimePreferences(contactId);
+            if (timePreferences == null) return PartialView("../TimePreferences/_TimePreferences", model);
+
             foreach (var timePreference in timePreferences)
             {
                 model.TimePreferences.Add(new TimePreferenceViewModel
@@ -188,6 +211,87 @@ namespace PickUpSports.Controllers
             }
 
             return PartialView("../TimePreferences/_TimePreferences", model);
+        }
+
+        public ActionResult GetGamesStartedByUser(int contactId, bool isPublicProfileView)
+        {
+            var model = new GameProfileViewModel();
+            model.IsPublicProfileView = isPublicProfileView;
+            model.ContactId = contactId;
+
+            var games = _gameService.GetCurrentOrderedGamesByContactId(contactId);
+            if (games==null) return PartialView("../Game/_GamesUserCreated", model);
+
+            model.Games = new List<GameListViewModel>();
+
+            foreach (var game in games)
+            {
+                var gameToAdd = new GameListViewModel
+                {
+                    EndDate = game.EndTime,
+                    GameId = game.GameId,
+                    GameStatus = ((GameStatusEnum) game.GameStatusId).ToString(),
+                    Sport = _gameService.GetSportNameById(game.SportId),
+                    StartDate = game.StartTime,
+                    Venue = _venueService.GetVenueNameById(game.VenueId),
+                    VenueId = game.VenueId
+                };
+
+                if (game.ContactId != null)
+                {
+                    gameToAdd.ContactId = game.ContactId;
+                    gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+
+                model.Games.Add(gameToAdd);
+            }
+
+            return PartialView("../Game/_GamesUserCreated", model);
+        }
+
+        public ActionResult GetGamesUserJoined(int contactId, bool isPublicProfileView)
+        {
+            var model = new GameProfileViewModel();
+            model.IsPublicProfileView = isPublicProfileView;
+            model.ContactId = contactId;
+
+            var pickUpGames = _gameService.GetPickUpGamesByContactId(contactId);
+            if (pickUpGames == null) return PartialView("../Game/_GamesUserJoined", model);
+
+            model.Games = new List<GameListViewModel>();
+
+            foreach (var pickUpGame in pickUpGames)
+            {
+                var game = _gameService.GetGameById(pickUpGame.GameId);
+
+                // Do not add game to list if time passed
+                if (game.EndTime < DateTime.Today.AddDays(-1)) continue;
+
+                // Do not add if user is the creator of game
+                if (game.ContactId == contactId) continue;
+
+                var gameToAdd = new GameListViewModel
+                {
+                    EndDate = game.EndTime,
+                    GameId = game.GameId,
+                    GameStatus = ((GameStatusEnum)game.GameStatusId).ToString(),
+                    Sport = _gameService.GetSportNameById(game.SportId),
+                    StartDate = game.StartTime,
+                    Venue = _venueService.GetVenueNameById(game.VenueId),
+                    VenueId = game.VenueId
+                };
+
+                if (game.ContactId != null)
+                {
+                    gameToAdd.ContactId = game.ContactId;
+                    gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+
+                model.Games.Add(gameToAdd);
+            }
+
+            model.Games = model.Games.OrderBy(x => x.StartDate).ToList();
+            return PartialView("../Game/_GamesUserJoined", model);
         }
 
         private Dictionary<string, string> PopulateStatesDropdown()

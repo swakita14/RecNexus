@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Globalization;
-using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.GoogleApiModels;
 using System.Linq;
+using PickUpSports.Interface.Repositories;
 
 namespace PickUpSports.Services
 {
     public class VenueService : IVenueService
     {
         private readonly IPlacesApiClient _placesApi;
-        private readonly PickUpContext _context;
+        private readonly IVenueRepository _venueRepository;
+        private readonly IBusinessHoursRepository _businessHoursRepository;
+        private readonly IReviewRepository _reviewRepository;
+        private readonly ILocationRepository _locationRepository;
 
-        public VenueService(IPlacesApiClient placesApi, PickUpContext context)
+        public VenueService(IPlacesApiClient placesApi, IVenueRepository venueRepository, IBusinessHoursRepository businessHoursRepository, IReviewRepository reviewRepository, ILocationRepository locationRepository)
         {
             _placesApi = placesApi;
-            _context = context;
+            _venueRepository = venueRepository;
+            _businessHoursRepository = businessHoursRepository;
+            _reviewRepository = reviewRepository;
+            _locationRepository = locationRepository;
         }
 
         /**
@@ -27,7 +32,8 @@ namespace PickUpSports.Services
         public void UpdateVenues()
         {
             // Only want to update Venues database once a week
-            Venue mostRecentUpdate = _context.Venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
+            var venues = _venueRepository.GetAllVenues();
+            Venue mostRecentUpdate = venues.OrderByDescending(v => v.DateUpdated).FirstOrDefault();
 
             // If there is no update or if most recent update was more than two weeks ago
             // search places and update Venues database
@@ -39,7 +45,7 @@ namespace PickUpSports.Services
                 foreach (var place in places)
                 {
                     // Check if we already have this venue in database
-                    Venue existingVenue = _context.Venues.FirstOrDefault(v => v.GooglePlaceId == place.PlaceId);
+                    Venue existingVenue = venues.FirstOrDefault(v => v.GooglePlaceId == place.PlaceId);
 
                     // If not in database, add it
                     if (existingVenue == null)
@@ -51,14 +57,13 @@ namespace PickUpSports.Services
                             DateUpdated = DateTime.Now
                         };
 
-                        _context.Venues.Add(venue);
-                        _context.SaveChanges();
+                        _venueRepository.AddVenue(venue);
                     }
                 }
 
                 // Update most recent update
                 mostRecentUpdate.DateUpdated = DateTime.Now;
-                _context.SaveChanges();
+                _venueRepository.Edit(mostRecentUpdate);
 
                 UpdateVenueDetails();
             }
@@ -92,13 +97,19 @@ namespace PickUpSports.Services
             return dDistance;
         }
 
+        public string GetVenueNameById(int venueId)
+        {
+            var venue = _venueRepository.GetVenueById(venueId);
+            return venue.Name;
+        }
+
         /**
          * Add or update venue details in database
          */
         private void UpdateVenueDetails()
         {
             // Get all venues 
-            List<Venue> venues = _context.Venues.ToList();
+            List<Venue> venues = _venueRepository.GetAllVenues();
 
             // Get only venues that don't have details
             List<Venue> venuesWithoutDetails = venues.Where(v => v.Address1 == null).ToList();
@@ -140,8 +151,7 @@ namespace PickUpSports.Services
                 }
 
                 // Update Venue entity
-                _context.Entry(venue).State = EntityState.Modified;
-                _context.SaveChanges();
+                _venueRepository.Edit(venue);
 
                 // Map OpeningHours API response to BusinessHours entity
                 if (venueDetails.Result.OpeningHours != null)
@@ -160,8 +170,7 @@ namespace PickUpSports.Services
                         if (!string.IsNullOrEmpty(closeTime)) hours.CloseTime = DateTime.Parse(closeTime).TimeOfDay;
 
                         // Add BusinessHours entity
-                        _context.BusinessHours.Add(hours);
-                        _context.SaveChanges();
+                        _businessHoursRepository.AddBusinessHours(hours);
                     }
                 }
 
@@ -183,10 +192,8 @@ namespace PickUpSports.Services
                             Timestamp = timestamp.AddSeconds(review.Time).ToLocalTime()
                         };
 
-                        _context.Reviews.Add(reviewEntity);
+                        _reviewRepository.AddReview(reviewEntity);
                     }
-
-                    _context.SaveChanges();
                 }
 
                 // Map Location API response to Location database entity
@@ -202,10 +209,11 @@ namespace PickUpSports.Services
                     };
 
                     // Add Location entity
-                    _context.Locations.Add(locationEntity);
-                    _context.SaveChanges();
+                    _locationRepository.AddLocation(locationEntity);
                 }
             }
         }
+
+
     }
 }

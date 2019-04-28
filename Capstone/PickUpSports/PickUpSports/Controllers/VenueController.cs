@@ -16,11 +16,15 @@ namespace PickUpSports.Controllers
     {
         private readonly PickUpContext _context;
         private readonly IVenueService _venueService;
+        private readonly IContactService _contactService;
+        private readonly IGameService _gameService;
 
-        public VenueController(PickUpContext context, IVenueService venueService)
+        public VenueController(PickUpContext context, IVenueService venueService, IContactService contactService, IGameService gameService)
         {
             _context = context;
             _venueService = venueService;
+            _contactService = contactService;
+            _gameService = gameService;
         }
         
         /**
@@ -299,19 +303,26 @@ namespace PickUpSports.Controllers
             model.Reviews = tempList.OrderByDescending(r => r.Timestamp).ToList();
 
             // Map Games
-            List<Game> games = _context.Games.Where(x => x.VenueId == id).ToList();
+            var games = _gameService.GetCurrentGamesByVenueId(id);
+            if (games == null) return View(model);
+
             List<GameListViewModel> gameList = new List<GameListViewModel>();
-            foreach (var item in games)
+            foreach (var game in games)
             {
-                GameListViewModel gameListViewModel = new GameListViewModel
+                GameListViewModel gameToAdd = new GameListViewModel
                 {
-                    GameId = item.GameId,
-                    ContactName = _context.Contacts.First(x => x.ContactId == item.ContactId).Username,
-                    Sport = _context.Sports.First(x => x.SportID == item.SportId).SportName,
-                    StartDate = item.StartTime.ToString(),
-                    EndDate = item.EndTime.ToString()
+                    GameId = game.GameId,
+                    Sport = _context.Sports.First(x => x.SportID == game.SportId).SportName,
+                    StartDate = game.StartTime,
+                    EndDate = game.EndTime
                 };
-                gameList.Add(gameListViewModel);
+
+                if (game.ContactId != null)
+                {
+                    gameToAdd.ContactId = game.ContactId;
+                    gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+                gameList.Add(gameToAdd);
             }
 
 

@@ -10,10 +10,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Interface;
-using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
-using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
 using DayOfWeek = System.DayOfWeek;
@@ -25,22 +23,21 @@ namespace PickUpSports.Controllers
         private readonly PickUpContext _context;
         private readonly IContactService _contactService;
         private readonly IGMailService _gMailer;
+        private readonly IGameService _gameService;
 
-        public GameController(PickUpContext context)
-        {
-            _context = context;
-        }
 
-        public GameController(PickUpContext context, IContactService contactService, IGMailService gMailer)
+        public GameController(PickUpContext context, IContactService contactService, IGMailService gMailer, IGameService gameService)
         {
             _context = context;
             _contactService = contactService;
             _gMailer = gMailer;
+            _gameService = gameService;
         }
 
         /**
          * Routes user to page that contains Create Game form
          */
+        [Authorize]
         public ActionResult CreateGame()
         {
             ViewBag.GameCreated = false;
@@ -155,15 +152,20 @@ namespace PickUpSports.Controllers
             List<GameListViewModel> model = new List<GameListViewModel>();
             foreach (var game in games)
             {
-                model.Add(new GameListViewModel
+                var gameToAdd = new GameListViewModel();
+                gameToAdd.GameId = game.GameId;
+                gameToAdd.Sport = _context.Sports.Find(game.SportId).SportName;
+                gameToAdd.Venue = _context.Venues.Find(game.VenueId).Name;
+                gameToAdd.StartDate = game.StartTime;
+                gameToAdd.EndDate = game.EndTime;
+
+                if (game.ContactId != null)
                 {
-                    GameId = game.GameId,
-                    ContactName = _context.Contacts.Find(game.ContactId).Username,
-                    Sport = _context.Sports.Find(game.SportId).SportName,
-                    Venue = _context.Venues.Find(game.VenueId).Name,
-                    StartDate = game.StartTime.ToString(),
-                    EndDate = game.EndTime.ToString()
-                });
+                    gameToAdd.ContactId = game.ContactId;
+                    gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+
+                model.Add(gameToAdd);
             }
 
             return View(model);
@@ -173,6 +175,7 @@ namespace PickUpSports.Controllers
          * Routes user to GameDetails page to show details for single game
          */
         [Authorize]
+        [HttpGet]
         public ActionResult GameDetails(int id)
         {
             ViewBag.IsCreator = false;
@@ -202,15 +205,19 @@ namespace PickUpSports.Controllers
             //creating view model for the page
             ViewGameViewModel model = new ViewGameViewModel()
             {
-                ContactName = _context.Contacts.Find(game.ContactId).Username,
                 EndDate = game.EndTime.ToString(),
                 GameId = game.GameId,
                 Status = _context.GameStatuses.Find(game.GameStatusId).Status,
                 Sport = _context.Sports.Find(game.SportId).SportName,
                 StartDate = game.StartTime.ToString(),
                 Venue = _context.Venues.Find(game.VenueId).Name,
-                ContactId = contact.ContactId,
             };
+
+            if (game.ContactId != null)
+            {
+                model.ContactId = game.ContactId;
+                model.ContactName = _contactService.GetContactById(game.ContactId).Username;
+            }
 
             //returning model to the view
             return View(model);
@@ -225,7 +232,7 @@ namespace PickUpSports.Controllers
             string body = "";
 
             //Find all the players that are currently signed up for the game
-            List<PickUpGame> checkGames = _contactService.GetPickUpGameListByGameId(model.GameId);
+            List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
 
             //finding game
             Game game = _context.Games.Find(model.GameId);
@@ -237,11 +244,9 @@ namespace PickUpSports.Controllers
             //If the Join Game button was pressed 
             if (button.Equals("Join Game"))
             {
-
                 //sending model back so values dont blank out
                 ViewGameViewModel returnModel = new ViewGameViewModel()
                 {
-                    ContactName = _context.Contacts.Find(game.ContactId).Username,
                     EndDate = game.EndTime.ToString(),
                     GameId = game.GameId,
                     Status = _context.GameStatuses.Find(game.GameStatusId).Status,
@@ -249,6 +254,12 @@ namespace PickUpSports.Controllers
                     StartDate = game.StartTime.ToString(),
                     Venue = _context.Venues.Find(game.VenueId).Name,
                 };
+
+                if (game.ContactId != null)
+                {
+                    returnModel.ContactId = game.ContactId;
+                    returnModel.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
 
                 //if the game is cancelled, users are prevent to join this game
                 if (game.GameStatusId == 2)
@@ -259,7 +270,7 @@ namespace PickUpSports.Controllers
                 }
 
                 //check if the person is already signed up for the game 
-                if (!IsNotSignedUpForGame(model.ContactId, checkGames))
+                if (!IsNotSignedUpForGame((int) model.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
@@ -270,7 +281,7 @@ namespace PickUpSports.Controllers
                 //add new person to the pickupgame table
                 PickUpGame newPickUpGame = new PickUpGame()
                 {
-                    ContactId = model.ContactId,
+                    ContactId = (int) model.ContactId,
                     GameId = model.GameId,
                 };
 
@@ -286,7 +297,7 @@ namespace PickUpSports.Controllers
             if (button.Equals("Leave Game"))
             {
                 //check if the person is already signed up for the game 
-                if (IsNotSignedUpForGame(model.ContactId, checkGames))
+                if (IsNotSignedUpForGame((int) model.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You have not signed up for this game");
@@ -294,7 +305,6 @@ namespace PickUpSports.Controllers
                     //sending model back so values dont blank out
                     ViewGameViewModel returnModel = new ViewGameViewModel()
                     {
-                        ContactName = _context.Contacts.Find(game.ContactId).Username,
                         EndDate = game.EndTime.ToString(),
                         GameId = game.GameId,
                         Status = _context.GameStatuses.Find(game.GameStatusId).Status,
@@ -302,6 +312,12 @@ namespace PickUpSports.Controllers
                         StartDate = game.StartTime.ToString(),
                         Venue = _context.Venues.Find(game.VenueId).Name,
                     };
+
+                    if (game.ContactId != null)
+                    {
+                        returnModel.ContactId = game.ContactId;
+                        returnModel.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                    }
 
                     return View(returnModel);
                 }
@@ -318,7 +334,12 @@ namespace PickUpSports.Controllers
 
             _context.SaveChanges();
 
-            SendMessage(game, game.ContactId, body);
+            // If contact ID null then creator has deleted account, do not send email
+            if (game.ContactId != null)
+            {
+                SendMessage(game, (int)game.ContactId, body);
+
+            }
 
             //redirect to the gamedetails page so that they could see that they are signed on
             return RedirectToAction("GameDetails", new { id = model.GameId });
@@ -329,24 +350,29 @@ namespace PickUpSports.Controllers
             //Initializing Message Details 
             string sendingToEmail = "";
             string messageContent = "";
-            int playerCount = _contactService.GetPickUpGameListByGameId(game.GameId).Count();
+            int playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
 
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
-                sendingToEmail = _contactService.GetContactById(game.ContactId).Email;
+                sendingToEmail = _contactService.GetContactById((int)game.ContactId).Email;
                 messageContent = body + "The current number of players on this game is: " + playerCount;
 
             }
             else
             {
                 //emailing to the players on the game list
-               sendingToEmail = _contactService.GetContactById(playerId).Email;
-               messageContent = body;
+                sendingToEmail = _contactService.GetContactById(playerId).Email;
+                messageContent = body;
             }
 
+            MailMessage mailMessage = new MailMessage(_gMailer.GetEmailAddress(), sendingToEmail)
+            {
+                Body = messageContent
+            };
+
             //Send the Message
-            _gMailer.Send(messageContent, sendingToEmail);
+            _gMailer.Send(mailMessage);
         }
 
         /***
@@ -416,15 +442,22 @@ namespace PickUpSports.Controllers
             //Find right data for each variable 
             foreach (var game in gameList)
             {
-                model.Add(new GameListViewModel
+                var gameToAdd = new GameListViewModel
                 {
                     GameId = game.GameId,
-                    ContactName = _context.Contacts.Find(game.ContactId).Username,
                     Sport = _context.Sports.Find(game.SportId).SportName,
                     Venue = _context.Venues.Find(game.VenueId).Name,
-                    StartDate = game.StartTime.ToString(),
-                    EndDate = game.EndTime.ToString()
-                });
+                    StartDate = game.StartTime,
+                    EndDate = game.EndTime
+                };
+
+                if (game.ContactId != null)
+                {
+                    gameToAdd.ContactId = game.ContactId;
+                    gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+
+                model.Add(gameToAdd);
             }
 
 
@@ -450,15 +483,22 @@ namespace PickUpSports.Controllers
             //Find right data for each variable 
             foreach (var game in gameList)
             {
-                model.Add(new GameListViewModel
+                var gameToAdd = new GameListViewModel
                 {
                     GameId = game.GameId,
-                    ContactName = _context.Contacts.Find(game.ContactId).Username,
                     Sport = _context.Sports.Find(game.SportId).SportName,
                     Venue = _context.Venues.Find(game.VenueId).Name,
-                    StartDate = game.StartTime.ToString(),
-                    EndDate = game.EndTime.ToString()
-                });
+                    StartDate = game.StartTime,
+                    EndDate = game.EndTime
+                };
+
+                if (game.ContactId != null)
+                {
+                    gameToAdd.ContactId = game.ContactId;
+                    gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+
+                model.Add(gameToAdd);
             }
             return PartialView("_GameSearch", model);
         }
@@ -477,28 +517,42 @@ namespace PickUpSports.Controllers
                 {
                     if (game.StartTime >= startDateTime && game.EndTime <= endDateTime)
                     {
-                        model.Add(new GameListViewModel
+                        var gameToAdd = new GameListViewModel
                         {
                             GameId = game.GameId,
-                            ContactName = _context.Contacts.Find(game.ContactId).Username,
                             Sport = _context.Sports.Find(game.SportId).SportName,
                             Venue = _context.Venues.Find(game.VenueId).Name,
-                            StartDate = game.StartTime.ToString(),
-                            EndDate = game.EndTime.ToString()
-                        });
+                            StartDate = game.StartTime,
+                            EndDate = game.EndTime
+                        };
+
+                        if (game.ContactId != null)
+                        {
+                            gameToAdd.ContactId = game.ContactId;
+                            gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                        }
+
+                        model.Add(gameToAdd);
                     }
                 }
                 else
                 {
-                    model.Add(new GameListViewModel
+                    var gameToAdd = new GameListViewModel
                     {
                         GameId = game.GameId,
-                        ContactName = _context.Contacts.Find(game.ContactId).Username,
                         Sport = _context.Sports.Find(game.SportId).SportName,
                         Venue = _context.Venues.Find(game.VenueId).Name,
-                        StartDate = game.StartTime.ToString(),
-                        EndDate = game.EndTime.ToString()
-                    });
+                        StartDate = game.StartTime,
+                        EndDate = game.EndTime
+                    };
+
+                    if (game.ContactId != null)
+                    {
+                        gameToAdd.ContactId = game.ContactId;
+                        gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                    }
+
+                    model.Add(gameToAdd);
                 }
             }                         
             if (model.Count == 0)
@@ -510,9 +564,11 @@ namespace PickUpSports.Controllers
 
         public PartialViewResult PlayerList(int gameId)
         {
-            List<PickUpGame> playerList = _contactService.GetPickUpGameListByGameId(gameId);
+            List<PickUpGame> playerList = _gameService.GetPickUpGameListByGameId(gameId);
 
             List<PickUpGameViewModel> model = new List<PickUpGameViewModel>();
+
+            if (playerList == null) return PartialView("_PlayerList", null);
 
             foreach (var player in playerList)
             {
@@ -561,7 +617,7 @@ namespace PickUpSports.Controllers
             EditGameViewModel model = new EditGameViewModel()
             { 
                 GameId = id,
-                ContactId = game.ContactId,   
+                ContactId = (int) game.ContactId,   
                 Sport = _context.Sports.Find(game.SportId).SportName,
                 Status = _context.GameStatuses.Find(game.GameStatusId).Status,
                 Venue = _context.Venues.Find(game.VenueId).Name,
@@ -603,7 +659,7 @@ namespace PickUpSports.Controllers
             PopulateEditDropDownMethod(existingGame);
 
             //check if the game will happen in one hour
-            if (startDateTime.AddHours(-1) < DateTime.Now)
+            if (!IsThisGameCanCancel(startDateTime))
             {
                 ViewData.ModelState.AddModelError("GameStart", "Sorry, you can only edit the game at least 1 hour long before it starts.");
                 PopulateEditDropDownMethod(existingGame);
@@ -660,7 +716,7 @@ namespace PickUpSports.Controllers
                                                                                      + "; Sport: " + _context.Sports.First(x => x.SportID == existingGame.SportId).SportName
                                                                                      + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
 
-                List<PickUpGame> pickUpGameList = _contactService.GetPickUpGameListByGameId(existingGame.GameId);
+                List<PickUpGame> pickUpGameList = _gameService.GetPickUpGameListByGameId(existingGame.GameId);
                 foreach (var player in pickUpGameList)
                 {
                     SendMessage(existingGame, player.ContactId, body);
@@ -806,6 +862,15 @@ namespace PickUpSports.Controllers
                 _context.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public bool IsThisGameCanCancel(DateTime dateTime)
+        {
+            if (dateTime.AddHours(-1) < DateTime.Now)
+            {
+                return false;
+            }
+            return true;
         }
 
     }

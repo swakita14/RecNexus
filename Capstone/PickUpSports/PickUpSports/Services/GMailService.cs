@@ -29,21 +29,14 @@ namespace PickUpSports.Models.Extensions
         /**
          * This Method will send the message with the message content(body) and the email address passed in
          */
-        public bool Send(string body, string toEmailAddress)
+        public bool Send(MailMessage message)
         {
-            //Creating new Message with information passed in
-            var message = new MailMessage(GetEmailAddress(), toEmailAddress)
-            {
-                Subject = "Change in Game Information",
-                Body = body
-            };
-
-            //Checking it to true make sure its in html format
-            message.IsBodyHtml = true;
-
             //Enabling credentials and ssl
             _smtpClient.Credentials = _networkCredential;
             _smtpClient.EnableSsl = true;
+
+            //easier formatting messsages
+            message.IsBodyHtml = true;
 
             //Send the message with the credentials 
             _smtpClient.Send(message);

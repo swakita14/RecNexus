@@ -19,7 +19,6 @@ namespace PickUpSports.Models.ViewModel.ContactController
         [DisplayName("Last Name:")]
         public string LastName { get; set; }
 
-        [Required]
         [DisplayName("Email:")]
         public string Email { get; set; }
 

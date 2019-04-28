@@ -7,7 +7,7 @@ namespace PickUpSports.Interface
     {
         Contact GetContactByEmail(string email);
 
-        Contact GetContactById(int id);
+        Contact GetContactById(int? id);
 
         Contact GetContactByUsername(string username);
 
@@ -19,11 +19,8 @@ namespace PickUpSports.Interface
 
         void DeleteUser(Contact contact);
 
-        List<string> GetSportPreferences(int contactId);
+        List<string> GetUserSportPreferences(int contactId);
 
-        List<TimePreference> GetTimePreferences(int contactId);
-
-        List<PickUpGame> GetPickUpGameListByGameId(int gameId);
-
+        List<TimePreference> GetUserTimePreferences(int contactId);
     }
 }
