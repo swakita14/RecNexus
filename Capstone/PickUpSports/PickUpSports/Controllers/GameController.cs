@@ -270,7 +270,7 @@ namespace PickUpSports.Controllers
                 }
 
                 //check if the person is already signed up for the game 
-                if (!IsNotSignedUpForGame((int) model.ContactId, checkGames))
+                if (!IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
@@ -281,7 +281,7 @@ namespace PickUpSports.Controllers
                 //add new person to the pickupgame table
                 PickUpGame newPickUpGame = new PickUpGame()
                 {
-                    ContactId = (int) model.ContactId,
+                    ContactId = currContactUser.ContactId,
                     GameId = model.GameId,
                 };
 
@@ -297,7 +297,7 @@ namespace PickUpSports.Controllers
             if (button.Equals("Leave Game"))
             {
                 //check if the person is already signed up for the game 
-                if (IsNotSignedUpForGame((int) model.ContactId, checkGames))
+                if (IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You have not signed up for this game");
@@ -328,7 +328,7 @@ namespace PickUpSports.Controllers
                 body = currContactUser.Username + " has just left the game. ";
 
                 //Remove the Player from the Game 
-                _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == model.ContactId));
+                _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == currContactUser.ContactId));
                 
             }
 
@@ -383,7 +383,7 @@ namespace PickUpSports.Controllers
             //Just in case a null "0" comes in stop it from coming in
             if (contactId == 0) return false;
 
-            if (games == null) return false;
+            if (games == null) return true;
 
             foreach (var game in games)
             {
