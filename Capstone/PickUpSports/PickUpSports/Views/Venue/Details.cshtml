@@ -14,9 +14,9 @@
         @Model.Address1
         @if (!string.IsNullOrEmpty(Model.Address2))
         {
-            <br/>@Model.Address2
+            <br />@Model.Address2
         }
-        <br/>@Model.City, @Model.State, @Model.ZipCode
+        <br />@Model.City, @Model.State, @Model.ZipCode
     </div>
     @if (!string.IsNullOrEmpty(Model.Phone))
     {
@@ -27,14 +27,14 @@
     <div class="row">
         @if (Model.AverageRating != null)
         {
-            <br/><b>Average Review Rating:</b> @Model.AverageRating
+            <br /><b>Average Review Rating:</b> @Model.AverageRating
         }
-        <br/>@Html.ActionLink("Leave a review!", "Create", "Review", new {id = @Model.VenueId}, null)
+        <br />@Html.ActionLink("Leave a review!", "Create", "Review", new { id = @Model.VenueId }, null)
     </div>
 </div>
 
 @*Business Hours*@
-<br/>
+<br />
 <div class="container">
     <div class="row">
         <h3>
@@ -58,44 +58,80 @@
     }
 </div>
 
+@*Games*@
+<br />
+<div class="container">
+    <div class="row">
+        <h3>
+            <b>Recent Games:</b>
+        </h3>
+    </div>
+    @if (Model.Games!=null)
+    {
+        foreach (var game in Model.Games)
+        {
+
+                <div class="row">
+                    @Html.DisplayFor(model => game.Sport)
+                </div>
+                <div class="row">
+                    @Html.DisplayFor(model => game.StartDate) to @Html.DisplayFor(model => game.EndDate)
+                </div>
+                <div class="row">
+                    Game started by @Html.DisplayFor(model => game.ContactName)
+                </div>
+                <div class="row">
+                    <br />@Html.ActionLink("Click here for more details on game", "GameDetails", "Game", new { id = game.GameId }, null)
+                </div>
+            <hr />
+        }
+    }
+    else
+    {
+        <div class="row">
+            There are no games available for this venue.
+        </div>
+    }
+</div>
+
 @*Reviews*@
-<br/>
+<br />
 <div class="container">
     <div class="row">
         <h3>
             <b>Reviews:</b>
         </h3>
-        <br/>
+        <br />
     </div>
 
-        @if (Model.Reviews.Count > 0)
+    @if (Model.Reviews.Count > 0)
+    {
+        foreach (var reviews in Model.Reviews)
         {
-            foreach (var reviews in Model.Reviews)
-            {
-                <div class="place-rating">
-                    
-                    @if (reviews.Author != null)
-                    {
-                        <h4><b>Author:</b> @reviews.Author</h4>
-                    }
-                    else
-                    {
-                        <h4><b>Author:</b> <i>anonymous</i></h4>
-                    }
+            <div class="place-rating">
 
-                    <h4><b>Rating: </b>@reviews.Rating</h4>
-                    <h4><b>Review Date:</b> @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</h4>
-                    <p>@reviews.Comments</p>
-                                         
-                </div>
-                <br/>
-            }
-        }
-        else
-        {
-            <div class="row">
-                There are no reviews available for this venue.
+                @if (reviews.Author != null)
+                {
+                    <h4><b>Author:</b> @reviews.Author</h4>
+                }
+                else
+                {
+                    <h4><b>Author:</b> <i>anonymous</i></h4>
+                }
+
+                <h4><b>Rating: </b>@reviews.Rating</h4>
+                <h4><b>Review Date:</b> @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</h4>
+                <p>@reviews.Comments</p>
+
             </div>
+            <br />
         }
-    
+    }
+    else
+    {
+        <div class="row">
+            There are no reviews available for this venue.
+        </div>
+    }
+
 </div>

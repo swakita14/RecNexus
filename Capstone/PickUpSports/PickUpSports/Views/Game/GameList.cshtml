@@ -45,8 +45,19 @@
                         @Html.DisplayFor(model => game.StartDate) to @Html.DisplayFor(model => game.EndDate)
                     </div>
                     <div class="row">
-                        Game started by @Html.DisplayFor(model => game.ContactName)
-                    </div>
+                        @if (game.ContactId == null)
+                        {
+                            <html>
+                            User that created this game no longer has an account.
+                            </html>
+                        }
+                        else
+                        {
+                            <html>
+                            Game started by @Html.ActionLink(game.ContactName, "Profile", "Contact", new {id = game.ContactId}, null)
+                            </html>
+                        }                    
+                        </div>
 
 
                     <div class="row">

@@ -1,6 +1,6 @@
 ﻿@model List<PickUpSports.Models.ViewModel.GameController.GameListViewModel>
 @{
-    ViewBag.Title = "_SearchByVenue";
+    ViewBag.Title = "Pick Up Games";
 }
 
 
@@ -25,7 +25,7 @@
                 @Html.DisplayFor(model => game.StartDate) to @Html.DisplayFor(model => game.EndDate)
             </div>
             <div class="row">
-                Game started by @Html.DisplayFor(model => game.ContactName)
+                Game started by @Html.ActionLink(game.ContactName, "Profile", "Contact", new {id = game.ContactId}, null)
             </div>
 
 

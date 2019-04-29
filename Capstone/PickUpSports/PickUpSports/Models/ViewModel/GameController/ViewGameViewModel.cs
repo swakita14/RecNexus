@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using PickUpSports.Models.DatabaseModels;
+﻿using System.ComponentModel;
 
 namespace PickUpSports.Models.ViewModel.GameController
 {
     public class ViewGameViewModel
     {
-      
-    
+
+        private string contactName;
+
         public int GameId { get; set; }
 
-        public int PickUpGameId { get; set; }
+        public int? ContactId { get; set; }
 
-        public int ContactId { get; set; }
+        public int PickUpGameId { get; set; }
 
 
         [DisplayName("Venue:")]
@@ -35,6 +30,23 @@ namespace PickUpSports.Models.ViewModel.GameController
         public string EndDate { get; set; }
 
         [DisplayName("Contact Name:")]
-        public string ContactName { get; set; }
+        public string ContactName
+        {
+            get
+            {
+                return contactName;
+            }
+            set
+            {
+                if (ContactId == null)
+                {
+                    contactName = "- User no longer exists -";
+                }
+                else
+                {
+                    contactName = value;
+                }
+            }
+        }
     }
 }

@@ -8,6 +8,6 @@ namespace PickUpSports.Models.DatabaseModels
 
         public int GameId { get; set; }
 
-        public int? ContactId { get; set; }
+        public int ContactId { get; set; }
     }
 }

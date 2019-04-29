@@ -1,11 +1,16 @@
-﻿using System.Web.Mvc;
+﻿using System.Net;
+using System.Net.Mail;
+using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
 using PickUpSports.DAL;
+using PickUpSports.DAL.Repositories;
 using PickUpSports.GoogleApi;
 using PickUpSports.Interface;
+using PickUpSports.Interface.Repositories;
+using PickUpSports.Models.Extensions;
 using PickUpSports.Services;
 using RestSharp;
 
@@ -38,6 +43,24 @@ namespace PickUpSports
                 x.ResolveKeyed<IRestClient>("Google"), placesKey
             )).As<IPlacesApiClient>();
 
+            //Grabbing email credentials from app settings 
+            var emailAddress = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"];
+            var emailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
+
+            //Registering Network credentials with email and password
+            builder.Register(x => new NetworkCredential(emailAddress, emailPassword))
+                .AsSelf()
+                .InstancePerRequest();
+
+            //Setting email host and port number for Google
+            var host = "smtp.gmail.com";
+            var port = 587;
+
+            //Register SMTP Client with the values 
+            builder.Register(x => new SmtpClient(host, port))
+                .AsSelf()
+                .InstancePerRequest();
+
             // Register PickUpContext for database
             builder.Register(context => new PickUpContext())
                 .AsSelf()
@@ -45,6 +68,21 @@ namespace PickUpSports
 
             // Register services
             builder.RegisterType<VenueService>().As<IVenueService>();
+            builder.RegisterType<ContactService>().As<IContactService>();
+            builder.RegisterType<GMailService>().As<IGMailService>();
+            builder.RegisterType<GameService>().As<IGameService>();
+
+            // Register repositories
+            builder.RegisterType<ContactRepository>().As<IContactRepository>();
+            builder.RegisterType<TimePreferenceRepository>().As<ITimePreferenceRepository>();
+            builder.RegisterType<SportPreferenceRepository>().As<ISportPreferenceRepository>();
+            builder.RegisterType<ReviewRepository>().As<IReviewRepository>();
+            builder.RegisterType<SportRepository>().As<ISportRepository>();
+            builder.RegisterType<PickUpGameRepository>().As<IPickUpGameRepository>();
+            builder.RegisterType<GameRepository>().As<IGameRepository>();
+            builder.RegisterType<VenueRepository>().As<IVenueRepository>();
+            builder.RegisterType<BusinessHoursRepository>().As<IBusinessHoursRepository>();
+            builder.RegisterType<LocationRepository>().As<ILocationRepository>();
 
             var container = builder.Build();
 

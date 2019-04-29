@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity.Validation;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,9 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
-using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models;
-using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Controllers
 {
@@ -20,18 +19,20 @@ namespace PickUpSports.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private readonly PickUpContext _context;
+        private readonly IContactService _contactService;
+        private readonly IGMailService _gMailService;
 
-        public AccountController(PickUpContext context)
+        public AccountController(IContactService contactService, IGMailService gMailService)
         {
-            _context = context;
+            _contactService = contactService;
+            _gMailService = gMailService;
         }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, PickUpContext context)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IContactService contactService, IGMailService gMailService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
-            _context = context;
+            _contactService = contactService;
+            _gMailService = gMailService;
         }
 
         public ApplicationSignInManager SignInManager
@@ -77,6 +78,23 @@ namespace PickUpSports.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
+            }
+
+            // Require the user to have a confirmed email before they can log on.
+            // var user = await UserManager.FindByNameAsync(model.Email);
+            var user = UserManager.Find(model.Email, model.Password);
+            if (user != null)
+            {
+                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
+                {
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+
+                    // Uncomment to debug locally  
+                    // ViewBag.Link = callbackUrl;
+                    ViewBag.errorMessage = "You must have a confirmed email to log on. "
+                                           + "The confirmation token has been resent to your email account.";
+                    return View("EmailConfirmation");
+                }
             }
 
             // This doesn't count login failures towards account lockout
@@ -163,10 +181,16 @@ namespace PickUpSports.Controllers
               
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    //  Comment the following line to prevent log in until the user is confirmed.
+                    //  await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    // Redirect user to create Contact profile because new user
-                    return RedirectToAction("Create", "Contact");
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
+
+                    ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
+                                      + "before you can log in.";
+
+                    return View("EmailConfirmation");
+                    //return RedirectToAction("Index", "Home");
                 }
 
                 AddErrors(result);
@@ -180,44 +204,31 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
+        private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
+        {
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
+
+            var user = await UserManager.FindByIdAsync(userID);
+
+            var callbackUrl = Url.Action("ConfirmEmail", "Account",
+                new { userId = userID, code = code }, protocol: Request.Url.Scheme);
+            //await UserManager.SendEmailAsync(userID, subject,
+            //    "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            SendAccountEmail(user.Email, subject, "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            return callbackUrl;
+        }
+
         public async Task<ActionResult> RemoveAccount(int id)
         {
-            Contact contact = _context.Contacts.Find(id);
-            
+            var contact = _contactService.GetContactById(id);
+
             // Remove from AspNet tables
             ApplicationUser user = UserManager.Users.FirstOrDefault(u => u.Email == contact.Email);
             IdentityResult result = await UserManager.DeleteAsync(user);
 
-            if (result.Succeeded)
-            {
-                // Delete any SportPreferences related to Contact
-                List<SportPreference> sportPrefs =
-                    _context.SportPreferences.Where(s => s.ContactID == contact.ContactId).ToList();
-                if (sportPrefs.Count > 0) _context.SportPreferences.RemoveRange(sportPrefs);
-
-                // Delete any TimePreferences related to Contact
-                List<TimePreference> timePrefs =
-                    _context.TimePreferences.Where(s => s.ContactID == contact.ContactId).ToList();
-                if (timePrefs.Count > 0) _context.TimePreferences.RemoveRange(timePrefs);
-
-                // Set ContactID for any Reviews to null
-                List<Review> reviews =
-                    _context.Reviews.Where(s => s.ContactId == contact.ContactId).ToList();
-
-                if (reviews.Count > 0)
-                {
-                    foreach (var review in reviews)
-                    {
-                        review.ContactId = null;
-                    }
-
-                    _context.SaveChanges();
-                }
-
-                // Remove from Contact table
-                _context.Contacts.Remove(contact);
-                _context.SaveChanges();
-            }
+            if (result.Succeeded) _contactService.DeleteUser(contact);
 
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
@@ -240,6 +251,7 @@ namespace PickUpSports.Controllers
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
+            
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
@@ -267,22 +279,39 @@ namespace PickUpSports.Controllers
                     return View("ForgotPasswordConfirmation");
                 }
 
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account",
+                    new { UserId = user.Id, code = code }, protocol: Request.Url.Scheme);
+
+                SendAccountEmail(user.Email, "Reset Password", 
+                    "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+
+                return View("ForgotPasswordConfirmation");
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
+        public void SendAccountEmail(string emailAddress, string subject, string body)
+        {
+            var accountEmail = _gMailService.Send(new MailMessage(_gMailService.GetEmailAddress(), emailAddress)
+            {
+                Subject = subject,
+                Body = body
+            });
+        }
+
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult EmailConfirmation()
         {
             return View();
         }
@@ -306,7 +335,7 @@ namespace PickUpSports.Controllers
             {
                 return View(model);
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist

@@ -10,6 +10,7 @@
 	[City]				   NVARCHAR (256)  NULL,
 	[State]                NVARCHAR (256)  NULL,
 	[ZipCode]              NVARCHAR (256)  NULL,
+	[HasPublicProfile]	   BIT			   NULL	
     CONSTRAINT [PK_dbo.Contacts] PRIMARY KEY CLUSTERED ([ContactId] ASC)
 );
 
@@ -141,4 +142,28 @@ CREATE TABLE PickUpGame
 	CONSTRAINT PK_PickUpGame PRIMARY KEY (PickUpGameID),
 	CONSTRAINT FK_PickUpGame_Game FOREIGN KEY (GameID) REFERENCES Game(GameID),
 	CONSTRAINT FK_PickUpGame_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID)
+);
+
+CREATE TABLE Friend
+(
+	FriendID int IDENTITY(1,1) NOT NULL,
+	ContactID int NOT NULL,
+	FriendContactID int NOT NULL,
+
+	CONSTRAINT PK_Friend PRIMARY KEY (FriendID),
+	CONSTRAINT FK_Friend_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID),
+	CONSTRAINT FK_Friend_FriendContact FOREIGN KEY (FriendContactID) REFERENCES Contact(ContactID)
+
+);
+
+CREATE TABLE MessageConnection
+(
+ ConnectionID int IDENTITY(1,1) NOT NULL,
+ ContactID int NOT NULL,
+ MessageContactID int NOT NULL,
+ Connected bool 
+
+ CONSTRAINT PK_Friend PRIMARY KEY (FriendID),
+	CONSTRAINT FK_Friend_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID),
+	CONSTRAINT FK_Friend_FriendContact FOREIGN KEY (FriendContactID) REFERENCES Contact(ContactID)
 );

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace PickUpSports.Models.ViewModel.GameController
 {
@@ -11,7 +7,7 @@ namespace PickUpSports.Models.ViewModel.GameController
     {
         public int GameId { get; set; }
 
-        public int? ContactId { get; set; }
+        public int ContactId { get; set; }
 
         [Required]
         [DisplayName("Venue:")]

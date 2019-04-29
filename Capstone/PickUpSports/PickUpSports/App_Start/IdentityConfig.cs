@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -10,16 +10,51 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using PickUpSports.Interface;
 using PickUpSports.Models;
+using PickUpSports.Models.Extensions;
 
 namespace PickUpSports
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        private readonly IGMailService _gMailService;
+
+        public EmailService()
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+
+        }
+        public EmailService(IGMailService gMailService)
+        {
+            _gMailService = gMailService;
+        }
+        public async Task SendAsync(IdentityMessage message)
+        {
+            await configSendGridasync(message);
+        }
+
+        private async Task configSendGridasync(IdentityMessage message)
+        {
+            sendMail(message);
+        }
+
+        void sendMail(IdentityMessage message)
+        {
+
+            #region formatter
+            string text = string.Format("Please click on this link to {0}: {1}", message.Subject, message.Body);
+            string html = "Please confirm your account by clicking this link: <a href=\"" + message.Body + "\">link</a><br/>";
+
+            html += HttpUtility.HtmlEncode(@"Or click on the copy the following link on the browser:" + message.Body);
+            #endregion
+
+            MailMessage msg = new MailMessage();
+            msg.To.Add(new MailAddress(message.Destination));
+            msg.Subject = message.Subject;
+            msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Plain));
+            msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
+
+            _gMailService.Send(msg);
         }
     }
 
@@ -35,6 +70,7 @@ namespace PickUpSports
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+        private readonly IGMailService _gMailService;
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
@@ -76,6 +112,7 @@ namespace PickUpSports
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
             });
+            //Need to pass in parameters here?
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;

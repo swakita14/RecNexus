@@ -1,0 +1,14 @@
+﻿@model PickUpSports.Models.ViewModel.FriendInviteViewModel
+@{
+    ViewBag.Title = "FriendInvite";
+}
+
+<h2>Invite a Friend!</h2>
+
+@using (Html.BeginForm("InviteToGame", "Friends", FormMethod.Post))
+{
+    <h2> @Html.DropDownList("Select Friend", Model.Friends))</h2>
+     <h2>@Html.DropDownList("Select a Game", Model.Games)</h2>
+       
+    <input type="submit" value="Send Invite" class="btn btn-default" />
+}

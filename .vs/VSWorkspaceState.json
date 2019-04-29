@@ -4,9 +4,10 @@
     "\\Capstone",
     "\\Capstone\\PickUpSports",
     "\\Capstone\\PickUpSports\\PickUpSports",
-    "\\Capstone\\PickUpSports\\PickUpSports\\bin",
+    "\\Capstone\\PickUpSports\\PickUpSports\\Controllers",
     "\\Milestones",
     "\\Milestones\\Milestone3"
   ],
+  "SelectedNode": "\\Capstone\\PickUpSports\\PickUpSports\\Controllers\\VenueController.cs",
   "PreviewInSolutionExplorer": false
 }

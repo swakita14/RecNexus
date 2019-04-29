@@ -7,6 +7,7 @@ using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.GameController;
 using PickUpSports.Models.ViewModel.VenueController;
 
 namespace PickUpSports.Controllers
@@ -15,11 +16,15 @@ namespace PickUpSports.Controllers
     {
         private readonly PickUpContext _context;
         private readonly IVenueService _venueService;
+        private readonly IContactService _contactService;
+        private readonly IGameService _gameService;
 
-        public VenueController(PickUpContext context, IVenueService venueService)
+        public VenueController(PickUpContext context, IVenueService venueService, IContactService contactService, IGameService gameService)
         {
             _context = context;
             _venueService = venueService;
+            _contactService = contactService;
+            _gameService = gameService;
         }
         
         /**
@@ -296,6 +301,33 @@ namespace PickUpSports.Controllers
 
             // Order reviews newest to oldest
             model.Reviews = tempList.OrderByDescending(r => r.Timestamp).ToList();
+
+            // Map Games
+            var games = _gameService.GetCurrentGamesByVenueId(id);
+            if (games == null) return View(model);
+
+            List<GameListViewModel> gameList = new List<GameListViewModel>();
+            foreach (var game in games)
+            {
+                GameListViewModel gameToAdd = new GameListViewModel
+                {
+                    GameId = game.GameId,
+                    Sport = _context.Sports.First(x => x.SportID == game.SportId).SportName,
+                    StartDate = game.StartTime,
+                    EndDate = game.EndTime
+                };
+
+                if (game.ContactId != null)
+                {
+                    gameToAdd.ContactId = game.ContactId;
+                    gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+                gameList.Add(gameToAdd);
+            }
+
+
+            model.Games = gameList.OrderByDescending(x => x.StartDate).ToList();
+
             return View(model);
         }
         
