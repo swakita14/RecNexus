@@ -350,8 +350,18 @@ namespace PickUpSports.Controllers
             //Initializing Message Details 
             string sendingToEmail = "";
             string messageContent = "";
-            int playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
+            int playerCount = 0;
 
+            if (_gameService.GetPickUpGameListByGameId(game.GameId) == null)
+            {
+                playerCount = 0;
+            }
+            else
+            {
+                playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
+            }
+
+          
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
