@@ -113,7 +113,9 @@ CREATE TABLE GameStatus
 
 INSERT INTO GameStatus (GameStatus) VALUES
 ('Open'),
-('Cancelled')
+('Cancelled'),
+('Acccepted'),
+('Rejected')
 GO
 
 CREATE TABLE Game
