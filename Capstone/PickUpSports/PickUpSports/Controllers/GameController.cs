@@ -132,6 +132,26 @@ namespace PickUpSports.Controllers
 
             ViewBag.GameCreated = true;
             PopulateDropdownValues();
+
+            //send notification to users once a new game created and it includes the user's preference
+            List<SportPreference> checkSportPreference = _context.SportPreferences.ToList();
+            foreach (var item in checkSportPreference)
+            {
+                if (item.SportID == model.SportId)
+                {
+                    var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+                    //add game link to the email
+                    var directUrl = Url.Action("GameDetails", "Game", new { id = newGame.GameId }, protocol: Request.Url.Scheme);
+                    fileContents = fileContents.Replace("{URL}", directUrl);
+                    //replace the html contents to the game details
+                    fileContents = fileContents.Replace("{VENUE}", venue.Name);
+                    fileContents = fileContents.Replace("{SPORT}", _context.Sports.Find(model.SportId).SportName);
+                    fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
+                    fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
+                    SendMessage(newGame, item.ContactID, fileContents);
+                }
+            }
+
             return View();
         }
 
