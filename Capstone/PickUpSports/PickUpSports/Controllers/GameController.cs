@@ -137,7 +137,7 @@ namespace PickUpSports.Controllers
             List<SportPreference> checkSportPreference = _context.SportPreferences.ToList();
             foreach (var item in checkSportPreference)
             {
-                if (item.SportID == model.SportId)
+                if (item.SportID == model.SportId && item.ContactID!=newGame.ContactId)
                 {
                     var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
                     //add game link to the email
@@ -151,6 +151,48 @@ namespace PickUpSports.Controllers
                     SendMessage(newGame, item.ContactID, fileContents);
                 }
             }
+
+            // time preference
+            List<TimePreference> checkTimePreferences = _context.TimePreferences.ToList();
+            List<Contact> nonDuplicateUser = new List<Contact>();
+            bool duplicate = false ;
+            foreach (var item in checkTimePreferences)
+            {
+                if ((int)newGame.StartTime.DayOfWeek==item.DayOfWeek
+                    && newGame.StartTime.TimeOfDay>item.BeginTime && newGame.EndTime.TimeOfDay<item.EndTime
+                    && item.ContactID != newGame.ContactId)
+                {
+                    foreach(var user in nonDuplicateUser)
+                    {
+                        if (user.ContactId == item.ContactID)
+                        {
+                            duplicate = true;
+                        }
+                        else
+                        {
+                            duplicate = false;
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        nonDuplicateUser.Add(_context.Contacts.First(x=>x.ContactId==item.ContactID));
+                    }
+                    foreach (var checkeduser in nonDuplicateUser)
+                    {
+                        var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+                        //add game link to the email
+                        var directUrl = Url.Action("GameDetails", "Game", new { id = newGame.GameId }, protocol: Request.Url.Scheme);
+                        fileContents = fileContents.Replace("{URL}", directUrl);
+                        //replace the html contents to the game details
+                        fileContents = fileContents.Replace("{VENUE}", venue.Name);
+                        fileContents = fileContents.Replace("{SPORT}", _context.Sports.Find(model.SportId).SportName);
+                        fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
+                        fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
+                        SendMessage(newGame, item.ContactID, fileContents);
+                    }
+                }
+            }
+
 
             return View();
         }
