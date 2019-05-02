@@ -330,7 +330,6 @@ namespace PickUpSports.Controllers
 
             return View(model);
         }
-        
         protected override void Dispose(bool disposing)
         {
             if (disposing)

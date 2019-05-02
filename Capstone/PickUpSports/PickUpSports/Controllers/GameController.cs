@@ -493,8 +493,28 @@ namespace PickUpSports.Controllers
                 });
             }
 
+            Venue venue = _context.Venues.Find(id);
+
+            if (!VenueHasOwner(venue))
+            {
+                ViewData.ModelState.AddModelError("NoOwner", "This venue has not been claimed by an owner so please be sure to contact them directly after creating your game to avoid scheduling conflicts");
+            }
+
             // Partial view displaying bids for specific item
             return PartialView("_BusinessHours", model);
+        }
+
+
+        public bool VenueHasOwner(Venue venue)
+        {
+            //Find the owner using the venue ID, again could be simplified using repo patterns
+            VenueOwner owner = _context.VenueOwners.FirstOrDefault(x => x.VenueId == venue.VenueId);
+
+            //if there is not an owner it would be null so return false
+            if (owner == null) return false;
+
+            //else there is an owner and the value is not null so return true 
+            return true;
         }
 
         public PartialViewResult GetGamesResult(int venueId)

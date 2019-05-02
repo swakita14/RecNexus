@@ -1,6 +1,15 @@
 ﻿@model List<PickUpSports.Models.ViewModel.BusinessHoursViewModel>
 
 <div class="well" style="padding-bottom: 20px">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                @Html.ValidationSummary(false, null, new {@class = "text-danger", @id ="error-msg"})
+
+            </div>
+        </div>
+    }
     <div class="row">
         <h6>
             <b>Hours of Operation:</b>
