@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Owin.Security.Google;
 using PickUpSports.DAL;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel;
@@ -36,7 +37,7 @@ namespace PickUpSports.Controllers
         public ActionResult Detail(int id)
         {
 
-            //return View(model);
+            return View();
         }
 
         public void PopulateDropdownValues()
