@@ -497,7 +497,7 @@ namespace PickUpSports.Controllers
 
             if (!VenueHasOwner(venue))
             {
-                ViewData.ModelState.AddModelError("NoOwner", "The Owner for this Venue currently does not exist.");
+                ViewData.ModelState.AddModelError("NoOwner", "This venue has not been claimed by an owner so please be sure to contact them directly after creating your game to avoid scheduling conflicts");
             }
 
             // Partial view displaying bids for specific item
