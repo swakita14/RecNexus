@@ -5,12 +5,12 @@
 
 @*Venue details*@
 <div class="container">
-    <div class="row">
+    <div class="row" id="Name">
         <h2>
             <i>@Model.Name</i>
         </h2>
     </div>
-    <div class="row">
+    <div class="row" id="AddressInformation">
         @Model.Address1
         @if (!string.IsNullOrEmpty(Model.Address2))
         {
@@ -24,7 +24,7 @@
             @Model.Phone
         </div>
     }
-    <div class="row">
+    <div class="row" id="AverageRating">
         @if (Model.AverageRating != null)
         {
             <br /><b>Average Review Rating:</b> @Model.AverageRating
@@ -36,7 +36,7 @@
 @*Business Hours*@
 <br />
 <div class="container">
-    <div class="row">
+    <div class="row" id="BusinessHours">
         <h3>
             <b>Hours of Operation:</b>
         </h3>
@@ -60,7 +60,7 @@
 
 @*Games*@
 <br />
-<div class="container">
+<div class="container" id="Games">
     <div class="row">
         <h3>
             <b>Recent Games:</b>
@@ -96,7 +96,7 @@
 
 @*Reviews*@
 <br />
-<div class="container">
+<div class="container" id="Reviews">
     <div class="row">
         <h3>
             <b>Reviews:</b>

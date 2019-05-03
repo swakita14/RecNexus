@@ -23,6 +23,7 @@ namespace PickUpSportsTests
         }
 
         [Test]
+        [Ignore("Needs creds before running")]
         public void Send_SentMessage_ReturnTrue()
         {
             //Arrange - from value needs to be filled in with the email address 
