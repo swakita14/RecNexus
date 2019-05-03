@@ -5,7 +5,7 @@ namespace PickUpSports.Interface.Repositories
 {
     public interface ISportPreferenceRepository
     {
-        List<SportPreference> GetUsersSportPreferencesByContactId(int contactId);
+        List<SportPreference> GetAllSportsPreferences();
 
         void Delete(SportPreference sportPreference);
 

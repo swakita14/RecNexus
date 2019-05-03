@@ -13,11 +13,18 @@ namespace PickUpSports.Services
         private readonly IGameRepository _gameRepository;
         private readonly ISportRepository _sportRepository;
 
-        public GameService(IPickUpGameRepository pickUpGameRepository, IGameRepository gameRepository, ISportRepository sportRepository)
+        public GameService(IPickUpGameRepository pickUpGameRepository, 
+            IGameRepository gameRepository, 
+            ISportRepository sportRepository)
         {
             _pickUpGameRepository = pickUpGameRepository;
             _gameRepository = gameRepository;
             _sportRepository = sportRepository;
+        }
+
+        public Game CreateGame(Game game)
+        {
+            return _gameRepository.AddGame(game);
         }
 
         public List<PickUpGame> GetPickUpGameListByGameId(int gameId)

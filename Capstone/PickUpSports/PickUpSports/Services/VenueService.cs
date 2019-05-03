@@ -17,7 +17,11 @@ namespace PickUpSports.Services
         private readonly IReviewRepository _reviewRepository;
         private readonly ILocationRepository _locationRepository;
 
-        public VenueService(IPlacesApiClient placesApi, IVenueRepository venueRepository, IBusinessHoursRepository businessHoursRepository, IReviewRepository reviewRepository, ILocationRepository locationRepository)
+        public VenueService(IPlacesApiClient placesApi, 
+            IVenueRepository venueRepository, 
+            IBusinessHoursRepository businessHoursRepository, 
+            IReviewRepository reviewRepository, 
+            ILocationRepository locationRepository)
         {
             _placesApi = placesApi;
             _venueRepository = venueRepository;
@@ -26,9 +30,7 @@ namespace PickUpSports.Services
             _locationRepository = locationRepository;
         }
 
-        /**
-         * Add or update new venues in database
-         */
+
         public List<Venue> GetAllVenues()
         {
             return _venueRepository.GetAllVenues();
@@ -37,6 +39,12 @@ namespace PickUpSports.Services
         public Venue GetVenueById(int venueId)
         {
             return _venueRepository.GetVenueById(venueId);
+        }
+
+        public string GetVenueNameById(int venueId)
+        {
+            var venue = _venueRepository.GetVenueById(venueId);
+            return venue.Name;
         }
 
         public Location GetVenueLocation(int venueId)
@@ -101,39 +109,6 @@ namespace PickUpSports.Services
                 UpdateVenueDetails();
             }
 
-        }
-
-        /**
-         * Method to  calculate distance via Haversine formula.
-         */
-        public double CalculateVenueDistance(double lat1, double long1, double lat2, double long2)
-        {
-            double dDistance = Double.MinValue;
-            double dLat1InRad = lat1 * (Math.PI / 180.0);
-            double dLong1InRad = long1 * (Math.PI / 180);
-            double dLat2InRad = lat2 * (Math.PI / 180.0);
-            double dLong2InRad = long2 * (Math.PI / 180.0);
-
-            double dLongitude = dLong2InRad - dLong1InRad;
-            double dLatitude = dLat2InRad - dLat1InRad;
-
-            // Intermediate result a.
-            double a = Math.Pow(Math.Sin(dLatitude / 2.0), 2.0) +
-                       Math.Cos(dLat1InRad) * Math.Cos(dLat2InRad) *
-                       Math.Pow(Math.Sin(dLongitude / 2.0), 2.0);
-            //Intermediate result c 
-            double c = 2.0 * Math.Asin(Math.Sqrt(a));
-
-            //Distance (using approximate radius of earth in miles)
-            const Double kEarthRadiusMiles = 3958.8;
-            dDistance = kEarthRadiusMiles * c;
-            return dDistance;
-        }
-
-        public string GetVenueNameById(int venueId)
-        {
-            var venue = _venueRepository.GetVenueById(venueId);
-            return venue.Name;
         }
 
         /**
@@ -245,6 +220,33 @@ namespace PickUpSports.Services
                     _locationRepository.AddLocation(locationEntity);
                 }
             }
+        }
+
+        /**
+         * Method to  calculate distance via Haversine formula.
+         */
+        public double CalculateVenueDistance(double lat1, double long1, double lat2, double long2)
+        {
+            double dDistance = Double.MinValue;
+            double dLat1InRad = lat1 * (Math.PI / 180.0);
+            double dLong1InRad = long1 * (Math.PI / 180);
+            double dLat2InRad = lat2 * (Math.PI / 180.0);
+            double dLong2InRad = long2 * (Math.PI / 180.0);
+
+            double dLongitude = dLong2InRad - dLong1InRad;
+            double dLatitude = dLat2InRad - dLat1InRad;
+
+            // Intermediate result a.
+            double a = Math.Pow(Math.Sin(dLatitude / 2.0), 2.0) +
+                       Math.Cos(dLat1InRad) * Math.Cos(dLat2InRad) *
+                       Math.Pow(Math.Sin(dLongitude / 2.0), 2.0);
+            //Intermediate result c 
+            double c = 2.0 * Math.Asin(Math.Sqrt(a));
+
+            //Distance (using approximate radius of earth in miles)
+            const Double kEarthRadiusMiles = 3958.8;
+            dDistance = kEarthRadiusMiles * c;
+            return dDistance;
         }
 
 

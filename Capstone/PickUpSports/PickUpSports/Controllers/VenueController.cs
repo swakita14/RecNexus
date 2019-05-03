@@ -18,7 +18,9 @@ namespace PickUpSports.Controllers
         private readonly IContactService _contactService;
         private readonly IGameService _gameService;
 
-        public VenueController(IVenueService venueService, IContactService contactService, IGameService gameService)
+        public VenueController(IVenueService venueService, 
+            IContactService contactService, 
+            IGameService gameService)
         {
             _venueService = venueService;
             _contactService = contactService;
@@ -89,14 +91,14 @@ namespace PickUpSports.Controllers
                 ViewBag.Error = "No results to filter. Please click \"Reset all filters\"";
                 return View("Index", viewModel);
             }
+
             // User entered a search string
             if (!string.IsNullOrEmpty(model.Search))
             {
                 // Search venue names and cities
                 viewModel.Venues.AddRange(model.Venues.Where(x => x.Name.CaseInsensitiveContains(model.Search)).ToList());
                 viewModel.Venues.AddRange(model.Venues.Where(x => x.City.CaseInsensitiveContains(model.Search)));
-
-
+                
                 // Get first venue on list and assign coordinates to map center
                 var firstVenue = viewModel.Venues.FirstOrDefault();
                 if (firstVenue != null)

@@ -5,6 +5,8 @@ namespace PickUpSports.Interface
 {
     public interface IGameService
     {
+        Game CreateGame(Game game);
+
         List<PickUpGame> GetPickUpGameListByGameId(int gameId);
 
         List<PickUpGame> GetPickUpGamesByContactId(int contactId);

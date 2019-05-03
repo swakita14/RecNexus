@@ -5,7 +5,7 @@ namespace PickUpSports.Interface.Repositories
 {
     public interface ITimePreferenceRepository
     {
-        List<TimePreference> GetUsersTimePreferencesByContactId(int contactId);
+        List<TimePreference> GetAllTimePreferences();
 
         void Delete(TimePreference timePreference);
     }

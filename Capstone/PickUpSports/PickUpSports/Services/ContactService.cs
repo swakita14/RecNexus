@@ -68,7 +68,7 @@ namespace PickUpSports.Services
         public void DeleteUser(Contact contact)
         {
             // Delete any SportPreferences related to Contact
-            var sportPreferences = _sportPreferenceRepository.GetUsersSportPreferencesByContactId(contact.ContactId);
+            var sportPreferences = GetAllSportPreferences().Where(x => x.ContactID == contact.ContactId).ToList();
             if (sportPreferences.Count > 0)
             {
                 foreach (var sportPreference in sportPreferences)
@@ -78,7 +78,7 @@ namespace PickUpSports.Services
             }
 
             // Delete any TimePreferences related to Contact
-            var timePreferences = _timePreferenceRepository.GetUsersTimePreferencesByContactId(contact.ContactId);
+            var timePreferences = GetUserTimePreferences(contact.ContactId);
             if (timePreferences.Count > 0)
             {
                 foreach (var timePreferece in timePreferences)
@@ -138,13 +138,24 @@ namespace PickUpSports.Services
             _contactRepository.DeleteContact(contact);
         }
 
+        public List<SportPreference> GetAllSportPreferences()
+        {
+            return _sportPreferenceRepository.GetAllSportsPreferences();
+        }
+
+        public List<TimePreference> GetAllTimePreferences()
+        {
+            return _timePreferenceRepository.GetAllTimePreferences();
+        }
+
+
         public List<string> GetUserSportPreferences(int contactId)
         {
-            var sportPreferences = _sportPreferenceRepository.GetUsersSportPreferencesByContactId(contactId);
-            if (sportPreferences.Count == 0) return null;
+            var sportPreferences = _sportPreferenceRepository.GetAllSportsPreferences();
+            var userPrefs = sportPreferences.Where(x => x.ContactID == contactId).ToList();
 
             var results = new List<string>();
-            foreach (var sportPreference in sportPreferences)
+            foreach (var sportPreference in userPrefs)
             {
                 var sport = _sportRepository.GetSportById(sportPreference.SportID);
                 results.Add(sport.SportName);
@@ -154,10 +165,11 @@ namespace PickUpSports.Services
 
         public List<TimePreference> GetUserTimePreferences(int contactId)
         {
-            var results = _timePreferenceRepository.GetUsersTimePreferencesByContactId(contactId);
-            if (results.Count == 0) return null;
+            var timePreferences = _timePreferenceRepository.GetAllTimePreferences();
+            var userPrefs = timePreferences.Where(x => x.ContactID == contactId).ToList();
 
-            return results;
+            if (userPrefs.Count == 0) return null;
+            return userPrefs;
         }
     }
 }

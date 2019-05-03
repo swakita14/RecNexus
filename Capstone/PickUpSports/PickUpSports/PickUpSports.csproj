@@ -322,7 +322,6 @@
     <Compile Include="Controllers\SportPreferencesController.cs" />
     <Compile Include="Controllers\TimePreferencesController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
-    <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\FriendConfiguration.cs" />

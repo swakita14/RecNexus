@@ -20,18 +20,20 @@ namespace PickUpSports.Controllers
 {
     public class GameController : Controller
     {
-        private readonly PickUpContext _context;
         private readonly IContactService _contactService;
         private readonly IGMailService _gMailer;
         private readonly IGameService _gameService;
+        private readonly IVenueService _venueService;
 
-
-        public GameController(PickUpContext context, IContactService contactService, IGMailService gMailer, IGameService gameService)
+        public GameController(IContactService contactService, 
+            IGMailService gMailer, 
+            IGameService gameService, 
+            IVenueService venueService)
         {
-            _context = context;
             _contactService = contactService;
             _gMailer = gMailer;
             _gameService = gameService;
+            _venueService = venueService;
         }
 
         /**
@@ -41,17 +43,6 @@ namespace PickUpSports.Controllers
         public ActionResult CreateGame()
         {
             ViewBag.GameCreated = false;
-            // Confirm user is logged in (visitors can't create game)
-            string email = User.Identity.GetUserName();
-            Contact contact = _contactService.GetContactByEmail(email);
-
-            if (contact == null)
-            {
-                ModelState.AddModelError("NoContact", "Please login or register to start a game.");
-                PopulateDropdownValues();
-                return View();
-            }
-
             PopulateDropdownValues();
             return View();
         }
@@ -62,17 +53,6 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult CreateGame(CreateGameViewModel model)
         {
-            // Confirm user is logged in (visitors can't create game)
-            string email = User.Identity.GetUserName();
-            Contact contact = _contactService.GetContactByEmail(email);
-
-            if (contact == null)
-            {
-                ModelState.AddModelError("NoContact", "Please login or register to start a game.");
-                PopulateDropdownValues();
-                return View();
-            }
-
             // Check model validation before doing anything
             if (!ModelState.IsValid)
             {
@@ -104,8 +84,8 @@ namespace PickUpSports.Controllers
             }
 
             // Get venue by ID and business hours for that venue
-            Venue venue = _context.Venues.Find(model.VenueId);
-            List<BusinessHours> venueHours = _context.BusinessHours.Where(b => b.VenueId == venue.VenueId).ToList();
+            Venue venue = _venueService.GetVenueById(model.VenueId);
+            List<BusinessHours> venueHours = _venueService.GetVenueBusinessHours(model.VenueId);
 
             // Return error to View if the venue is not available
             bool isVenueAvailable = IsVenueAvailable(venueHours, startDateTime, endDateTime);
@@ -115,6 +95,9 @@ namespace PickUpSports.Controllers
                 PopulateDropdownValues();
                 return View(model);
             }
+
+            string email = User.Identity.GetUserName();
+            Contact contact = _contactService.GetContactByEmail(email);
 
             // All validation passed so add game to database 
             Game newGame = new Game
@@ -127,17 +110,17 @@ namespace PickUpSports.Controllers
                 EndTime = endDateTime
             };
 
-            _context.Games.Add(newGame);
-            _context.SaveChanges();
+            _gameService.CreateGame(newGame);
 
             ViewBag.GameCreated = true;
             PopulateDropdownValues();
 
             //send notification to users once a new game created and it includes the user's preference
-            List<SportPreference> checkSportPreference = _context.SportPreferences.ToList();
+            List<SportPreference> checkSportPreference = _contactService.GetAllSportPreferences();
+
             foreach (var item in checkSportPreference)
             {
-                if (item.SportID == model.SportId && item.ContactID!=newGame.ContactId)
+                if (item.SportID == model.SportId && item.ContactID != newGame.ContactId)
                 {
                     var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
                     //add game link to the email
@@ -145,7 +128,7 @@ namespace PickUpSports.Controllers
                     fileContents = fileContents.Replace("{URL}", directUrl);
                     //replace the html contents to the game details
                     fileContents = fileContents.Replace("{VENUE}", venue.Name);
-                    fileContents = fileContents.Replace("{SPORT}", _context.Sports.Find(model.SportId).SportName);
+                    fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(item.SportID));
                     fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
                     fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
                     SendMessage(newGame, item.ContactID, fileContents);
@@ -153,7 +136,7 @@ namespace PickUpSports.Controllers
             }
 
             // time preference
-            List<TimePreference> checkTimePreferences = _context.TimePreferences.ToList();
+            List<TimePreference> checkTimePreferences = _contactService.GetAllTimePreferences();
             List<Contact> nonDuplicateUser = new List<Contact>();
             bool duplicate = false ;
             foreach (var item in checkTimePreferences)
@@ -175,7 +158,7 @@ namespace PickUpSports.Controllers
                     }
                     if (!duplicate)
                     {
-                        nonDuplicateUser.Add(_context.Contacts.First(x=>x.ContactId==item.ContactID));
+                        nonDuplicateUser.Add(_contactService.GetContactById(item.ContactID));
                     }
                     foreach (var checkeduser in nonDuplicateUser)
                     {
@@ -185,7 +168,7 @@ namespace PickUpSports.Controllers
                         fileContents = fileContents.Replace("{URL}", directUrl);
                         //replace the html contents to the game details
                         fileContents = fileContents.Replace("{VENUE}", venue.Name);
-                        fileContents = fileContents.Replace("{SPORT}", _context.Sports.Find(model.SportId).SportName);
+                        fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(model.SportId));
                         fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
                         fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
                         SendMessage(newGame, item.ContactID, fileContents);
@@ -202,8 +185,8 @@ namespace PickUpSports.Controllers
          */
         public ActionResult GameList()
         {
-            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name");
-            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName");
+            ViewBag.Venue = new SelectList(_venueService.GetAllVenues(), "VenueId", "Name");
+            ViewBag.Sport = new SelectList(_gameService..Sports, "SportId", "SportName");
 
             // Get games that are open and that have not already passed and
             // order by games happening soonest
@@ -946,14 +929,6 @@ namespace PickUpSports.Controllers
             }
 
             return null;
-        }
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _context.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         public bool IsThisGameCanCancel(DateTime dateTime)
