@@ -29,6 +29,39 @@ namespace PickUpSports.Services
         /**
          * Add or update new venues in database
          */
+        public List<Venue> GetAllVenues()
+        {
+            return _venueRepository.GetAllVenues();
+        }
+
+        public Venue GetVenueById(int venueId)
+        {
+            return _venueRepository.GetVenueById(venueId);
+        }
+
+        public Location GetVenueLocation(int venueId)
+        {
+            var locations = _locationRepository.GetAllLocations();
+            return locations.FirstOrDefault(x => x.VenueId == venueId);
+        }
+
+        public List<Review> GetVenueReviews(int venueId)
+        {
+            var reviews = _reviewRepository.GetAllReviews();
+            return reviews.Where(x => x.VenueId == venueId).ToList();
+        }
+
+        public List<BusinessHours> GetVenueBusinessHours(int venueId)
+        {
+            var businessHours = _businessHoursRepository.GetAllBusinessHours();
+            return businessHours.Where(x => x.VenueId == venueId).ToList();
+        }
+
+        public List<BusinessHours> GetAllBusinessHours()
+        {
+            return _businessHoursRepository.GetAllBusinessHours();
+        }
+
         public void UpdateVenues()
         {
             // Only want to update Venues database once a week

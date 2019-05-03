@@ -14,14 +14,12 @@ namespace PickUpSports.Controllers
 {
     public class VenueController : Controller
     {
-        private readonly PickUpContext _context;
         private readonly IVenueService _venueService;
         private readonly IContactService _contactService;
         private readonly IGameService _gameService;
 
-        public VenueController(PickUpContext context, IVenueService venueService, IContactService contactService, IGameService gameService)
+        public VenueController(IVenueService venueService, IContactService contactService, IGameService gameService)
         {
-            _context = context;
             _venueService = venueService;
             _contactService = contactService;
             _gameService = gameService;
@@ -37,19 +35,15 @@ namespace PickUpSports.Controllers
             // Create view model for list of venues
             SearchVenueViewModel model = new SearchVenueViewModel();
             model.Venues = new List<VenueViewModel>();
-            List<Venue> venues = _context.Venues.ToList();
-
-            // Set default coordinates for map on venue page
-            model.CurrentLatitude = "44.942898";
-            model.CurrentLongitude = "-123.035095";
+            List<Venue> venues = _venueService.GetAllVenues();
 
             foreach (var venue in venues)
             {
-                //get location of venue
-                Location location = _context.Locations.FirstOrDefault(l => l.VenueId == venue.VenueId);
+                // get location of venue
+                Location location = _venueService.GetVenueLocation(venue.VenueId);
                 
                 // get the rating 
-                List<Review> reviews = _context.Reviews.Where(r => r.VenueId == venue.VenueId).ToList();
+                List<Review> reviews = _venueService.GetVenueReviews(venue.VenueId);
 
                 decimal? avgRating;
                 if (reviews.Count > 0)
@@ -136,7 +130,7 @@ namespace PickUpSports.Controllers
                 if (model.Filter.Equals("Time"))
                 {
                     //get all the buiness hours for all the venues
-                    List<BusinessHours> hours = _context.BusinessHours.ToList();
+                    List<BusinessHours> hours = _venueService.GetAllBusinessHours();
 
                     //lets wait till time is NOT null
                     if (model.Time != null)
@@ -181,7 +175,7 @@ namespace PickUpSports.Controllers
                     foreach (var venue in model.Venues)
                     {
                         //get location of venue
-                        Location location = _context.Locations.FirstOrDefault(l => l.VenueId == venue.VenueId);
+                        Location location = _venueService.GetVenueLocation(venue.VenueId);
 
                         //converted coordinates from strings to doubles
                         double userLat = Convert.ToDouble(model.CurrentLatitude);
@@ -233,7 +227,7 @@ namespace PickUpSports.Controllers
             VenueViewModel model = new VenueViewModel();
 
             // Map venue details
-            Venue venue = _context.Venues.Find(id);
+            Venue venue = _venueService.GetVenueById(id);
             model.Address1 = venue.Address1;
             model.Address2 = venue.Address2;
             model.City = venue.City;
@@ -244,7 +238,7 @@ namespace PickUpSports.Controllers
             model.ZipCode = venue.ZipCode;
 
             // Map business hours
-            List<BusinessHours> businessHours = _context.BusinessHours.Where(b => b.VenueId == id).ToList();
+            List<BusinessHours> businessHours = _venueService.GetVenueBusinessHours(id);
             model.BusinessHours = new List<BusinessHoursViewModel>();
 
             foreach (var businessHour in businessHours)
@@ -261,7 +255,7 @@ namespace PickUpSports.Controllers
             }
 
             // Map reviews 
-            List<Review> reviews = _context.Reviews.Where(r => r.VenueId == id).ToList();
+            List<Review> reviews = _venueService.GetVenueReviews(id);
             model.Reviews = new List<ReviewViewModel>();
 
             decimal? avgRating;
@@ -291,7 +285,7 @@ namespace PickUpSports.Controllers
                 if (review.IsGoogleReview) reviewModel.Author = review.GoogleAuthor;
                 else
                 {
-                    Contact user = _context.Contacts.Find(review.ContactId);
+                    Contact user = _contactService.GetContactById(review.ContactId);
                     if (user == null) reviewModel.Author = null;
                     else reviewModel.Author = user.Username;
                 }
@@ -312,7 +306,7 @@ namespace PickUpSports.Controllers
                 GameListViewModel gameToAdd = new GameListViewModel
                 {
                     GameId = game.GameId,
-                    Sport = _context.Sports.First(x => x.SportID == game.SportId).SportName,
+                    Sport = _gameService.GetSportNameById(game.SportId),
                     StartDate = game.StartTime,
                     EndDate = game.EndTime
                 };
@@ -329,14 +323,6 @@ namespace PickUpSports.Controllers
             model.Games = gameList.OrderByDescending(x => x.StartDate).ToList();
 
             return View(model);
-        }
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _context.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

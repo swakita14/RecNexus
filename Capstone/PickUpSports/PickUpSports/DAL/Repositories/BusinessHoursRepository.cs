@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 
@@ -42,6 +44,11 @@ namespace PickUpSports.DAL.Repositories
 
             _context.BusinessHours.Remove(existing);
             _context.SaveChanges();
+        }
+
+        public List<BusinessHours> GetAllBusinessHours()
+        {
+            return _context.BusinessHours.ToList();
         }
     }
 }
