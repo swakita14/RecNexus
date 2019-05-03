@@ -296,6 +296,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\VenueOwnerController.cs" />
+    <Compile Include="DAL\Configurations\VenueOwnerConfiguration.cs" />
     <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
     <Compile Include="DAL\Repositories\GameRepository.cs" />
     <Compile Include="DAL\Repositories\LocationRepository.cs" />
@@ -306,6 +308,8 @@
     <Compile Include="Interface\Repositories\ILocationRepository.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
+    <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
+    <Compile Include="Models\ViewModel\CreateVenueOwnerViewModel.cs" />
     <Compile Include="Services\ChatHub\ChatHub.cs" />
     <Compile Include="Interface\Repositories\IVenueRepository.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -409,6 +413,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\EmailFormat.html" />
     <Content Include="Scripts\ChatInit.js" />
     <Content Include="Content\gameTable.css" />
     <Content Include="Content\playerTable.css" />
@@ -520,6 +525,8 @@
     <Content Include="Views\Game\_GamesUserCreated.cshtml" />
     <Content Include="Views\Account\EmailConfirmation.cshtml" />
     <Content Include="Views\Friends\FriendInvite.cshtml" />
+    <Content Include="Views\VenueOwner\Create.cshtml" />
+    <Content Include="Views\VenueOwner\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

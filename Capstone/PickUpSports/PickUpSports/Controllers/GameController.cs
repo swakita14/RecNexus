@@ -132,6 +132,68 @@ namespace PickUpSports.Controllers
 
             ViewBag.GameCreated = true;
             PopulateDropdownValues();
+
+            //send notification to users once a new game created and it includes the user's preference
+            List<SportPreference> checkSportPreference = _context.SportPreferences.ToList();
+            foreach (var item in checkSportPreference)
+            {
+                if (item.SportID == model.SportId && item.ContactID!=newGame.ContactId)
+                {
+                    var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+                    //add game link to the email
+                    var directUrl = Url.Action("GameDetails", "Game", new { id = newGame.GameId }, protocol: Request.Url.Scheme);
+                    fileContents = fileContents.Replace("{URL}", directUrl);
+                    //replace the html contents to the game details
+                    fileContents = fileContents.Replace("{VENUE}", venue.Name);
+                    fileContents = fileContents.Replace("{SPORT}", _context.Sports.Find(model.SportId).SportName);
+                    fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
+                    fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
+                    SendMessage(newGame, item.ContactID, fileContents);
+                }
+            }
+
+            // time preference
+            List<TimePreference> checkTimePreferences = _context.TimePreferences.ToList();
+            List<Contact> nonDuplicateUser = new List<Contact>();
+            bool duplicate = false ;
+            foreach (var item in checkTimePreferences)
+            {
+                if ((int)newGame.StartTime.DayOfWeek==item.DayOfWeek
+                    && newGame.StartTime.TimeOfDay>item.BeginTime && newGame.EndTime.TimeOfDay<item.EndTime
+                    && item.ContactID != newGame.ContactId)
+                {
+                    foreach(var user in nonDuplicateUser)
+                    {
+                        if (user.ContactId == item.ContactID)
+                        {
+                            duplicate = true;
+                        }
+                        else
+                        {
+                            duplicate = false;
+                        }
+                    }
+                    if (!duplicate)
+                    {
+                        nonDuplicateUser.Add(_context.Contacts.First(x=>x.ContactId==item.ContactID));
+                    }
+                    foreach (var checkeduser in nonDuplicateUser)
+                    {
+                        var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+                        //add game link to the email
+                        var directUrl = Url.Action("GameDetails", "Game", new { id = newGame.GameId }, protocol: Request.Url.Scheme);
+                        fileContents = fileContents.Replace("{URL}", directUrl);
+                        //replace the html contents to the game details
+                        fileContents = fileContents.Replace("{VENUE}", venue.Name);
+                        fileContents = fileContents.Replace("{SPORT}", _context.Sports.Find(model.SportId).SportName);
+                        fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
+                        fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
+                        SendMessage(newGame, item.ContactID, fileContents);
+                    }
+                }
+            }
+
+
             return View();
         }
 
@@ -431,8 +493,28 @@ namespace PickUpSports.Controllers
                 });
             }
 
+            Venue venue = _context.Venues.Find(id);
+
+            if (!VenueHasOwner(venue))
+            {
+                ViewData.ModelState.AddModelError("NoOwner", "This venue has not been claimed by an owner so please be sure to contact them directly after creating your game to avoid scheduling conflicts");
+            }
+
             // Partial view displaying bids for specific item
             return PartialView("_BusinessHours", model);
+        }
+
+
+        public bool VenueHasOwner(Venue venue)
+        {
+            //Find the owner using the venue ID, again could be simplified using repo patterns
+            VenueOwner owner = _context.VenueOwners.FirstOrDefault(x => x.VenueId == venue.VenueId);
+
+            //if there is not an owner it would be null so return false
+            if (owner == null) return false;
+
+            //else there is an owner and the value is not null so return true 
+            return true;
         }
 
         public PartialViewResult GetGamesResult(int venueId)
