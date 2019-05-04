@@ -14,7 +14,6 @@ using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.ContactController;
-using PickUpSports.Models.ViewModel.GameController;
 
 namespace PickUpSports.Controllers
 {
@@ -108,6 +107,14 @@ namespace PickUpSports.Controllers
 
         }
 
+        [Authorize]
+        [HttpGet]
+        public ActionResult FriendInvite()
+        {
+            return View();
+        }
+
+
         /*
         * PBI 148 Austin Bergman
        */
@@ -124,7 +131,7 @@ namespace PickUpSports.Controllers
                 SendInvite(game, friend.FriendID);
             }
             
-           return RedirectToAction("GameDetails","Game");
+           return RedirectToAction("FriendInvite","Friends");
         }
 
         /*
