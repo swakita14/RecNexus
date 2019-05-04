@@ -21,6 +21,7 @@ namespace PickUpSportsTests
 
         public GameControllerTests()
         {
+
             _contactServiceMock = new Mock<IContactService>();
             _gmailServiceMock = new Mock<IGMailService>();
             _gameServiceMock = new Mock<IGameService>();

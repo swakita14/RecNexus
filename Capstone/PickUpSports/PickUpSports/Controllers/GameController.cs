@@ -186,21 +186,18 @@ namespace PickUpSports.Controllers
         public ActionResult GameList()
         {
             ViewBag.Venue = new SelectList(_venueService.GetAllVenues(), "VenueId", "Name");
-            ViewBag.Sport = new SelectList(_gameService..Sports, "SportId", "SportName");
+            ViewBag.Sport = new SelectList(_gameService.GetAllSports(), "SportId", "SportName");
 
-            // Get games that are open and that have not already passed and
-            // order by games happening soonest
-            List<Game> games = _context.Games
-                .Where(g => g.GameStatusId == (int)GameStatusEnum.Open && g.StartTime > DateTime.Now)
-                .OrderBy(g => g.StartTime).ToList();
+            // Get games that are open and that have not already passed and order by games happening soonest
+            List<Game> games = _gameService.GetAllCurrentOpenGames();
 
             List<GameListViewModel> model = new List<GameListViewModel>();
             foreach (var game in games)
             {
                 var gameToAdd = new GameListViewModel();
                 gameToAdd.GameId = game.GameId;
-                gameToAdd.Sport = _context.Sports.Find(game.SportId).SportName;
-                gameToAdd.Venue = _context.Venues.Find(game.VenueId).Name;
+                gameToAdd.Sport = _gameService.GetSportNameById(game.SportId);
+                gameToAdd.Venue = _venueService.GetVenueNameById(game.VenueId);
                 gameToAdd.StartDate = game.StartTime;
                 gameToAdd.EndDate = game.EndTime;
 
@@ -226,23 +223,15 @@ namespace PickUpSports.Controllers
             ViewBag.IsCreator = false;
 
             //validating the id to make sure its not null
-            if (id == 0)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             //getting current logged in user information in case they want to join game
             string email = User.Identity.GetUserName();
             Contact contact = _contactService.GetContactByEmail(email);
 
-            //find the game 
-            Game game = _context.Games.Find(id);
+            Game game = _gameService.GetGameById(id);
            
-            if (IsCreatorOfGame(contact.ContactId, game))
-            {
-                ViewBag.IsCreator = true;
-            }
-            
+            if (IsCreatorOfGame(contact.ContactId, game)) ViewBag.IsCreator = true;
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
@@ -252,10 +241,10 @@ namespace PickUpSports.Controllers
             {
                 EndDate = game.EndTime.ToString(),
                 GameId = game.GameId,
-                Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                Sport = _context.Sports.Find(game.SportId).SportName,
+                Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
+                Sport = _gameService.GetSportNameById(game.SportId),
                 StartDate = game.StartTime.ToString(),
-                Venue = _context.Venues.Find(game.VenueId).Name,
+                Venue = _venueService.GetVenueNameById(game.VenueId),
             };
 
             if (game.ContactId != null)
@@ -279,8 +268,7 @@ namespace PickUpSports.Controllers
             //Find all the players that are currently signed up for the game
             List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
 
-            //finding game
-            Game game = _context.Games.Find(model.GameId);
+            Game game = _gameService.GetGameById(model.GameId);
 
             //find the current logged-on user
             string email = User.Identity.GetUserName();
@@ -294,10 +282,10 @@ namespace PickUpSports.Controllers
                 {
                     EndDate = game.EndTime.ToString(),
                     GameId = game.GameId,
-                    Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                    Sport = _context.Sports.Find(game.SportId).SportName,
+                    Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
+                    Sport = _gameService.GetSportNameById(game.SportId),
                     StartDate = game.StartTime.ToString(),
-                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    Venue = _venueService.GetVenueNameById(game.VenueId)
                 };
 
                 if (game.ContactId != null)
@@ -315,7 +303,7 @@ namespace PickUpSports.Controllers
                 }
 
                 //check if the person is already signed up for the game 
-                if (!IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
+                if (!_gameService.IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You are already signed up for this game");
@@ -334,15 +322,14 @@ namespace PickUpSports.Controllers
                 body = currContactUser.Username + " has just joined the game. ";
 
                 //save it       
-                _context.PickUpGames.Add(newPickUpGame);
-
+                _gameService.AddPlayerToGame(newPickUpGame);
             }
 
             //If the Leave Game button was pressed 
             if (button.Equals("Leave Game"))
             {
                 //check if the person is already signed up for the game 
-                if (IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
+                if (_gameService.IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You have not signed up for this game");
@@ -352,10 +339,10 @@ namespace PickUpSports.Controllers
                     {
                         EndDate = game.EndTime.ToString(),
                         GameId = game.GameId,
-                        Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                        Sport = _context.Sports.Find(game.SportId).SportName,
+                        Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
+                        Sport = _gameService.GetSportNameById(game.SportId),
                         StartDate = game.StartTime.ToString(),
-                        Venue = _context.Venues.Find(game.VenueId).Name,
+                        Venue = _venueService.GetVenueNameById(game.VenueId)
                     };
 
                     if (game.ContactId != null)
@@ -373,20 +360,15 @@ namespace PickUpSports.Controllers
                 body = currContactUser.Username + " has just left the game. ";
 
                 //Remove the Player from the Game 
-                _context.PickUpGames.Remove(_context.PickUpGames.First(x => x.GameId == model.GameId && x.ContactId == currContactUser.ContactId));
-                
+                var usersGames = _gameService.GetPickUpGamesByContactId(currContactUser.ContactId);
+                var pickUpGame = usersGames.FirstOrDefault(x => x.GameId == model.GameId);
+                _gameService.RemovePlayerFromGame(pickUpGame);
+                                    
             }
-
-            _context.SaveChanges();
 
             // If contact ID null then creator has deleted account, do not send email
-            if (game.ContactId != null)
-            {
-                SendMessage(game, (int)game.ContactId, body);
+            if (game.ContactId != null) SendMessage(game, (int)game.ContactId, body);
 
-            }
-
-            //redirect to the gamedetails page so that they could see that they are signed on
             return RedirectToAction("GameDetails", new { id = model.GameId });
         }
 
@@ -430,28 +412,7 @@ namespace PickUpSports.Controllers
             _gMailer.Send(mailMessage);
         }
 
-        /***
-         * Helper method to see if user is already signed up for a game or not
-         */
-        public bool IsNotSignedUpForGame(int contactId, List<PickUpGame> games)
-        {
-            //Just in case a null "0" comes in stop it from coming in
-            if (contactId == 0) return false;
 
-            if (games == null) return true;
-
-            foreach (var game in games)
-            {
-                if (game.ContactId == contactId)
-                {
-                    return false;
-                }
-                
-            }
-
-            // else this person hasn't signed up yet
-            return true;
-        }
 
         /**
          * Partial view that to display business hours on CreateGame page
@@ -647,13 +608,15 @@ namespace PickUpSports.Controllers
 
             foreach (var player in playerList)
             {
+                var contact = _contactService.GetContactById(player.ContactId);
+
                 model.Add(new PickUpGameViewModel
                 {
                     PickUpGameId = player.PickUpGameId,
                     GameId = gameId,
-                    Username = _context.Contacts.Find(player.ContactId).Username,
-                    Email = _context.Contacts.Find(player.ContactId).Email,
-                    PhoneNumber = _context.Contacts.Find(player.ContactId).PhoneNumber
+                    Username = contact.Username,
+                    Email = contact.Email,
+                    PhoneNumber = contact.PhoneNumber
                 });
 
             }
