@@ -1,25 +1,26 @@
 ﻿@model PickUpSports.Models.ViewModel.VenueOwnerController.CreateVenueOwnerViewModel
 
 @{
-    ViewBag.Title = "Initialize Your Information";
+    ViewBag.Title = "Edit Your Information";
 }
 
-@using (Html.BeginForm("Create", "VenueOwner", FormMethod.Post))
+@using (Html.BeginForm("Edit", "VenueOwner", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     <div class="container">
         <div class="row">
             <div class="form-box">
-                <h2>Initialize Your Information</h2>
+                <h2>@ViewBag.Title</h2>
                 <br/>
                 <form role="form" id="game-form">
+                    @Html.HiddenFor(x => x.VenueOwnerId)
 
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-user"></span>
                             </div>
-                            <input type="text" class="form-control" name="FirstName" placeholder="First Name">
+                            <input type="text" class="form-control" name="FirstName" value="@Model.FirstName" placeholder="First Name">
                         </div>
                     </div>
 
@@ -28,7 +29,7 @@
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-user"></span>
                             </div>
-                            <input type="text" class="form-control" name="LastName" placeholder="Last Name">
+                            <input type="text" class="form-control" name="LastName" value="@Model.LastName" placeholder="Last Name">
                         </div>
                     </div>
                     <div class="form-group">
@@ -36,7 +37,7 @@
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-home"></span>
                             </div>
-                            <input type="text" class="form-control" name="Email" placeholder="Email">
+                            <input type="text" class="form-control" name="Email" value="@Model.Email"placeholder="Email">
                         </div>
                     </div>
 
@@ -45,7 +46,7 @@
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-earphone"></span>
                             </div>
-                            <input type="text" class="form-control" name="PhoneNumber" placeholder="Phone Number">
+                            <input type="text" class="form-control" name="PhoneNumber" value="@Model.PhoneNumber" placeholder="Phone Number">
                         </div>
                     </div>
                     <div class="form-group">
@@ -53,7 +54,7 @@
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-earphone"></span>
                             </div>
-                            <input type="text" class="form-control" name="CompanyName" placeholder="Company Name">
+                            <input type="text" class="form-control" name="CompanyName" value="@Model.CompanyName" placeholder="Company Name">
                         </div>
                     </div>
                     <div class="form-group">
@@ -61,18 +62,14 @@
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-earphone"></span>
                             </div>
-                            @Html.DropDownListFor(
-                                x => x.VenueName,
-                                new SelectList(ViewBag.Venues, "Key", "Value"),
-                                "Select a Venue",
-                                new { @class = "form-control" })
+                            <input type="text" class="form-control" name="CompanyName" value="@Model.VenueName" placeholder="Company Name" readonly>
                         </div>
                     </div>
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <div class="row">
                             <div class="col-md-12">
-                                @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+                                @Html.ValidationSummary(false, null, new {@class = "text-danger"})
 
                             </div>
                         </div>
