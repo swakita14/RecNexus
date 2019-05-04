@@ -184,10 +184,10 @@ namespace PickUpSports.Controllers
             return RedirectToAction("Detail", "VenueOwner", new {id = existingOwner.VenueOwnerId});
         }
 
-        [HttpPost]
-        public ActionResult MessageOwner()
-        {
-            
-        }
+//        [HttpPost]
+//        public ActionResult MessageOwner()
+//        {
+//            
+//        }
     }
 }

@@ -1,6 +1,4 @@
-﻿@using PickUpSports.Models.DatabaseModels
-@using PickUpSports.Models.ViewModel
-@model PickUpSports.Models.ViewModel.FriendInviteViewModel
+﻿@model PickUpSports.Models.ViewModel.FriendInviteViewModel
 @{
     ViewBag.Title = "FriendInvite";
 }
@@ -10,15 +8,14 @@
 @using (Html.BeginForm("FriendInvite", "Friends", FormMethod.Post))
 {
     <select id="friendselect" name="FriendName">
-        <option value="0"> Please Select a Friend</option>
-        @foreach(ViewFriendsViewModel friend in Model.Friends)
+        @foreach(var friend in Model.Friends)
     {
         <Option value="@friend.FriendId">@friend.FriendName</Option>
     }
     </select> 
 
     <select id="Gameselect" name="GameTitle">
-        <option value="0"> Please Select a Game</option>
+       
         @foreach(var game in Model.Games)
         {
             <Option value="@game.GameId">@game.Venue</Option>
