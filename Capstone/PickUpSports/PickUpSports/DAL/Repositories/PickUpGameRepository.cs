@@ -31,6 +31,13 @@ namespace PickUpSports.DAL.Repositories
             return pickUpGameList;
         }
 
+        public PickUpGame AddPickUpGame(PickUpGame pickUpGame)
+        {
+            _context.PickUpGames.Add(pickUpGame);
+            _context.SaveChanges();
+            return pickUpGame;
+        }
+
         public void DeletePickUpGame(PickUpGame pickUpGame)
         {
             PickUpGame existing = _context.PickUpGames.Find(pickUpGame.PickUpGameId);

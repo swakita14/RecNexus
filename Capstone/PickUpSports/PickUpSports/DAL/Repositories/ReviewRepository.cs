@@ -33,5 +33,10 @@ namespace PickUpSports.DAL.Repositories
             List<Review> reviews = _context.Reviews.Where(s => s.ContactId == contactId).ToList();
             return reviews;
         }
+
+        public List<Review> GetAllReviews()
+        {
+            return _context.Reviews.ToList();
+        }
     }
 }

@@ -301,6 +301,7 @@
     <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
     <Compile Include="DAL\Repositories\GameRepository.cs" />
     <Compile Include="DAL\Repositories\LocationRepository.cs" />
+    <Compile Include="DAL\Repositories\VenueOwnerRepository.cs" />
     <Compile Include="DAL\Repositories\VenueRepository.cs" />
     <Compile Include="Interface\IGameService.cs" />
     <Compile Include="Interface\Repositories\IBusinessHoursRepository.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Interface\Repositories\ILocationRepository.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
+    <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\MessageOwnerViewModel.cs" />
@@ -323,7 +325,6 @@
     <Compile Include="Controllers\SportPreferencesController.cs" />
     <Compile Include="Controllers\TimePreferencesController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
-    <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\FriendConfiguration.cs" />

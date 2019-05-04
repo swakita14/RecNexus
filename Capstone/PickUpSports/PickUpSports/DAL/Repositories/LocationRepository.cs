@@ -1,4 +1,6 @@
-﻿using PickUpSports.Interface.Repositories;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.DAL.Repositories
@@ -10,6 +12,11 @@ namespace PickUpSports.DAL.Repositories
         public LocationRepository(PickUpContext context)
         {
             _context = context;
+        }
+
+        public List<Location> GetAllLocations()
+        {
+            return _context.Locations.ToList();
         }
 
         public Location AddLocation(Location location)

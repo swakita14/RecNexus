@@ -8,9 +8,9 @@ namespace PickUpSports.Models.ViewModel.VenueController
 
         public string Filter { get; set; }
 
-        public string CurrentLatitude { get; set; }
+        public string CurrentLatitude { get; set; } = "44.942898";
 
-        public string CurrentLongitude { get; set; }
+        public string CurrentLongitude { get; set; } = "-123.035095";
 
         public string Day { get; set; }
 

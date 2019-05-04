@@ -1,4 +1,5 @@
-﻿using PickUpSports.Models.DatabaseModels;
+﻿using System.Collections.Generic;
+using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Interface.Repositories
 {
@@ -11,5 +12,7 @@ namespace PickUpSports.Interface.Repositories
         void Edit(BusinessHours businessHours);
 
         void Delete(BusinessHours businessHours);
+
+        List<BusinessHours> GetAllBusinessHours();
     }
 }

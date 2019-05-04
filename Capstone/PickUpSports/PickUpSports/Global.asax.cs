@@ -83,6 +83,7 @@ namespace PickUpSports
             builder.RegisterType<VenueRepository>().As<IVenueRepository>();
             builder.RegisterType<BusinessHoursRepository>().As<IBusinessHoursRepository>();
             builder.RegisterType<LocationRepository>().As<ILocationRepository>();
+            builder.RegisterType<VenueOwnerRepository>().As<IVenueOwnerRepository>();
 
             var container = builder.Build();
 

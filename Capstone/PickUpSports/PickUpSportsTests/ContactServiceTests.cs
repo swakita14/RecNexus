@@ -78,7 +78,7 @@ namespace PickUpSportsTests
         public void GetUserSportPreferences_GivenContactId_ReturnList()
         {
             // Arrange
-            _sportPrefRepositoryMock.Setup(x => x.GetUsersSportPreferencesByContactId(It.IsAny<int>())).Returns(
+            _sportPrefRepositoryMock.Setup(x => x.GetAllSportsPreferences()).Returns(
                 new List<SportPreference>
                 {
                     new SportPreference {ContactID = 1, SportID = 1, SportPrefID = 1},
@@ -88,7 +88,7 @@ namespace PickUpSportsTests
             _sportRepositoryMock.Setup(x => x.GetSportById(1)).Returns(new Sport{SportName = "Hi", SportID = 1});
 
             // Act
-            var result = _sut.GetUserSportPreferences(It.IsAny<int>());
+            var result = _sut.GetUserSportPreferences(1);
 
             // Assert
             result.Should().BeOfType<List<string>>();
@@ -101,7 +101,7 @@ namespace PickUpSportsTests
         public void GetUserSportPreferences_NoPreferences_ReturnNull()
         {
             // Arrange
-            _sportPrefRepositoryMock.Setup(x => x.GetUsersSportPreferencesByContactId(It.IsAny<int>()))
+            _sportPrefRepositoryMock.Setup(x => x.GetAllSportsPreferences())
                 .Returns(new List<SportPreference>());
 
             // Act
@@ -118,18 +118,19 @@ namespace PickUpSportsTests
         public void GetUserTimePreferences_GivenContactId_ReturnList()
         {
             // Arrange
-            _timeRepositoryMock.Setup(x => x.GetUsersTimePreferencesByContactId(It.IsAny<int>())).Returns(
+            _timeRepositoryMock.Setup(x => x.GetAllTimePreferences()).Returns(
                 new List<TimePreference>
                 {
-                    It.IsAny<TimePreference>(),
-                    It.IsAny<TimePreference>()
+                    new TimePreference{ContactID = 0},
+                    new TimePreference{ContactID = 0}
                 });
 
             // Act
-            var result = _sut.GetUserTimePreferences(It.IsAny<int>());
+            var result = _sut.GetUserTimePreferences(0);
 
             // Assert
             result.Should().BeOfType<List<TimePreference>>();
+            result.Count.Should().Be(2);
         }
 
         /**
@@ -139,7 +140,7 @@ namespace PickUpSportsTests
         public void GetUserTimePreferences_NoPreferences_ReturnNull()
         {
             // Arrange
-            _timeRepositoryMock.Setup(x => x.GetUsersTimePreferencesByContactId(It.IsAny<int>()))
+            _timeRepositoryMock.Setup(x => x.GetAllTimePreferences())
                 .Returns(new List<TimePreference>());
 
             // Act
@@ -161,9 +162,9 @@ namespace PickUpSportsTests
                 ContactId = 1
             };
 
-            _sportPrefRepositoryMock.Setup(x => x.GetUsersSportPreferencesByContactId(contact.ContactId))
+            _sportPrefRepositoryMock.Setup(x => x.GetAllSportsPreferences())
                 .Returns(new List<SportPreference>());
-            _timeRepositoryMock.Setup(x => x.GetUsersTimePreferencesByContactId(contact.ContactId))
+            _timeRepositoryMock.Setup(x => x.GetAllTimePreferences())
                 .Returns(new List<TimePreference>());
             _reviewRepositoryMock.Setup(x => x.GetReviewsByContactId(contact.ContactId))
                 .Returns(new List<Review>());
@@ -191,9 +192,9 @@ namespace PickUpSportsTests
                 ContactId = 1
             };
 
-            _sportPrefRepositoryMock.Setup(x => x.GetUsersSportPreferencesByContactId(contact.ContactId))
+            _sportPrefRepositoryMock.Setup(x => x.GetAllSportsPreferences())
                 .Returns(new List<SportPreference>());
-            _timeRepositoryMock.Setup(x => x.GetUsersTimePreferencesByContactId(contact.ContactId))
+            _timeRepositoryMock.Setup(x => x.GetAllTimePreferences())
                 .Returns(new List<TimePreference>());
             _reviewRepositoryMock.Setup(x => x.GetReviewsByContactId(contact.ContactId))
                 .Returns(new List<Review>());
