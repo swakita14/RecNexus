@@ -311,7 +311,8 @@
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
     <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
-    <Compile Include="Models\ViewModel\CreateVenueOwnerViewModel.cs" />
+    <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
+    <Compile Include="Models\ViewModel\VenueOwnerController\MessageOwnerViewModel.cs" />
     <Compile Include="Services\ChatHub\ChatHub.cs" />
     <Compile Include="Interface\Repositories\IVenueRepository.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -528,6 +529,8 @@
     <Content Include="Views\Friends\FriendInvite.cshtml" />
     <Content Include="Views\VenueOwner\Create.cshtml" />
     <Content Include="Views\VenueOwner\Detail.cshtml" />
+    <Content Include="Views\VenueOwner\Edit.cshtml" />
+    <Content Include="Views\VenueOwner\MessageOwner.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

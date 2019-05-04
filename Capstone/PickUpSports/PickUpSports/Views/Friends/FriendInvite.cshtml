@@ -7,8 +7,21 @@
 
 @using (Html.BeginForm("InviteToGame", "Friends", FormMethod.Post))
 {
-    <h2> @Html.DropDownList("Select Friend", Model.Friends))</h2>
-     <h2>@Html.DropDownList("Select a Game", Model.Games)</h2>
+    <select id="friendselect" name="FriendName">
+        <option value="0"> Please Select a Friend</option>
+        @foreach(var friend in Model.Friends)
+    {
+        <Option value="@friend.FriendId">@friend.FriendName</Option>
+    }
+    </select> 
+
+    <select id="Gameselect" name="GameTitle">
+        <option value="0"> Please Select a Game</option>
+        @foreach(var game in Model.Games)
+        {
+            <Option value="@game.GameId">@game.Venue</Option>
+        }
+    </select> 
        
     <input type="submit" value="Send Invite" class="btn btn-default" />
 }

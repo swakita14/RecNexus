@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 
-namespace PickUpSports.Models.ViewModel
+namespace PickUpSports.Models.ViewModel.VenueOwnerController
 {
     public class CreateVenueOwnerViewModel
     {
@@ -26,11 +26,14 @@ namespace PickUpSports.Models.ViewModel
         [Display(Name = "Phone Number:")]
         public string PhoneNumber { get; set; }
 
+        [Display(Name = "Company Name:")]
+        public string CompanyName { get; set; }
+
         public DateTime SignUpDate { get; set; }
 
         [Display(Name = "Venue:")]
         public string VenueName { get; set; }
 
-        
+
     }
 }
