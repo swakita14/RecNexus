@@ -110,8 +110,8 @@ namespace PickUpSports.Controllers
         [Authorize]
         [HttpGet]
         public ActionResult FriendInvite()
-        {
-            return View();
+        { 
+        return View();
         }
 
 
@@ -120,7 +120,7 @@ namespace PickUpSports.Controllers
        */
         [Authorize]
         [HttpPost]
-        public RedirectToRouteResult InviteToGame(Friend friend, Game game, string button)
+        public ActionResult FriendInvite(Friend friend, Game game, string button)
         {
             //find the current logged-on user
             string email = User.Identity.GetUserName();
@@ -131,7 +131,7 @@ namespace PickUpSports.Controllers
                 SendInvite(game, friend.FriendID);
             }
             
-           return RedirectToAction("FriendInvite","Friends");
+           return View();
         }
 
         /*
