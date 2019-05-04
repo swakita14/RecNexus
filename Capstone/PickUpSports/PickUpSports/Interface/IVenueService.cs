@@ -7,5 +7,6 @@
        double CalculateVenueDistance(double lat1, double long1, double lat2, double long2);
 
        string GetVenueNameById(int venueId);
+
    }
 }
