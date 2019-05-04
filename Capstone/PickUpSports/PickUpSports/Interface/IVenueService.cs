@@ -1,4 +1,6 @@
-﻿namespace PickUpSports.Interface
+﻿using PickUpSports.Models.DatabaseModels;
+
+namespace PickUpSports.Interface
 {
    public interface IVenueService
    {
@@ -7,6 +9,10 @@
        double CalculateVenueDistance(double lat1, double long1, double lat2, double long2);
 
        string GetVenueNameById(int venueId);
+
+       Venue GetVenueById(int venueId);
+
+       
 
    }
 }

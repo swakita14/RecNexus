@@ -103,6 +103,11 @@ namespace PickUpSports.Services
             return venue.Name;
         }
 
+        public Venue GetVenueById(int venueId)
+        {
+            return _venueRepository.GetVenueById(venueId);
+        }
+
         /**
          * Add or update venue details in database
          */

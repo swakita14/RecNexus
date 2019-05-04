@@ -34,6 +34,14 @@ namespace PickUpSports.Models.ViewModel.VenueOwnerController
         [Display(Name = "Venue:")]
         public string VenueName { get; set; }
 
+        [Required]
+        [Display(Name = "Subject:")]
+        public string MessageSubject { get; set; }
+
+        [Required]
+        [Display(Name = "Body:")]
+        public string MessageBody { get; set; }
+
 
     }
 }

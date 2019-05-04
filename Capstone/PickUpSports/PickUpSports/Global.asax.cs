@@ -71,6 +71,7 @@ namespace PickUpSports
             builder.RegisterType<ContactService>().As<IContactService>();
             builder.RegisterType<GMailService>().As<IGMailService>();
             builder.RegisterType<GameService>().As<IGameService>();
+            builder.RegisterType<VenueOwnerServices>().As<IVenueOwnerService>();
 
             // Register repositories
             builder.RegisterType<ContactRepository>().As<IContactRepository>();
@@ -83,6 +84,7 @@ namespace PickUpSports
             builder.RegisterType<VenueRepository>().As<IVenueRepository>();
             builder.RegisterType<BusinessHoursRepository>().As<IBusinessHoursRepository>();
             builder.RegisterType<LocationRepository>().As<ILocationRepository>();
+            builder.RegisterType<VenueOwnerRepository>().As<IVenueOwnerRepository>();
 
             var container = builder.Build();
 
