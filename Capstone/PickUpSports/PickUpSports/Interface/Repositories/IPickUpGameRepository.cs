@@ -9,6 +9,8 @@ namespace PickUpSports.Interface.Repositories
 
         List<PickUpGame> GetPickUpGameListByContactId(int contactId);
 
+        PickUpGame AddPickUpGame(PickUpGame pickUpGame);
+
         void DeletePickUpGame(PickUpGame pickUpGame);
     }
 }

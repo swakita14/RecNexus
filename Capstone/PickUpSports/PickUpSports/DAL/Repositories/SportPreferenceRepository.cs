@@ -14,10 +14,9 @@ namespace PickUpSports.DAL.Repositories
             _context = context;
         }
 
-        public List<SportPreference> GetUsersSportPreferencesByContactId(int contactId)
+        public List<SportPreference> GetAllSportsPreferences()
         {
-            var preferences = _context.SportPreferences.Where(x => x.ContactID == contactId).ToList();
-            return preferences;
+            return _context.SportPreferences.ToList();
         }
 
         public void Delete(SportPreference sportPreference)

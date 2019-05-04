@@ -7,6 +7,8 @@ namespace PickUpSports.Interface.Repositories
     {
         List<Game> GetAllGames();
 
+        Game AddGame(Game game);
+
         Game GetGameById(int id);
 
         void EditGame(Game game);

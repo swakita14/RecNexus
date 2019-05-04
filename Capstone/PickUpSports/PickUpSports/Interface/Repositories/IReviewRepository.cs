@@ -10,5 +10,7 @@ namespace PickUpSports.Interface.Repositories
         void EditReview(Review review);
 
         List<Review> GetReviewsByContactId(int contactId);
+
+        List<Review> GetAllReviews();
     }
 }
