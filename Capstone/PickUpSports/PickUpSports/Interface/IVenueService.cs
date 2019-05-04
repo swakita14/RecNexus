@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Interface
@@ -9,6 +10,8 @@ namespace PickUpSports.Interface
 
        Venue GetVenueById(int venueId);
 
+       void EditVenue(Venue venue);
+
        Location GetVenueLocation(int venueId);
 
        List<Review> GetVenueReviews(int venueId);
@@ -17,8 +20,12 @@ namespace PickUpSports.Interface
 
        List<BusinessHours> GetAllBusinessHours();
 
-       void UpdateVenues();
+       bool VenueHasOwner(Venue venue);
 
+       bool IsVenueAvailable(List<BusinessHours> venueHours, DateTime startDateTime, DateTime endDateTime);
+
+       void UpdateVenues();
+        
        double CalculateVenueDistance(double lat1, double long1, double lat2, double long2);
 
        string GetVenueNameById(int venueId);

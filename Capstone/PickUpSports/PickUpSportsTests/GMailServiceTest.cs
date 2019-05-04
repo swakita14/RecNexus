@@ -3,6 +3,7 @@ using System.Net.Mail;
 using Moq;
 using NUnit.Framework;
 using PickUpSports.Models.Extensions;
+using PickUpSports.Services;
 
 namespace PickUpSportsTests
 {

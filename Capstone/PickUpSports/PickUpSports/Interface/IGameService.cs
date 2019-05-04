@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Interface
@@ -17,6 +18,8 @@ namespace PickUpSports.Interface
 
         Game GetGameById(int id);
 
+        void EditGame(Game game);
+
         List<Game> GetAllGamesByContactId(int contactId);
 
         List<Game> GetAllCurrentOpenGames();
@@ -25,11 +28,23 @@ namespace PickUpSports.Interface
 
         List<Game> GetCurrentGamesByVenueId(int venueId);
 
+        List<Game> GetCurrentGamesBySportId(int sportId);
+
         string GetSportNameById(int sportId);
 
         List<Sport> GetAllSports();
 
         bool IsNotSignedUpForGame(int contactId, List<PickUpGame> games);
+
+        bool IsCreatorOfGame(int contactId, Game game);
+
+        bool IsSelectedTimeValid(DateTime startDateTime, DateTime endDataTime);
+
+        bool IsThisGameCanCancel(DateTime dateTime);
+
+        Game CheckForExistingGame(int venueId, int sportId, DateTime startDateTime);
+
+        Game CheckForExistingGameExceptItself(int venueId, int sportId, DateTime startDateTime, int gameId);
 
     }
 }

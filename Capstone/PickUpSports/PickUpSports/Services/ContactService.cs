@@ -79,7 +79,7 @@ namespace PickUpSports.Services
 
             // Delete any TimePreferences related to Contact
             var timePreferences = GetUserTimePreferences(contact.ContactId);
-            if (timePreferences.Count > 0)
+            if (timePreferences != null)
             {
                 foreach (var timePreferece in timePreferences)
                 {
@@ -152,7 +152,11 @@ namespace PickUpSports.Services
         public List<string> GetUserSportPreferences(int contactId)
         {
             var sportPreferences = _sportPreferenceRepository.GetAllSportsPreferences();
-            var userPrefs = sportPreferences.Where(x => x.ContactID == contactId).ToList();
+            var userPrefs = from s in sportPreferences
+                where s.ContactID == contactId
+                select s;
+
+            if (userPrefs.ToList().Count < 1) return null;
 
             var results = new List<string>();
             foreach (var sportPreference in userPrefs)

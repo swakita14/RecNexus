@@ -61,6 +61,14 @@ namespace PickUpSports.Services
         }
 
         /*
+         * Given game, edit that game
+         */
+        public void EditGame(Game game)
+        {
+            _gameRepository.EditGame(game);
+        }
+
+        /*
          * Given Contact ID, get all games that player started 
          */
         public List<Game> GetAllGamesByContactId(int contactId)
@@ -111,7 +119,7 @@ namespace PickUpSports.Services
             var results = from g in games
                 where g.ContactId == contactId &&
                       g.EndTime > DateTime.Today.AddDays(-1)
-                      orderby g.StartTime ascending 
+                      orderby g.StartTime  
                 select g;
 
             if (!results.Any()) return null;
@@ -127,7 +135,21 @@ namespace PickUpSports.Services
             var games = _gameRepository.GetAllGames();
             if (games == null) return null;
 
-            var results = games.Where(x => x.VenueId == venueId && x.EndTime > DateTime.Today.AddDays(-1));
+            var results = games.Where(x => x.VenueId == venueId && x.EndTime > DateTime.Today.AddDays(-1)).ToList();
+
+            if (!results.Any()) return null;
+            return results.ToList();
+        }
+
+        /*
+         * Given SportID, returns list of current games
+         */
+        public List<Game> GetCurrentGamesBySportId(int sportId)
+        {
+            var games = _gameRepository.GetAllGames();
+            if (games == null) return null;
+
+            var results = games.Where(x => x.SportId == sportId && x.EndTime > DateTime.Today.AddDays(-1)).ToList();
 
             if (!results.Any()) return null;
             return results.ToList();
@@ -171,6 +193,115 @@ namespace PickUpSports.Services
 
             // else this person hasn't signed up yet
             return true;
+        }
+
+        /*
+         * Given a Contact ID and a game, check if user is
+         * creater of that game
+         */
+        public bool IsCreatorOfGame(int contactId, Game game)
+        {
+            //if blank value then return false
+            if (contactId == 0 || game.ContactId == 0) return false;
+
+            if (game == null) return false;
+
+            //see if it matches, if so then the contact is the creator
+            if (contactId == game.ContactId)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /*
+         * Check if given time is valid
+         */
+        public bool IsSelectedTimeValid(DateTime startDateTime, DateTime endDataTime)
+        {
+            if (startDateTime == null || endDataTime == null)
+            {
+                return false;
+            }
+            if (endDataTime.Date != startDateTime.Date)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /*
+         * Games can only be cancelled if not within an hour
+         * before start time
+         */
+        public bool IsThisGameCanCancel(DateTime dateTime)
+        {
+            if (dateTime.AddHours(-1) < DateTime.Now)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public Game CheckForExistingGame(int venueId, int sportId, DateTime startDateTime)
+        {
+            // Check for all games that are happening at same venue
+            var allGames = GetAllCurrentOpenGames();
+            var gamesAtVenue = allGames.Where(x => x.VenueId == venueId).ToList();
+            if (gamesAtVenue.Count <= 0) return null;
+
+            // Check for all games happening at that venue with same sport
+            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
+            if (sportsAtVenue.Count <= 0) return null;
+
+            // There are existing games with same sport and venue so check starting time
+            foreach (var game in sportsAtVenue)
+            {
+                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
+                {
+                    // If we get here, the new game will overlap with an existing game
+                    // Check if status is Open and if so, return that game
+                    if (game.GameStatusId == (int)GameStatusEnum.Open)
+                    {
+                        return game;
+                    }
+                }
+            }
+
+            return null;
+
+        }
+
+        // Added by Kexin, because the above method CheckForExistingGame is also used by creating games, there is no gameID to compare
+        // make sure the existing game is not itself, user can save the game without any edition
+        public Game CheckForExistingGameExceptItself(int venueId, int sportId, DateTime startDateTime, int gameId)
+        {
+            // Check for all games that are happening at same venue that aren't this game
+            var allGames = GetAllCurrentOpenGames();
+            var gamesAtVenue = allGames.Where(x => x.VenueId == venueId && x.GameId != gameId).ToList();
+            if (gamesAtVenue.Count <= 0) return null;
+
+            // Check for all games happening at that venue with same sport
+            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
+            if (sportsAtVenue.Count <= 0) return null;
+
+            // There are existing games with same sport and venue so check starting time
+            foreach (var game in sportsAtVenue)
+            {
+                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
+                {
+                    // If we get here, the new game will overlap with an existing game
+                    // Check if status is Open and if so, return that game
+                    if (game.GameStatusId == (int)GameStatusEnum.Open)
+                    {
+                        return game;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

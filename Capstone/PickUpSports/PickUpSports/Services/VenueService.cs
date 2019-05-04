@@ -16,18 +16,21 @@ namespace PickUpSports.Services
         private readonly IBusinessHoursRepository _businessHoursRepository;
         private readonly IReviewRepository _reviewRepository;
         private readonly ILocationRepository _locationRepository;
+        private readonly IVenueOwnerRepository _venueOwnerRepository;
 
         public VenueService(IPlacesApiClient placesApi, 
             IVenueRepository venueRepository, 
             IBusinessHoursRepository businessHoursRepository, 
             IReviewRepository reviewRepository, 
-            ILocationRepository locationRepository)
+            ILocationRepository locationRepository, 
+            IVenueOwnerRepository venueOwnerRepository)
         {
             _placesApi = placesApi;
             _venueRepository = venueRepository;
             _businessHoursRepository = businessHoursRepository;
             _reviewRepository = reviewRepository;
             _locationRepository = locationRepository;
+            _venueOwnerRepository = venueOwnerRepository;
         }
 
 
@@ -39,6 +42,11 @@ namespace PickUpSports.Services
         public Venue GetVenueById(int venueId)
         {
             return _venueRepository.GetVenueById(venueId);
+        }
+
+        public void EditVenue(Venue venue)
+        {
+            _venueRepository.Edit(venue);
         }
 
         public string GetVenueNameById(int venueId)
@@ -68,6 +76,48 @@ namespace PickUpSports.Services
         public List<BusinessHours> GetAllBusinessHours()
         {
             return _businessHoursRepository.GetAllBusinessHours();
+        }
+
+        public bool VenueHasOwner(Venue venue)
+        {
+            //Find the owner using the venue ID, again could be simplified using repo patterns
+            var allOwners = _venueOwnerRepository.GetAllVenueOwners();
+            var venueOwner = allOwners.FirstOrDefault(x => x.VenueId == venue.VenueId);
+
+            //if there is not an owner it would be null so return false
+            if (venueOwner == null) return false;
+
+            //else there is an owner and the value is not null so return true 
+            return true;
+        }
+
+        public bool IsVenueAvailable(List<BusinessHours> venueHours, DateTime startDateTime, DateTime endDateTime)
+        {
+            // If no business hours then venue has no hours and is therefore not available
+            if (venueHours == null) return false;
+
+            // Only checking start date because games should not span over a day 
+            DayOfWeek startDate = startDateTime.DayOfWeek;
+            BusinessHours venueOpenDate = venueHours.FirstOrDefault(x => x.DayOfWeek == (int)startDate);
+
+            // Venue is open that date, check timeframes
+            if (venueOpenDate != null)
+            {
+                TimeSpan startTime = startDateTime.TimeOfDay;
+                TimeSpan endTime = endDateTime.TimeOfDay;
+
+                // Change midnight to 11:59 PM for accurate time comparisons
+                if (venueOpenDate.CloseTime == new TimeSpan(00, 00, 00))
+                    venueOpenDate.CloseTime = new TimeSpan(23, 59, 00);
+
+                // Ensure both start and end times are within range
+                if (startTime > venueOpenDate.OpenTime && startTime < venueOpenDate.CloseTime)
+                {
+                    if (endTime > venueOpenDate.OpenTime && endTime < venueOpenDate.CloseTime) return true;
+                }
+            }
+
+            return false;
         }
 
         public void UpdateVenues()

@@ -74,7 +74,7 @@ namespace PickUpSports.Controllers
             }
 
             // Check if similar game already exists
-            Game existingGame = CheckForExistingGame(model.VenueId, model.SportId, startDateTime);
+            Game existingGame = _gameService.CheckForExistingGame(model.VenueId, model.SportId, startDateTime);
             if (existingGame != null)
             {
                 // TODO - Add link to existing game details later when that page is created
@@ -88,7 +88,7 @@ namespace PickUpSports.Controllers
             List<BusinessHours> venueHours = _venueService.GetVenueBusinessHours(model.VenueId);
 
             // Return error to View if the venue is not available
-            bool isVenueAvailable = IsVenueAvailable(venueHours, startDateTime, endDateTime);
+            bool isVenueAvailable = _venueService.IsVenueAvailable(venueHours, startDateTime, endDateTime);
             if (!isVenueAvailable)
             {
                 ViewData.ModelState.AddModelError("DateRange", $"Unfortunately, {venue.Name} is not available during the hours you chose.");
@@ -231,7 +231,7 @@ namespace PickUpSports.Controllers
 
             Game game = _gameService.GetGameById(id);
            
-            if (IsCreatorOfGame(contact.ContactId, game)) ViewBag.IsCreator = true;
+            if (_gameService.IsCreatorOfGame(contact.ContactId, game)) ViewBag.IsCreator = true;
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
@@ -421,7 +421,7 @@ namespace PickUpSports.Controllers
         public PartialViewResult BusinessHoursByVenueId(int id)
         {
             // Map business hours
-            List<BusinessHours> businessHours = _context.BusinessHours.Where(b => b.VenueId == id).ToList();
+            List<BusinessHours> businessHours = _venueService.GetVenueBusinessHours(id);
             List<BusinessHoursViewModel> model = new List<BusinessHoursViewModel>();
 
             foreach (var businessHour in businessHours)
@@ -437,9 +437,9 @@ namespace PickUpSports.Controllers
                 });
             }
 
-            Venue venue = _context.Venues.Find(id);
+            Venue venue = _venueService.GetVenueById(id);
 
-            if (!VenueHasOwner(venue))
+            if (!_venueService.VenueHasOwner(venue))
             {
                 ViewData.ModelState.AddModelError("NoOwner", "This venue has not been claimed by an owner so please be sure to contact them directly after creating your game to avoid scheduling conflicts");
             }
@@ -448,32 +448,15 @@ namespace PickUpSports.Controllers
             return PartialView("_BusinessHours", model);
         }
 
-
-        public bool VenueHasOwner(Venue venue)
-        {
-            //Find the owner using the venue ID, again could be simplified using repo patterns
-            VenueOwner owner = _context.VenueOwners.FirstOrDefault(x => x.VenueId == venue.VenueId);
-
-            //if there is not an owner it would be null so return false
-            if (owner == null) return false;
-
-            //else there is an owner and the value is not null so return true 
-            return true;
-        }
-
         public PartialViewResult GetGamesResult(int venueId)
         {
             //list of games found using venue ID
-            List<Game> gameList = _context.Games.Where(x => x.VenueId == venueId).ToList();
+            var gameList = _gameService.GetCurrentGamesByVenueId(venueId);
 
-            if (gameList.Count == 0)
-            {
-                ViewData.ModelState.AddModelError("GameSearch", "There are no games that matches your search");
-            }
+            if (gameList.Count == 0) ViewData.ModelState.AddModelError("GameSearch", "There are no games that matches your search");
 
             //List using ViewModel to format how I like 
             List<GameListViewModel> model = new List<GameListViewModel>();
-
 
             //Find right data for each variable 
             foreach (var game in gameList)
@@ -481,8 +464,8 @@ namespace PickUpSports.Controllers
                 var gameToAdd = new GameListViewModel
                 {
                     GameId = game.GameId,
-                    Sport = _context.Sports.Find(game.SportId).SportName,
-                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    Sport = _gameService.GetSportNameById(game.SportId),
+                    Venue = _venueService.GetVenueNameById(game.VenueId),
                     StartDate = game.StartTime,
                     EndDate = game.EndTime
                 };
@@ -504,8 +487,7 @@ namespace PickUpSports.Controllers
 
         public PartialViewResult SearchBySport(int sportId)
         {
-            //list of games found using venue ID
-            List<Game> gameList = _context.Games.Where(x => x.SportId == sportId).ToList();
+            List<Game> gameList = _gameService.GetCurrentGamesBySportId(sportId);
 
             if (gameList.Count == 0)
             {
@@ -522,8 +504,8 @@ namespace PickUpSports.Controllers
                 var gameToAdd = new GameListViewModel
                 {
                     GameId = game.GameId,
-                    Sport = _context.Sports.Find(game.SportId).SportName,
-                    Venue = _context.Venues.Find(game.VenueId).Name,
+                    Sport = _gameService.GetSportNameById(game.SportId),
+                    Venue = _venueService.GetVenueNameById(game.VenueId),
                     StartDate = game.StartTime,
                     EndDate = game.EndTime
                 };
@@ -541,23 +523,22 @@ namespace PickUpSports.Controllers
 
         public PartialViewResult TimeFilter(string dateRange)
         {
-
             var dates = dateRange.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
             var startDateTime = DateTime.Parse(dates[0], CultureInfo.InvariantCulture);
             var endDateTime = DateTime.Parse(dates[1], CultureInfo.CurrentCulture);
 
             List<GameListViewModel> model = new List<GameListViewModel>();
-            foreach (var game in _context.Games)
+            foreach (var game in _gameService.GetAllCurrentOpenGames())
             {
-                if (IsSelectedTimeValid(startDateTime, endDateTime))
+                if (_gameService.IsSelectedTimeValid(startDateTime, endDateTime))
                 {
                     if (game.StartTime >= startDateTime && game.EndTime <= endDateTime)
                     {
                         var gameToAdd = new GameListViewModel
                         {
                             GameId = game.GameId,
-                            Sport = _context.Sports.Find(game.SportId).SportName,
-                            Venue = _context.Venues.Find(game.VenueId).Name,
+                            Sport = _gameService.GetSportNameById(game.SportId),
+                            Venue = _venueService.GetVenueNameById(game.VenueId),
                             StartDate = game.StartTime,
                             EndDate = game.EndTime
                         };
@@ -576,8 +557,8 @@ namespace PickUpSports.Controllers
                     var gameToAdd = new GameListViewModel
                     {
                         GameId = game.GameId,
-                        Sport = _context.Sports.Find(game.SportId).SportName,
-                        Venue = _context.Venues.Find(game.VenueId).Name,
+                        Sport = _gameService.GetSportNameById(game.SportId),
+                        Venue = _venueService.GetVenueNameById(game.VenueId),
                         StartDate = game.StartTime,
                         EndDate = game.EndTime
                     };
@@ -635,13 +616,13 @@ namespace PickUpSports.Controllers
             Contact currContact = _contactService.GetContactByEmail(email);
 
             //Find Game
-            Game game = _context.Games.Find(id);
+            Game game = _gameService.GetGameById(id);
 
             //Populate dropdown using the current values of the existing game
             PopulateEditDropDownMethod(game);
 
             //check if the user is the creator of the game
-            if (!IsCreatorOfGame(currContact.ContactId, game))
+            if (!_gameService.IsCreatorOfGame(currContact.ContactId, game))
             {
                 return RedirectToAction("GameDetails", new {id = id});
             }
@@ -655,10 +636,12 @@ namespace PickUpSports.Controllers
             EditGameViewModel model = new EditGameViewModel()
             { 
                 GameId = id,
-                ContactId = (int) game.ContactId,   
-                Sport = _context.Sports.Find(game.SportId).SportName,
-                Status = _context.GameStatuses.Find(game.GameStatusId).Status,
-                Venue = _context.Venues.Find(game.VenueId).Name,
+                ContactId = (int) game.ContactId,
+                VenueId = game.VenueId,
+                SportId = game.SportId,
+                Sport = _gameService.GetSportNameById(game.SportId),
+                Venue = _venueService.GetVenueNameById(game.VenueId),
+                Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
                 DateRange = dateRange,
 
             };
@@ -672,12 +655,18 @@ namespace PickUpSports.Controllers
          */
         public void PopulateEditDropDownMethod(Game game)
         {
-            ViewBag.Venue = new SelectList(_context.Venues, "VenueId", "Name", game.VenueId);
-            ViewBag.Sport = new SelectList(_context.Sports, "SportId", "SportName", game.SportId);
-            ViewBag.Status = new SelectList(_context.GameStatuses, "GameStatusId", "Status", game.GameStatusId);
+            ViewBag.Venue = new SelectList(_venueService.GetAllVenues(), "VenueId", "Name", game.VenueId);
+            ViewBag.Sport = new SelectList(_gameService.GetAllSports(), "SportId", "SportName", game.SportId);
+
+            var gameStatusDict = new Dictionary<int, string>();
+            foreach (GameStatusEnum gameStatus in Enum.GetValues(typeof(GameStatusEnum)))
+            {
+                gameStatusDict.Add((int)gameStatus, gameStatus.ToString());
+            }
+
+            ViewBag.Status = new SelectList(gameStatusDict, "GameStatusId", "Status", game.GameStatusId);
         }
-
-
+        
         [Authorize]
         [HttpPost]
         public ActionResult EditGame(EditGameViewModel model)
@@ -691,13 +680,13 @@ namespace PickUpSports.Controllers
             var endDateTime = DateTime.Parse(dates[1], CultureInfo.CurrentCulture);
 
             //find the existing game
-            Game existingGame = _context.Games.Find(model.GameId);
+            Game existingGame = _gameService.GetGameById(model.GameId);
 
             //populating dropdown with the existing game
             PopulateEditDropDownMethod(existingGame);
 
             //check if the game will happen in one hour
-            if (!IsThisGameCanCancel(startDateTime))
+            if (!_gameService.IsThisGameCanCancel(startDateTime))
             {
                 ViewData.ModelState.AddModelError("GameStart", "Sorry, you can only edit the game at least 1 hour long before it starts.");
                 PopulateEditDropDownMethod(existingGame);
@@ -705,7 +694,7 @@ namespace PickUpSports.Controllers
             }
 
             //check if the dates match - Can't have games that start and end on different dates 
-            if (!IsSelectedTimeValid(startDateTime, endDateTime))
+            if (!_gameService.IsSelectedTimeValid(startDateTime, endDateTime))
             {
                 ViewData.ModelState.AddModelError("DateRange", "Start date and end date must be same date.");
                 PopulateEditDropDownMethod(existingGame);
@@ -713,21 +702,20 @@ namespace PickUpSports.Controllers
             }
 
             //check for existing games
-            Game gameCheck = CheckForExistingGameExceptItself(int.Parse(model.Venue), int.Parse(model.Sport), startDateTime, model.GameId);
+            Game gameCheck = _gameService.CheckForExistingGameExceptItself(model.VenueId, model.SportId, startDateTime, model.GameId);
             if (gameCheck != null)
             {
-                // TODO - Add link to existing game details later when that page is created
                 ViewData.ModelState.AddModelError("GameExists", "A game already exists with this venue, sport, and time.");
                 PopulateEditDropDownMethod(existingGame);
                 return View(model);
             }
 
             // Get venue by ID and business hours for that venue
-            Venue venue = _context.Venues.Find(int.Parse(model.Venue));
-            List<BusinessHours> venueHours = _context.BusinessHours.Where(b => b.VenueId == venue.VenueId).ToList();
+            Venue venue = _venueService.GetVenueById(model.VenueId);
+            List<BusinessHours> venueHours = _venueService.GetVenueBusinessHours(model.VenueId);
 
             // Return error to View if the venue is not available
-            bool isVenueAvailable = IsVenueAvailable(venueHours, startDateTime, endDateTime);
+            bool isVenueAvailable = _venueService.IsVenueAvailable(venueHours, startDateTime, endDateTime);
             if (!isVenueAvailable)
             {
                 ViewData.ModelState.AddModelError("DateRange", $"Unfortunately, {venue.Name} is not available during the hours you chose.");
@@ -736,22 +724,25 @@ namespace PickUpSports.Controllers
             }
 
             //if all the checks passed, then pass the values into the existing game
-            existingGame.VenueId = int.Parse(model.Venue);
-            existingGame.SportId = int.Parse(model.Sport);
-            existingGame.GameStatusId = int.Parse(model.Status);
+            var gameStatusEnum = (GameStatusEnum) Enum.Parse(typeof(GameStatusEnum), model.Status);
+            existingGame.VenueId = model.VenueId;
+            existingGame.SportId = model.SportId;
+            existingGame.GameStatusId = (int) gameStatusEnum;
             existingGame.GameId = model.GameId;
             existingGame.ContactId = model.ContactId;
             existingGame.StartTime = startDateTime;
             existingGame.EndTime = endDateTime;
 
-            //save changes
-            _context.Entry(existingGame).State = EntityState.Modified;
+            _gameService.EditGame(existingGame);
 
             //send email to users once the game is cancelled
             if (int.Parse(model.Status) == 2)
             {
-                string body = "Sorry, this game is canceled by the creator. Venue: " + _context.Venues.First(x => x.VenueId == existingGame.VenueId).Name
-                                                                                     + "; Sport: " + _context.Sports.First(x => x.SportID == existingGame.SportId).SportName
+                var venueName = _venueService.GetVenueNameById(existingGame.VenueId);
+                var sportName = _gameService.GetSportNameById(existingGame.SportId);
+
+                string body = "Sorry, this game is canceled by the creator. Venue: " + venueName
+                                                                                     + "; Sport: " + sportName
                                                                                      + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
 
                 List<PickUpGame> pickUpGameList = _gameService.GetPickUpGameListByGameId(existingGame.GameId);
@@ -761,147 +752,17 @@ namespace PickUpSports.Controllers
                 }                              
             }
 
-            _context.SaveChanges();
-
             //redirect them back to the changed game detail
             return RedirectToAction("GameDetails", new {id = model.GameId});
         }
-
-        public void PopulateEditDropdown() { }
-
-        public bool IsCreatorOfGame(int contactId, Game game)
-        {
-            //if blank value then return false
-            if (contactId == 0 || game.ContactId == 0) return false;
-
-            if (game == null) return false;
-
-            //see if it matches, if so then the contact is the creator
-            if (contactId == game.ContactId)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsSelectedTimeValid(DateTime startDateTime,DateTime endDataTime)
-        {
-            if(startDateTime == null|| endDataTime == null)
-            {
-                return false;
-            }
-            if (endDataTime.Date!=startDateTime.Date)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
+        
         /**
          * Helper methods
         */
         public void PopulateDropdownValues()
         {
-            ViewBag.Venues = _context.Venues.ToList().ToDictionary(v => v.VenueId, v => v.Name);
-            ViewBag.Sports = _context.Sports.ToList().ToDictionary(s => s.SportID, s => s.SportName);
+            ViewBag.Venues = _venueService.GetAllVenues().ToDictionary(v => v.VenueId, v => v.Name);
+            ViewBag.Sports = _gameService.GetAllSports().ToList().ToDictionary(s => s.SportID, s => s.SportName);
         }
-
-        public bool IsVenueAvailable(List<BusinessHours> venueHours, DateTime startDateTime, DateTime endDateTime)
-        {
-            // If no business hours then venue has no hours and is therefore not available
-            if (venueHours == null) return false;
-
-            // Only checking start date because games should not span over a day 
-            DayOfWeek startDate = startDateTime.DayOfWeek;
-            BusinessHours venueOpenDate = venueHours.FirstOrDefault(x => x.DayOfWeek == (int)startDate);
-
-            // Venue is open that date, check timeframes
-            if (venueOpenDate != null)
-            {
-                TimeSpan startTime = startDateTime.TimeOfDay;
-                TimeSpan endTime = endDateTime.TimeOfDay;
-
-                // Change midnight to 11:59 PM for accurate time comparisons
-                if (venueOpenDate.CloseTime == new TimeSpan(00, 00, 00))
-                    venueOpenDate.CloseTime = new TimeSpan(23, 59, 00);
-
-                // Ensure both start and end times are within range
-                if (startTime > venueOpenDate.OpenTime && startTime < venueOpenDate.CloseTime)
-                {
-                    if (endTime > venueOpenDate.OpenTime && endTime < venueOpenDate.CloseTime) return true;
-                }
-            }
-
-            return false;
-        }
-
-        public Game CheckForExistingGame(int venueId, int sportId, DateTime startDateTime)
-        {
-            // Check for all games that are happening at same venue
-            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId).ToList();
-            if (gamesAtVenue.Count <= 0) return null;
-
-            // Check for all games happening at that venue with same sport
-            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
-            if (sportsAtVenue.Count <= 0) return null;
-
-            // There are existing games with same sport and venue so check starting time
-            foreach (var game in sportsAtVenue)
-            {
-                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
-                {
-                    // If we get here, the new game will overlap with an existing game
-                    // Check if status is Open and if so, return that game
-                    if (game.GameStatusId == (int)GameStatusEnum.Open)
-                    {
-                        return game;
-                    }
-                }
-            }
-
-            return null;
-
-        }
-
-        // Added by Kexin, because the above method CheckForExistingGame is also used by creating games, there is no gameID to compare
-        // make sure the existing game is not itself, user can save the game without any edition
-        public Game CheckForExistingGameExceptItself(int venueId, int sportId, DateTime startDateTime, int gameId)
-        {
-            // Check for all games that are happening at same venue
-            List<Game> gamesAtVenue = _context.Games.Where(g => g.VenueId == venueId && g.GameId != gameId).ToList();
-            if (gamesAtVenue.Count <= 0) return null;
-
-            // Check for all games happening at that venue with same sport
-            List<Game> sportsAtVenue = gamesAtVenue.Where(g => g.SportId == sportId).ToList();
-            if (sportsAtVenue.Count <= 0) return null;
-
-            // There are existing games with same sport and venue so check starting time
-            foreach (var game in sportsAtVenue)
-            {
-                if (startDateTime >= game.StartTime && startDateTime <= game.EndTime)
-                {
-                    // If we get here, the new game will overlap with an existing game
-                    // Check if status is Open and if so, return that game
-                    if (game.GameStatusId == (int)GameStatusEnum.Open)
-                    {
-                        return game;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public bool IsThisGameCanCancel(DateTime dateTime)
-        {
-            if (dateTime.AddHours(-1) < DateTime.Now)
-            {
-                return false;
-            }
-            return true;
-        }
-
     }
 }
