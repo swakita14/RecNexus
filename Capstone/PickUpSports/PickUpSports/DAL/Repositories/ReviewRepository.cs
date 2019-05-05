@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using PickUpSports.Interface.Repositories;
@@ -22,6 +23,11 @@ namespace PickUpSports.DAL.Repositories
             return review;
         }
 
+        public Review GetReviewById(int id)
+        {
+            return _context.Reviews.Find(id);
+        }
+
         public void EditReview(Review review)
         {
             _context.Entry(review).State = EntityState.Modified;
@@ -32,6 +38,20 @@ namespace PickUpSports.DAL.Repositories
         {
             List<Review> reviews = _context.Reviews.Where(s => s.ContactId == contactId).ToList();
             return reviews;
+        }
+
+        public List<Review> GetAllReviews()
+        {
+            return _context.Reviews.ToList();
+        }
+
+        public void DeleteReview(Review review)
+        {
+            Review existing = _context.Reviews.Find(review.ReviewId);
+            if (existing == null) throw new ArgumentNullException($"Could not find review by ID {review.ReviewId}");
+
+            _context.Reviews.Remove(existing);
+            _context.SaveChanges();
         }
     }
 }

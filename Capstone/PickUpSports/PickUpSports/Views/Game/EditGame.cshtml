@@ -24,7 +24,8 @@
                 <fieldset>
                     @Html.HiddenFor(model => model.ContactId)
                     @Html.HiddenFor(model => model.GameId)
-
+                    @Html.HiddenFor(model => model.VenueId)
+                    @Html.HiddenFor(model => model.SportId)
                     <legend class="text-center header" id="header">Edit Game Detail</legend>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Venue)

@@ -1,4 +1,6 @@
-﻿using PickUpSports.Interface.Repositories;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.DAL.Repositories
@@ -16,6 +18,11 @@ namespace PickUpSports.DAL.Repositories
         {
             var result = _context.Sports.Find(id);
             return result;
+        }
+
+        public List<Sport> GetAllSports()
+        {
+            return _context.Sports.ToList();
         }
     }
 }

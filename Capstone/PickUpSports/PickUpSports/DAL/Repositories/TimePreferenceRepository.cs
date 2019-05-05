@@ -14,10 +14,9 @@ namespace PickUpSports.DAL.Repositories
             _context = context;
         }
 
-        public List<TimePreference> GetUsersTimePreferencesByContactId(int contactId)
+        public List<TimePreference> GetAllTimePreferences()
         {
-            var preferences = _context.TimePreferences.Where(x => x.ContactID == contactId).ToList();
-            return preferences;
+            return _context.TimePreferences.ToList();
         }
 
         public void Delete(TimePreference timePreference)

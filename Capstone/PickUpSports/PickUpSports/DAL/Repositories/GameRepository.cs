@@ -21,6 +21,13 @@ namespace PickUpSports.DAL.Repositories
             return _context.Games.ToList();
         }
 
+        public Game AddGame(Game game)
+        {
+            _context.Games.Add(game);
+            _context.SaveChanges();
+            return game;
+        }
+
         public Game GetGameById(int id)
         {
             return _context.Games.Find(id);

@@ -302,7 +302,7 @@
     <Compile Include="DAL\Repositories\GameRepository.cs" />
     <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="DAL\Repositories\LocationRepository.cs" />
-    <Compile Include="DAL\Repositories\VenueOwnerRespository.cs" />
+    <Compile Include="DAL\Repositories\VenueOwnerRepository.cs" />
     <Compile Include="DAL\Repositories\VenueRepository.cs" />
     <Compile Include="Interface\IGameService.cs" />
     <Compile Include="Interface\IVenueOwnerService.cs" />
@@ -311,7 +311,10 @@
     <Compile Include="Interface\Repositories\ILocationRepository.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
+    <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
+    <Compile Include="Models\ViewModel\ReviewController\EditReviewViewModel.cs" />
+    <Compile Include="Models\ViewModel\VenueController\PartialReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\MessageOwnerViewModel.cs" />
     <Compile Include="Services\ChatHub\ChatHub.cs" />
@@ -326,7 +329,6 @@
     <Compile Include="Controllers\SportPreferencesController.cs" />
     <Compile Include="Controllers\TimePreferencesController.cs" />
     <Compile Include="Controllers\VenueController.cs" />
-    <Compile Include="Controllers\VenueMapController.cs" />
     <Compile Include="DAL\Configurations\BusinessHoursConfiguration.cs" />
     <Compile Include="DAL\Configurations\ContactConfiguration.cs" />
     <Compile Include="DAL\Configurations\FriendConfiguration.cs" />
@@ -388,7 +390,7 @@
     <Compile Include="Models\ViewModel\ContactController\ProfileViewModel.cs" />
     <Compile Include="Models\ViewModel\CreatePickUpViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\CreateGameViewModel.cs" />
-    <Compile Include="Models\ViewModel\CreateReviewViewModel.cs" />
+    <Compile Include="Models\ViewModel\ReviewController\CreateReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\ContactController\CreateSportPreferenceViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\EditGameViewModel.cs" />
     <Compile Include="Models\ViewModel\GameController\GameListViewModel.cs" />
@@ -511,7 +513,6 @@
     <Content Include="Views\TimePreferences\Edit.cshtml" />
     <Content Include="Views\SportPreferences\ModifySportPreferences.cshtml" />
     <Content Include="Views\SportPreferences\Delete.cshtml" />
-    <Content Include="Views\SportPreferences\Details.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
     <Content Include="Web_deploy.config" />
     <Content Include="Views\Game\_BusinessHours.cshtml" />
@@ -534,6 +535,9 @@
     <Content Include="Views\VenueOwner\Detail.cshtml" />
     <Content Include="Views\VenueOwner\Edit.cshtml" />
     <Content Include="Views\VenueOwner\MessageOwner.cshtml" />
+    <Content Include="Views\Venue\_VenueReviews.cshtml" />
+    <Content Include="Views\Venue\_VenueGames.cshtml" />
+    <Content Include="Views\Review\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
