@@ -67,6 +67,26 @@ namespace PickUpSports.Services
             return reviews.Where(x => x.VenueId == venueId).ToList();
         }
 
+        public void CreateVenueReview(Review review)
+        {
+            _reviewRepository.AddReview(review);
+        }
+
+        public void EditVenueReview(Review review)
+        {
+            _reviewRepository.EditReview(review);
+        }
+
+        public void DeleteVenueReview(Review review)
+        {
+            _reviewRepository.DeleteReview(review);
+        }
+
+        public Review GetReviewById(int reviewId)
+        {
+           return _reviewRepository.GetReviewById(reviewId);
+        }
+
         public List<BusinessHours> GetVenueBusinessHours(int venueId)
         {
             var businessHours = _businessHoursRepository.GetAllBusinessHours();

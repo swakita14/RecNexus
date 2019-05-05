@@ -16,6 +16,14 @@ namespace PickUpSports.Interface
 
        List<Review> GetVenueReviews(int venueId);
 
+       void CreateVenueReview(Review review);
+
+       void EditVenueReview(Review review);
+
+       void DeleteVenueReview(Review review);
+
+       Review GetReviewById(int reviewId);
+
        List<BusinessHours> GetVenueBusinessHours(int venueId);
 
        List<BusinessHours> GetAllBusinessHours();

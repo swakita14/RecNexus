@@ -5,133 +5,78 @@
 
 @*Venue details*@
 <div class="container">
-    <div class="row" id="Name">
-        <h2>
-            <i>@Model.Name</i>
-        </h2>
-    </div>
-    <div class="row" id="AddressInformation">
-        @Model.Address1
-        @if (!string.IsNullOrEmpty(Model.Address2))
-        {
-            <br />@Model.Address2
-        }
-        <br />@Model.City, @Model.State, @Model.ZipCode
-    </div>
-    @if (!string.IsNullOrEmpty(Model.Phone))
-    {
-        <div class="row">
-            @Model.Phone
-        </div>
-    }
-    <div class="row" id="AverageRating">
-        @if (Model.AverageRating != null)
-        {
-            <br /><b>Average Review Rating:</b> @Model.AverageRating
-        }
-        <br />@Html.ActionLink("Leave a review!", "Create", "Review", new { id = @Model.VenueId }, null)
-    </div>
-</div>
-
-@*Business Hours*@
-<br />
-<div class="container">
-    <div class="row" id="BusinessHours">
-        <h3>
-            <b>Hours of Operation:</b>
-        </h3>
-    </div>
-    @if (Model.BusinessHours.Count > 0)
-    {
-        foreach (var businessHour in Model.BusinessHours)
-        {
-            <div class="row">
-                @Html.DisplayFor(x => businessHour.DayOfWeek): @Html.DisplayFor(x => businessHour.OpenTime) - @Html.DisplayFor(x => businessHour.CloseTime)
-            </div>
-        }
-    }
-    else
-    {
-        <div class="row">
-            We apologize. Business hours are not currently available for this venue.
-        </div>
-    }
-</div>
-
-@*Games*@
-<br />
-<div class="container" id="Games">
     <div class="row">
-        <h3>
-            <b>Recent Games:</b>
-        </h3>
-    </div>
-    @if (Model.Games!=null)
-    {
-        foreach (var game in Model.Games)
-        {
-
-                <div class="row">
-                    @Html.DisplayFor(model => game.Sport)
+        <div class="form-box">
+            <h2 id="Name">@Model.Name</h2>
+            <div class="well">
+                <div class="row" id="AddressInformation">
+                    @Model.Address1
+                    @if (!string.IsNullOrEmpty(Model.Address2))
+                    {
+                        <br />@Model.Address2
+                    }
+                    <br />@Model.City, @Model.State, @Model.ZipCode
                 </div>
-                <div class="row">
-                    @Html.DisplayFor(model => game.StartDate) to @Html.DisplayFor(model => game.EndDate)
-                </div>
-                <div class="row">
-                    Game started by @Html.DisplayFor(model => game.ContactName)
-                </div>
-                <div class="row">
-                    <br />@Html.ActionLink("Click here for more details on game", "GameDetails", "Game", new { id = game.GameId }, null)
-                </div>
-            <hr />
-        }
-    }
-    else
-    {
-        <div class="row">
-            There are no games available for this venue.
-        </div>
-    }
-</div>
-
-@*Reviews*@
-<br />
-<div class="container" id="Reviews">
-    <div class="row">
-        <h3>
-            <b>Reviews:</b>
-        </h3>
-        <br />
-    </div>
-
-    @if (Model.Reviews.Count > 0)
-    {
-        foreach (var reviews in Model.Reviews)
-        {
-            <div class="place-rating">
-
-                @if (reviews.Author != null)
+                @if (!string.IsNullOrEmpty(Model.Phone))
                 {
-                    <h4><b>Author:</b> @reviews.Author</h4>
+                    <div class="row">
+                        @Model.Phone
+                    </div>
+                }
+                
+                <br/>
+                <div class="row" id="BusinessHours">
+                    <b>Hours of Operation:</b>
+                </div>
+                @if (Model.BusinessHours.Count > 0)
+                {
+                    foreach (var businessHour in Model.BusinessHours)
+                    {
+                        <div class="row">
+                            @Html.DisplayFor(x => businessHour.DayOfWeek): @Html.DisplayFor(x => businessHour.OpenTime) - @Html.DisplayFor(x => businessHour.CloseTime)
+                        </div>
+                    }
                 }
                 else
                 {
-                    <h4><b>Author:</b> <i>anonymous</i></h4>
+                    <div class="row">
+                        We apologize. Business hours are not currently available for this venue.
+                    </div>
                 }
-
-                <h4><b>Rating: </b>@reviews.Rating</h4>
-                <h4><b>Review Date:</b> @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</h4>
-                <p>@reviews.Comments</p>
-
+                
+                <br/>
+                <div class="row" id="AverageRating">
+                    @if (Model.AverageRating != null)
+                    {
+                        <b>Average Review Rating:</b> @Model.AverageRating
+                    }
+                </div>
             </div>
-            <br />
-        }
-    }
-    else
-    {
-        <div class="row">
-            There are no reviews available for this venue.
         </div>
-    }
-
+    </div>
 </div>
+
+<center>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-6" id="Reviews">
+                <center><b>@Model.Name Reviews</b></center>
+                <br />@Html.ActionLink("Leave a review!", "Create", "Review", new { id = @Model.VenueId }, null)    
+                <br /><br/>
+                @{
+                    Html.RenderAction("GetReviews", new { venueId = Model.VenueId});
+                }
+            </div>
+
+            <div class="col-md-6" id="Games">
+                <center><b>Games coming up at @Model.Name</b></center>
+                <br />@Html.ActionLink("Start a game!", "CreateGame", "Game")
+                <br /><br/>
+                @{
+                    Html.RenderAction("GetVenueGames", new { venueId = Model.VenueId});
+                }
+            </div>
+        </div>
+    </div>
+</center>
+

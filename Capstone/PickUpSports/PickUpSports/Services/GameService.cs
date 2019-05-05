@@ -127,8 +127,8 @@ namespace PickUpSports.Services
         }
 
         /*
-         * Given VenueID, returns list of current games
-         * in ascending order by the ending time of the game
+         * Given VenueID, returns list of games
+         * that haven't passed yet 
          */
         public List<Game> GetCurrentGamesByVenueId(int venueId)
         {
