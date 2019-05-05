@@ -35,12 +35,16 @@
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h5 class="modal-title" id="confirmRemove">@Html.LabelFor(x => x.MessageSubject)</h5>
-                    @Html.EditorFor(x => x.MessageSubject, new {htmlAttributes = new { @class = "form-control" }})
+                    <h5 class="modal-title" id="confirmRemove">New Message for @Model.FirstName @Model.LastName</h5>
+                    <br/>
+                    @Html.LabelFor(x => x.MessageSubject)
+                    @Html.EditorFor(x => x.MessageSubject, new { htmlAttributes = new { @class = "form-control", placeholder ="Subject" } })
+                    @Html.ValidationMessageFor(x => x.MessageSubject , "Please enter a subject", new { @class = "text-danger"})
                 </div>
                 <div class="modal-body">
                     @Html.LabelFor(x => x.MessageBody)
-                    @Html.EditorFor(x => x.MessageBody, new {htmlAttributes = new { @class = "form-control" }})
+                    @Html.TextAreaFor(x => x.MessageBody, new { @class = "form-control", rows = 5, placeholder = "Questions, Comments, or Concerns" } )
+                    @Html.ValidationMessageFor(x => x.MessageBody, "This section cannot be empty", new { @class = "text-danger"})
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

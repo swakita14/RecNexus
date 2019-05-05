@@ -43,6 +43,15 @@ namespace PickUpSports.Services
             return _venueOwnerRepository.GetVenueOwnerByVenueId(venueId);
         }
 
+        public bool IsVenueOwner(string email)
+        {
+            VenueOwner owner = _venueOwnerRepository.GetVenueOwnerByEmail(email);
+
+            if (owner == null) return false;
+
+            return true;
+        }
+
         public bool VenueHasOwner(Venue venue)
         {
             var existingVenueOwner = _venueOwnerRepository.GetVenueOwnerByVenueId(venue.VenueId);
