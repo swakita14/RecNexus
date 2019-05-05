@@ -294,6 +294,50 @@ namespace PickUpSports.Controllers
             return PartialView("../Game/_GamesUserJoined", model);
         }
 
+        public ActionResult GetGamesRejected(int contactId, bool isPublicProfileView)
+        {
+            var model = new GameProfileViewModel();
+            model.IsPublicProfileView = isPublicProfileView;
+            model.ContactId = contactId;
+
+            List<Game> gameList = _gameService.GetAllGamesByContactId(model.ContactId);
+
+            if(gameList == null) return PartialView("../Game/_GetGamesRejected", model);
+
+            model.Games = new List<GameListViewModel>();
+
+            foreach (var game in gameList)
+            {
+                // Do not add game to list if time passed
+                if (game.EndTime < DateTime.Today.AddDays(-1)) continue;
+
+                if (game.GameStatusId == 4)
+                {
+                    var gameToAdd = new GameListViewModel
+                    {
+                        EndDate = game.EndTime,
+                        GameId = game.GameId,
+                        GameStatus = ((GameStatusEnum)game.GameStatusId).ToString(),
+                        Sport = _gameService.GetSportNameById(game.SportId),
+                        StartDate = game.StartTime,
+                        Venue = _venueService.GetVenueNameById(game.VenueId),
+                        VenueId = game.VenueId
+                    };
+
+                    if (game.ContactId != null)
+                    {
+                        gameToAdd.ContactId = game.ContactId;
+                        gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                    }
+                    model.Games.Add(gameToAdd);
+                }
+            }
+
+            model.Games = model.Games.OrderBy(x => x.StartDate).ToList();
+
+            return PartialView("../Game/_GetGamesRejected", model);
+        }
+
         private Dictionary<string, string> PopulateStatesDropdown()
         {
             var states = new Dictionary<string, string>();
