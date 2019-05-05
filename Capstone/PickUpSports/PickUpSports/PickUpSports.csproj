@@ -311,7 +311,6 @@
     <Compile Include="Interface\Repositories\ILocationRepository.cs" />
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
-    <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
     <Compile Include="Models\ViewModel\ReviewController\EditReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\PartialReviewViewModel.cs" />
