@@ -36,11 +36,11 @@
                 <div class="modal-header">
 
                     <h5 class="modal-title" id="confirmRemove">@Html.LabelFor(x => x.MessageSubject)</h5>
-                    @Html.EditorFor(x => x.MessageSubject, new { @class = "form-control" })
+                    @Html.EditorFor(x => x.MessageSubject, new {htmlAttributes = new { @class = "form-control" }})
                 </div>
                 <div class="modal-body">
                     @Html.LabelFor(x => x.MessageBody)
-                    @Html.EditorFor(x => x.MessageBody, new { @class = "form-control" })
+                    @Html.EditorFor(x => x.MessageBody, new {htmlAttributes = new { @class = "form-control" }})
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
