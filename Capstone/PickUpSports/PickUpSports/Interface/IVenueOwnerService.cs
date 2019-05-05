@@ -15,5 +15,7 @@ namespace PickUpSports.Interface
         VenueOwner AddVenueOwner(VenueOwner owner);
 
         void EditVenueOwner(VenueOwner owner);
+
+        bool IsVenueOwner(string email);
     }
 }

@@ -315,7 +315,6 @@
     <Compile Include="Models\ViewModel\ReviewController\EditReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueController\PartialReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
-    <Compile Include="Models\ViewModel\VenueOwnerController\MessageOwnerViewModel.cs" />
     <Compile Include="Services\ChatHub\ChatHub.cs" />
     <Compile Include="Interface\Repositories\IVenueRepository.cs" />
     <Compile Include="Controllers\AccountController.cs" />
