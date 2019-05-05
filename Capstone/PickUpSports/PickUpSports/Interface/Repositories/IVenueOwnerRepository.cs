@@ -1,9 +1,7 @@
-<<<<<<< HEAD
+
 ﻿using PickUpSports.Models.DatabaseModels;
-=======
 ﻿using System.Collections.Generic;
-using PickUpSports.Models.DatabaseModels;
->>>>>>> upstream/development
+
 
 namespace PickUpSports.Interface.Repositories
 {
