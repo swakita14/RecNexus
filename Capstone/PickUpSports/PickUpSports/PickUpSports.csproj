@@ -300,10 +300,12 @@
     <Compile Include="DAL\Configurations\VenueOwnerConfiguration.cs" />
     <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
     <Compile Include="DAL\Repositories\GameRepository.cs" />
+    <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="DAL\Repositories\LocationRepository.cs" />
     <Compile Include="DAL\Repositories\VenueOwnerRepository.cs" />
     <Compile Include="DAL\Repositories\VenueRepository.cs" />
     <Compile Include="Interface\IGameService.cs" />
+    <Compile Include="Interface\IVenueOwnerService.cs" />
     <Compile Include="Interface\Repositories\IBusinessHoursRepository.cs" />
     <Compile Include="Interface\Repositories\IGameRepository.cs" />
     <Compile Include="Interface\Repositories\ILocationRepository.cs" />
@@ -407,6 +409,7 @@
     <Compile Include="Models\ViewModel\ViewFriendsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContactService.cs" />
+    <Compile Include="Services\VenueOwnerServices.cs" />
     <Compile Include="Services\VenueService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

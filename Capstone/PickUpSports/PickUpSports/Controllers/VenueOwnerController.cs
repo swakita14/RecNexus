@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -20,16 +22,20 @@ namespace PickUpSports.Controllers
     {
         private readonly PickUpContext _context;
         private readonly IGMailService _gMailer;
+        private readonly IVenueOwnerService _venueOwnerService;
+        private readonly IVenueService _venueService; 
 
         public VenueOwnerController(PickUpContext context)
         {
             _context = context;
         }
 
-        public VenueOwnerController(PickUpContext context, IGMailService gMailer)
+        public VenueOwnerController(PickUpContext context, IGMailService gMailer, IVenueOwnerService venueOwnerService, IVenueService venueService)
         {
             _context = context;
             _gMailer = gMailer;
+            _venueOwnerService = venueOwnerService;
+            _venueService = venueService;
         }
 
         [HttpGet]
@@ -53,10 +59,10 @@ namespace PickUpSports.Controllers
             }
             
             //Find venue with the view model id
-            Venue venue = _context.Venues.Find(int.Parse(model.VenueName));
+            Venue venue = _venueService.GetVenueById(int.Parse(model.VenueName));
 
             //If the venue already has an owner, error 
-            if (VenueHasOwner(venue))
+            if (_venueOwnerService.VenueHasOwner(venue))
             {
                 ViewData.ModelState.AddModelError("OwnerExists", "There is already an owner for this Venue");
                 PopulateDropdownValues();
@@ -73,39 +79,27 @@ namespace PickUpSports.Controllers
                 Phone = model.PhoneNumber,
                 CompanyName = model.CompanyName,
                 SignUpDate = DateTime.Now,
-                VenueId = _context.Venues.FirstOrDefault(x => x.Name == model.VenueName).VenueId
+                VenueId = venue.VenueId
             };
 
             //Add the owner to the table, and save changes
-            _context.VenueOwners.Add(owner);
-            _context.SaveChanges();
+            _venueOwnerService.AddVenueOwner(owner);
 
             //Take them to the page that shows the details that they just added 
             return RedirectToAction("Detail", new {id = model.VenueOwnerId});
         }
 
-        public bool VenueHasOwner(Venue venue)
-        {
-            //Find the owner using the venue ID, again could be simplified using repo patterns
-            VenueOwner owner = _context.VenueOwners.FirstOrDefault(x => x.VenueId == venue.VenueId);
-
-            //if there is not an owner it would be null so return false
-            if (owner == null) return false;
-
-            //else there is an owner and the value is not null so return true 
-            return true;
-        }
-
+        [Authorize]
         public ActionResult Detail(int id)
         {
             //Get the current logged in user - will be implemented in the future when the log in function/ page is complete
             //string ownerEmail = User.Identity.GetUserName();
 
             //Finds the owner with the current logged in user email
-            //VenueOwner owner = _context.VenueOwners.FirstOrDefault(x => x.Email == ownerEmail);
+            //VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
 
             //Finding the owner using the id 
-            VenueOwner owner = _context.VenueOwners.Find(id);
+            VenueOwner owner = _venueOwnerService.GetVenueOwnerById(id);
 
 
             //If the owner has not created an account yet, redirect them to the create page
@@ -121,7 +115,7 @@ namespace PickUpSports.Controllers
                 PhoneNumber = owner.Phone,
                 CompanyName = owner.CompanyName,
                 SignUpDate = owner.SignUpDate,
-                VenueName = _context.Venues.Find(owner.VenueId).Name
+                VenueName = _venueService.GetVenueNameById(owner.VenueId)
             };
 
             //Return it back to the view
@@ -143,7 +137,7 @@ namespace PickUpSports.Controllers
             if (id == 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             //Find venue owner using the id
-            VenueOwner owner = _context.VenueOwners.Find(id);
+            VenueOwner owner = _venueOwnerService.GetVenueOwnerById(id);
 
             //Initialize view model values using the owner values
             CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
@@ -166,7 +160,7 @@ namespace PickUpSports.Controllers
         public ActionResult Edit(CreateVenueOwnerViewModel model)
         {
             //Find the existing owner withe the Id
-            VenueOwner existingOwner = _context.VenueOwners.Find(model.VenueOwnerId);
+            VenueOwner existingOwner = _venueOwnerService.GetVenueOwnerById(model.VenueOwnerId);
 
             //Add the changed values to the existing owner
             existingOwner.VenueOwnerId = model.VenueOwnerId;
@@ -177,17 +171,37 @@ namespace PickUpSports.Controllers
             existingOwner.CompanyName = model.CompanyName;
 
             //save the changes
-            _context.Entry(existingOwner).State = EntityState.Modified;
-            _context.SaveChanges();
+            _venueOwnerService.EditVenueOwner(existingOwner);
 
             //Redirect to the details page 
             return RedirectToAction("Detail", "VenueOwner", new {id = existingOwner.VenueOwnerId});
         }
 
         [HttpPost]
-        public ActionResult MessageOwner()
+        public ActionResult MessageOwner(CreateVenueOwnerViewModel model)
         {
-            
+            //Get the current logged in users email
+            string currUserEmail = User.Identity.GetUserName();
+
+            //Find the Venue owner using the Id
+            VenueOwner owner = _venueOwnerService.GetVenueOwnerById(model.VenueOwnerId);
+
+            string subject = "Message from User Concerning Your Venue: " + model.MessageSubject;
+            string body = "<b>" + currUserEmail + "</b> wrote: <i>" + model.MessageBody + "</i>";
+
+            //Create a new message with the inputs
+            MailMessage mail = new MailMessage(_gMailer.GetEmailAddress(), owner.Email)
+            {
+                Subject = subject,
+                Body = body
+            };
+
+            mail.IsBodyHtml = true;
+
+            //Send Message
+            _gMailer.Send(mail);
+
+            return RedirectToAction("Detail", "VenueOwner", new { id = model.VenueOwnerId });
         }
     }
 }
