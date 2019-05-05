@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
+using PickUpSports.Models.Enums;
 using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
@@ -27,7 +29,7 @@ namespace PickUpSports.Controllers
             _gameService = gameService;
         }
         
-        /**
+        /*
          * Show a list of venues
          */
         public ActionResult Index()
@@ -74,7 +76,7 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
-        /**
+        /*
          * Venue search and filter results
          */
         [HttpPost]
@@ -220,7 +222,7 @@ namespace PickUpSports.Controllers
             return View("Index", viewModel);
         }
 
-        /**
+        /*
          * Get venue, hours, and review data for single Venue and return to view
          */
         public ActionResult Details(int id)
@@ -266,11 +268,22 @@ namespace PickUpSports.Controllers
                 avgRating = (decimal) reviews.Average(r => r.Rating);
                 model.AverageRating = Math.Round((decimal) avgRating, 1);
             }
-            else
+            else model.AverageRating = null;         
+
+            return View(model);
+        }
+
+        public PartialViewResult GetReviews(int venueId)
+        {
+            var reviews = _venueService.GetVenueReviews(venueId);
+            var model = new PartialReviewViewModel{VenueId = venueId};
+
+            if (reviews.Count > 0)
             {
-                avgRating = null;
-                model.AverageRating = null;
+                var averageRating = (decimal)reviews.Average(r => r.Rating);
+                model.AverageReviewRating = Math.Round((decimal)averageRating, 1);
             }
+            else model.AverageReviewRating = null;
 
             List<ReviewViewModel> tempList = new List<ReviewViewModel>();
             foreach (var review in reviews)
@@ -279,7 +292,8 @@ namespace PickUpSports.Controllers
                 {
                     Rating = review.Rating,
                     Timestamp = review.Timestamp,
-                    Comments = review.Comments
+                    Comments = review.Comments,
+                    ReviewId = review.ReviewId
                 };
 
                 // If review is not a Google review then there is no GoogleAuthor, 
@@ -289,7 +303,19 @@ namespace PickUpSports.Controllers
                 {
                     Contact user = _contactService.GetContactById(review.ContactId);
                     if (user == null) reviewModel.Author = null;
-                    else reviewModel.Author = user.Username;
+                    else
+                    {
+                        reviewModel.Author = user.Username;
+
+                        // Check if the logged in user wrote this review
+                        string loggedInUserEmail = User.Identity.GetUserName();
+
+                        if (user.Email == loggedInUserEmail)
+                        {
+                            reviewModel.ReviewBelongsToUser = true;
+                        }
+                        else reviewModel.ReviewBelongsToUser = false;
+                    }
                 }
 
                 tempList.Add(reviewModel);
@@ -297,12 +323,14 @@ namespace PickUpSports.Controllers
 
             // Order reviews newest to oldest
             model.Reviews = tempList.OrderByDescending(r => r.Timestamp).ToList();
+            return PartialView("_VenueReviews", model);
+        }
 
-            // Map Games
-            var games = _gameService.GetCurrentGamesByVenueId(id);
-            if (games == null) return View(model);
+        public PartialViewResult GetVenueGames(int venueId)
+        {
+            var model = new List<GameListViewModel>();
+            var games = _gameService.GetCurrentGamesByVenueId(venueId).Where(x => x.GameStatusId == (int)GameStatusEnum.Open);
 
-            List<GameListViewModel> gameList = new List<GameListViewModel>();
             foreach (var game in games)
             {
                 GameListViewModel gameToAdd = new GameListViewModel
@@ -318,13 +346,12 @@ namespace PickUpSports.Controllers
                     gameToAdd.ContactId = game.ContactId;
                     gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
                 }
-                gameList.Add(gameToAdd);
+
+                model.Add(gameToAdd);
             }
 
-
-            model.Games = gameList.OrderByDescending(x => x.StartDate).ToList();
-
-            return View(model);
+            model = new List<GameListViewModel>(model.OrderBy(x => x.StartDate));
+            return PartialView("_VenueGames", model);
         }
     }
 }

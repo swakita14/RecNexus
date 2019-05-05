@@ -13,5 +13,7 @@ namespace PickUpSports.Models.ViewModel
         public string Comments { get; set; }
 
         public string Author { get; set; }
+
+        public bool ReviewBelongsToUser { get; set; } = false;
     }
 }

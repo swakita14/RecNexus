@@ -5,7 +5,7 @@ using OpenQA.Selenium.Chrome;
 
 namespace PickUpSportsTests
 {
-    /**
+    /*
      * PBI 404 - Shayna Conner
      * Wrote these tests before changing Venue/Details view so when view
      * is updated, we can ensure all necessary elements are added back
@@ -26,7 +26,7 @@ namespace PickUpSportsTests
         {
             var element = _driver.FindElement(By.Id("Name"));
             element.Displayed.Should().BeTrue();
-            element.Text.Should().Be("Bryan Johnston Park");
+            element.Text.Should().Be("BRYAN JOHNSTON PARK");
         }
 
         [Test]
