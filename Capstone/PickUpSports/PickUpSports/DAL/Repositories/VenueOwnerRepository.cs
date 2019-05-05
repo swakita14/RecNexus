@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using PickUpSports.Interface.Repositories;
 using PickUpSports.Models.DatabaseModels;
 
@@ -49,6 +50,24 @@ namespace PickUpSports.DAL.Repositories
         public List<VenueOwner> GetAllVenueOwners()
         {
            return _context.VenueOwners.ToList();
+        }
+
+        public VenueOwner GetVenueOwnerByEmail(string email)
+        {
+            var owner = _context.VenueOwners.FirstOrDefault(x => x.Email == email);
+
+            if (owner == null) return null;
+
+            return owner;
+        }
+
+        public VenueOwner GetVenueOwnerByVenueId(int venueId)
+        {
+            var owner = _context.VenueOwners.FirstOrDefault(x => x.VenueId == venueId);
+
+            if (owner == null) return null;
+
+            return owner;
         }
     }
 }

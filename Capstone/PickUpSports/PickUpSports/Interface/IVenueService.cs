@@ -38,8 +38,6 @@ namespace PickUpSports.Interface
 
        string GetVenueNameById(int venueId);
 
-       Venue GetVenueById(int venueId);
-
        
 
    }
