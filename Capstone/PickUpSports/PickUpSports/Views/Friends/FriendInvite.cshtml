@@ -1,4 +1,5 @@
-﻿@model PickUpSports.Models.ViewModel.FriendInviteViewModel
+﻿@using PickUpSports.Models.DatabaseModels
+@model PickUpSports.Models.ViewModel.FriendInviteViewModel
 @{
     ViewBag.Title = "FriendInvite";
 }
@@ -7,20 +8,14 @@
 
 @using (Html.BeginForm("FriendInvite", "Friends", FormMethod.Post))
 {
-    <select id="friendselect" name="FriendName">
-        @foreach(var friend in Model.Friends)
-    {
-        <Option value="@friend.FriendId">@friend.FriendName</Option>
-    }
-    </select> 
-
-    <select id="Gameselect" name="GameTitle">
-       
-        @foreach(var game in Model.Games)
-        {
-            <Option value="@game.GameId">@game.Venue</Option>
-        }
-    </select> 
+   @Html.DropDownList("FriendName",ViewBag.FriendName)
+@*     <select id="Gameselect" name="GameTitle"> *@
+@*         *@
+@*         @foreach(var game in Model.Games) *@
+@*         { *@
+@*             <Option value="@game.GameId">@game.Venue</Option> *@
+@*         } *@
+@*     </select>  *@
        
     <input type="submit" name ="button" value="Send Invite" class="btn btn-default" />
 }

@@ -110,8 +110,16 @@ namespace PickUpSports.Controllers
         [Authorize]
         [HttpGet]
         public ActionResult FriendInvite()
-        { 
-        return View();
+        {
+            FriendInviteViewModel friend = new FriendInviteViewModel();
+
+            IEnumerable<SelectListItem> friends = friend.Friends.Select(f => new SelectListItem
+            {
+                Value = f.FriendName,
+                Text = f.FriendName
+            });
+            ViewBag.FriendName = friends;
+            return View();
         }
 
 
