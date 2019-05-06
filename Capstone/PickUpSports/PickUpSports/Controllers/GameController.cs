@@ -411,9 +411,7 @@ namespace PickUpSports.Controllers
             //Send the Message
             _gMailer.Send(mailMessage);
         }
-
-
-
+        
         /**
          * Partial view that to display business hours on CreateGame page
          */
@@ -649,23 +647,6 @@ namespace PickUpSports.Controllers
             //pass it back
             return View(model);
         }
-
-        /**
-         * Helper method that takes in the game object and creates a dropdown with the current game values
-         */
-        public void PopulateEditDropDownMethod(Game game)
-        {
-            ViewBag.Venue = new SelectList(_venueService.GetAllVenues(), "VenueId", "Name", game.VenueId);
-            ViewBag.Sport = new SelectList(_gameService.GetAllSports(), "SportId", "SportName", game.SportId);
-
-            var gameStatusDict = new Dictionary<int, string>();
-            foreach (GameStatusEnum gameStatus in Enum.GetValues(typeof(GameStatusEnum)))
-            {
-                gameStatusDict.Add((int)gameStatus, gameStatus.ToString());
-            }
-
-            ViewBag.Status = new SelectList(gameStatusDict, "GameStatusId", "Status", game.GameStatusId);
-        }
         
         [Authorize]
         [HttpPost]
@@ -763,6 +744,23 @@ namespace PickUpSports.Controllers
         {
             ViewBag.Venues = _venueService.GetAllVenues().ToDictionary(v => v.VenueId, v => v.Name);
             ViewBag.Sports = _gameService.GetAllSports().ToList().ToDictionary(s => s.SportID, s => s.SportName);
+        }
+        
+        /**
+         * Helper method that takes in the game object and creates a dropdown with the current game values
+         */
+        public void PopulateEditDropDownMethod(Game game)
+        {
+            ViewBag.Venue = new SelectList(_venueService.GetAllVenues(), "VenueId", "Name", game.VenueId);
+            ViewBag.Sport = new SelectList(_gameService.GetAllSports(), "SportId", "SportName", game.SportId);
+
+            var gameStatusDict = new Dictionary<int, string>();
+            foreach (GameStatusEnum gameStatus in Enum.GetValues(typeof(GameStatusEnum)))
+            {
+                gameStatusDict.Add((int)gameStatus, gameStatus.ToString());
+            }
+
+            ViewBag.Status = new SelectList(gameStatusDict, "GameStatusId", "Status", game.GameStatusId);
         }
     }
 }

@@ -109,17 +109,22 @@ namespace PickUpSports.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult FriendInvite()
+        public ActionResult FriendInvite(int id)
         {
-            FriendInviteViewModel friend = new FriendInviteViewModel();
+            //Find the list of friends using the contactId
+            List<Friend> friendList = _context.Friends.Where(x => x.ContactID == id).ToList();
 
-            IEnumerable<SelectListItem> friends = friend.Friends.Select(f => new SelectListItem
-            {
-                Value = f.FriendName,
-                Text = f.FriendName
-            });
+            //Find the list of games using the contactId
+            List<Game> gameList = _context.Games.Where(x => x.ContactId == id).ToList();
+
+            //initializing list of ViewModel
+            var model = new FriendInviteViewModel();
+            model.Friends =friendList;
+
             ViewBag.FriendName = friends;
-            return View();
+                return View();
+            
+          
         }
 
 
