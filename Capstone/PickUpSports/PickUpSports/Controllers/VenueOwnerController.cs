@@ -21,15 +21,28 @@ namespace PickUpSports.Controllers
         private readonly PickUpContext _context;
         private readonly IGMailService _gMailer;
 
-        public VenueOwnerController(PickUpContext context)
-        {
-            _context = context;
-        }
+        private readonly IVenueService _venueService;
 
-        public VenueOwnerController(PickUpContext context, IGMailService gMailer)
+        public VenueOwnerController(PickUpContext context, IGMailService gMailer, IVenueService venueService)
         {
             _context = context;
             _gMailer = gMailer;
+            _venueService = venueService;
+        }
+
+        public ActionResult ClaimVenue(int venueId)
+        {
+            var model = new ClaimVenueFormViewModel();
+            model.VenueId = venueId;
+            model.VenueName = _venueService.GetVenueNameById(venueId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ClaimVenue(ClaimVenueFormViewModel model)
+        {
+            return View();
         }
 
         [HttpGet]
@@ -184,10 +197,10 @@ namespace PickUpSports.Controllers
             return RedirectToAction("Detail", "VenueOwner", new {id = existingOwner.VenueOwnerId});
         }
 
-        [HttpPost]
-        public ActionResult MessageOwner()
-        {
+        //[HttpPost]
+        //public ActionResult MessageOwner()
+        //{
             
-        }
+        //}
     }
 }
