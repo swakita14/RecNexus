@@ -117,14 +117,8 @@ namespace PickUpSports.Controllers
             //Find the list of games using the contactId
             List<Game> gameList = _context.Games.Where(x => x.ContactId == id).ToList();
 
-            //initializing list of ViewModel
-            var model = new FriendInviteViewModel();
-            model.Friends =friendList;
+            return View();
 
-            ViewBag.FriendName = friends;
-                return View();
-            
-          
         }
 
 
