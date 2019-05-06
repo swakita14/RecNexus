@@ -10,8 +10,12 @@ namespace PickUpSports.Models.ViewModel
     {
         public int ContactId { get; set; }
 
-        public List<ViewFriendsViewModel> Friends { get; set; }
+       public int FriendId { get; set; }
+       public string FriendName { get; set; }
 
-        public List<GameListViewModel> Games { get; set; }
+       public int GameId { get; set; }
+       public int VenueId { get; set; }
+
+     
     }
 }
