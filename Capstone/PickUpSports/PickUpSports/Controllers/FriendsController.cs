@@ -109,9 +109,22 @@ namespace PickUpSports.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult FriendInvite()
+        public ActionResult FriendInvite(int id)
         {
-            return View();
+            //Find the list of friends using the contactId
+            List<Friend> friendList = _context.Friends.Where(x => x.ContactID == id).ToList();
+
+            //Find the list of games using the contactId
+            List<Game> gameList = _context.Games.Where(x => x.ContactId == id).ToList();
+
+            //initializing list of ViewModel
+            var model = new FriendInviteViewModel();
+            model.Friends =friendList;
+
+            ViewBag.FriendName = friends;
+                return View();
+            
+          
         }
 
 
@@ -120,7 +133,7 @@ namespace PickUpSports.Controllers
        */
         [Authorize]
         [HttpPost]
-        public RedirectToRouteResult InviteToGame(Friend friend, Game game, string button)
+        public ActionResult FriendInvite(Friend friend, Game game, string button)
         {
             //find the current logged-on user
             string email = User.Identity.GetUserName();
@@ -131,7 +144,7 @@ namespace PickUpSports.Controllers
                 SendInvite(game, friend.FriendID);
             }
             
-           return RedirectToAction("FriendInvite","Friends");
+           return View();
         }
 
         /*
