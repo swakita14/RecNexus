@@ -10,15 +10,19 @@
         <div class="row">
             <div class="form-box">
                 <h2>Claim @Model.VenueName</h2>
-                    @if (!ViewData.ModelState.IsValid)
-                    {
-                        <div class="row">
-                            <div class="col-md-12">
-                                @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.ValidationSummary(false, null, new {@class = "text-danger"})
 
-                            </div>
                         </div>
-                    }
+                    </div>
+                }
+                
+                @Html.HiddenFor(x => x.VenueId)
+                @Html.HiddenFor(x => x.VenueName)
+
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
@@ -29,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-               
+
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
@@ -40,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-12">
@@ -69,14 +73,15 @@
                     </div>
                 </div>
 
-                @if (ViewBag.GameCreated != null && ViewBag.GameCreated)
-                    {
-                        <div class="form-group">
-                            <center>
-                                <p><span class="glyphicon glyphicon-ok"></span> Game created successfully!</p>
-                            </center>
-                        </div>
-                    }
+                @if (ViewBag.SubmitEmailSent != null && ViewBag.SubmitEmailSent)
+                {
+                    <div class="form-group">
+                        <center>
+                            <p><span class="glyphicon glyphicon-ok"></span> Your request has been sent!</p>
+                            <p>Please allow 24-48 hours for an administrator to get back to you.</p>
+                        </center>
+                    </div>
+                }
             </div>
         </div>
     </div>

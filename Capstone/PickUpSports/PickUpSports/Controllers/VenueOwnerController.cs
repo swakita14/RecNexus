@@ -29,23 +29,48 @@ namespace PickUpSports.Controllers
             model.VenueId = venueId;
             model.VenueName = _venueService.GetVenueNameById(venueId);
 
+            ViewBag.SubmitEmailSent = false;
             return View(model);
         }
 
         [HttpPost]
         public ActionResult ClaimVenue(ClaimVenueFormViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
-
-            var mailMessage = new MailMessage(_gMailer.GetEmailAddress(), "sconner@bookbyte.com")
+            if (!ModelState.IsValid)
             {
-                Subject = $"Received request to claim venue {model.VenueName} from {model.FirstName + " " + model.LastName}",
-                
-            };
+                ViewBag.SubmitEmailSent = false;
+                return View(model);
+            }
+
+            // Send email to Scrum Lords for approval
+            var email = new MailMessage();
+            email.To.Add(_gMailer.GetEmailAddress());
+            email.From = new MailAddress(_gMailer.GetEmailAddress());
+            email.Subject = $"Received request to claim venue {model.VenueName}.";
+            email.Body = $"Received below request to claim venue {model.VenueName}:<br />"
+                         + $"Name: {model.FirstName} {model.LastName}<br />"
+                         + $"Email: {model.Email}<br />"
+                         + $"Phone: {model.PhoneNumber}<br />"
+                         + $"Company name (if applicable): {model.CompanyName}<br />"
+                         + "Proof of ownership document is attached.";
+            email.IsBodyHtml = true;
+
             var attachment = new Attachment(model.Document.InputStream, model.Document.FileName);
-            mailMessage.Attachments.Add(attachment);
-            return View();
+            email.Attachments.Add(attachment);
+
+            // Send email and return to view if successful
+            if (_gMailer.Send(email))
+            {
+                ViewBag.SubmitEmailSent = true;
+                return View(model);
+            }
+
+            // Email could not be sent, display error 
+            ViewBag.SubmitEmailSent = false;
+            ViewData.ModelState.AddModelError("EmailError", "Unfortunately, your email could not be sent.");
+            return View(model);
         }
+
         [HttpGet]
         public ActionResult Create()
         {
