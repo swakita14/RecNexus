@@ -1,43 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security.Google;
-using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.VenueOwnerController;
-using RestSharp.Extensions;
 
 namespace PickUpSports.Controllers
 {
     public class VenueOwnerController : Controller
     {
-        private readonly PickUpContext _context;
         private readonly IGMailService _gMailer;
         private readonly IVenueOwnerService _venueOwnerService;
         private readonly IVenueService _venueService; 
 
-        public VenueOwnerController(PickUpContext context)
+        public VenueOwnerController(IGMailService gMailer, IVenueOwnerService venueOwnerService, IVenueService venueService)
         {
-            _context = context;
-        }
-
-        public VenueOwnerController(PickUpContext context, IGMailService gMailer, IVenueOwnerService venueOwnerService, IVenueService venueService)
-        {
-            _context = context;
             _gMailer = gMailer;
             _venueOwnerService = venueOwnerService;
             _venueService = venueService;
         }
 
+        public ActionResult ClaimVenue(int venueId)
+        {
+            var model = new ClaimVenueFormViewModel();
+            model.VenueId = venueId;
+            model.VenueName = _venueService.GetVenueNameById(venueId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ClaimVenue(ClaimVenueFormViewModel model)
+        {
+            return View();
+        }
         [HttpGet]
         public ActionResult Create()
         {
@@ -136,7 +135,7 @@ namespace PickUpSports.Controllers
          */
         public void PopulateDropdownValues()
         {
-            ViewBag.Venues = _context.Venues.ToList().ToDictionary(v => v.VenueId, v => v.Name);
+            ViewBag.Venues = _venueService.GetAllVenues().ToDictionary(v => v.VenueId, v => v.Name);
         }
 
         [HttpGet]
