@@ -113,6 +113,7 @@
     <Compile Include="GMailServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FriendControllerTests.cs" />
+    <Compile Include="VenueOwnerSeleniumTests.cs" />
     <Compile Include="VenueDetailsSeleniumTests.cs" />
     <Compile Include="VenueServiceTests.cs" />
   </ItemGroup>
