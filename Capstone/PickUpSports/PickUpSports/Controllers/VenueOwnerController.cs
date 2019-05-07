@@ -126,19 +126,16 @@ namespace PickUpSports.Controllers
         public ActionResult Detail(int id)
         {
             //Bool variable for the View: checking if user is venue owner or not
-            //ViewBag.IsOwner = true;
+           ViewBag.IsOwner = false;
 
             //Get the current logged in user - will be implemented in the future when the log in function/ page is complete
-            //string ownerEmail = User.Identity.GetUserName();
+            string ownerEmail = User.Identity.GetUserName();
 
             //Check if current logged in user is the owner
-            //if (!_venueOwnerService.IsVenueOwner(ownerEmail))
-            //{
-            //    ViewBag.IsOwner = false;
-            //}
-
-            //Finds the owner with the current logged in user email
-            //VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
+            if (_venueOwnerService.IsVenueOwner(ownerEmail))
+            {
+                ViewBag.IsOwner = true;
+            }
 
             //Finding the owner using the id 
             VenueOwner owner = _venueOwnerService.GetVenueOwnerById(id);
