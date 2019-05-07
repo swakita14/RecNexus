@@ -4,7 +4,7 @@
     ViewBag.Title = "Claim Venue";
 }
 
-@using (Html.BeginForm("ClaimVenue", "VenueOwner", FormMethod.Post))
+@using (Html.BeginForm("ClaimVenue", "VenueOwner", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="container">
         <div class="row">
@@ -29,15 +29,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" placeholder="Company name (if different from venue name)" name="CompanyName">
-                        </div>
-                    </div>
-                </div>
-                
+               
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
@@ -49,18 +41,32 @@
                     </div>
                 </div>
                 
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" placeholder="Company name (if different from venue name)" name="CompanyName">
+                        </div>
+                    </div>
+                </div>
+
                 <center>
                     <div class="form-group">
-                        <div class="col-sm-6">
-                            <input type="file" class="form-control" data-icon="false">
+                        <div class="row">
+                            <p>Please attach proof of ownership of this venue.</p>
+                            <div class="col-sm-12">
+                                <input type="file" class="form-control" name="Document" data-icon="false">
+                            </div>
                         </div>
                     </div>
 
                 </center>
                 <div class="form-group">
-                    <center>
-                        <button type="submit" class="btn btn-default">Submit Form</button>
-                    </center>
+                    <div class="row">
+
+                        <center>
+                            <button type="submit" class="btn btn-default">Submit Form</button>
+                        </center>
+                    </div>
                 </div>
 
                 @if (ViewBag.GameCreated != null && ViewBag.GameCreated)

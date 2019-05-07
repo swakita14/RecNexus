@@ -35,6 +35,15 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult ClaimVenue(ClaimVenueFormViewModel model)
         {
+            if (!ModelState.IsValid) return View(model);
+
+            var mailMessage = new MailMessage(_gMailer.GetEmailAddress(), "sconner@bookbyte.com")
+            {
+                Subject = $"Received request to claim venue {model.VenueName} from {model.FirstName + " " + model.LastName}",
+                
+            };
+            var attachment = new Attachment(model.Document.InputStream, model.Document.FileName);
+            mailMessage.Attachments.Add(attachment);
             return View();
         }
         [HttpGet]

@@ -53,11 +53,13 @@
                 </div>
                 
                 <div class="row">
-                    @if (Model.HasVenueOwner)
+                    @if (!Model.HasVenueOwner)
                     {
-                    <html>
-                    If you own or run this venue, please @Html.ActionLink("click here", "ClaimVenue", "VenueOwner", new {venueId = @Model.VenueId}, null) to claim this venue and maintain any games or information"
-                    </html>
+                        <br/>
+                        <html>
+                        If you own or run this venue, please @Html.ActionLink("click here", "ClaimVenue", "VenueOwner", new {venueId = @Model.VenueId}, null) 
+                        <br />to claim this venue and maintain any games or information.
+                        </html>
                     }
                 </div>
             </div>
