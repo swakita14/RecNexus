@@ -14,9 +14,18 @@
                 <p>@Html.DisplayFor(x => x.Email)</p>
                 <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
                 <p>
+                    @if (ViewBag.IsOwner)
+                    {
                     <center>
-                        @Html.ActionLink("Edit Information", "Edit", new { id = Model.VenueOwnerId })  | <a href="#" data-toggle="modal" data-target="#confirm">Message Owner</a> |
+                        @Html.ActionLink("Edit Information", "Edit", new { id = Model.VenueOwnerId })
                     </center>
+                    }
+                    else
+                    {
+                    <center>
+                        <a href="#" data-toggle="modal" data-target="#confirm">Message Owner</a> 
+                    </center>
+                    }
                 </p>
 
             </div>
