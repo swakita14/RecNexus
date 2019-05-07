@@ -296,6 +296,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\VenueOwnerController.cs" />
     <Compile Include="DAL\Configurations\VenueOwnerConfiguration.cs" />
     <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
@@ -540,6 +541,7 @@
     <Content Include="Views\Game\_GetGamesRejected.cshtml" />
     <Content Include="Views\Account\VenueOwnerLogin.cshtml" />
     <Content Include="Views\VenueOwner\ClaimVenue.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

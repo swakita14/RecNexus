@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -12,7 +11,7 @@ using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
 {
-    [Authorize]
+    [Authorize(Roles="Admin")]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
