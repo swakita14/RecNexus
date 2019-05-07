@@ -71,6 +71,7 @@ namespace PickUpSports
             builder.RegisterType<ContactService>().As<IContactService>();
             builder.RegisterType<GMailService>().As<IGMailService>();
             builder.RegisterType<GameService>().As<IGameService>();
+            builder.RegisterType<VenueOwnerServices>().As<IVenueOwnerService>();
 
             // Register repositories
             builder.RegisterType<ContactRepository>().As<IContactRepository>();
