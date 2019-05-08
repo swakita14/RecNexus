@@ -1,41 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security.Google;
-using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.VenueOwnerController;
-using RestSharp.Extensions;
 
 namespace PickUpSports.Controllers
 {
     public class VenueOwnerController : Controller
     {
-        private readonly PickUpContext _context;
         private readonly IGMailService _gMailer;
         private readonly IVenueOwnerService _venueOwnerService;
         private readonly IVenueService _venueService; 
 
-        public VenueOwnerController(PickUpContext context)
+        public VenueOwnerController(IGMailService gMailer, IVenueOwnerService venueOwnerService, IVenueService venueService)
         {
-            _context = context;
-        }
-
-        public VenueOwnerController(PickUpContext context, IGMailService gMailer, IVenueOwnerService venueOwnerService, IVenueService venueService)
-        {
-            _context = context;
             _gMailer = gMailer;
             _venueOwnerService = venueOwnerService;
             _venueService = venueService;
+        }
+
+        public ActionResult ClaimVenue(int venueId)
+        {
+            var model = new ClaimVenueFormViewModel();
+            model.VenueId = venueId;
+            model.VenueName = _venueService.GetVenueNameById(venueId);
+
+            ViewBag.SubmitEmailSent = false;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ClaimVenue(ClaimVenueFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.SubmitEmailSent = false;
+                return View(model);
+            }
+
+            // Send email to Scrum Lords for approval
+            var email = new MailMessage();
+            email.To.Add(_gMailer.GetEmailAddress());
+            email.From = new MailAddress(_gMailer.GetEmailAddress());
+            email.Subject = $"Received request to claim venue {model.VenueName}.";
+            email.Body = $"Received below request to claim venue {model.VenueName}:<br />"
+                         + $"Name: {model.FirstName} {model.LastName}<br />"
+                         + $"Email: {model.Email}<br />"
+                         + $"Phone: {model.PhoneNumber}<br />"
+                         + $"Company name (if applicable): {model.CompanyName}<br />"
+                         + "Proof of ownership document is attached.";
+            email.IsBodyHtml = true;
+
+            var attachment = new Attachment(model.Document.InputStream, model.Document.FileName);
+            email.Attachments.Add(attachment);
+
+            // Send email and return to view if successful
+            if (_gMailer.Send(email))
+            {
+                ViewBag.SubmitEmailSent = true;
+                return View(model);
+            }
+
+            // Email could not be sent, display error 
+            ViewBag.SubmitEmailSent = false;
+            ViewData.ModelState.AddModelError("EmailError", "Unfortunately, your email could not be sent.");
+            return View(model);
         }
 
         [HttpGet]
@@ -93,19 +126,16 @@ namespace PickUpSports.Controllers
         public ActionResult Detail(int id)
         {
             //Bool variable for the View: checking if user is venue owner or not
-            //ViewBag.IsOwner = true;
+           ViewBag.IsOwner = false;
 
             //Get the current logged in user - will be implemented in the future when the log in function/ page is complete
-            //string ownerEmail = User.Identity.GetUserName();
+            string ownerEmail = User.Identity.GetUserName();
 
             //Check if current logged in user is the owner
-            //if (!_venueOwnerService.IsVenueOwner(ownerEmail))
-            //{
-            //    ViewBag.IsOwner = false;
-            //}
-
-            //Finds the owner with the current logged in user email
-            //VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
+            if (_venueOwnerService.IsVenueOwner(ownerEmail))
+            {
+                ViewBag.IsOwner = true;
+            }
 
             //Finding the owner using the id 
             VenueOwner owner = _venueOwnerService.GetVenueOwnerById(id);
@@ -136,7 +166,7 @@ namespace PickUpSports.Controllers
          */
         public void PopulateDropdownValues()
         {
-            ViewBag.Venues = _context.Venues.ToList().ToDictionary(v => v.VenueId, v => v.Name);
+            ViewBag.Venues = _venueService.GetAllVenues().ToDictionary(v => v.VenueId, v => v.Name);
         }
 
         [HttpGet]

@@ -26,15 +26,12 @@ namespace PickUpSports.Models.ViewModel.VenueController
 
         public decimal? AverageRating { get; set; }
 
-        public List<ReviewViewModel> Reviews { get; set; }
-
         public string LatitudeCoord { get; set; }
-        public string LongitudeCoord { get; set; }
 
-        public List<Location> Locations { get; set; }
+        public string LongitudeCoord { get; set; }
 
         public double Distance { get; set; }
 
-        public List<GameListViewModel> Games { get; set; }
+        public bool HasVenueOwner { get; set; }
     }
 }

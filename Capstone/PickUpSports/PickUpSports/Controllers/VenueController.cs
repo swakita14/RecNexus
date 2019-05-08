@@ -241,6 +241,9 @@ namespace PickUpSports.Controllers
             model.VenueId = venue.VenueId;
             model.ZipCode = venue.ZipCode;
 
+            // Check if venue owner exists
+            model.HasVenueOwner = _venueService.VenueHasOwner(venue);
+
             // Map business hours
             List<BusinessHours> businessHours = _venueService.GetVenueBusinessHours(id);
             model.BusinessHours = new List<BusinessHoursViewModel>();
@@ -260,7 +263,6 @@ namespace PickUpSports.Controllers
 
             // Map reviews 
             List<Review> reviews = _venueService.GetVenueReviews(id);
-            model.Reviews = new List<ReviewViewModel>();
 
             decimal? avgRating;
             if (reviews.Count > 0)
