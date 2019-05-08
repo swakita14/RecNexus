@@ -19,21 +19,30 @@ namespace PickUpSports.Controllers
         private readonly IContactService _contactService;
         private readonly IGameService _gameService;
         private readonly IVenueService _venueService;
+        private readonly IVenueOwnerService _venueOwnerService;
 
-        public ContactController(IContactService contactService, IGameService gameService, IVenueService venueService)
+        public ContactController(IContactService contactService, IGameService gameService, IVenueService venueService, IVenueOwnerService venueOwnerService)
         {
             _contactService = contactService;
             _gameService = gameService;
             _venueService = venueService;
+            _venueOwnerService = venueOwnerService;
         }
-
-
-        public ActionResult Details(int? id)
+        
+        public ActionResult Details()
         {
-            string newContactEmail = User.Identity.GetUserName();
+            string userEmail = User.Identity.GetUserName();
 
-            Contact contact = _contactService.GetContactByEmail(newContactEmail);
+            // First check if venue owner and route to correct profile if so
+            bool isVenueOwner = _venueOwnerService.IsVenueOwner(userEmail);
+            if (isVenueOwner)
+            {
+                var owner = _venueOwnerService.GetVenueOwnerByEmail(userEmail);
+                return RedirectToAction("Detail", "VenueOwner", new {id = owner.VenueOwnerId});
+            }
 
+            Contact contact = _contactService.GetContactByEmail(userEmail);
+            
             // If username is null, profile was never set up
             if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
 

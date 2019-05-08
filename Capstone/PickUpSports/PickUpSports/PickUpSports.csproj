@@ -317,6 +317,7 @@
     <Compile Include="Models\ViewModel\VenueController\PartialReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\ClaimVenueFormViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
+    <Compile Include="Models\ViewModel\VenueOwnerController\VenueOwnerViewModel.cs" />
     <Compile Include="Services\ChatHub\ChatHub.cs" />
     <Compile Include="Interface\Repositories\IVenueRepository.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -542,6 +543,7 @@
     <Content Include="Views\Account\VenueOwnerLogin.cshtml" />
     <Content Include="Views\VenueOwner\ClaimVenue.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\VenueOwner\_ModifyVenueOwners.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

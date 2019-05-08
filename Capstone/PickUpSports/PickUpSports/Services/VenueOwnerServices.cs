@@ -13,7 +13,7 @@ namespace PickUpSports.Services
 
         private readonly IVenueOwnerRepository _venueOwnerRepository;
 
-        public VenueOwnerServices(IVenueOwnerRepository venueOwnerRepository, IVenueRepository venueRepository)
+        public VenueOwnerServices(IVenueOwnerRepository venueOwnerRepository)
         {
             _venueOwnerRepository = venueOwnerRepository;
         }
@@ -31,6 +31,11 @@ namespace PickUpSports.Services
         public VenueOwner GetVenueOwnerByEmail(string email)
         {
             return _venueOwnerRepository.GetVenueOwnerByEmail(email);
+        }
+
+        public List<VenueOwner> GetAllVenueOwners()
+        {
+            return _venueOwnerRepository.GetAllVenueOwners();
         }
 
         public VenueOwner GetVenueOwnerById(int venueOwnerId)
