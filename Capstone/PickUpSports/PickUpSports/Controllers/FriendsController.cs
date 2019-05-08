@@ -116,10 +116,10 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact currContactUser = _contactService.GetContactByEmail(email);
 
-            // Give the id of the user
+            // Get the id of the user
            int currID = currContactUser.ContactId;
 
-          // pass Games and Friends to the model
+          // pass  Friends to the model
             PopulateDropdownValues(currID);
             return View();
             
