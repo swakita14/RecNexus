@@ -1,21 +1,49 @@
-﻿@using PickUpSports.Models.DatabaseModels
+﻿
 @model PickUpSports.Models.ViewModel.FriendInviteViewModel
 @{
-    ViewBag.Title = "FriendInvite";
+    ViewBag.Title = "Invite a friend to a Game";
 }
 
 <h2>Invite a Friend!</h2>
 
 @using (Html.BeginForm("FriendInvite", "Friends", FormMethod.Post))
 {
-   @Html.DropDownList("FriendName",ViewBag.FriendName)
-@*     <select id="Gameselect" name="GameTitle"> *@
-@*         *@
-@*         @foreach(var game in Model.Games) *@
-@*         { *@
-@*             <Option value="@game.GameId">@game.Venue</Option> *@
-@*         } *@
-@*     </select>  *@
-       
-    <input type="submit" name ="button" value="Send Invite" class="btn btn-default" />
+<div class="container">
+    <div class="row">
+        <div class="form-box">
+            <h2>Invite a Friend</h2>
+            <form role="form" id="game-form">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+                }
+
+            <!-- Friend field -->
+                <div class="form-group" style="padding-top: 20px">
+                    @Html.DropDownListFor(
+                        x => x.FriendId,
+                        new SelectList(ViewBag.Friends, "Key", "Value"),
+                        "Select a Friend",
+                        new {@class = "form-control"})
+                </div>
+
+              
+
+                <div class="form-group">
+                    <center>
+                        <button type="submit" class="btn btn-default">Add Friend</button>
+                    </center>
+                </div>
+
+              
+            </form>
+        </div>
+    </div>
+</div>
+   
 }
