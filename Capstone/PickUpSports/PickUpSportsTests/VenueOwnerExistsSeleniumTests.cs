@@ -10,12 +10,12 @@ namespace PickUpSportsTests
 
 
     [TestFixture]
-    public class VenueOwnerSeleniumTests
+    public class VenueOwnerExistsSeleniumTests
     {
         private readonly IWebDriver _driver;
 
 
-        public VenueOwnerSeleniumTests()
+        public VenueOwnerExistsSeleniumTests()
         {
             _driver = new ChromeDriver();
             _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Game/CreateGame");
@@ -33,9 +33,7 @@ namespace PickUpSportsTests
             password.SendKeys("");
 
 
-            _driver.FindElement(By.XPath("//button[contains.,'Log In')]")).Click();
-
-            //var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _driver.FindElement(By.Id("login-button")).Click();
             
         }
         
@@ -48,6 +46,9 @@ namespace PickUpSportsTests
 
             //select certain venue on dropdown
             selectVenues.SelectByText("Bryan Johnston Park");
+
+            //Wait for the partial view to show
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             //expect an error message that owner is not there
             var element = _driver.FindElement(By.Id("error-msg"));
