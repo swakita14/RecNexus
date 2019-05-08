@@ -72,11 +72,11 @@ namespace PickUpSportsSpecFlow.VenueOwnerTests
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Venues without owners should display a message accordingly")]
-        [NUnit.Framework.CategoryAttribute("mytag")]
+        [NUnit.Framework.CategoryAttribute("noowner")]
         public virtual void VenuesWithoutOwnersShouldDisplayAMessageAccordingly()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Venues without owners should display a message accordingly", null, new string[] {
-                        "mytag"});
+                        "noowner"});
 #line 7
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();

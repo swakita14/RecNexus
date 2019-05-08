@@ -9,12 +9,12 @@ using TechTalk.SpecFlow;
 namespace PickUpSportsSpecFlow
 {
     [Binding]
-    public class VenueOwnerAvailabilitySteps : IDisposable
+    public class VenueOwnerAvailabilitySteps_DoesNotExist : IDisposable
     {
 
         private readonly IWebDriver _driver;
 
-        public VenueOwnerAvailabilitySteps() 
+        public VenueOwnerAvailabilitySteps_DoesNotExist() 
         {
             _driver = new ChromeDriver();
         }
@@ -26,11 +26,11 @@ namespace PickUpSportsSpecFlow
 
             IWebElement username = _driver.FindElement(By.Id("Email"));
             username.Clear();
-            username.SendKeys("waldemar@gmail.com");
+            username.SendKeys("");
 
             IWebElement password = _driver.FindElement(By.Id("Password"));
             password.Clear();
-            password.SendKeys("Passw0rd!");
+            password.SendKeys("");
 
 
             _driver.FindElement(By.Id("login-button")).Click();
