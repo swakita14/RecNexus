@@ -32,13 +32,13 @@ namespace PickUpSportsTests
         {
             _driver.FindElement(By.LinkText("Venue Owner")).Click();
 
-            //var title = _driver.FindElement(By.Id("venueOwner-login"));
+            var title = _driver.FindElement(By.Id("venueOwner-login"));
             var email = _driver.FindElement(By.Id("Email"));
             var password = _driver.FindElement(By.Id("Password"));
 
-            //title.Text.Should().Be("Venue Owner Log In");
+            title.Text.Should().Be("Venue Owner Log In");
 
-            //title.Displayed.Should().BeTrue();
+            title.Displayed.Should().BeTrue();
             email.Displayed.Should().BeTrue();
             password.Displayed.Should().BeTrue();
         }
