@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickUpSports", "PickUpSport
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickUpSportsTests", "PickUpSportsTests\PickUpSportsTests.csproj", "{DE54F8EB-585B-42D0-B597-2D3FBFA4DB48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickUpSportsSpecFlow", "PickUpSportsSpecFlow\PickUpSportsSpecFlow.csproj", "{CFC0F0CC-E4B2-40E7-9BCA-B11878E6A437}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickUpSportsSpecFlow", "PickUpSportsSpecFlow\PickUpSportsSpecFlow.csproj", "{8D5C5476-B9A2-4AAF-AFC9-EC24CC60B402}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{DE54F8EB-585B-42D0-B597-2D3FBFA4DB48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE54F8EB-585B-42D0-B597-2D3FBFA4DB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE54F8EB-585B-42D0-B597-2D3FBFA4DB48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFC0F0CC-E4B2-40E7-9BCA-B11878E6A437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFC0F0CC-E4B2-40E7-9BCA-B11878E6A437}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFC0F0CC-E4B2-40E7-9BCA-B11878E6A437}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFC0F0CC-E4B2-40E7-9BCA-B11878E6A437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D5C5476-B9A2-4AAF-AFC9-EC24CC60B402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D5C5476-B9A2-4AAF-AFC9-EC24CC60B402}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D5C5476-B9A2-4AAF-AFC9-EC24CC60B402}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D5C5476-B9A2-4AAF-AFC9-EC24CC60B402}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
