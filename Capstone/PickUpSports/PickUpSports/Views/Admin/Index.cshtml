@@ -1,4 +1,6 @@
-﻿@{
+﻿@model PickUpSports.Models.ViewModel.VenueOwnerController.CreateVenueOwnerViewModel
+
+@{
     ViewBag.Title = "Administrator Dashboard";
 }
 
@@ -12,3 +14,19 @@
         </div>
     </div>
 </div>
+
+
+<center>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-6">
+                <center><b>Add a Venue Owner</b></center>
+                @{ Html.RenderAction("AddVenueOwner", "Admin");}
+            </div>
+
+            <div class="col-md-6">
+                <p>test</p>
+            </div>
+        </div>
+    </div>
+</center>

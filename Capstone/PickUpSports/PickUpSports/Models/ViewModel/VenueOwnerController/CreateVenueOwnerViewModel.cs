@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using Org.BouncyCastle.Bcpg.OpenPgp;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PickUpSports.Models.ViewModel.VenueOwnerController
 {
     public class CreateVenueOwnerViewModel
     {
-        public int VenueOwnerId { get; set; }
+        public int VenueId { get; set; }
 
         [Required]
         [Display(Name = "First Name:")]
@@ -29,11 +24,6 @@ namespace PickUpSports.Models.ViewModel.VenueOwnerController
         [Display(Name = "Company Name:")]
         public string CompanyName { get; set; }
 
-        public DateTime SignUpDate { get; set; }
-
-        [Display(Name = "Venue:")]
-        public string VenueName { get; set; }
-
         [Required]
         [Display(Name = "Subject:")]
         public string MessageSubject { get; set; }
@@ -42,6 +32,6 @@ namespace PickUpSports.Models.ViewModel.VenueOwnerController
         [Display(Name = "Body:")]
         public string MessageBody { get; set; }
 
-
+        public string TemporaryPassword { get; set; }
     }
 }
