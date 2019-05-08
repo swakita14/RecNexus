@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row">
             <div class="form-box">
-                <h2>Initialize Your Information</h2>
+                <h2>Initialize Venue Owner</h2>
                 <br/>
                 <form role="form" id="game-form">
 
@@ -39,7 +39,6 @@
                             <input type="text" class="form-control" name="Email" placeholder="Email">
                         </div>
                     </div>
-
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">
@@ -62,21 +61,12 @@
                                 <span class="glyphicon glyphicon-globe"></span>
                             </div>
                             @Html.DropDownListFor(
-                                x => x.VenueName,
+                                x => x.VenueId,
                                 new SelectList(ViewBag.Venues, "Key", "Value"),
                                 "Select a Venue",
                                 new { @class = "form-control" })
                         </div>
                     </div>
-                    @if (!ViewData.ModelState.IsValid)
-                    {
-                        <div class="row">
-                            <div class="col-md-12">
-                                @Html.ValidationSummary(false, null, new { @class = "text-danger" })
-
-                            </div>
-                        </div>
-                    }
                     <div class="form-group">
                         <center>
                             <button type="submit" class="btn btn-default">Submit</button>
