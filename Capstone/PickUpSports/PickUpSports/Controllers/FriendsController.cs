@@ -109,15 +109,20 @@ namespace PickUpSports.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult FriendInvite(int id)
+        public ActionResult FriendInvite(int gameId)
         {
-            //Find the list of friends using the contactId
-            List<Friend> friendList = _context.Friends.Where(x => x.ContactID == id).ToList();
+          
+            //find the current logged-on user
+            string email = User.Identity.GetUserName();
+            Contact currContactUser = _contactService.GetContactByEmail(email);
 
-            //Find the list of games using the contactId
-            List<Game> gameList = _context.Games.Where(x => x.ContactId == id).ToList();
+            // Get the id of the user
+           int currID = currContactUser.ContactId;
 
+          // pass  Friends to the model
+            PopulateDropdownValues(currID);
             return View();
+            
 
         }
 
@@ -127,16 +132,26 @@ namespace PickUpSports.Controllers
        */
         [Authorize]
         [HttpPost]
-        public ActionResult FriendInvite(Friend friend, Game game, string button)
+        public ActionResult FriendInvite(FriendInviteViewModel model, string button)
         {
             //find the current logged-on user
             string email = User.Identity.GetUserName();
             Contact currContactUser = _contactService.GetContactByEmail(email);
-           
-            if (button.Equals("Send Invite"))
+            int currID = currContactUser.ContactId;
+
+            // Get the Game from the Model
+            Game game = _gameService.GetGameById(model.GameId);
+
+            // Check model validation before doing anything
+            if (!ModelState.IsValid)
             {
-                SendInvite(game, friend.FriendID);
+                PopulateDropdownValues(currID);
+                return View(model);
             }
+            
+            // pass Game and friend to the send email function
+            SendInvite(game, model.FriendId);
+            
             
            return View();
         }
@@ -169,7 +184,14 @@ namespace PickUpSports.Controllers
             _gMailer.Send(mailMessage);
         }
 
-      
+
+         public void PopulateDropdownValues(int id)
+         {
+           // Key: FriendId Value: Username of Friend
+            ViewBag.Friends = _context.Friends.Where(x => x.ContactID == id).ToList().ToDictionary(f => f.FriendID, f => _context.Contacts.Find(f.FriendContactID).Username);
+         }
+
+
 
         public bool IsAlreadyAFriend(int contactId, Contact friend, List<Friend> friendList)
         { 
