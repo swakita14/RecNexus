@@ -1,10 +1,14 @@
 ﻿using System;
 
-namespace PickUpSports.Models.DatabaseModels
+namespace PickUpSports.Models.ViewModel.VenueOwnerController
 {
-    public class VenueOwner
+    public class VenueOwnerViewModel
     {
         public int VenueOwnerId { get; set; }
+
+        public int VenueId { get; set; }
+
+        public string VenueName { get; set; }
 
         public string FirstName { get; set; }
 
@@ -12,12 +16,10 @@ namespace PickUpSports.Models.DatabaseModels
 
         public string Email { get; set; }
 
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
 
         public string CompanyName { get; set; }
 
         public DateTime SignUpDate { get; set; }
-
-        public int VenueId { get; set; }
     }
 }

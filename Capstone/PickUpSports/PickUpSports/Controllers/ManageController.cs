@@ -11,7 +11,7 @@ using PickUpSports.Models.ViewModel;
 
 namespace PickUpSports.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Authorize]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -232,7 +232,6 @@ namespace PickUpSports.Controllers
         //
         // POST: /Manage/ChangePassword
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
