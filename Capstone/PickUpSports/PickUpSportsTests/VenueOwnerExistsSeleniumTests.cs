@@ -10,12 +10,12 @@ namespace PickUpSportsTests
 
 
     [TestFixture]
-    public class VenueOwnerSeleniumTests
+    public class VenueOwnerExistsSeleniumTests
     {
         private readonly IWebDriver _driver;
 
 
-        public VenueOwnerSeleniumTests()
+        public VenueOwnerExistsSeleniumTests()
         {
             _driver = new ChromeDriver();
             _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Game/CreateGame");
