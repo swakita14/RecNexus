@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel.GameController;
 
 namespace PickUpSports.Models.ViewModel
