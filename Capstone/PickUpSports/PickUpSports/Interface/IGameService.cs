@@ -46,5 +46,8 @@ namespace PickUpSports.Interface
 
         Game CheckForExistingGameExceptItself(int venueId, int sportId, DateTime startDateTime, int gameId);
 
+        Game RejectGame(int gameId);
+
+        Game AcceptGame(int gameId);
     }
 }

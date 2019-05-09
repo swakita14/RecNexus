@@ -71,19 +71,29 @@
                             @Html.HiddenFor(model => model.GameId)
                             @Html.HiddenFor(model => model.ContactId)
                             @Html.HiddenFor(model => model.PickUpGameId)
+                            if (ViewBag.IsVenueOwner)
+                            {
+                                if (ViewBag.IsThisVenueOwner)
+                                {
+                                    <input type="submit" name="button" class="btn btn-default" value=@ViewBag.SubmitValue />
+                                }
+                            }
+                            else
+                            {
+                                if (ViewBag.IsCreator)
+                                {
+                                    <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'" />
+                                }
+                                else
+                                {
 
-                             if (ViewBag.IsCreator)
-                             {
-                                 <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'"/>
-                             }
-                             else
-                             {
+                                    <input type="submit" name="button" value="Join Game" class="btn btn-default" />
+                                    <input type="submit" name="button" value="Leave Game" class="btn btn-default" />
 
-                                 <input type="submit" name="button" value="Join Game" class="btn btn-default"/>
-                                 <input type="submit" name="button" value="Leave Game" class="btn btn-default"/>
-                                
-                             }
-                            <input type="button" class="btn btn-default" value= "Invite a friend" onclick="location.href = '@Url.Action("FriendInvite", "Friends", new {id = Model.GameId})'"/>
+                                }
+                                <input type="button" class="btn btn-default" value="Invite a friend" onclick="location.href = '@Url.Action("FriendInvite", "Friends", new {id = Model.GameId})'" />
+                            }
+
 
                         }
 
