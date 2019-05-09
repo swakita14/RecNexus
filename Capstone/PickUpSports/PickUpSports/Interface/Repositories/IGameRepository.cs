@@ -14,5 +14,9 @@ namespace PickUpSports.Interface.Repositories
         void EditGame(Game game);
 
         void DeleteGame(Game game);
+
+        void RejectGame(Game game);
+
+        void AcceptGame(Game game);
     }
 }

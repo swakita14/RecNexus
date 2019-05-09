@@ -24,16 +24,19 @@ namespace PickUpSports.Controllers
         private readonly IGMailService _gMailer;
         private readonly IGameService _gameService;
         private readonly IVenueService _venueService;
+        private readonly IVenueOwnerService _venueOwnerService;
 
         public GameController(IContactService contactService, 
             IGMailService gMailer, 
             IGameService gameService, 
-            IVenueService venueService)
+            IVenueService venueService,
+            IVenueOwnerService venueOwnerService)
         {
             _contactService = contactService;
             _gMailer = gMailer;
             _gameService = gameService;
             _venueService = venueService;
+            _venueOwnerService = venueOwnerService;
         }
 
         /**
@@ -221,6 +224,8 @@ namespace PickUpSports.Controllers
         public ActionResult GameDetails(int id)
         {
             ViewBag.IsCreator = false;
+            ViewBag.IsVenueOwner = false;
+            ViewBag.IsThisVenueOwner = false;
 
             //validating the id to make sure its not null
             if (id == 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -230,8 +235,24 @@ namespace PickUpSports.Controllers
             Contact contact = _contactService.GetContactByEmail(email);
 
             Game game = _gameService.GetGameById(id);
-           
-            if (_gameService.IsCreatorOfGame(contact.ContactId, game)) ViewBag.IsCreator = true;
+
+            if (contact == null)
+            {
+                VenueOwner venueOwner = _venueOwnerService.GetVenueOwnerByEmail(email);
+                ViewBag.IsVenueOwner = true;
+                ViewBag.IsCreator = false;
+                if (venueOwner.VenueId == game.VenueId)
+                {
+                    ViewBag.IsThisVenueOwner = true;
+                }
+            }
+            else
+            {
+                if (_gameService.IsCreatorOfGame(contact.ContactId, game))
+                ViewBag.IsCreator = true;
+                ViewBag.IsVenueOwner = false;
+                ViewBag.IsThisVenueOwner = false;
+            }            
 
             //if there are no games then return: 
             if (game == null) return HttpNotFound();
@@ -251,6 +272,16 @@ namespace PickUpSports.Controllers
             {
                 model.ContactId = game.ContactId;
                 model.ContactName = _contactService.GetContactById(game.ContactId).Username;
+            }
+        
+            // Add funtion buttons to the venue owner
+            if (game.GameStatusId == 4)
+            {
+                ViewBag.SubmitValue = "Accept";
+            }
+            if (game.GameStatusId == 3 || game.GameStatusId == 1)
+            {
+                ViewBag.SubmitValue = "Reject";
             }
 
             //returning model to the view
@@ -274,6 +305,56 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact currContactUser = _contactService.GetContactByEmail(email);
 
+            //If the Reject button was pressed
+            if (button.Equals("Reject"))
+            {
+                ViewGameViewModel returnModel = new ViewGameViewModel()
+                {
+                    EndDate = game.EndTime.ToString(),
+                    GameId = game.GameId,
+                    Status = Enum.GetName(typeof(GameStatusEnum), 4),
+                    Sport = _gameService.GetSportNameById(game.SportId),
+                    StartDate = game.StartTime.ToString(),
+                    Venue = _venueService.GetVenueNameById(game.VenueId)
+                };
+
+                if (game.ContactId != null)
+                {
+                    returnModel.ContactId = game.ContactId;
+                    returnModel.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }                
+
+                //Compose the body of the Message
+                body = "Sorry the venue owner reject your game based on the confliction of the venue arrangement";
+
+                //save it       
+                _gameService.RejectGame(game.GameId);
+            }
+            //If the Reject button was pressed
+            if (button.Equals("Accept"))
+            {
+                ViewGameViewModel returnModel = new ViewGameViewModel()
+                {
+                    EndDate = game.EndTime.ToString(),
+                    GameId = game.GameId,
+                    Status = Enum.GetName(typeof(GameStatusEnum), 3),
+                    Sport = _gameService.GetSportNameById(game.SportId),
+                    StartDate = game.StartTime.ToString(),
+                    Venue = _venueService.GetVenueNameById(game.VenueId)
+                };
+
+                if (game.ContactId != null)
+                {
+                    returnModel.ContactId = game.ContactId;
+                    returnModel.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                }
+
+                //Compose the body of the Message
+                body = "The venue owner accept your game!";
+
+                //save it       
+                _gameService.AcceptGame(game.GameId);
+            }
             //If the Join Game button was pressed 
             if (button.Equals("Join Game"))
             {
@@ -301,7 +382,13 @@ namespace PickUpSports.Controllers
                     ViewData.ModelState.AddModelError("SignedUp", "Sorry, this game is canceled, you can not join this game");
                     return View(returnModel);
                 }
-
+                //if the game is rejected by the venue owner, users are prevent to join this game
+                if (game.GameStatusId == 4)
+                {
+                    //error message
+                    ViewData.ModelState.AddModelError("RejectedGame", "Sorry, this game is rejected by the venue owner, you can not join this game");
+                    return View(returnModel);
+                }
                 //check if the person is already signed up for the game 
                 if (!_gameService.IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
                 {
@@ -670,6 +757,14 @@ namespace PickUpSports.Controllers
             if (!_gameService.IsThisGameCanCancel(startDateTime))
             {
                 ViewData.ModelState.AddModelError("GameStart", "Sorry, you can only edit the game at least 1 hour long before it starts.");
+                PopulateEditDropDownMethod(existingGame);
+                return View(model);
+            }
+
+            //check if this game rejected
+            if (_gameService.GetGameById(model.GameId).GameStatusId==4)
+            {
+                ViewData.ModelState.AddModelError("GameRejected", "Sorry, this game is rejected by the venue owner so you cannot edit this game.");
                 PopulateEditDropDownMethod(existingGame);
                 return View(model);
             }
