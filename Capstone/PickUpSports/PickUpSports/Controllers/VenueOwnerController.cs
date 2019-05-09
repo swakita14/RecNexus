@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using PickUpSports.Interface;
+using PickUpSports.Models;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.ViewModel.VenueOwnerController;
 
@@ -14,9 +18,24 @@ namespace PickUpSports.Controllers
     {
         private readonly IGMailService _gMailer;
         private readonly IVenueOwnerService _venueOwnerService;
-        private readonly IVenueService _venueService; 
+        private readonly IVenueService _venueService;
+        private ApplicationUserManager _userManager;
 
-        public VenueOwnerController(IGMailService gMailer, IVenueOwnerService venueOwnerService, IVenueService venueService)
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        public VenueOwnerController(IGMailService gMailer, 
+            IVenueOwnerService venueOwnerService, 
+            IVenueService venueService)
         {
             _gMailer = gMailer;
             _venueOwnerService = venueOwnerService;
@@ -71,7 +90,34 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
+        [Authorize(Roles="Admin")]
+        public ActionResult GetAllVenuOwners()
+        {
+            var allOwners = _venueOwnerService.GetAllVenueOwners();
+            var model = new List<VenueOwnerViewModel>();
+
+            foreach (var venueOwner in allOwners)
+            {
+                model.Add(new VenueOwnerViewModel
+                {
+                    FirstName = venueOwner.FirstName,
+                    LastName = venueOwner.LastName,
+                    CompanyName = venueOwner.CompanyName,
+                    Email = venueOwner.Email,
+                    PhoneNumber = venueOwner.Phone,
+                    SignUpDate = venueOwner.SignUpDate,
+                    VenueName = _venueService.GetVenueNameById(venueOwner.VenueId),
+                    VenueOwnerId = venueOwner.VenueOwnerId,
+                    VenueId = venueOwner.VenueId
+                });
+            }
+
+            return PartialView("_ModifyVenueOwners", model);
+
+        }
+
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             //Return drop down of the venues
@@ -80,6 +126,7 @@ namespace PickUpSports.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(CreateVenueOwnerViewModel model)
         {
             PopulateDropdownValues();
@@ -90,9 +137,9 @@ namespace PickUpSports.Controllers
                 PopulateDropdownValues();
                 return View(model);
             }
-            
+
             //Find venue with the view model id
-            Venue venue = _venueService.GetVenueById(int.Parse(model.VenueName));
+            Venue venue = _venueService.GetVenueById(model.VenueId);
 
             //If the venue already has an owner, error 
             if (_venueOwnerService.VenueHasOwner(venue))
@@ -102,28 +149,39 @@ namespace PickUpSports.Controllers
                 return View(model);
             }
 
-            //Creating new owner with the values from the view
-            VenueOwner owner = new VenueOwner
+            // Adding owner to AspNetUsers table
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true};
+
+            var temporaryPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["VenueOwnerTemporaryPassword"];
+            var result = UserManager.Create(user, temporaryPassword);
+            if (result.Succeeded)
             {
-                VenueOwnerId = model.VenueOwnerId,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Phone = model.PhoneNumber,
-                CompanyName = model.CompanyName,
-                SignUpDate = DateTime.Now,
-                VenueId = venue.VenueId
-            };
+                //Creating new owner with the values from the view
+                VenueOwner owner = new VenueOwner
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Phone = model.PhoneNumber,
+                    CompanyName = model.CompanyName,
+                    SignUpDate = DateTime.Now,
+                    VenueId = venue.VenueId
+                };
 
-            //Add the owner to the table, and save changes
-            _venueOwnerService.AddVenueOwner(owner);
+                //Add the owner to the table, and save changes
+                _venueOwnerService.AddVenueOwner(owner);
 
-            //Take them to the page that shows the details that they just added 
-            return RedirectToAction("Detail", new {id = model.VenueOwnerId});
+                // Only admin can create venue owner so return to admin dashboard
+                return RedirectToAction("Index", "Admin");
+            }
+            
+            ViewData.ModelState.AddModelError("AddError", "Could not add venue owner.");
+            PopulateDropdownValues();
+            return View(model);
         }
 
         [Authorize]
-        public ActionResult Detail(int id)
+        public ActionResult Detail()
         {
             //Bool variable for the View: checking if user is venue owner or not
            ViewBag.IsOwner = false;
@@ -137,13 +195,8 @@ namespace PickUpSports.Controllers
                 ViewBag.IsOwner = true;
             }
 
-            //Finding the owner using the id 
-            VenueOwner owner = _venueOwnerService.GetVenueOwnerById(id);
-
-
-            //If the owner has not created an account yet, redirect them to the create page
-            if (owner == null) return RedirectToAction("Create", "VenueOwner");
-
+            VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
+            
             //Create the view model using values of the owner if not null
             CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
             {
@@ -161,15 +214,8 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
-        /**
-         * Helper method that creates the dropdown of the venues
-         */
-        public void PopulateDropdownValues()
-        {
-            ViewBag.Venues = _venueService.GetAllVenues().ToDictionary(v => v.VenueId, v => v.Name);
-        }
-
         [HttpGet]
+        [Authorize]
         public ActionResult Edit(int id)
         {
             //Bad request if value is 0
@@ -196,6 +242,7 @@ namespace PickUpSports.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Edit(CreateVenueOwnerViewModel model)
         {
             //Find the existing owner withe the Id
@@ -211,6 +258,9 @@ namespace PickUpSports.Controllers
 
             //save the changes
             _venueOwnerService.EditVenueOwner(existingOwner);
+
+            // An administrator is editing, return to Admin dashboard
+            if (User.IsInRole("Admin")) return RedirectToAction("Index", "Admin");
 
             //Redirect to the details page 
             return RedirectToAction("Detail", "VenueOwner", new {id = existingOwner.VenueOwnerId});
@@ -241,6 +291,14 @@ namespace PickUpSports.Controllers
             _gMailer.Send(mail);
 
             return RedirectToAction("Detail", "VenueOwner", new { id = model.VenueOwnerId });
+        }
+
+        /*
+         * Helper method that creates the dropdown of the venues
+         */
+        public void PopulateDropdownValues()
+        {
+            ViewBag.Venues = _venueService.GetAllVenues().ToDictionary(v => v.VenueId, v => v.Name);
         }
     }
 }

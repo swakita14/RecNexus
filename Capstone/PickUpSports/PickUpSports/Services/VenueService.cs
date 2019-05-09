@@ -319,5 +319,15 @@ namespace PickUpSports.Services
             }
         }
 
+        public bool LoggedInUserIsVenueOwner(string email, Venue venue)
+        {
+            VenueOwner venueOwner = _venueOwnerRepository.GetVenueOwnerByEmail(email);
+
+            if (venueOwner == null) return false;
+
+            if (venueOwner.VenueId != venue.VenueId) return false;
+
+            return true;
+        }
     }
 }

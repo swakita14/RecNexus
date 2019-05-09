@@ -12,3 +12,17 @@
         </div>
     </div>
 </div>
+
+<center>
+    <div class="container" style="padding-top: 30px">
+        <div class="row">
+            <div class="col-md-6">
+                <center><b>Venue Owners</b></center>
+                <br />
+                @{
+                    Html.RenderAction("GetAllVenuOwners", "VenueOwner");
+                }
+            </div>
+        </div>
+    </div>
+</center>
