@@ -118,6 +118,18 @@ namespace PickUpSports.Controllers
             ViewBag.GameCreated = true;
             PopulateDropdownValues();
 
+            //email content
+            var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+            //add game link to the email
+            var directUrl = Url.Action("GameDetails", "Game", new { id = newGame.GameId }, protocol: Request.Url.Scheme);
+            fileContents = fileContents.Replace("{URL}", directUrl);
+            //replace the html contents to the game details           
+            fileContents = fileContents.Replace("{VENUE}", venue.Name);
+            fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(model.SportId));
+            fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
+            fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
+            
+
             //send notification to users once a new game created and it includes the user's preference
             List<SportPreference> checkSportPreference = _contactService.GetAllSportPreferences();
 
@@ -125,16 +137,11 @@ namespace PickUpSports.Controllers
             {
                 if (item.SportID == model.SportId && item.ContactID != newGame.ContactId)
                 {
-                    var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
-                    //add game link to the email
-                    var directUrl = Url.Action("GameDetails", "Game", new { id = newGame.GameId }, protocol: Request.Url.Scheme);
-                    fileContents = fileContents.Replace("{URL}", directUrl);
-                    //replace the html contents to the game details
-                    fileContents = fileContents.Replace("{VENUE}", venue.Name);
-                    fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(item.SportID));
-                    fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
-                    fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
-                    SendMessage(newGame, item.ContactID, fileContents);
+                    fileContents = fileContents.Replace("{URLNAME}", "JOIN");
+                    fileContents = fileContents.Replace("{TITLE}", "New Games Coming!!!");
+                    fileContents = fileContents.Replace("{INFO}", "We have a new game you may interested!");
+                    var subject = "New Game At Rec Nexus";
+                    SendMessage(newGame, item.ContactID, fileContents, subject);
                 }
             }
 
@@ -165,20 +172,25 @@ namespace PickUpSports.Controllers
                     }
                     foreach (var checkeduser in nonDuplicateUser)
                     {
-                        var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
-                        //add game link to the email
-                        var directUrl = Url.Action("GameDetails", "Game", new { id = newGame.GameId }, protocol: Request.Url.Scheme);
-                        fileContents = fileContents.Replace("{URL}", directUrl);
-                        //replace the html contents to the game details
-                        fileContents = fileContents.Replace("{VENUE}", venue.Name);
-                        fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(model.SportId));
-                        fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
-                        fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
-                        SendMessage(newGame, item.ContactID, fileContents);
+                        fileContents = fileContents.Replace("{URLNAME}", "JOIN");
+                        fileContents = fileContents.Replace("{TITLE}", "New Games Coming!!!");
+                        fileContents = fileContents.Replace("{INFO}", "We have a new game you may interested!");
+                        var subject = "New Game At Rec Nexus";
+                        SendMessage(newGame, item.ContactID, fileContents, subject);
                     }
                 }
             }
 
+            //send notification to the venue owner
+            if (_venueService.VenueHasOwner(venue))
+            {
+                int ownerId= _venueOwnerService.GetVenueOwnerByVenueId(venue.VenueId).VenueOwnerId;
+                fileContents = fileContents.Replace("{URLNAME}", "CHECK");
+                fileContents = fileContents.Replace("{TITLE}", "New Game Created on Your Venue!");
+                fileContents = fileContents.Replace("{INFO}", "There is a new game created on your venue, please check and make sure there is no conflict with the venue schedule.");
+                var subject = "New Game on Your Venue";
+                SendMessage(newGame, ownerId, fileContents, subject);
+            }
 
             return View();
         }
@@ -294,8 +306,6 @@ namespace PickUpSports.Controllers
         {
             ViewBag.IsCreator = false;
 
-            string body = "";
-
             //Find all the players that are currently signed up for the game
             List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
 
@@ -305,27 +315,42 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact currContactUser = _contactService.GetContactByEmail(email);
 
+            ViewGameViewModel returnModel = new ViewGameViewModel()
+            {
+                EndDate = game.EndTime.ToString(),
+                GameId = game.GameId,
+                Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
+                Sport = _gameService.GetSportNameById(game.SportId),
+                StartDate = game.StartTime.ToString(),
+                Venue = _venueService.GetVenueNameById(game.VenueId)
+            };
+
+            //make the email more readable
+            var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+            //add game link to the email
+            var directUrl = Url.Action("GameDetails", "Game", new { id = game.GameId }, protocol: Request.Url.Scheme);
+            fileContents = fileContents.Replace("{URL}", directUrl);
+            fileContents = fileContents.Replace("{URLNAME}", "CHECK");
+            fileContents = fileContents.Replace("{VENUE}", returnModel.Venue);
+            fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(game.SportId));
+            fileContents = fileContents.Replace("{STARTTIME}", returnModel.StartDate);
+            fileContents = fileContents.Replace("{ENDTIME}", returnModel.EndDate);
+
             //If the Reject button was pressed
             if (button.Equals("Reject"))
-            {
-                ViewGameViewModel returnModel = new ViewGameViewModel()
-                {
-                    EndDate = game.EndTime.ToString(),
-                    GameId = game.GameId,
-                    Status = Enum.GetName(typeof(GameStatusEnum), 4),
-                    Sport = _gameService.GetSportNameById(game.SportId),
-                    StartDate = game.StartTime.ToString(),
-                    Venue = _venueService.GetVenueNameById(game.VenueId)
-                };
-
+            {               
+                returnModel.Status = Enum.GetName(typeof(GameStatusEnum), 4);
                 if (game.ContactId != null)
                 {
                     returnModel.ContactId = game.ContactId;
                     returnModel.ContactName = _contactService.GetContactById(game.ContactId).Username;
                 }                
-
-                //Compose the body of the Message
-                body = "Sorry the venue owner reject your game based on the confliction of the venue arrangement";
+              
+                //replace the html contents to the game details      
+                fileContents = fileContents.Replace("{TITLE}", "Game Rejected");
+                fileContents = fileContents.Replace("{INFO}", "Sorry the venue owner reject your game based on the confliction of the venue arrangement");                
+                var subject = "Game Status";
+                SendMessage(game, (int)returnModel.ContactId, fileContents,subject);
 
                 //save it       
                 _gameService.RejectGame(game.GameId);
@@ -333,15 +358,7 @@ namespace PickUpSports.Controllers
             //If the Reject button was pressed
             if (button.Equals("Accept"))
             {
-                ViewGameViewModel returnModel = new ViewGameViewModel()
-                {
-                    EndDate = game.EndTime.ToString(),
-                    GameId = game.GameId,
-                    Status = Enum.GetName(typeof(GameStatusEnum), 3),
-                    Sport = _gameService.GetSportNameById(game.SportId),
-                    StartDate = game.StartTime.ToString(),
-                    Venue = _venueService.GetVenueNameById(game.VenueId)
-                };
+                returnModel.Status = Enum.GetName(typeof(GameStatusEnum), 3);
 
                 if (game.ContactId != null)
                 {
@@ -349,25 +366,19 @@ namespace PickUpSports.Controllers
                     returnModel.ContactName = _contactService.GetContactById(game.ContactId).Username;
                 }
 
-                //Compose the body of the Message
-                body = "The venue owner accept your game!";
+                //replace the html contents to the game details      
+                fileContents = fileContents.Replace("{TITLE}", "Game Accepted");
+                fileContents = fileContents.Replace("{INFO}", "The venue owner accept your game!");
+                var subject = "Game Status";
+                SendMessage(game, (int)returnModel.ContactId, fileContents,subject);
 
                 //save it       
                 _gameService.AcceptGame(game.GameId);
             }
+
             //If the Join Game button was pressed 
             if (button.Equals("Join Game"))
             {
-                //sending model back so values dont blank out
-                ViewGameViewModel returnModel = new ViewGameViewModel()
-                {
-                    EndDate = game.EndTime.ToString(),
-                    GameId = game.GameId,
-                    Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
-                    Sport = _gameService.GetSportNameById(game.SportId),
-                    StartDate = game.StartTime.ToString(),
-                    Venue = _venueService.GetVenueNameById(game.VenueId)
-                };
 
                 if (game.ContactId != null)
                 {
@@ -404,33 +415,24 @@ namespace PickUpSports.Controllers
                     ContactId = currContactUser.ContactId,
                     GameId = model.GameId,
                 };
-
-                //Compose the body of the Message
-                body = currContactUser.Username + " has just joined the game. ";
-
                 //save it       
                 _gameService.AddPlayerToGame(newPickUpGame);
+
+                //replace the html contents to the game details                     
+                fileContents = fileContents.Replace("{TITLE}", "New Player!!!");
+                fileContents = fileContents.Replace("{INFO}", currContactUser.Username + " has just joined the game." + "The current number of players on this game is: " + _gameService.GetPickUpGameListByGameId(game.GameId).Count());
+                var subject = "Game Information Update";
+                SendMessage(game, (int)returnModel.ContactId, fileContents, subject);                
             }
 
             //If the Leave Game button was pressed 
             if (button.Equals("Leave Game"))
-            {
+            {              
                 //check if the person is already signed up for the game 
                 if (_gameService.IsNotSignedUpForGame(currContactUser.ContactId, checkGames))
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "You have not signed up for this game");
-
-                    //sending model back so values dont blank out
-                    ViewGameViewModel returnModel = new ViewGameViewModel()
-                    {
-                        EndDate = game.EndTime.ToString(),
-                        GameId = game.GameId,
-                        Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
-                        Sport = _gameService.GetSportNameById(game.SportId),
-                        StartDate = game.StartTime.ToString(),
-                        Venue = _venueService.GetVenueNameById(game.VenueId)
-                    };
 
                     if (game.ContactId != null)
                     {
@@ -443,56 +445,66 @@ namespace PickUpSports.Controllers
 
                 Debug.Write(model);
 
-                //Creating body for the mail notification
-                body = currContactUser.Username + " has just left the game. ";
-
                 //Remove the Player from the Game 
                 var usersGames = _gameService.GetPickUpGamesByContactId(currContactUser.ContactId);
                 var pickUpGame = usersGames.FirstOrDefault(x => x.GameId == model.GameId);
                 _gameService.RemovePlayerFromGame(pickUpGame);
-                                    
-            }
 
-            // If contact ID null then creator has deleted account, do not send email
-            if (game.ContactId != null) SendMessage(game, (int)game.ContactId, body);
+                //count the number of current users in the game to send notification to the creator
+                int playerCount = 0;
+
+                if (_gameService.GetPickUpGameListByGameId(game.GameId) == null)
+                {
+                    playerCount = 0;
+                }
+                else
+                {
+                    playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
+                }
+
+                //replace the html contents to the game details                     
+                fileContents = fileContents.Replace("{TITLE}", "Somebody Leaves");
+                fileContents = fileContents.Replace("{INFO}", currContactUser.Username + " has just left the game. " + "The current number of players on this game is: " + playerCount);
+                var subject = "Game Information Update";
+                SendMessage(game, (int)game.ContactId, fileContents, subject);                                   
+            }
 
             return RedirectToAction("GameDetails", new { id = model.GameId });
         }
 
-        public void SendMessage(Game game, int playerId, string body)
+        public void SendMessage(Game game, int playerId, string body, string subject)
         {
             //Initializing Message Details 
             string sendingToEmail = "";
             string messageContent = "";
-            int playerCount = 0;
-
-            if (_gameService.GetPickUpGameListByGameId(game.GameId) == null)
-            {
-                playerCount = 0;
-            }
-            else
-            {
-                playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
-            }
-
           
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
                 sendingToEmail = _contactService.GetContactById((int)game.ContactId).Email;
-                messageContent = body + "The current number of players on this game is: " + playerCount;
+                messageContent = body;
 
             }
             else
             {
-                //emailing to the players on the game list
-                sendingToEmail = _contactService.GetContactById(playerId).Email;
+                if (_contactService.GetContactById(playerId) != null)
+                {
+                    //emailing to the players on the game list
+                    sendingToEmail = _contactService.GetContactById(playerId).Email;                    
+                }
+                else
+                {
+                    //email to the venue owner
+                    sendingToEmail = _venueOwnerService.GetVenueOwnerById(playerId).Email;
+                }
                 messageContent = body;
             }
 
             MailMessage mailMessage = new MailMessage(_gMailer.GetEmailAddress(), sendingToEmail)
             {
-                Body = messageContent
+                Body = messageContent,
+                Subject = subject
+                
             };
 
             //Send the Message
@@ -817,14 +829,24 @@ namespace PickUpSports.Controllers
                 var venueName = _venueService.GetVenueNameById(existingGame.VenueId);
                 var sportName = _gameService.GetSportNameById(existingGame.SportId);
 
-                string body = "Sorry, this game is canceled by the creator. Venue: " + venueName
-                                                                                     + "; Sport: " + sportName
-                                                                                     + "; Start Time: " + startDateTime + "; End Time: " + endDateTime;
+                var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+                //add game link to the email
+                var directUrl = Url.Action("GameDetails", "Game", new { id = existingGame.GameId }, protocol: Request.Url.Scheme);
+                fileContents = fileContents.Replace("{URL}", directUrl);
+                fileContents = fileContents.Replace("{URLNAME}", "CHECK");
+                fileContents = fileContents.Replace("{VENUE}", venueName);
+                fileContents = fileContents.Replace("{SPORT}", sportName);
+                fileContents = fileContents.Replace("{STARTTIME}", startDateTime.ToString());
+                fileContents = fileContents.Replace("{ENDTIME}", endDateTime.ToString());
+                fileContents = fileContents.Replace("{TITLE}", "Game Cancelled");
+                fileContents = fileContents.Replace("{INFO}", "Sorry, this game is canceled by the creator.");
+                var subject = "Game Cancelled";
+
 
                 List<PickUpGame> pickUpGameList = _gameService.GetPickUpGameListByGameId(existingGame.GameId);
                 foreach (var player in pickUpGameList)
                 {
-                    SendMessage(existingGame, player.ContactId, body);
+                    SendMessage(existingGame, player.ContactId, fileContents, subject);
                 }                              
             }
 
