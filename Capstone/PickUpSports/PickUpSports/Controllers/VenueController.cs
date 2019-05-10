@@ -19,14 +19,17 @@ namespace PickUpSports.Controllers
         private readonly IVenueService _venueService;
         private readonly IContactService _contactService;
         private readonly IGameService _gameService;
+        private readonly IVenueOwnerService _venueOwnerService;
 
         public VenueController(IVenueService venueService, 
             IContactService contactService, 
-            IGameService gameService)
+            IGameService gameService,
+            IVenueOwnerService venueOwnerService)
         {
             _venueService = venueService;
             _contactService = contactService;
             _gameService = gameService;
+            _venueOwnerService = venueOwnerService;
         }
         
         /*
@@ -354,6 +357,63 @@ namespace PickUpSports.Controllers
 
             model = new List<GameListViewModel>(model.OrderBy(x => x.StartDate));
             return PartialView("_VenueGames", model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult EditVenue(int id)
+        {
+            //Get the current logged in user
+            string currUser = User.Identity.GetUserName();
+
+            //If the current user is not the venue owner then redirect them to details of venue
+            if (!_venueOwnerService.IsVenueOwner(currUser))
+            {
+                return RedirectToAction("Details", new { id = id });
+            }
+
+            //Find the venues with the ID
+            Venue venue = _venueService.GetVenueById(id);
+
+            //Gotta get business hours for the venues 
+            List<BusinessHours> businessHours = _venueService.GetVenueBusinessHours(id);
+
+            //Creating a Business hour VM for the view model passing back to the venue view
+            List<BusinessHoursViewModel> businessHoursViewModels = new List<BusinessHoursViewModel>();
+
+            foreach (var hours in businessHours)
+            {
+                foreach (var viewModelHours in businessHoursViewModels)
+                {
+                    viewModelHours.CloseTime = hours.CloseTime.ToString();
+                    viewModelHours.OpenTime = hours.OpenTime.ToString();
+                    viewModelHours.DayOfWeek = Enum.Parse(typeof(DayOfWeek), hours.DayOfWeek.ToString()).ToString();
+                }
+            }
+
+            //Create the View Model for the Edit View
+            VenueViewModel model = new VenueViewModel
+            {
+                VenueId = venue.VenueId,
+                Name = venue.Name,
+                Address1 = venue.Address1,
+                Address2 = venue.Address2,
+                City = venue.City,
+                Phone = venue.Phone,
+                State = venue.State,
+                ZipCode = venue.ZipCode,
+                BusinessHours = businessHoursViewModels
+            };
+
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditVenue(VenueViewModel model)
+        {
+            return RedirectToAction("Details", new { id = model.VenueId });
         }
     }
 }

@@ -563,6 +563,7 @@
     <Content Include="Views\VenueOwner\ClaimVenue.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\VenueOwner\_ModifyVenueOwners.cshtml" />
+    <Content Include="Views\Venue\EditVenue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
