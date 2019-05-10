@@ -36,24 +36,16 @@
                 {
                     foreach (var businessHour in Model.BusinessHours)
                     {
-                        <div class="row">
-                            @Html.DisplayFor(x => businessHour.DayOfWeek): @Html.DisplayFor(x => businessHour.OpenTime) - @Html.DisplayFor(x => businessHour.CloseTime)
-                        </div>
+                <div class="row">
+                    @Html.DisplayFor(x => businessHour.DayOfWeek):  @Html.EditorFor(x => businessHour.OpenTime, new { htmlAttributes = new { @class = "form-control", value = businessHour.OpenTime } }) -  @Html.EditorFor(x => businessHour.CloseTime, new { htmlAttributes = new { @class = "form-control", value = businessHour.CloseTime } })
+                </div>
                     }
                 }
                 else
                 {
                     <div class="row">
                         You have not yet set any business hours yet. Add some if you like:
-                        @for(int i = 0; i < 7; i ++)
-                        {
-                            foreach (var hours in Model.BusinessHours)
-                            {
-                                <div>
-                                    @Html.TextAreaFor(x => hours.OpenTime, new { htmlAttributes = new { @class = "form-control"}}) - @Html.TextAreaFor(x => hours.CloseTime, new { htmlAttributes = new { @class = "form-control" } })
-                                </div>
-                            }
-                        }
+
                     </div>
                 }
 

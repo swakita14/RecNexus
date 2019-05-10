@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using PickUpSports.DAL;
 using PickUpSports.Interface;
@@ -378,17 +379,47 @@ namespace PickUpSports.Controllers
             //Gotta get business hours for the venues 
             List<BusinessHours> businessHours = _venueService.GetVenueBusinessHours(id);
 
+            //create a shell for business hours with complete set of day of weeks
+            List<BusinessHours> shell = new List<BusinessHours>();
+            for (int i = 0; i < 7; i++)
+            {
+                shell.Add(new BusinessHours()
+                {
+                    DayOfWeek = i,
+                    VenueId = id
+                });
+            }
+
+            foreach (var hourses in businessHours)
+            {
+                BusinessHours doug = shell.Find(x => x.DayOfWeek == hourses.DayOfWeek);
+                doug.BusinessHoursId = hourses.BusinessHoursId;
+                doug.CloseTime = hourses.CloseTime;
+                doug.OpenTime = hourses.OpenTime;
+            }
+
             //Creating a Business hour VM for the view model passing back to the venue view
             List<BusinessHoursViewModel> businessHoursViewModels = new List<BusinessHoursViewModel>();
 
-            foreach (var hours in businessHours)
+            foreach (var hours in shell)
             {
-                foreach (var viewModelHours in businessHoursViewModels)
+                string openTimeString = "";
+                string closingTimeString = "";
+
+                if (hours.CloseTime != TimeSpan.Zero || hours.OpenTime != TimeSpan.Zero)
                 {
-                    viewModelHours.CloseTime = hours.CloseTime.ToString();
-                    viewModelHours.OpenTime = hours.OpenTime.ToString();
-                    viewModelHours.DayOfWeek = Enum.Parse(typeof(DayOfWeek), hours.DayOfWeek.ToString()).ToString();
+                    openTimeString = hours.OpenTime.ToString();
+                    closingTimeString = hours.CloseTime.ToString();
                 }
+
+                BusinessHoursViewModel hoursViewModel = new BusinessHoursViewModel()
+                { 
+                    DayOfWeek = Enum.Parse(typeof(DayOfWeek), hours.DayOfWeek.ToString()).ToString(),
+                    CloseTime = openTimeString,
+                    OpenTime = closingTimeString
+                };
+
+                businessHoursViewModels.Add(hoursViewModel);
             }
 
             //Create the View Model for the Edit View
