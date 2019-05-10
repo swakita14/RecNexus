@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -117,11 +118,17 @@ namespace PickUpSports.Controllers
             Contact currContactUser = _contactService.GetContactByEmail(email);
 
             // Get the id of the user
-           int currID = currContactUser.ContactId;
-
-          // pass  Friends to the model
+            int currID = currContactUser.ContactId;
+          
+            // Populate Dropdown list
             PopulateDropdownValues(currID);
-            return View();
+
+            // populate model
+            FriendInviteViewModel model = new FriendInviteViewModel();
+            model.ContactId = currID;
+            model.GameId = gameId;
+            
+            return View(model);
             
 
         }
@@ -132,7 +139,7 @@ namespace PickUpSports.Controllers
        */
         [Authorize]
         [HttpPost]
-        public ActionResult FriendInvite(FriendInviteViewModel model, string button)
+        public ActionResult FriendInvite(FriendInviteViewModel model, int friendId)
         {
             //find the current logged-on user
             string email = User.Identity.GetUserName();
@@ -142,24 +149,35 @@ namespace PickUpSports.Controllers
             // Get the Game from the Model
             Game game = _gameService.GetGameById(model.GameId);
 
+
+            // get list of friends from logged in user
+            List<Friend> friends = _context.Friends.Where(x => x.ContactID == currID).ToList();
+
+            
             // Check model validation before doing anything
             if (!ModelState.IsValid)
-            {
-                PopulateDropdownValues(currID);
-                return View(model);
-            }
-            
-            // pass Game and friend to the send email function
-            SendInvite(game, model.FriendId);
-            
-            
-           return View();
+                       {
+                           PopulateDropdownValues(currID);
+                           return View(model);
+                       }
+
+            // Get contact info from friend 
+            Friend friendinv = friends.Find(f => f.FriendID == friendId);
+            int friendInvId = friendinv.FriendContactID;
+
+
+            // pass Game and Contactfriend to the send email function
+            SendInvite(game, friendInvId );
+
+
+            //redirect them back to the changed game detail
+            return RedirectToAction("GameDetails", "Game",new { id = model.GameId });
         }
 
         /*
          * PBI 148 Austin Bergman
          */
-         public void SendInvite(Game game, int friendId)
+         public void SendInvite(Game game, int friendContactId)
         {
             string sendToEmail = "";
             string messageContent = "";
@@ -172,7 +190,7 @@ namespace PickUpSports.Controllers
             int playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
 
             // sending email to the friend 
-            sendToEmail = _contactService.GetContactById(friendId).Email;
+            sendToEmail = _contactService.GetContactById(friendContactId).Email;
             messageContent = "Please join my game! the current player count is " + playerCount + " here is a link to the game " + url;
 
 

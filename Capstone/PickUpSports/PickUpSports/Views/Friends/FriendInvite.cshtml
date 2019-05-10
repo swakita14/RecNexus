@@ -22,8 +22,11 @@
                         </div>
                     </div>
                 }
-
-            <!-- Friend field -->
+                
+                @Html.HiddenFor(model => model.ContactId)
+                @Html.HiddenFor(model => model.GameId)
+               
+                <!-- Friend field -->
                 <div class="form-group" style="padding-top: 20px">
                     @Html.DropDownListFor(
                         x => x.FriendId,
