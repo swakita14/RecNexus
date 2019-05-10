@@ -47,5 +47,17 @@ namespace PickUpSports.DAL.Repositories
             _context.Games.Remove(existing);
             _context.SaveChanges();
         }
+
+        public void RejectGame(Game game)
+        {
+            game.GameStatusId = 4;
+            _context.SaveChanges();
+        }
+
+        public void AcceptGame(Game game)
+        {
+            game.GameStatusId = 3;
+            _context.SaveChanges();
+        }
     }
 }

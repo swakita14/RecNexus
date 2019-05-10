@@ -303,5 +303,22 @@ namespace PickUpSports.Services
 
             return null;
         }
+
+        //Reject Game 
+        public Game RejectGame(int gameId)
+        {
+            Game game = GetGameById(gameId);
+            _gameRepository.RejectGame(game);
+            return game;
+        }
+
+        //Accept Game 
+        public Game AcceptGame(int gameId)
+        {
+            Game game = GetGameById(gameId);
+            _gameRepository.AcceptGame(game);
+            return game;
+        }
+
     }
 }
