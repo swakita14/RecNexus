@@ -366,12 +366,16 @@ namespace PickUpSports.Controllers
         [HttpGet]
         public ActionResult EditVenue(int id)
         {
+            //Populate states dropdown
+            ViewBag.States = PopulateStatesDropdown();
+
             //Get the current logged in user
             string currUser = User.Identity.GetUserName();
 
             //If the current user is not the venue owner then redirect them to details of venue
             if (!_venueOwnerService.IsVenueOwner(currUser))
             {
+                ViewBag.States = PopulateStatesDropdown();
                 return RedirectToAction("Details", new { id = id });
             }
 
@@ -421,8 +425,8 @@ namespace PickUpSports.Controllers
                 BusinessHoursViewModel hoursViewModel = new BusinessHoursViewModel()
                 { 
                     DayOfWeek = Enum.Parse(typeof(DayOfWeek), hours.DayOfWeek.ToString()).ToString(),
-                    CloseTime = openTimeString,
-                    OpenTime = closingTimeString
+                    CloseTime = closingTimeString,
+                    OpenTime = openTimeString
                 };
 
                 //Add the business hours
@@ -451,6 +455,9 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult EditVenue(VenueViewModel model)
         {
+            //Populate states dropdown
+            ViewBag.States = PopulateStatesDropdown();
+
             //Editing the venue details 
             Venue existingVenue = _venueService.GetVenueById(model.VenueId);
 
@@ -466,20 +473,56 @@ namespace PickUpSports.Controllers
             //find the current hours of the venue using the venueId
             List<BusinessHours> existingHours = _venueService.GetVenueBusinessHours(model.VenueId);
 
+            TimeSpan beginTimeSpan = TimeSpan.Zero;
+            TimeSpan endTimeSpan = TimeSpan.Zero;
 
             //for each hours in the view modeling hours - runs 7 times since the days of weeks are not null
             foreach (var hours in model.BusinessHours)
             {
+
+
                 //convert the string day of week to numbers to be able to pass it back into the dB
                 DayOfWeek convertDayOfWeek = (DayOfWeek) (Enum.Parse(typeof(DayOfWeek), hours.DayOfWeek));
 
                 //Match the day of week with the existing 
                 BusinessHours checkHours = existingHours.Find(x => x.DayOfWeek == (int)convertDayOfWeek);
 
-                //If the Open Time and the Closing Time are not null, there was time entered into it
-                if (hours.OpenTime != null || hours.OpenTime != null)
+                //Check if only one field is filled and the other isn't
+                if (hours.OpenTime != null && hours.CloseTime == null)
+                { 
+                    ViewBag.States = PopulateStatesDropdown();
+                    ViewData.ModelState.AddModelError("BothTimeFilled", "Please fill out both Opening and Ending Time for the certain day");
+                    return View(model);
+                }
+                if (hours.OpenTime == null && hours.CloseTime != null)
                 {
-                    Debug.Write((int) convertDayOfWeek);
+                    ViewBag.States = PopulateStatesDropdown();
+                    ViewData.ModelState.AddModelError("BothTimeFilled", "Please fill out both Opening and Ending Time for the certain day");
+                    return View(model);
+                }
+
+                //If the Open Time and the Closing Time are not null, there was time entered into it
+                if (hours.OpenTime != null && hours.CloseTime != null)
+                {
+                    //Checking if it is a valid format, if so assign it to the TimeSpan variable initialized above 
+                    bool checkOpenTime = TimeSpan.TryParse(hours.OpenTime, out beginTimeSpan);
+                    bool checkCloseTime = TimeSpan.TryParse(hours.CloseTime, out endTimeSpan);
+
+                    if(!checkCloseTime && !checkOpenTime)
+                    {
+                        ViewBag.States = PopulateStatesDropdown();
+                        ViewData.ModelState.AddModelError("ValidTime", "The time must be between 00:00 - 23:00");
+                        return View(model);
+                    }
+
+
+                    //checking if opening time and closing time is valid
+                    if (beginTimeSpan >= endTimeSpan)
+                    {
+                        ViewBag.States = PopulateStatesDropdown();
+                        ViewData.ModelState.AddModelError("TimeRange", "The Opening Time cannot be after or equal to the Closing Time");
+                        return View(model);
+                    }
 
                     //Case: 1: Adding new Business Hours - If checkHours equals null, then there was no match so time to add in a new business hour
                     if (checkHours == null)
@@ -517,6 +560,65 @@ namespace PickUpSports.Controllers
 
 
             return RedirectToAction("Details", new { id = model.VenueId });
+        }
+
+        private Dictionary<string, string> PopulateStatesDropdown()
+        {
+            var states = new Dictionary<string, string>();
+
+            states.Add("AL", "Alabama");
+            states.Add("AK", "Alaska");
+            states.Add("AZ", "Arizona");
+            states.Add("AR", "Arkansas");
+            states.Add("CA", "California");
+            states.Add("CO", "Colorado");
+            states.Add("CT", "Connecticut");
+            states.Add("DE", "Delaware");
+            states.Add("DC", "District of Columbia");
+            states.Add("FL", "Florida");
+            states.Add("GA", "Georgia");
+            states.Add("HI", "Hawaii");
+            states.Add("ID", "Idaho");
+            states.Add("IL", "Illinois");
+            states.Add("IN", "Indiana");
+            states.Add("IA", "Iowa");
+            states.Add("KS", "Kansas");
+            states.Add("KY", "Kentucky");
+            states.Add("LA", "Louisiana");
+            states.Add("ME", "Maine");
+            states.Add("MD", "Maryland");
+            states.Add("MA", "Massachusetts");
+            states.Add("MI", "Michigan");
+            states.Add("MN", "Minnesota");
+            states.Add("MS", "Mississippi");
+            states.Add("MO", "Missouri");
+            states.Add("MT", "Montana");
+            states.Add("NE", "Nebraska");
+            states.Add("NV", "Nevada");
+            states.Add("NH", "New Hampshire");
+            states.Add("NJ", "New Jersey");
+            states.Add("NM", "New Mexico");
+            states.Add("NY", "New York");
+            states.Add("NC", "North Carolina");
+            states.Add("ND", "North Dakota");
+            states.Add("OH", "Ohio");
+            states.Add("OK", "Oklahoma");
+            states.Add("OR", "Oregon");
+            states.Add("PA", "Pennsylvania");
+            states.Add("RI", "Rhode Island");
+            states.Add("SC", "South Carolina");
+            states.Add("SD", "South Dakota");
+            states.Add("TN", "Tennessee");
+            states.Add("TX", "Texas");
+            states.Add("UT", "Utah");
+            states.Add("VT", "Vermont");
+            states.Add("VA", "Virginia");
+            states.Add("WA", "Washington");
+            states.Add("WV", "West Virginia");
+            states.Add("WI", "Wisconsin");
+            states.Add("WY", "Wyoming");
+
+            return states;
         }
     }
 }
