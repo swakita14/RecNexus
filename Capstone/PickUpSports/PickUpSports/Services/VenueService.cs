@@ -329,5 +329,29 @@ namespace PickUpSports.Services
 
             return true;
         }
+
+
+        public void ClearBusinessHours(List<BusinessHours> hours)
+        {
+            foreach (var businessHours in hours)
+            {
+                _businessHoursRepository.Delete(businessHours);
+            }
+        }
+
+        public void AddBusinessHour(BusinessHours hour)
+        {
+            _businessHoursRepository.AddBusinessHours(hour);
+        }
+
+        public void UpdateBusinessHours(BusinessHours hours)
+        {
+            _businessHoursRepository.Edit(hours);
+        }
+
+        public void DeleteBusinessHours(BusinessHours hours)
+        {
+           _businessHoursRepository.Delete(hours);
+        }
     }
 }
