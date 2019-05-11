@@ -316,6 +316,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\TrendingController.cs" />
     <Compile Include="Controllers\VenueOwnerController.cs" />
     <Compile Include="DAL\Configurations\VenueOwnerConfiguration.cs" />
     <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
@@ -333,6 +334,11 @@
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
     <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
     <Compile Include="Models\ViewModel\ReviewController\EditReviewViewModel.cs" />
+    <Compile Include="Models\ViewModel\TrendingController\ResponseInput.cs" />
+    <Compile Include="Models\ViewModel\TrendingController\ResultOutcome.cs" />
+    <Compile Include="Models\ViewModel\TrendingController\ResultTrendingContent.cs" />
+    <Compile Include="Models\ViewModel\TrendingController\TrendingModel.cs" />
+    <Compile Include="Models\ViewModel\TrendingController\TrendingTable.cs" />
     <Compile Include="Models\ViewModel\VenueController\PartialReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\ClaimVenueFormViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
@@ -429,6 +435,7 @@
     <Compile Include="Models\ViewModel\ViewFriendsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContactService.cs" />
+    <Compile Include="Services\TrendingWebServices.cs" />
     <Compile Include="Services\VenueOwnerServices.cs" />
     <Compile Include="Services\VenueService.cs" />
     <Compile Include="Startup.cs" />
@@ -563,6 +570,8 @@
     <Content Include="Views\VenueOwner\ClaimVenue.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\VenueOwner\_ModifyVenueOwners.cshtml" />
+    <Content Include="Views\Venue\EditVenue.cshtml" />
+    <Content Include="Views\Trending\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">

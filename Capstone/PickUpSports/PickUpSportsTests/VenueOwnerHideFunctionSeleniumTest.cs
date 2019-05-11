@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Web.Configuration;
 
 namespace PickUpSportsTests
 {
@@ -19,8 +19,9 @@ namespace PickUpSportsTests
         public void FindGame_PickUpGamesPage()
         {
             _driver.FindElement(By.LinkText("Venue Owner")).Click();
+            
             _driver.FindElement(By.Id("Email")).SendKeys("emailtest1998@gmail.com");
-            _driver.FindElement(By.Id("Password")).SendKeys("Passw0rld!");
+            _driver.FindElement(By.Id("Password")).SendKeys(WebConfigurationManager.AppSettings["TestEmailPassword"]);
             _driver.FindElement(By.Id("login-button")).Click();
 
             _driver.FindElement(By.LinkText("PICK UP GAMES")).Click();
