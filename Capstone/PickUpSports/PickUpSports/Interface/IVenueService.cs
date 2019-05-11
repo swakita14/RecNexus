@@ -40,7 +40,15 @@ namespace PickUpSports.Interface
 
        bool LoggedInUserIsVenueOwner(string email, Venue venue);
 
-       
+       void AddBusinessHour(BusinessHours hour);
+
+       void UpdateBusinessHours(BusinessHours hours);
+
+       void DeleteBusinessHours(BusinessHours hours);
+
+
+
+
 
    }
 }

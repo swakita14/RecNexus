@@ -26,7 +26,7 @@ namespace PickUpSportsTests
             _gmailServiceMock = new Mock<IGMailService>();
             _gameServiceMock = new Mock<IGameService>();
             _venueServiceMock = new Mock<IVenueService>();
-            _sut = new GameController(_contactServiceMock.Object, _gmailServiceMock.Object, _gameServiceMock.Object, _venueServiceMock.Object);
+            //_sut = new GameController(_contactServiceMock.Object, _gmailServiceMock.Object, _gameServiceMock.Object, _venueServiceMock.Object);
         }
     }
 }
