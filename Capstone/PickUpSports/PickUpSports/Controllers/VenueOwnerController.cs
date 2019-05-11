@@ -181,7 +181,7 @@ namespace PickUpSports.Controllers
         }
 
         [Authorize]
-        public ActionResult Detail()
+        public ActionResult Detail(int? id)
         {
             //Bool variable for the View: checking if user is venue owner or not
            ViewBag.IsOwner = false;
@@ -193,25 +193,44 @@ namespace PickUpSports.Controllers
             if (_venueOwnerService.IsVenueOwner(ownerEmail))
             {
                 ViewBag.IsOwner = true;
+
+                VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
+
+                //Create the view model using values of the owner if not null
+                CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
+                {
+                    VenueOwnerId = owner.VenueOwnerId,
+                    FirstName = owner.FirstName,
+                    LastName = owner.LastName,
+                    Email = owner.Email,
+                    PhoneNumber = owner.Phone,
+                    CompanyName = owner.CompanyName,
+                    SignUpDate = owner.SignUpDate,
+                    VenueName = _venueService.GetVenueNameById(owner.VenueId)
+                };
+
+                //Return it back to the view
+                return View(model);
             }
-
-            VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
-            
-            //Create the view model using values of the owner if not null
-            CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
+            else
             {
-                VenueOwnerId = owner.VenueOwnerId,
-                FirstName = owner.FirstName,
-                LastName = owner.LastName,
-                Email = owner.Email,
-                PhoneNumber = owner.Phone,
-                CompanyName = owner.CompanyName,
-                SignUpDate = owner.SignUpDate,
-                VenueName = _venueService.GetVenueNameById(owner.VenueId)
-            };
+                ViewBag.IsOwner = false;
+                VenueOwner owner = _venueOwnerService.GetVenueOwnerById((int) id);
 
-            //Return it back to the view
-            return View(model);
+                CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
+                {
+                    VenueOwnerId = owner.VenueOwnerId,
+                    FirstName = owner.FirstName,
+                    LastName = owner.LastName,
+                    Email = owner.Email,
+                    PhoneNumber = owner.Phone,
+                    CompanyName = owner.CompanyName,
+                    SignUpDate = owner.SignUpDate,
+                    VenueName = _venueService.GetVenueNameById(owner.VenueId)
+                };
+                return View(model);
+
+            }
         }
 
         [HttpGet]
@@ -293,6 +312,11 @@ namespace PickUpSports.Controllers
             return RedirectToAction("Detail", "VenueOwner", new { id = model.VenueOwnerId });
         }
 
+        //public ActionResult Calendar()
+        //{
+        //    _calendarApi.InsertEvent();
+        //    return PartialView("_VenueOwnerCalendar");
+        //}
         /*
          * Helper method that creates the dropdown of the venues
          */
