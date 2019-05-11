@@ -4,53 +4,63 @@
 }
 
 @*Edit Venue details*@
-<div class="container">
-    <div class="row">
-        <div class="form-box">
-            <h2 id="Name">@Model.Name</h2>
-            <div class="well">
-                <div class="row" id="AddressInformation">
-                    @Html.EditorFor(x => x.Address1, new { htmlAttributes = new { @class = "form-control", value = Model.Address1 } })
-                    @if (!string.IsNullOrEmpty(Model.Address2))
-                    {
-                        <br />@Html.EditorFor(x => x.Address2, new { htmlAttributes = new { @class = "form-control", value = Model.Address2 } })
-                    }
+@using (Html.BeginForm("EditVenue", "Venue", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+
+    @Html.HiddenFor(x => x.VenueId)
+    @Html.HiddenFor(x => x.Name)
+    <div class="container">
+        <div class="row">
+            <div class="form-box">
+                <h2 id="Name">@Model.Name</h2>
+                <div class="well">
+                    <div class="row" id="AddressInformation">
+                        @Html.EditorFor(x => x.Address1, new { htmlAttributes = new { @class = "form-control", value = Model.Address1 } })
+                        @if (!string.IsNullOrEmpty(Model.Address2))
+                        {
+                            <br />
+                            @Html.EditorFor(x => x.Address2, new { htmlAttributes = new { @class = "form-control", value = Model.Address2 } })
+                        }
+                        <br />
+                        @Html.EditorFor(x => x.City, new { htmlAttributes = new { @class = "form-control", value = Model.City } }),
+                        @Html.EditorFor(x => x.State, new { htmlAttributes = new { @class = "form-control", value = Model.State } }),
+                        @Html.EditorFor(x => x.ZipCode, new { htmlAttributes = new { @class = "form-control", value = Model.ZipCode } })
+                    </div>
                     <br />
-                    @Html.EditorFor(x => x.City, new { htmlAttributes = new { @class = "form-control", value = Model.City } }),
-                    @Html.EditorFor(x => x.State, new { htmlAttributes = new { @class = "form-control", value = Model.State } }),
-                    @Html.EditorFor(x => x.ZipCode, new { htmlAttributes = new { @class = "form-control", value = Model.ZipCode } })
-                </div>
-                <br/>
-                @if (!string.IsNullOrEmpty(Model.Phone))
-                {
-                    <div class="row">
-                        @Html.EditorFor(x => x.Phone, new { htmlAttributes = new { @class = "form-control", value=Model.Phone}})
-                    </div>
-                }
-
-                <br />
-                <div class="row" id="BusinessHours">
-                    <b>Hours of Operation:</b>
-                </div>
-                @if (Model.BusinessHours.Count > 0)
-                {
-                    foreach (var businessHour in Model.BusinessHours)
+                    @if (!string.IsNullOrEmpty(Model.Phone))
                     {
-                <div class="row">
-                    @Html.DisplayFor(x => businessHour.DayOfWeek):  @Html.EditorFor(x => businessHour.OpenTime, new { htmlAttributes = new { @class = "form-control", value = businessHour.OpenTime } }) -  @Html.EditorFor(x => businessHour.CloseTime, new { htmlAttributes = new { @class = "form-control", value = businessHour.CloseTime } })
-                </div>
+                        <div class="row">
+                            @Html.EditorFor(x => x.Phone, new { htmlAttributes = new { @class = "form-control", value = Model.Phone } })
+                        </div>
                     }
-                }
-                else
-                {
-                    <div class="row">
-                        You have not yet set any business hours yet. Add some if you like:
 
+                    <br />
+                    <div class="row" id="BusinessHours">
+                        <b>Hours of Operation:</b>
                     </div>
-                }
+                    @for (int i = 0; i < Model.BusinessHours.Count; i++)
+                    {
+                        @Html.HiddenFor(x => Model.BusinessHours[i].DayOfWeek)
+                        
+                        <div class="row">
+                            @Html.DisplayFor(x => Model.BusinessHours[i].DayOfWeek): @Html.EditorFor(x => Model.BusinessHours[i].OpenTime, new { htmlAttributes = new { @class = "form-control", value = Model.BusinessHours[i].OpenTime } }) - @Html.EditorFor(x => Model.BusinessHours[i].CloseTime, new { htmlAttributes = new { @class = "form-control", value = Model.BusinessHours[i].CloseTime } })
+                        </div>
+                    }
 
+                    @*@foreach (var businessHour in Model.BusinessHours)
+                    {
+                        <div class="row">
+                            @Html.DisplayFor(x => businessHour.DayOfWeek): @Html.EditorFor(x => businessHour.OpenTime, new { htmlAttributes = new { @class = "form-control", value = businessHour.OpenTime } }) - @Html.EditorFor(x => businessHour.CloseTime, new { htmlAttributes = new { @class = "form-control", value = businessHour.CloseTime } })
+                        </div>
+                    }*@
+
+
+                </div>
             </div>
         </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-</div>
+}
 

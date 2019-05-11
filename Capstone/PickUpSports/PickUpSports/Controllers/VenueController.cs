@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
@@ -390,12 +392,13 @@ namespace PickUpSports.Controllers
                 });
             }
 
-            foreach (var hourses in businessHours)
+            //If there is an existing hours for the venue, match it with the day of week in the shell and insert it 
+            foreach (var hours in businessHours)
             {
-                BusinessHours doug = shell.Find(x => x.DayOfWeek == hourses.DayOfWeek);
-                doug.BusinessHoursId = hourses.BusinessHoursId;
-                doug.CloseTime = hourses.CloseTime;
-                doug.OpenTime = hourses.OpenTime;
+                BusinessHours matchHours = shell.Find(x => x.DayOfWeek == hours.DayOfWeek);
+                matchHours.BusinessHoursId = hours.BusinessHoursId;
+                matchHours.CloseTime = hours.CloseTime;
+                matchHours.OpenTime = hours.OpenTime;
             }
 
             //Creating a Business hour VM for the view model passing back to the venue view
@@ -403,15 +406,18 @@ namespace PickUpSports.Controllers
 
             foreach (var hours in shell)
             {
+                //initializing the opening and closing string 
                 string openTimeString = "";
                 string closingTimeString = "";
 
+                //if the hours are not null then pass it in
                 if (hours.CloseTime != TimeSpan.Zero || hours.OpenTime != TimeSpan.Zero)
                 {
                     openTimeString = hours.OpenTime.ToString();
                     closingTimeString = hours.CloseTime.ToString();
                 }
 
+                //Create a new Business hours view model with it, either if it has a data or an empty string
                 BusinessHoursViewModel hoursViewModel = new BusinessHoursViewModel()
                 { 
                     DayOfWeek = Enum.Parse(typeof(DayOfWeek), hours.DayOfWeek.ToString()).ToString(),
@@ -419,6 +425,7 @@ namespace PickUpSports.Controllers
                     OpenTime = closingTimeString
                 };
 
+                //Add the business hours
                 businessHoursViewModels.Add(hoursViewModel);
             }
 
@@ -444,6 +451,71 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult EditVenue(VenueViewModel model)
         {
+            //Editing the venue details 
+            Venue existingVenue = _venueService.GetVenueById(model.VenueId);
+
+            existingVenue.Address1 = model.Address1;
+            existingVenue.Address2 = model.Address2;
+            existingVenue.City = model.City;
+            existingVenue.DateUpdated = DateTime.Now;
+            existingVenue.Name = model.Name;
+            existingVenue.Phone = model.Phone;
+            existingVenue.State = model.State;
+            existingVenue.ZipCode = model.ZipCode;
+
+            //find the current hours of the venue using the venueId
+            List<BusinessHours> existingHours = _venueService.GetVenueBusinessHours(model.VenueId);
+
+
+            //for each hours in the view modeling hours - runs 7 times since the days of weeks are not null
+            foreach (var hours in model.BusinessHours)
+            {
+                //convert the string day of week to numbers to be able to pass it back into the dB
+                DayOfWeek convertDayOfWeek = (DayOfWeek) (Enum.Parse(typeof(DayOfWeek), hours.DayOfWeek));
+
+                //Match the day of week with the existing 
+                BusinessHours checkHours = existingHours.Find(x => x.DayOfWeek == (int)convertDayOfWeek);
+
+                //If the Open Time and the Closing Time are not null, there was time entered into it
+                if (hours.OpenTime != null || hours.OpenTime != null)
+                {
+                    Debug.Write((int) convertDayOfWeek);
+
+                    //Case: 1: Adding new Business Hours - If checkHours equals null, then there was no match so time to add in a new business hour
+                    if (checkHours == null)
+                    {
+                        _venueService.AddBusinessHour(new BusinessHours()
+                        {
+                            VenueId = model.VenueId,
+                            CloseTime = TimeSpan.Parse(hours.CloseTime),
+                            OpenTime = TimeSpan.Parse(hours.OpenTime),
+                            DayOfWeek = (int) convertDayOfWeek
+                        });
+
+                    }
+                    //Case: 2 Modify Business Hours - if checkHours is not null there was a match 
+                    else
+                    {
+                        checkHours.CloseTime = TimeSpan.Parse(hours.CloseTime);
+                        checkHours.OpenTime = TimeSpan.Parse(hours.OpenTime);
+
+                        _venueService.UpdateBusinessHours(checkHours);
+                    }
+
+                }
+
+                //Case:3 Deleting Business Hours - user removes the business hours from the venue
+                if (checkHours != null && (hours.OpenTime == null && hours.CloseTime == null))
+                {
+                    _venueService.DeleteBusinessHours(checkHours);
+                }
+            }
+
+            //Edit the generic information of the venue excluding the business hours
+            _venueService.EditVenue(existingVenue);
+
+
+
             return RedirectToAction("Details", new { id = model.VenueId });
         }
     }
