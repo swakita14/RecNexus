@@ -333,6 +333,8 @@
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
     <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
     <Compile Include="Models\ViewModel\ReviewController\EditReviewViewModel.cs" />
+    <Compile Include="Models\ViewModel\TrendingController\TrendingModel.cs" />
+    <Compile Include="Models\ViewModel\TrendingController\TrendingTable.cs" />
     <Compile Include="Models\ViewModel\VenueController\PartialReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\ClaimVenueFormViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
@@ -429,6 +431,7 @@
     <Compile Include="Models\ViewModel\ViewFriendsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContactService.cs" />
+    <Compile Include="Services\TrendingWebServices.cs" />
     <Compile Include="Services\VenueOwnerServices.cs" />
     <Compile Include="Services\VenueService.cs" />
     <Compile Include="Startup.cs" />

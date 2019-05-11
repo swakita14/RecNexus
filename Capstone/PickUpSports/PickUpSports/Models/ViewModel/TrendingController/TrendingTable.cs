@@ -7,5 +7,7 @@ namespace PickUpSports.Models.ViewModel.TrendingController
 {
     public class TrendingTable
     {
+        public string[] ColumnNames { get; set; }
+        public string[,] Values { get; set; }
     }
 }
