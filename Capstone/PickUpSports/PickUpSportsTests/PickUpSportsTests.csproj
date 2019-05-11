@@ -122,9 +122,10 @@
     <Compile Include="GameControllerTests.cs" />
     <Compile Include="GameServiceTests.cs" />
     <Compile Include="GMailServiceTest.cs" />
+    <Compile Include="PreferenceNotificationSeleniumTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FriendControllerTests.cs" />
-    <Compile Include="VenueOwnerHideFunctionSeleniumTest.cs" />
+    <Compile Include="VenueOwnerHideFunctionSeleniumTests.cs" />
     <Compile Include="VenueOwnerLoginSeleniumTests.cs" />
     <Compile Include="VenueDetailsSeleniumTests.cs" />
     <Compile Include="VenueServiceTests.cs" />
