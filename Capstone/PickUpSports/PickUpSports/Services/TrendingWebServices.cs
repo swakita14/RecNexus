@@ -24,37 +24,29 @@ namespace PickUpSports.Services
 
    public class TrendingWebServices
    {
-        public async Task<T>InvokeRequestResponseService<T>(string gameId, string sportName, string venueName, string sportId, string venueId, string rating) where T : class
+        public async Task<T>InvokeRequestResponseService<T>( string venueName, string sportName) where T : class
         {
             using (var client = new HttpClient())
             {
 
                 var trendingValues = new[]
                 {
-                    new TrendingViewModel
+                    new TrendingModel
                     {
-                        GameId = Parse(gameId),
-                        SportName = sportName,
                         VenueName = venueName,
-                        SportId = Parse(sportId),
-                        VenueId = Parse(venueId),
-                        Rating = Parse(rating)
-
+                        SportName = sportName
                     }
 
                 };
 
-                var propertyCount = typeof(TrendingViewModel).GetProperties().Count();
+                var propertyCount = typeof(TrendingModel).GetProperties().Count();
                 var convertValues = new string[trendingValues.Count(), propertyCount];
                 for (var i = 0; i < convertValues.GetLength(0); i++)
                 {
-                    convertValues[i, 0] = trendingValues[i].GameId.ToString();
-                    convertValues[i, 1] = trendingValues[i].SportName;
-                    convertValues[i, 2] = trendingValues[i].VenueName;
-                    convertValues[i, 3] = trendingValues[i].SportId.ToString();
-                    convertValues[i, 4] = trendingValues[i].VenueId.ToString();
-                    convertValues[i, 5] = trendingValues[i].Rating.ToString();
-
+                   
+                    convertValues[i, 0] = trendingValues[i].SportName;
+                    convertValues[i, 1] = trendingValues[i].VenueName;
+                    
                 }
 
                 
@@ -66,7 +58,7 @@ namespace PickUpSports.Services
                             "input1",
                             new TrendingTable()
                             {
-                                ColumnNames = new string[] {"GameID", "Sport", "Venue", "VenueID", "SportID", "Rating"},
+                                ColumnNames = new string[] {"Venue", "Sport"},
                                 Values = convertValues
                             }
                         },
