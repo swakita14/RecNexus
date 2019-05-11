@@ -83,7 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VenueOwnerTests\VenueOwnerAvailabilitySteps_DoesNotExist.cs" />
+    <Compile Include="VenueOwnerTests\VenueOwnerAvailabilitySteps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
