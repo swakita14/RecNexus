@@ -463,7 +463,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\errors.json" />
     <None Include="Properties\PublishProfiles\PickupSports-Development - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\gameEdit.js" />
@@ -485,7 +484,6 @@
     <Content Include="Scripts\orderByDistance.js" />
     <Content Include="Scripts\pickUpGameView.js" />
     <Content Include="Scripts\searchVenues.js" />
-    <Content Include="Scripts\sitemap.xml" />
     <Content Include="Scripts\Tests\ChatTest.html" />
     <Content Include="Scripts\Tests\ChatTest.js" />
     <Content Include="Scripts\Tests\qunit-2.9.2.css" />
@@ -530,7 +528,6 @@
     <Content Include="Views\Contact\Edit.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Venue\Index.cshtml" />
-    <Content Include="Scripts\version.json" />
     <Content Include="Views\Venue\Details.cshtml" />
     <Content Include="Views\Review\Create.cshtml" />
     <Content Include="Views\Venue\Map.cshtml" />
