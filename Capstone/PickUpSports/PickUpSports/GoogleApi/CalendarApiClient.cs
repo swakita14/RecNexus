@@ -51,15 +51,5 @@ namespace PickUpSports.GoogleApi
 
         }
 
-        private void SetRole()
-        {
-            AclRule body = new AclRule();
-            body.Role = "writer";
-            body.Scope = new AclRule.ScopeData();
-            body.Scope.Type = "user";
-            body.Scope.Value = "shaynuhcon@gmail.com";
-
-            _calendarService.Acl.Insert(body, _calendarId).Execute();
-        }
     }
 }

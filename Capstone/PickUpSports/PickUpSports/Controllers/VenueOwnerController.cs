@@ -20,7 +20,6 @@ namespace PickUpSports.Controllers
         private readonly IVenueOwnerService _venueOwnerService;
         private readonly IVenueService _venueService;
         private ApplicationUserManager _userManager;
-        private readonly ICalendarApiClient _calendarApi;
 
         public ApplicationUserManager UserManager
         {
@@ -36,12 +35,11 @@ namespace PickUpSports.Controllers
 
         public VenueOwnerController(IGMailService gMailer, 
             IVenueOwnerService venueOwnerService, 
-            IVenueService venueService, ICalendarApiClient calendarApi)
+            IVenueService venueService)
         {
             _gMailer = gMailer;
             _venueOwnerService = venueOwnerService;
             _venueService = venueService;
-            _calendarApi = calendarApi;
         }
 
         public ActionResult ClaimVenue(int venueId)
@@ -314,11 +312,11 @@ namespace PickUpSports.Controllers
             return RedirectToAction("Detail", "VenueOwner", new { id = model.VenueOwnerId });
         }
 
-        public ActionResult Calendar()
-        {
-            _calendarApi.InsertEvent();
-            return PartialView("_VenueOwnerCalendar");
-        }
+        //public ActionResult Calendar()
+        //{
+        //    _calendarApi.InsertEvent();
+        //    return PartialView("_VenueOwnerCalendar");
+        //}
         /*
          * Helper method that creates the dropdown of the venues
          */
