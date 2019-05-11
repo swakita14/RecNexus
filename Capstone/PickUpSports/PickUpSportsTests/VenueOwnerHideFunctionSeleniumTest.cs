@@ -1,0 +1,32 @@
+﻿using FluentAssertions;
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace PickUpSportsTests
+{
+    [TestFixture]
+    public class VenueOwnerHideFunctionSeleniumTest
+    {
+        private readonly IWebDriver _driver;
+
+        public VenueOwnerHideFunctionSeleniumTest()
+        {
+            _driver = new ChromeDriver();
+            _driver.Navigate().GoToUrl("https://localhost:44341/Account/Login");
+        }
+        [Test]
+        public void FindGame_PickUpGamesPage()
+        {
+            _driver.FindElement(By.LinkText("Venue Owner")).Click();
+            _driver.FindElement(By.Id("Email")).SendKeys("emailtest1998@gmail.com");
+            _driver.FindElement(By.Id("Password")).SendKeys("Passw0rld!");
+            _driver.FindElement(By.Id("login-button")).Click();
+
+            _driver.FindElement(By.LinkText("PICK UP GAMES")).Click();
+
+            _driver.FindElement(By.LinkText("CLICK HERE FOR MORE DETAILS ON GAME")).Click();
+        }
+
+    }
+}
