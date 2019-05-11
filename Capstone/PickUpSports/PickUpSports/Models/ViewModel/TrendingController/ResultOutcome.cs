@@ -5,9 +5,8 @@ using System.Web;
 
 namespace PickUpSports.Models.ViewModel.TrendingController
 {
-    public class TrendingTable
+    public class ResultOutcome
     {
-        public string[] ColumnNames { get; set; }
-        public string[,] Values { get; set; }
+        public ResponseInput Results { get; set; }
     }
 }
