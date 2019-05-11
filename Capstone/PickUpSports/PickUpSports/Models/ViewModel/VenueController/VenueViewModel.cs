@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel.GameController;
+using PickUpSports.Models.ViewModel.VenueOwnerController;
 
 namespace PickUpSports.Models.ViewModel.VenueController
 {
@@ -33,5 +32,7 @@ namespace PickUpSports.Models.ViewModel.VenueController
         public double Distance { get; set; }
 
         public bool HasVenueOwner { get; set; }
+
+        public VenueOwnerViewModel VenueOwner { get; set; }
     }
 }

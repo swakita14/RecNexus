@@ -1,10 +1,15 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using System.Threading;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Calendar.v3;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
 using PickUpSports.DAL;
 using PickUpSports.DAL.Repositories;
 using PickUpSports.GoogleApi;
@@ -30,18 +35,44 @@ namespace PickUpSports
             // Register all controllers in our MVC project 
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-            // Register RestClient for API with base URL 
+            // Register RestClient for Places API with base URL 
             builder.Register(x =>
                     new RestClient($"https://maps.googleapis.com/maps/api/place"))
-                .Keyed<IRestClient>("Google");
+                .Keyed<IRestClient>("GooglePlaces");
 
             // Get Google API key from app settings
             var placesKey = System.Web.Configuration.WebConfigurationManager.AppSettings["GooglePlacesApiKey"];
 
             // Register API client class with the RestClient and API key as a parameter
             builder.Register(x => new PlacesApiClient(
-                x.ResolveKeyed<IRestClient>("Google"), placesKey
+                x.ResolveKeyed<IRestClient>("GooglePlaces"), placesKey
             )).As<IPlacesApiClient>();
+
+            // Google Calendar API
+            var calendarId = System.Web.Configuration.WebConfigurationManager.AppSettings["CalendarId"];
+            var calendarClientId = System.Web.Configuration.WebConfigurationManager.AppSettings["CalendarClientId"];
+            var calendarClientSecret = System.Web.Configuration.WebConfigurationManager.AppSettings["CalendarClientSecret"];
+
+            var calendarScopes = new string[] {
+                CalendarService.Scope.Calendar,
+                CalendarService.Scope.CalendarEvents
+            };
+
+            UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(new ClientSecrets
+            {
+                ClientId = calendarClientId,
+                ClientSecret = calendarClientSecret
+            }, calendarScopes, "RecNexus", CancellationToken.None, new FileDataStore("RecNexus")).Result;
+
+            builder.Register(x => new CalendarService(new BaseClientService.Initializer
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = "Rec Nexus",
+            }));
+
+            builder.Register(x => new CalendarApiClient(
+                    x.Resolve<CalendarService>(), calendarId))
+                .As<ICalendarApiClient>();
 
             //Grabbing email credentials from app settings 
             var emailAddress = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"];
