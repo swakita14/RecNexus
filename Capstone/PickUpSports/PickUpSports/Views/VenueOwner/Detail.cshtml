@@ -8,27 +8,32 @@
     <div class="row">
         <div class="form-box">
             <h2>@Model.VenueName's Owner</h2>
-            <br />
-            <div class="well">
-                <p>@Html.DisplayFor(x => x.FirstName) @Html.DisplayFor(x => x.LastName)</p>
-                <p>@Html.DisplayFor(x => x.Email)</p>
-                <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
-                <p>
-                    @if (ViewBag.IsOwner)
-                    {
-                    <center>
-                        @Html.ActionLink("Edit Information", "Edit", new { id = Model.VenueOwnerId })
-                    </center>
-                    }
-                    else
-                    {
-                    <center>
-                        <a href="#" data-toggle="modal" data-target="#confirm">Message Owner</a> 
-                    </center>
-                    }
-                </p>
+            @if (ViewBag.IsOwner)
+            {
+                <div class="well">
+                    <p>@Html.DisplayFor(x => x.FirstName) @Html.DisplayFor(x => x.LastName)</p>
+                    <p>@Html.DisplayFor(x => x.Email)</p>
+                    <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
+                    <p>
+                        <center>
+                            @Html.ActionLink("Edit Information", "Edit", new { id = Model.VenueOwnerId })
+                        </center>
+                    </p>
 
-            </div>
+                </div>
+            }
+            else
+            {
+                <div class="well">
+                    <p>@Html.DisplayFor(x => x.FirstName) @Html.DisplayFor(x => x.LastName)</p>
+                    <p>
+                        <center>
+                            <a href="#" data-toggle="modal" data-target="#confirm">Message Owner</a> 
+                        </center>
+                    </p>
+
+                </div>
+            }
         </div>
     </div>
 </div>
