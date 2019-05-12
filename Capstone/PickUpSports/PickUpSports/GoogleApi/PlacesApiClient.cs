@@ -21,7 +21,7 @@ namespace PickUpSports.GoogleApi
         /**
          * Check Google API for different sports venues
          */
-        public Task<List<PlaceSearchResult>> GetVenues()
+        public List<PlaceSearchResult> GetVenues()
         {
             List<GeometryLocation> cities = new List<GeometryLocation>();
 
@@ -40,35 +40,35 @@ namespace PickUpSports.GoogleApi
             foreach (var city in cities)
             {
                 // Get basketball venues
-                PlaceSearchResponse basketballVenues = GetPlaces("basketball", "park", city).Result;
+                PlaceSearchResponse basketballVenues = GetPlaces("basketball", "park", city);
                 foreach (var venue in basketballVenues.Results) results.Add(venue);
 
                 // Get football venues
-                PlaceSearchResponse footballVenues = GetPlaces("football", "school", city).Result;
+                PlaceSearchResponse footballVenues = GetPlaces("football", "school", city);
                 foreach (var venue in footballVenues.Results) results.Add(venue);
 
                 // Get tennis venues
-                PlaceSearchResponse tennisVenues = GetPlaces("tennis", "park", city).Result;
+                PlaceSearchResponse tennisVenues = GetPlaces("tennis", "park", city);
                 foreach (var venue in tennisVenues.Results) results.Add(venue);
 
                 // Get baseball venues
-                PlaceSearchResponse baseballVenues = GetPlaces("baseball", "park", city).Result;
+                PlaceSearchResponse baseballVenues = GetPlaces("baseball", "park", city);
                 foreach (var venue in baseballVenues.Results) results.Add(venue);
 
                 // Get softball venues
-                PlaceSearchResponse softballVenues = GetPlaces("softball", "park", city).Result;
+                PlaceSearchResponse softballVenues = GetPlaces("softball", "park", city);
                 foreach (var venue in softballVenues.Results) results.Add(venue);
 
                 // Get golf venues
-                PlaceSearchResponse golfVenues = GetPlaces("golf", "park", city).Result;
+                PlaceSearchResponse golfVenues = GetPlaces("golf", "park", city);
                 foreach (var venue in golfVenues.Results) results.Add(venue);
 
                 // Get volleyball venues
-                PlaceSearchResponse volleyballVenues = GetPlaces("volleyball", "park", city).Result;
+                PlaceSearchResponse volleyballVenues = GetPlaces("volleyball", "park", city);
                 foreach (var venue in volleyballVenues.Results) results.Add(venue);
             }
-           
-            return Task.FromResult(results);
+
+            return results;
         }
 
         /**
@@ -78,7 +78,7 @@ namespace PickUpSports.GoogleApi
          * including but not limited to name, type, and address</param>
          * <param name="type">Used to indicate status.</param>
          */
-        public Task<PlaceSearchResponse> GetPlaces(string keyword, string type, GeometryLocation location)
+        public PlaceSearchResponse GetPlaces(string keyword, string type, GeometryLocation location)
         {
             // Initialize API request with URL and API key
             RestRequest request = new RestRequest("/nearbysearch/json?", Method.GET);
@@ -95,10 +95,10 @@ namespace PickUpSports.GoogleApi
 
             // Convert JSON response to model and return response
             PlaceSearchResponse apiResponse = JsonConvert.DeserializeObject<PlaceSearchResponse>(response.Content);
-            return Task.FromResult(apiResponse);
+            return apiResponse;
         }
 
-        public Task<PlaceDetailsResponse> GetPlaceDetailsById(string placeId)
+        public PlaceDetailsResponse GetPlaceDetailsById(string placeId)
         {
             // Initialize API request with URL and API key
             RestRequest request = new RestRequest("/details/json?", Method.GET);
@@ -113,7 +113,7 @@ namespace PickUpSports.GoogleApi
 
             // Convert JSON response to model and return response
             PlaceDetailsResponse apiResponse = JsonConvert.DeserializeObject<PlaceDetailsResponse>(response.Content);
-            return Task.FromResult(apiResponse);
+            return apiResponse;
         }
     }
 }

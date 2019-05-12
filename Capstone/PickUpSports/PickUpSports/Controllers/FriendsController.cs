@@ -112,7 +112,6 @@ namespace PickUpSports.Controllers
         [HttpGet]
         public ActionResult FriendInvite(int gameId)
         {
-          
             //find the current logged-on user
             string email = User.Identity.GetUserName();
             Contact currContactUser = _contactService.GetContactByEmail(email);
@@ -179,23 +178,32 @@ namespace PickUpSports.Controllers
          */
          public void SendInvite(Game game, int friendContactId)
         {
+            //find the current logged-on user
+            string email = User.Identity.GetUserName();
+            Contact currContactUser = _contactService.GetContactByEmail(email);
+
             string sendToEmail = "";
             string messageContent = "";
 
-            
+                     
             string url = Url.Action("GameDetails", "Game",
                 new System.Web.Routing.RouteValueDictionary(new { id = game.GameId }),
                 "http", Request.Url.Host);
 
-            int playerCount = _gameService.GetPickUpGameListByGameId(game.GameId).Count();
+            var existingPlayers = _gameService.GetPickUpGameListByGameId(game.GameId);
+            if (existingPlayers == null) messageContent = "Please join my game! Here is a link to the details where you can also join: " + url;
+            else
+            {
+                var playerCount = existingPlayers.Count;
+                messageContent = "Please join my game! the current player count is " + playerCount + " here is a link to the game " + url;
+            }
 
             // sending email to the friend 
             sendToEmail = _contactService.GetContactById(friendContactId).Email;
-            messageContent = "Please join my game! the current player count is " + playerCount + " here is a link to the game " + url;
-
-
+            
             MailMessage mailMessage = new MailMessage(_gMailer.GetEmailAddress(), sendToEmail)
             {
+                Subject = $"{currContactUser.Username} has invited you to join a game!",
                 Body = messageContent
             };
 

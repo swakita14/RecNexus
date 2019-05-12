@@ -25,6 +25,7 @@
                         <li><a href="@Url.Action("GameList", "Game")">Pick Up Games</a></li>
                         <li><a href="@Url.Action("CreateGame", "Game")">Start a Game</a></li>
                         <li><a href="@Url.Action("Index", "Trending")">Trending</a></li>
+                        <li><a href="@Url.Action("AboutUs", "Home")">About Us</a></li>
 
                         @if (Request.IsAuthenticated)
                         {
@@ -57,6 +58,5 @@
     @Scripts.Render("~/bundles/knockoutjs")
     @RenderSection("scripts", required: false)
     @RenderSection("search_games", required: false)
-
 </body>
 </html>

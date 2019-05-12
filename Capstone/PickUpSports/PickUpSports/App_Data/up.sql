@@ -90,7 +90,19 @@ CREATE TABLE [dbo].[Sport](
 INSERT INTO [dbo].[Sport] (SportName) VALUES
 ('Football'),
 ('Basketball'),
-('Tennis');
+('Tennis'),
+('Soccer'),
+('Baseball'),
+('Softball'),
+('Golf'),
+('Volleyball'),
+('Fencing'),
+('Disc Golf'),
+('Hiking'),
+('Ultimate Frisbee'),
+('Cricket'),
+('Field Hockey'),
+('Rugby');
 GO 
 
 CREATE TABLE [dbo].[SportPreference](

@@ -49,14 +49,14 @@
 
 
 .rwd-table {
-    background: #34495E;
+    background: #00144B;
     color: #fff;
     border-radius: .4em;
     overflow: hidden;
 }
-.rwd-table tr {
-    border-color: #46637f;
-}
+    .rwd-table tr {
+        border-color: #6B6B6B;
+    }
 .rwd-table th, .rwd-table td {
     margin: .5em 1em;
 }
@@ -66,5 +66,5 @@
     }
 }
 .rwd-table th, .rwd-table td:before {
-    color: #dd5;
+    color: #FCC521;
 }

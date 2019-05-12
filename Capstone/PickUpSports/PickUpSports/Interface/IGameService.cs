@@ -49,5 +49,7 @@ namespace PickUpSports.Interface
         Game RejectGame(int gameId);
 
         Game AcceptGame(int gameId);
+
+        List<GameStatus> GetAllGameStatuses();
     }
 }

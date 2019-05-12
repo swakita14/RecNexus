@@ -175,5 +175,15 @@ namespace PickUpSports.Services
             if (userPrefs.Count == 0) return null;
             return userPrefs;
         }
+
+        public string GetUsernameByContactId(int contactId)
+        {
+            var contact = _contactRepository.GetContactById(contactId);
+            var username = "";
+            if (contact == null) username = "- User no longer has account - ";
+            else username = contact.Username;
+
+            return username;
+        }
     }
 }
