@@ -54,8 +54,16 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult GetPredictionFromWebService()
         {
-           // var venueName = Request.Form["venueName"];
+            // var venueName = Request.Form["venueName"];
+            
+
+            if (Request.Form["SportName"] == "")
+            {
+                ViewData.ModelState.AddModelError("NoSport","you have not selected any sport!");
+                return RedirectToAction("Index");
+            }
             int sportId = Parse(Request.Form["SportName"]);
+
 
             var sportName = _gameService.GetSportNameById(sportId);
 
@@ -67,7 +75,7 @@ namespace PickUpSports.Controllers
                     var result = resultResponse.Results.Output1.Value.Values;
                     TrendingResult = new TrendingModel()
                     {
-                        VenueName = result[0, 2],
+                        VenueName = result[0, 17],
                         SportName = result[0, 1]
                     };
 
@@ -75,12 +83,12 @@ namespace PickUpSports.Controllers
             }
 
             string venName = TrendingResult.VenueName;
-            //Venue findVenue = _venueService.
-           // int venID = findVenue.VenueId;
+            var findVenue = _venueService.GetAllVenues().Where(v => v.Name == venName);
+            int venID = findVenue.ElementAt(0).VenueId;
 
 
             ViewBag.myData = venName;
-           // ViewBag.venID = venID;
+            ViewBag.venID = venID;
             PopulateDropdownValues();
             return View("Index");
 
