@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using System.Threading;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -11,7 +10,6 @@ using PickUpSports.DAL.Repositories;
 using PickUpSports.GoogleApi;
 using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
-using PickUpSports.Models.Extensions;
 using PickUpSports.Services;
 using RestSharp;
 
@@ -43,34 +41,7 @@ namespace PickUpSports
             builder.Register(x => new PlacesApiClient(
                 x.ResolveKeyed<IRestClient>("GooglePlaces"), placesKey
             )).As<IPlacesApiClient>();
-
-            // Google Calendar API
-            //var calendarId = System.Web.Configuration.WebConfigurationManager.AppSettings["CalendarId"];
-            //var calendarClientId = System.Web.Configuration.WebConfigurationManager.AppSettings["CalendarClientId"];
-            //var calendarClientSecret = System.Web.Configuration.WebConfigurationManager.AppSettings["CalendarClientSecret"];
-
-            //var calendarScopes = new string[] {
-            //    CalendarService.Scope.Calendar,
-            //    CalendarService.Scope.CalendarEvents
-            //};
-
-            //UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(new ClientSecrets
-            //{
-            //    ClientId = calendarClientId,
-            //    ClientSecret = calendarClientSecret
-            //}, calendarScopes, "RecNexus", CancellationToken.None, new FileDataStore("RecNexus")).Result;
-
-            //builder.Register(x => new CalendarService(new BaseClientService.Initializer
-            //{
-            //    HttpClientInitializer = credential,
-            //    ApplicationName = "Rec Nexus",
-                
-            //}));
-
-            //builder.Register(x => new CalendarApiClient(
-            //        x.Resolve<CalendarService>(), calendarId))
-            //    .As<ICalendarApiClient>();
-
+            
             //Grabbing email credentials from app settings 
             var emailAddress = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"];
             var emailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
@@ -113,6 +84,7 @@ namespace PickUpSports
             builder.RegisterType<BusinessHoursRepository>().As<IBusinessHoursRepository>();
             builder.RegisterType<LocationRepository>().As<ILocationRepository>();
             builder.RegisterType<VenueOwnerRepository>().As<IVenueOwnerRepository>();
+            builder.RegisterType<GameStatusRepository>().As<IGameStatusRepository>();
 
             var container = builder.Build();
 

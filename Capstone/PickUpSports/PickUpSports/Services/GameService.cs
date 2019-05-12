@@ -13,14 +13,17 @@ namespace PickUpSports.Services
         private readonly IPickUpGameRepository _pickUpGameRepository;
         private readonly IGameRepository _gameRepository;
         private readonly ISportRepository _sportRepository;
+        private readonly IGameStatusRepository _gameStatusRepository;
 
         public GameService(IPickUpGameRepository pickUpGameRepository, 
             IGameRepository gameRepository, 
-            ISportRepository sportRepository)
+            ISportRepository sportRepository, 
+            IGameStatusRepository gameStatusRepository)
         {
             _pickUpGameRepository = pickUpGameRepository;
             _gameRepository = gameRepository;
             _sportRepository = sportRepository;
+            _gameStatusRepository = gameStatusRepository;
         }
 
         /*
@@ -320,5 +323,9 @@ namespace PickUpSports.Services
             return game;
         }
 
+        public List<GameStatus> GetAllGameStatuses()
+        {
+            return _gameStatusRepository.GetAllGameStatuses();
+        }
     }
 }
