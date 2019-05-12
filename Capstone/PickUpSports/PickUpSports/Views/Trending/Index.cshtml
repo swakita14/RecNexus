@@ -1,4 +1,5 @@
-﻿@model PickUpSports.Models.ViewModel.TrendingModel
+﻿@using System.Activities.Statements
+@model PickUpSports.Models.ViewModel.TrendingModel
 @{
     ViewBag.Title = "View";
 }
@@ -21,28 +22,34 @@
                             </div>
                         </div>
                     }
-                    
+
                     <div class="form-group" style="padding-top: 20px">
                         @Html.DropDownListFor(
                             x => x.SportName,
                             new SelectList(ViewBag.Sport, "Key", "Value"),
                             "Select A Sport",
-                            new {@class = "form-control"})
+                            new { @class = "form-control" })
                     </div>
-                    
+
                     <div class="form-group">
                         <center>
                             <button type="submit" class="btn btn-default">Show Most Popular Venue</button>
                         </center>
                     </div>
-                    
-                    <div id="result"><h2>@ViewBag.myData</h2>
-                    <!--@Html.ActionLink("Click Here For More Info", "Details","Venue", new{id = @ViewBag.venID},null)-->
+
+                    <div id="result">
+                        <h2>@ViewBag.myData</h2>
+                        <center>
+                        @if (ViewBag.myData != null)
+                        {
+                            @Html.ActionLink("Click Here For More Info", "Details", "Venue", new { id = @ViewBag.venID }, null)
+                        }
+                        </center>
                     </div>
 
                 </form>
             </div>
         </div>
     </div>
-   
+
 }
