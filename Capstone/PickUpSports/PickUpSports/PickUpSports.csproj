@@ -321,6 +321,8 @@
     <Compile Include="DAL\Configurations\VenueOwnerConfiguration.cs" />
     <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
     <Compile Include="DAL\Repositories\GameRepository.cs" />
+    <Compile Include="DAL\Repositories\GameStatusRepository.cs" />
+    <Compile Include="Interface\Repositories\IGameStatusRepository.cs" />
     <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="DAL\Repositories\LocationRepository.cs" />
     <Compile Include="DAL\Repositories\VenueOwnerRepository.cs" />
@@ -342,6 +344,7 @@
     <Compile Include="Models\ViewModel\VenueController\PartialReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\ClaimVenueFormViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\CreateVenueOwnerViewModel.cs" />
+    <Compile Include="Models\ViewModel\VenueOwnerController\EventViewModel.cs" />
     <Compile Include="Models\ViewModel\VenueOwnerController\VenueOwnerViewModel.cs" />
     <Compile Include="Services\ChatHub\ChatHub.cs" />
     <Compile Include="Interface\Repositories\IVenueRepository.cs" />
@@ -569,6 +572,8 @@
     <Content Include="Views\VenueOwner\_ModifyVenueOwners.cshtml" />
     <Content Include="Views\Venue\EditVenue.cshtml" />
     <Content Include="Views\Trending\Index.cshtml" />
+    <Content Include="Views\VenueOwner\_VenueOwnerCalendar.cshtml" />
+    <Content Include="Views\VenueOwner\Calendar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
