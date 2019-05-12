@@ -451,6 +451,10 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\EmailFormat.html" />
+    <Content Include="Content\header.jpg" />
+    <Content Include="Content\sportIcon.png" />
+    <Content Include="Content\startGame.png" />
+    <Content Include="Content\venues.png" />
     <Content Include="Scripts\ChatInit.js" />
     <Content Include="Content\gameTable.css" />
     <Content Include="Content\playerTable.css" />
@@ -574,6 +578,7 @@
     <Content Include="Views\Trending\Index.cshtml" />
     <Content Include="Views\VenueOwner\_VenueOwnerCalendar.cshtml" />
     <Content Include="Views\VenueOwner\Calendar.cshtml" />
+    <Content Include="Views\Home\AboutUs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
