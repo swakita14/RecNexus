@@ -83,16 +83,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VenueDetailTests\VenueDetailsDisplaySteps.cs" />
     <Compile Include="VenueOwnerTests\UpdateVenueDetailSteps.cs" />
     <Compile Include="VenueOwnerTests\VenueOwnerAvailabilitySteps.cs" />
+    <Compile Include="VenueOwnerTests\VenueOwnerLoginDisplaySteps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="VenueDetailTests\VenueDetailsDisplay.feature" />
     <None Include="VenueOwnerTests\UpdateVenueDetail.feature" />
     <None Include="VenueOwnerTests\VenueOwnerAvailability.feature" />
+    <None Include="VenueOwnerTests\VenueOwnerLoginDisplay.feature" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

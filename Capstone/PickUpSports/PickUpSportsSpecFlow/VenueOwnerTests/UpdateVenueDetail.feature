@@ -3,8 +3,8 @@
 	As a developer
 	I want to make sure the owner can easily update their venue details
 
-@mytag
-Scenario: Add two numbers
+@editvenue
+Scenario: Venue Detail Edit
 	Given I have logged in as a venue owner for Real Sports Venue
 	And I have navigated to my venue's detail page
 	When I press edit venue
