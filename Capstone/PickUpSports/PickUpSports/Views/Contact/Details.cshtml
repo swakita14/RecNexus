@@ -23,7 +23,7 @@
                 <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
                 @if (Model.HasPublicProfile)
                 {
-                    <p>Your profile is <b>@Html.ActionLink("public", "Profile", new {id = Model.ContactId })</b></p>
+                    <p>Your profile is <b>@Html.ActionLink("public", "PlayerProfile", new {id = Model.ContactId })</b></p>
                 }
                 else
                 {

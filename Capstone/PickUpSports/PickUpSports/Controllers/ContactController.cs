@@ -170,7 +170,7 @@ namespace PickUpSports.Controllers
          * Endpoint that routes to public profile view. Should take in a Contact ID 
          */
         [HttpGet]
-        public ActionResult Profile(int id)
+        public ActionResult PlayerProfile(int id)
         {
             var model = new ProfileViewModel();
             var contact = _contactService.GetContactById(id);

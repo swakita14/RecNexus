@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Web.Http;
+using System.Web.Mvc;
 
 namespace PickUpSports.Controllers
 {
@@ -9,6 +10,8 @@ namespace PickUpSports.Controllers
         {
             return View();
         }
+
+        [System.Web.Mvc.Authorize]
         public ActionResult Chat()
         {
             return View();

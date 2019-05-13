@@ -56,15 +56,6 @@
     <Reference Include="Gherkin, Version=6.0.0.0, Culture=neutral, PublicKeyToken=86496cfa5b4a5851, processorArchitecture=MSIL">
       <HintPath>..\packages\Gherkin.6.0.0\lib\net45\Gherkin.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.1.38.2\lib\net45\Google.Apis.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.Core, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.Core.1.38.2\lib\net45\Google.Apis.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.PlatformServices, Version=1.38.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
-      <HintPath>..\packages\Google.Apis.1.38.2\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
-    </Reference>
     <Reference Include="MailKit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.2.1.4\lib\net45\MailKit.dll</HintPath>
     </Reference>
@@ -470,7 +461,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    
     <None Include="Properties\PublishProfiles\PickupSports-Development - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\gameEdit.js" />
@@ -557,7 +547,7 @@
     <Content Include="Views\SportPreferences\_SportPreferences.cshtml" />
     <Content Include="Views\TimePreferences\_TimePreferences.cshtml" />
     <Content Include="Views\Home\Chat.cshtml" />
-    <Content Include="Views\Contact\Profile.cshtml" />
+    <Content Include="Views\Contact\PlayerProfile.cshtml" />
     <Content Include="Views\Friends\FriendList.cshtml" />
     <Content Include="Views\Game\_GamesUserJoined.cshtml" />
     <Content Include="Views\Game\_GamesUserCreated.cshtml" />
@@ -580,12 +570,6 @@
     <Content Include="Views\VenueOwner\_VenueOwnerCalendar.cshtml" />
     <Content Include="Views\VenueOwner\Calendar.cshtml" />
     <Content Include="Views\Home\AboutUs.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PickUpSports.Data.GoogleAPI\PickUpSports.Data.GoogleAPI.csproj">
-      <Project>{67E10F34-47F7-4373-BAA8-AAF116C8683C}</Project>
-      <Name>PickUpSports.Data.GoogleAPI</Name>
-    </ProjectReference>
     <Content Include="Views\Game\CreateGame.cshtml" />
   </ItemGroup>
   <ItemGroup>
