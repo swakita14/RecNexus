@@ -24,18 +24,19 @@ namespace PickUpSports.Controllers
         private readonly IContactService _contactService;
         private readonly IGMailService _gMailer;
         private readonly IGameService _gameService;
-
+        private readonly IVenueService _venueService;
         public FriendsController(PickUpContext context)
         {
             _context = context;
         }
 
-        public FriendsController(PickUpContext context, IContactService contactService, IGMailService gMailer, IGameService gameService)
+        public FriendsController(PickUpContext context, IContactService contactService, IGMailService gMailer, IGameService gameService, IVenueService venueService)
         {
             _context = context;
             _contactService = contactService;
             _gMailer = gMailer;
             _gameService = gameService;
+            _venueService = venueService;
         }
 
         // GET: Friends
@@ -149,8 +150,7 @@ namespace PickUpSports.Controllers
             Game game = _gameService.GetGameById(model.GameId);
 
 
-            // get list of friends from logged in user
-            List<Friend> friends = _context.Friends.Where(x => x.ContactID == currID).ToList();
+          
 
             
             // Check model validation before doing anything
@@ -160,13 +160,32 @@ namespace PickUpSports.Controllers
                            return View(model);
                        }
 
+            // get list of friends from logged in user
+            List<Friend> friendList = _context.Friends.Where(x => x.ContactID == currID).ToList();
             // Get contact info from friend 
-            Friend friendinv = friends.Find(f => f.FriendID == friendId);
+            Friend friendinv = friendList.Find(f => f.FriendID == friendId);
             int friendInvId = friendinv.FriendContactID;
 
 
+            var venueName = _venueService.GetVenueNameById(game.VenueId);
+            var sportName = _gameService.GetSportNameById(game.SportId);
+
+            var fileContents = System.IO.File.ReadAllText(Server.MapPath("~/Content/EmailFormat.html"));
+            //add game link to the email
+            var directUrl = Url.Action("GameDetails", "Game", new { id = game.GameId }, protocol: Request.Url.Scheme);
+            fileContents = fileContents.Replace("{URL}", directUrl);
+            fileContents = fileContents.Replace("{URLNAME}", "CHECK");
+            fileContents = fileContents.Replace("{VENUE}", venueName);
+            fileContents = fileContents.Replace("{SPORT}", sportName);
+            fileContents = fileContents.Replace("{STARTTIME}", game.StartTime.ToString());
+            fileContents = fileContents.Replace("{ENDTIME}", game.EndTime.ToString());
+            fileContents = fileContents.Replace("{TITLE}", "Game Invite");
+            fileContents = fileContents.Replace("{INFO}", "Your Friend as invited youi to a game!");
+            var subject = "Game Invite";
+
+
             // pass Game and Contactfriend to the send email function
-            SendInvite(game, friendInvId );
+            SendInvite(game, friendInvId, fileContents, subject);
 
 
             //redirect them back to the changed game detail
@@ -176,7 +195,7 @@ namespace PickUpSports.Controllers
         /*
          * PBI 148 Austin Bergman
          */
-         public void SendInvite(Game game, int friendContactId)
+         public void SendInvite(Game game, int friendContactId, string body, string subject)
         {
             //find the current logged-on user
             string email = User.Identity.GetUserName();
@@ -185,26 +204,18 @@ namespace PickUpSports.Controllers
             string sendToEmail = "";
             string messageContent = "";
 
-                     
-            string url = Url.Action("GameDetails", "Game",
-                new System.Web.Routing.RouteValueDictionary(new { id = game.GameId }),
-                "http", Request.Url.Host);
+            messageContent = body;
 
-            var existingPlayers = _gameService.GetPickUpGameListByGameId(game.GameId);
-            if (existingPlayers == null) messageContent = "Please join my game! Here is a link to the details where you can also join: " + url;
-            else
-            {
-                var playerCount = existingPlayers.Count;
-                messageContent = "Please join my game! the current player count is " + playerCount + " here is a link to the game " + url;
-            }
+
+
 
             // sending email to the friend 
             sendToEmail = _contactService.GetContactById(friendContactId).Email;
-            
+
             MailMessage mailMessage = new MailMessage(_gMailer.GetEmailAddress(), sendToEmail)
             {
-                Subject = $"{currContactUser.Username} has invited you to join a game!",
-                Body = messageContent
+                Body = messageContent,
+                Subject = subject
             };
 
             _gMailer.Send(mailMessage);
