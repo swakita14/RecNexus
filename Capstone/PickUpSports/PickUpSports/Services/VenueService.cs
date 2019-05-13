@@ -16,19 +16,130 @@ namespace PickUpSports.Services
         private readonly IBusinessHoursRepository _businessHoursRepository;
         private readonly IReviewRepository _reviewRepository;
         private readonly ILocationRepository _locationRepository;
+        private readonly IVenueOwnerRepository _venueOwnerRepository;
 
-        public VenueService(IPlacesApiClient placesApi, IVenueRepository venueRepository, IBusinessHoursRepository businessHoursRepository, IReviewRepository reviewRepository, ILocationRepository locationRepository)
+        public VenueService(IPlacesApiClient placesApi, 
+            IVenueRepository venueRepository, 
+            IBusinessHoursRepository businessHoursRepository, 
+            IReviewRepository reviewRepository, 
+            ILocationRepository locationRepository, 
+            IVenueOwnerRepository venueOwnerRepository)
         {
             _placesApi = placesApi;
             _venueRepository = venueRepository;
             _businessHoursRepository = businessHoursRepository;
             _reviewRepository = reviewRepository;
             _locationRepository = locationRepository;
+            _venueOwnerRepository = venueOwnerRepository;
         }
 
-        /**
-         * Add or update new venues in database
-         */
+
+        public List<Venue> GetAllVenues()
+        {
+            return _venueRepository.GetAllVenues();
+        }
+
+        public Venue GetVenueById(int venueId)
+        {
+            return _venueRepository.GetVenueById(venueId);
+        }
+
+        public void EditVenue(Venue venue)
+        {
+            _venueRepository.Edit(venue);
+        }
+
+        public string GetVenueNameById(int venueId)
+        {
+            var venue = _venueRepository.GetVenueById(venueId);
+            return venue.Name;
+        }
+
+        public Location GetVenueLocation(int venueId)
+        {
+            var locations = _locationRepository.GetAllLocations();
+            return locations.FirstOrDefault(x => x.VenueId == venueId);
+        }
+
+        public List<Review> GetVenueReviews(int venueId)
+        {
+            var reviews = _reviewRepository.GetAllReviews();
+            return reviews.Where(x => x.VenueId == venueId).ToList();
+        }
+
+        public void CreateVenueReview(Review review)
+        {
+            _reviewRepository.AddReview(review);
+        }
+
+        public void EditVenueReview(Review review)
+        {
+            _reviewRepository.EditReview(review);
+        }
+
+        public void DeleteVenueReview(Review review)
+        {
+            _reviewRepository.DeleteReview(review);
+        }
+
+        public Review GetReviewById(int reviewId)
+        {
+           return _reviewRepository.GetReviewById(reviewId);
+        }
+
+        public List<BusinessHours> GetVenueBusinessHours(int venueId)
+        {
+            var businessHours = _businessHoursRepository.GetAllBusinessHours();
+            return businessHours.Where(x => x.VenueId == venueId).ToList();
+        }
+
+        public List<BusinessHours> GetAllBusinessHours()
+        {
+            return _businessHoursRepository.GetAllBusinessHours();
+        }
+
+        public bool VenueHasOwner(Venue venue)
+        {
+            //Find the owner using the venue ID, again could be simplified using repo patterns
+            var allOwners = _venueOwnerRepository.GetAllVenueOwners();
+            var venueOwner = allOwners.FirstOrDefault(x => x.VenueId == venue.VenueId);
+
+            //if there is not an owner it would be null so return false
+            if (venueOwner == null) return false;
+
+            //else there is an owner and the value is not null so return true 
+            return true;
+        }
+
+        public bool IsVenueAvailable(List<BusinessHours> venueHours, DateTime startDateTime, DateTime endDateTime)
+        {
+            // If no business hours then venue has no hours and is therefore not available
+            if (venueHours == null) return false;
+
+            // Only checking start date because games should not span over a day 
+            DayOfWeek startDate = startDateTime.DayOfWeek;
+            BusinessHours venueOpenDate = venueHours.FirstOrDefault(x => x.DayOfWeek == (int)startDate);
+
+            // Venue is open that date, check timeframes
+            if (venueOpenDate != null)
+            {
+                TimeSpan startTime = startDateTime.TimeOfDay;
+                TimeSpan endTime = endDateTime.TimeOfDay;
+
+                // Change midnight to 11:59 PM for accurate time comparisons
+                if (venueOpenDate.CloseTime == new TimeSpan(00, 00, 00))
+                    venueOpenDate.CloseTime = new TimeSpan(23, 59, 00);
+
+                // Ensure both start and end times are within range
+                if (startTime > venueOpenDate.OpenTime && startTime < venueOpenDate.CloseTime)
+                {
+                    if (endTime > venueOpenDate.OpenTime && endTime < venueOpenDate.CloseTime) return true;
+                }
+            }
+
+            return false;
+        }
+
         public void UpdateVenues()
         {
             // Only want to update Venues database once a week
@@ -40,7 +151,7 @@ namespace PickUpSports.Services
             if (mostRecentUpdate == null || mostRecentUpdate.DateUpdated < DateTime.Now.AddDays(-14))
             {
                 // Get list of places 
-                List<PlaceSearchResult> places = _placesApi.GetVenues().Result;
+                List<PlaceSearchResult> places = _placesApi.GetVenues();
 
                 foreach (var place in places)
                 {
@@ -97,12 +208,6 @@ namespace PickUpSports.Services
             return dDistance;
         }
 
-        public string GetVenueNameById(int venueId)
-        {
-            var venue = _venueRepository.GetVenueById(venueId);
-            return venue.Name;
-        }
-
         /**
          * Add or update venue details in database
          */
@@ -116,8 +221,12 @@ namespace PickUpSports.Services
 
             foreach (var venue in venuesWithoutDetails)
             {
+
+                // Venue owners have ability to manually update their venues, do not auto-update
+                if (VenueHasOwner(venue)) continue;
+
                 // Get Place details from Google API using GooglePlaceId
-                PlaceDetailsResponse venueDetails = _placesApi.GetPlaceDetailsById(venue.GooglePlaceId).Result;
+                PlaceDetailsResponse venueDetails = _placesApi.GetPlaceDetailsById(venue.GooglePlaceId);
 
                 // Map response data to database model properties
                 venue.Phone = venueDetails.Result.FormattedPhoneNumber;
@@ -214,6 +323,39 @@ namespace PickUpSports.Services
             }
         }
 
+        public bool LoggedInUserIsVenueOwner(string email, Venue venue)
+        {
+            VenueOwner venueOwner = _venueOwnerRepository.GetVenueOwnerByEmail(email);
 
+            if (venueOwner == null) return false;
+
+            if (venueOwner.VenueId != venue.VenueId) return false;
+
+            return true;
+        }
+
+
+        public void ClearBusinessHours(List<BusinessHours> hours)
+        {
+            foreach (var businessHours in hours)
+            {
+                _businessHoursRepository.Delete(businessHours);
+            }
+        }
+
+        public void AddBusinessHour(BusinessHours hour)
+        {
+            _businessHoursRepository.AddBusinessHours(hour);
+        }
+
+        public void UpdateBusinessHours(BusinessHours hours)
+        {
+            _businessHoursRepository.Edit(hours);
+        }
+
+        public void DeleteBusinessHours(BusinessHours hours)
+        {
+           _businessHoursRepository.Delete(hours);
+        }
     }
 }

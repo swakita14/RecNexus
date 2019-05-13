@@ -7,8 +7,14 @@ namespace PickUpSports.Interface.Repositories
     {
         Review AddReview(Review review);
 
+        Review GetReviewById(int id);
+
         void EditReview(Review review);
 
         List<Review> GetReviewsByContactId(int contactId);
+
+        List<Review> GetAllReviews();
+
+        void DeleteReview(Review review);
     }
 }

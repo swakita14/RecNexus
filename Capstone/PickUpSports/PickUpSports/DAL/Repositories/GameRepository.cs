@@ -21,6 +21,13 @@ namespace PickUpSports.DAL.Repositories
             return _context.Games.ToList();
         }
 
+        public Game AddGame(Game game)
+        {
+            _context.Games.Add(game);
+            _context.SaveChanges();
+            return game;
+        }
+
         public Game GetGameById(int id)
         {
             return _context.Games.Find(id);
@@ -38,6 +45,18 @@ namespace PickUpSports.DAL.Repositories
             if (existing == null) throw new ArgumentNullException($"Could not find existing game by ID {game.GameId}");
 
             _context.Games.Remove(existing);
+            _context.SaveChanges();
+        }
+
+        public void RejectGame(Game game)
+        {
+            game.GameStatusId = 4;
+            _context.SaveChanges();
+        }
+
+        public void AcceptGame(Game game)
+        {
+            game.GameStatusId = 3;
             _context.SaveChanges();
         }
     }

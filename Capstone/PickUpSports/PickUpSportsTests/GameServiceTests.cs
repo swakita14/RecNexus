@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -16,6 +15,7 @@ namespace PickUpSportsTests
         private readonly Mock<IPickUpGameRepository> _pickUpGameRepoMock;
         private readonly Mock<IGameRepository> _gameRepositoryMock;
         private readonly Mock<ISportRepository> _sportRepositoryMock;
+        private readonly Mock<IGameStatusRepository> _gameStatusRepoMock;
         private readonly GameService _sut;
 
         public GameServiceTests()
@@ -23,8 +23,8 @@ namespace PickUpSportsTests
             _pickUpGameRepoMock = new Mock<IPickUpGameRepository>();
             _gameRepositoryMock = new Mock<IGameRepository>();
             _sportRepositoryMock = new Mock<ISportRepository>();
-
-            _sut = new GameService(_pickUpGameRepoMock.Object, _gameRepositoryMock.Object, _sportRepositoryMock.Object);
+            _gameStatusRepoMock = new Mock<IGameStatusRepository>();
+            _sut = new GameService(_pickUpGameRepoMock.Object, _gameRepositoryMock.Object, _sportRepositoryMock.Object, _gameStatusRepoMock.Object);
         }
 
         /**
@@ -157,10 +157,10 @@ namespace PickUpSportsTests
             // Arrange
             var games = new List<Game>
             {
-                new Game {ContactId = 2, GameId = 4, VenueId = 23},
-                new Game {ContactId = 3, GameId = 5, VenueId = 22},
-                new Game {ContactId = 4, GameId = 6, VenueId = 23},
-                new Game {ContactId = 1, GameId = 9, VenueId = 23},
+                new Game {ContactId = 2, GameId = 4, VenueId = 23, EndTime = DateTime.Now},
+                new Game {ContactId = 3, GameId = 5, VenueId = 22, EndTime = DateTime.Now},
+                new Game {ContactId = 4, GameId = 6, VenueId = 23, EndTime = DateTime.Now},
+                new Game {ContactId = 1, GameId = 9, VenueId = 23, EndTime = DateTime.Now},
 
             };
             _gameRepositoryMock.Setup(x => x.GetAllGames()).Returns(games);
@@ -186,6 +186,128 @@ namespace PickUpSportsTests
 
             // Assert
             Assert.IsNull(results);
+        }
+
+        /**
+ * PBI 142 - Shion Wakita
+ */
+        [Test]
+        public void IsCreatorOfGame_UserIsNotCreator_ReturnsFalse()
+        {
+            //Arrange 
+            var startDateTime = DateTime.Parse("2019-04-01 04:00 AM");
+            var endDateTime = DateTime.Parse("2019-04-01 04:00 PM");
+
+            Game gameTest1 = new Game() { ContactId = 1, VenueId = 2, GameId = 3, GameStatusId = 1, SportId = 1, StartTime = startDateTime, EndTime = endDateTime };
+            Game gameTest2 = new Game() { ContactId = 2, VenueId = 2, GameId = 3, GameStatusId = 1, SportId = 1, StartTime = startDateTime, EndTime = endDateTime };
+
+            //Act
+            var isCreatorOfGameTest1 = _sut.IsCreatorOfGame(2, gameTest1);
+            var isCreatorOfGameTest2 = _sut.IsCreatorOfGame(1, gameTest2);
+
+            //Assert
+            Assert.AreEqual(isCreatorOfGameTest1, false);
+            Assert.AreEqual(isCreatorOfGameTest2, false);
+        }
+
+        /**
+         * PBI 142 - Shion Wakita
+         */
+        [Test]
+        public void IsCreatorOfGame_UserIsCreator_ReturnsTrue()
+        {
+            //Arrange 
+            var startDateTime = DateTime.Parse("2019-04-01 04:00 AM");
+            var endDateTime = DateTime.Parse("2019-04-01 04:00 PM");
+
+            Game gameTest1 = new Game() { ContactId = 1, VenueId = 3, GameId = 4, GameStatusId = 1, SportId = 2, StartTime = startDateTime, EndTime = endDateTime };
+            Game gameTest2 = new Game() { ContactId = 2, VenueId = 4, GameId = 3, GameStatusId = 1, SportId = 1, StartTime = startDateTime, EndTime = endDateTime };
+
+            //Act
+            var isCreatorOfGameTest1 = _sut.IsCreatorOfGame(1, gameTest1);
+            var isCreatorOfGameTest2 = _sut.IsCreatorOfGame(2, gameTest2);
+
+            //Assert
+            Assert.AreEqual(isCreatorOfGameTest1, true);
+            Assert.AreEqual(isCreatorOfGameTest2, true);
+
+        }
+
+        // Kexin Pan
+        [Test]
+        public void IsSelectedTimeValid_TimeIsValid_ReturnsTrue()
+        {
+            var startDateTime = DateTime.Parse("2019-04-11 09:00 PM");
+            var endDateTime = DateTime.Parse("2019-04-11 10:00 PM");
+
+            var isSelectedTimeValideTest = _sut.IsSelectedTimeValid(startDateTime, endDateTime);
+            Assert.AreEqual(isSelectedTimeValideTest, true);
+        }
+
+        [Test]
+        public void IsSelectedTimeValid_TimeIsNotValid_ReturnsFalse()
+        {
+            var startDateTime = DateTime.Parse("2019-04-12 09:00 PM");
+            var endDateTime = DateTime.Parse("2019-04-22 10:00 PM");
+
+            var isSelectedTimeValideTest = _sut.IsSelectedTimeValid(startDateTime, endDateTime);
+            Assert.AreEqual(isSelectedTimeValideTest, false);
+        }
+
+
+        /**
+         * PBI 254 - Shion Wakita
+         */
+        [Test]
+        public void IsNotSignedUpForGame_UserIsNotSignedUp_ReturnsTrue()
+        {
+            //Arrange
+            List<PickUpGame> playerList = new List<PickUpGame>();
+            playerList.Add(new PickUpGame()
+            { ContactId = 1, GameId = 2, PickUpGameId = 1 });
+            playerList.Add(new PickUpGame()
+            { ContactId = 2, GameId = 2, PickUpGameId = 2 });
+
+            //Act
+            var isNotSignedUpForGameTest = _sut.IsNotSignedUpForGame(3, playerList);
+
+            //Assert
+            Assert.AreEqual(isNotSignedUpForGameTest, true);
+
+        }
+
+        [Test]
+        public void IsNotSignedUpForGame_UserIsSignedUp_ReturnsFalse()
+        {
+            //Arrange
+            List<PickUpGame> playerList = new List<PickUpGame>();
+            playerList.Add(new PickUpGame()
+            { ContactId = 1, GameId = 2, PickUpGameId = 1 });
+            playerList.Add(new PickUpGame()
+            { ContactId = 2, GameId = 2, PickUpGameId = 2 });
+
+            //Act
+            var isNotSignedUpForGameTest = _sut.IsNotSignedUpForGame(1, playerList);
+
+            //Assert
+            Assert.AreEqual(isNotSignedUpForGameTest, false);
+        }
+
+        /**
+         * PBI 143 - Kexin Pan
+         */
+        [Test]
+        public void IsThisGameCanCancel_AtLeastBeforeOneHour_ReturnsTrue()
+        {
+            var startTime = DateTime.Parse("2019-05-15 7:00 PM");
+            Assert.AreEqual(_sut.IsThisGameCanCancel(startTime), true);
+        }
+
+        [Test]
+        public void IsThisGameCanCancel_NotBeforeOneHour_ReturnsFalse()
+        {
+            var startTime = DateTime.Parse("2019-04-12 09:00 PM");
+            Assert.AreEqual(_sut.IsThisGameCanCancel(startTime), false);
         }
 
     }

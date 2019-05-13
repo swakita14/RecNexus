@@ -1,4 +1,4 @@
-﻿namespace PickUpSports.Models.ViewModel
+﻿namespace PickUpSports.Models.ViewModel.ReviewController
 {
     public class CreateReviewViewModel
     {

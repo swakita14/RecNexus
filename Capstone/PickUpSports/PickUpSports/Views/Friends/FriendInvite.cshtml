@@ -1,14 +1,52 @@
-﻿@model PickUpSports.Models.ViewModel.FriendInviteViewModel
+﻿
+@model PickUpSports.Models.ViewModel.FriendInviteViewModel
 @{
-    ViewBag.Title = "FriendInvite";
+    ViewBag.Title = "Invite a friend to a Game";
 }
 
 <h2>Invite a Friend!</h2>
 
-@using (Html.BeginForm("InviteToGame", "Friends", FormMethod.Post))
+@using (Html.BeginForm("FriendInvite", "Friends", FormMethod.Post))
 {
-    <h2> @Html.DropDownList("Select Friend", Model.Friends))</h2>
-     <h2>@Html.DropDownList("Select a Game", Model.Games)</h2>
-       
-    <input type="submit" value="Send Invite" class="btn btn-default" />
+<div class="container">
+    <div class="row">
+        <div class="form-box">
+            <h2>Invite a Friend</h2>
+            <form role="form" id="game-form">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+                }
+                
+                @Html.HiddenFor(model => model.ContactId)
+                @Html.HiddenFor(model => model.GameId)
+               
+                <!-- Friend field -->
+                <div class="form-group" style="padding-top: 20px">
+                    @Html.DropDownListFor(
+                        x => x.FriendId,
+                        new SelectList(ViewBag.Friends, "Key", "Value"),
+                        "Select a Friend",
+                        new {@class = "form-control"})
+                </div>
+
+              
+
+                <div class="form-group">
+                    <center>
+                        <button type="submit" class="btn btn-default">Add Friend</button>
+                    </center>
+                </div>
+
+              
+            </form>
+        </div>
+    </div>
+</div>
+   
 }

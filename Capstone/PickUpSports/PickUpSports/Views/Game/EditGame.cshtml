@@ -1,7 +1,6 @@
-﻿@using PickUpSports.Models.DatabaseModels
-@model PickUpSports.Models.ViewModel.GameController.EditGameViewModel
+﻿@model PickUpSports.Models.ViewModel.GameController.EditGameViewModel
 @{
-    ViewBag.Title = "EditGame";
+    ViewBag.Title = "Edit Your Game";
 }
 
 @Styles.Render("https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css")
@@ -24,7 +23,8 @@
                 <fieldset>
                     @Html.HiddenFor(model => model.ContactId)
                     @Html.HiddenFor(model => model.GameId)
-
+                    @Html.HiddenFor(model => model.VenueId)
+                    @Html.HiddenFor(model => model.SportId)
                     <legend class="text-center header" id="header">Edit Game Detail</legend>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Venue)

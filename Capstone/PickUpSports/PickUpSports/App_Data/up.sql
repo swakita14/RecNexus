@@ -90,7 +90,19 @@ CREATE TABLE [dbo].[Sport](
 INSERT INTO [dbo].[Sport] (SportName) VALUES
 ('Football'),
 ('Basketball'),
-('Tennis');
+('Tennis'),
+('Soccer'),
+('Baseball'),
+('Softball'),
+('Golf'),
+('Volleyball'),
+('Fencing'),
+('Disc Golf'),
+('Hiking'),
+('Ultimate Frisbee'),
+('Cricket'),
+('Field Hockey'),
+('Rugby');
 GO 
 
 CREATE TABLE [dbo].[SportPreference](
@@ -113,7 +125,9 @@ CREATE TABLE GameStatus
 
 INSERT INTO GameStatus (GameStatus) VALUES
 ('Open'),
-('Cancelled')
+('Cancelled'),
+('Acccepted'),
+('Rejected')
 GO
 
 CREATE TABLE Game
@@ -166,4 +180,20 @@ CREATE TABLE MessageConnection
  CONSTRAINT PK_Friend PRIMARY KEY (FriendID),
 	CONSTRAINT FK_Friend_Contact FOREIGN KEY (ContactID) REFERENCES Contact(ContactID),
 	CONSTRAINT FK_Friend_FriendContact FOREIGN KEY (FriendContactID) REFERENCES Contact(ContactID)
+);
+
+
+CREATE TABLE VenueOwner
+(
+	VenueOwnerID int IDENTITY(1,1) NOT NULL,
+	FirstName nvarchar(50) NULL,
+	LastName nvarchar(50) NULL,
+	Email nvarchar(50) NULL,
+	Phone nvarchar(50) NULL,
+	CompanyName nvarchar(50) NULL,
+	SignUpDate datetime NOT NULL,
+	VenueID int NOT NULL,
+
+	CONSTRAINT PK_VenueOwner PRIMARY KEY (VenueOwnerID),
+	CONSTRAINT FK_VenueOwner_Venue FOREIGN KEY (VenueID) REFERENCES Venue(VenueID)
 );

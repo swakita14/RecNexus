@@ -1,36 +1,28 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
-using PickUpSports.Models.ViewModel;
+using PickUpSports.Models.ViewModel.ReviewController;
 
 namespace PickUpSports.Controllers
 {
     public class ReviewController : Controller
     {
-        private readonly PickUpContext _context;
+        private readonly IVenueService _venueService;
+        private readonly IContactService _contactService;
 
-        public ReviewController(PickUpContext context)
+        public ReviewController(IVenueService venueService, IContactService contactService)
         {
-            _context = context;
+            _venueService = venueService;
+            _contactService = contactService;
         }
 
+        [Authorize]
         public ActionResult Create(int id)
-        {
-            // Confirm user is logged in (visitors can't leave reviews)
-            string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
-
-            if (contact == null) 
-            {
-                ModelState.AddModelError("NoContact", "Please login or register to leave a review.");
-                return View();
-            }
-
+        { 
             // Get name of venue to display on View and return model
-            Venue venue = _context.Venues.Find(id);
+            Venue venue = _venueService.GetVenueById(id);
 
             var model = new CreateReviewViewModel
             {
@@ -46,7 +38,7 @@ namespace PickUpSports.Controllers
         {
             // Get contact to tie to review
             string email = User.Identity.GetUserName();
-            Contact contact = _context.Contacts.FirstOrDefault(c => c.Email == email);
+            Contact contact = _contactService.GetContactByEmail(email);
 
             // Create and add Review to database
             Review review = new Review
@@ -58,20 +50,63 @@ namespace PickUpSports.Controllers
                 VenueId = model.VenueId,
                 ContactId = contact.ContactId
             };
-
-            _context.Reviews.Add(review);
-            _context.SaveChanges();
+            
+            _venueService.CreateVenueReview(review);
 
             // Redirect user to Venue details page which shows all reviews
             return RedirectToAction("Details", "Venue", new {id = model.VenueId});
         }
-        protected override void Dispose(bool disposing)
+
+        [Authorize]
+        public ActionResult Edit(int id)
         {
-            if (disposing)
+            var review = _venueService.GetReviewById(id);
+            
+            var model = new EditReviewViewModel();
+            model.VenueId = review.VenueId;
+            model.Comments = review.Comments;
+            model.Rating = review.Rating;
+            model.ReviewId = review.ReviewId;
+            model.VenueName = _venueService.GetVenueNameById(review.VenueId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(EditReviewViewModel model)
+        {
+            var existingReview = _venueService.GetReviewById(model.ReviewId);
+
+            // Get logged in user
+            var email = User.Identity.Name;
+
+            // Get review author
+            var contact = _contactService.GetContactById(existingReview.ContactId);
+
+            // Return error if users are not same
+            if (!email.Equals(contact.Email))
             {
-                _context.Dispose();
+                ViewData.ModelState.AddModelError("Not Author", "You are not authorized to edit this review.");
+                return View(model);
             }
-            base.Dispose(disposing);
+
+            existingReview.Comments = model.Comments;
+            existingReview.Rating = model.Rating;
+
+
+
+            _venueService.EditVenueReview(existingReview);
+
+            return RedirectToAction("Details", "Venue", new { id = model.VenueId });
+        }
+
+        [Authorize]
+        public ActionResult Delete(int id)
+        {
+            var review = _venueService.GetReviewById(id);
+            _venueService.DeleteVenueReview(review);
+
+            return RedirectToAction("Details", "Venue", new { id = review.VenueId });
         }
     }
 }

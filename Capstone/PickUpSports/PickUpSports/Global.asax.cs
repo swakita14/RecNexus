@@ -10,7 +10,6 @@ using PickUpSports.DAL.Repositories;
 using PickUpSports.GoogleApi;
 using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
-using PickUpSports.Models.Extensions;
 using PickUpSports.Services;
 using RestSharp;
 
@@ -30,19 +29,19 @@ namespace PickUpSports
             // Register all controllers in our MVC project 
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-            // Register RestClient for API with base URL 
+            // Register RestClient for Places API with base URL 
             builder.Register(x =>
                     new RestClient($"https://maps.googleapis.com/maps/api/place"))
-                .Keyed<IRestClient>("Google");
+                .Keyed<IRestClient>("GooglePlaces");
 
             // Get Google API key from app settings
             var placesKey = System.Web.Configuration.WebConfigurationManager.AppSettings["GooglePlacesApiKey"];
 
             // Register API client class with the RestClient and API key as a parameter
             builder.Register(x => new PlacesApiClient(
-                x.ResolveKeyed<IRestClient>("Google"), placesKey
+                x.ResolveKeyed<IRestClient>("GooglePlaces"), placesKey
             )).As<IPlacesApiClient>();
-
+            
             //Grabbing email credentials from app settings 
             var emailAddress = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailUsername"];
             var emailPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["GMailPassword"];
@@ -71,6 +70,7 @@ namespace PickUpSports
             builder.RegisterType<ContactService>().As<IContactService>();
             builder.RegisterType<GMailService>().As<IGMailService>();
             builder.RegisterType<GameService>().As<IGameService>();
+            builder.RegisterType<VenueOwnerServices>().As<IVenueOwnerService>();
 
             // Register repositories
             builder.RegisterType<ContactRepository>().As<IContactRepository>();
@@ -83,6 +83,8 @@ namespace PickUpSports
             builder.RegisterType<VenueRepository>().As<IVenueRepository>();
             builder.RegisterType<BusinessHoursRepository>().As<IBusinessHoursRepository>();
             builder.RegisterType<LocationRepository>().As<ILocationRepository>();
+            builder.RegisterType<VenueOwnerRepository>().As<IVenueOwnerRepository>();
+            builder.RegisterType<GameStatusRepository>().As<IGameStatusRepository>();
 
             var container = builder.Build();
 

@@ -3,6 +3,7 @@ DROP TABLE TimePreference;
 DROP TABLE BusinessHours;
 DROP TABLE Review;
 DROP TABLE Location;
+DROP TABLE VenueOwner;
 DROP TABLE Venue;
 DROP TABLE PickUpGame;
 DROP TABLE Game;

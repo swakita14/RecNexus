@@ -19,34 +19,51 @@ namespace PickUpSports.Controllers
         private readonly IContactService _contactService;
         private readonly IGameService _gameService;
         private readonly IVenueService _venueService;
+        private readonly IVenueOwnerService _venueOwnerService;
 
-        public ContactController(IContactService contactService, IGameService gameService, IVenueService venueService)
+        public ContactController(IContactService contactService, IGameService gameService, IVenueService venueService, IVenueOwnerService venueOwnerService)
         {
             _contactService = contactService;
             _gameService = gameService;
             _venueService = venueService;
+            _venueOwnerService = venueOwnerService;
         }
-
-
-        public ActionResult Details(int? id)
+        
+        /*
+         * User's internal profile that only they have access to
+         */
+        public ActionResult Details()
         {
-            string newContactEmail = User.Identity.GetUserName();
+            string userEmail = User.Identity.GetUserName();
 
-            Contact contact = _contactService.GetContactByEmail(newContactEmail);
+            // First check if venue owner and route to correct profile if so
+            bool isVenueOwner = _venueOwnerService.IsVenueOwner(userEmail);
+            if (isVenueOwner)
+            {
+                var owner = _venueOwnerService.GetVenueOwnerByEmail(userEmail);
+                return RedirectToAction("Detail", "VenueOwner", new {id = owner.VenueOwnerId});
+            }
 
+            Contact contact = _contactService.GetContactByEmail(userEmail);
+            
             // If username is null, profile was never set up
             if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
 
             return View(contact);
         }
 
+        /*
+         * Route user to this page if they don't have any account details
+         */
         public ActionResult Create()
         {
             ViewBag.States = PopulateStatesDropdown();
             return View();
         }
 
-        // POST: Contacts/Create
+        /*
+         * Submit new user's details
+         */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateContactViewModel model)
@@ -89,20 +106,18 @@ namespace PickUpSports.Controllers
 
         }
 
-        // GET: Contacts/Edit/5
-        public ActionResult Edit(int? id)
+        /*
+         * Route user to page to edit their account details
+         */
+        public ActionResult Edit()
         {
-            ViewBag.States = PopulateStatesDropdown();
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            Contact contact = _contactService.GetContactById((int) id);
-
+            // Get logged in user
+            string email = User.Identity.GetUserName();
+            Contact contact = _contactService.GetContactByEmail(email);
             if (contact == null) return HttpNotFound();
 
+            ViewBag.States = PopulateStatesDropdown();
+            
             EditContactViewModel model = new EditContactViewModel
             {
                 ContactId = contact.ContactId,
@@ -121,10 +136,6 @@ namespace PickUpSports.Controllers
 
             return View(model);
         }
-
-        // POST: Contacts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EditContactViewModel model)
@@ -159,7 +170,7 @@ namespace PickUpSports.Controllers
          * Endpoint that routes to public profile view. Should take in a Contact ID 
          */
         [HttpGet]
-        public ActionResult Profile(int id)
+        public ActionResult PlayerProfile(int id)
         {
             var model = new ProfileViewModel();
             var contact = _contactService.GetContactById(id);
@@ -292,6 +303,50 @@ namespace PickUpSports.Controllers
 
             model.Games = model.Games.OrderBy(x => x.StartDate).ToList();
             return PartialView("../Game/_GamesUserJoined", model);
+        }
+
+        public ActionResult GetGamesRejected(int contactId, bool isPublicProfileView)
+        {
+            var model = new GameProfileViewModel();
+            model.IsPublicProfileView = isPublicProfileView;
+            model.ContactId = contactId;
+
+            List<Game> gameList = _gameService.GetAllGamesByContactId(model.ContactId);
+
+            if(gameList == null) return PartialView("../Game/_GetGamesRejected", model);
+
+            model.Games = new List<GameListViewModel>();
+
+            foreach (var game in gameList)
+            {
+                // Do not add game to list if time passed
+                if (game.EndTime < DateTime.Today.AddDays(-1)) continue;
+
+                if (game.GameStatusId == 4)
+                {
+                    var gameToAdd = new GameListViewModel
+                    {
+                        EndDate = game.EndTime,
+                        GameId = game.GameId,
+                        GameStatus = ((GameStatusEnum)game.GameStatusId).ToString(),
+                        Sport = _gameService.GetSportNameById(game.SportId),
+                        StartDate = game.StartTime,
+                        Venue = _venueService.GetVenueNameById(game.VenueId),
+                        VenueId = game.VenueId
+                    };
+
+                    if (game.ContactId != null)
+                    {
+                        gameToAdd.ContactId = game.ContactId;
+                        gameToAdd.ContactName = _contactService.GetContactById(game.ContactId).Username;
+                    }
+                    model.Games.Add(gameToAdd);
+                }
+            }
+
+            model.Games = model.Games.OrderBy(x => x.StartDate).ToList();
+
+            return PartialView("../Game/_GetGamesRejected", model);
         }
 
         private Dictionary<string, string> PopulateStatesDropdown()
