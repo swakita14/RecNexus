@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VenueOwnerTests\UpdateVenueDetailSteps.cs" />
     <Compile Include="VenueOwnerTests\VenueOwnerAvailabilitySteps.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +91,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="VenueOwnerTests\UpdateVenueDetail.feature" />
     <None Include="VenueOwnerTests\VenueOwnerAvailability.feature" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

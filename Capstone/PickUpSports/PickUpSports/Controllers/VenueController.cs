@@ -233,6 +233,7 @@ namespace PickUpSports.Controllers
          */
         public ActionResult Details(int id)
         {
+
             // Model to be sent to view
             VenueViewModel model = new VenueViewModel();
 
