@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContactProfileTests\RejectedGamesSteps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrendingTest\TrendingDataOutputSteps.cs" />
     <Compile Include="VenueDetailTests\VenueDetailsDisplaySteps.cs" />
@@ -94,6 +95,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="ContactProfileTests\RejectedGames.feature" />
     <None Include="packages.config" />
     <None Include="VenueDetailTests\VenueDetailsDisplay.feature" />
     <None Include="VenueOwnerTests\UpdateVenueDetail.feature" />
