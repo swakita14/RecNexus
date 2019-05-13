@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Web.Configuration;
@@ -23,8 +24,11 @@ namespace PickUpSportsTests
             _driver.FindElement(By.Id("Password")).SendKeys("Passw0rd!1819");
             _driver.FindElement(By.Id("login-button")).Click();
             _driver.FindElement(By.LinkText("View Games")).Click();
+
+            // Sleep to give page time to load before last click
+            Thread.Sleep(2000);
+
             _driver.FindElement(By.LinkText("CLICK HERE FOR MORE DETAILS ON GAME")).Click();
         }
-
     }
 }
