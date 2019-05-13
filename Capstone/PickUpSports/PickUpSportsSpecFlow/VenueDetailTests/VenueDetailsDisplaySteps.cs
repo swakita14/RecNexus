@@ -46,6 +46,7 @@ namespace PickUpSportsSpecFlow.VenueDetailTests
             var reviewLink = _driver.FindElement(By.LinkText("Leave a review!")); 
             var reviews = _driver.FindElement(By.Id("Reviews")); 
             var games = _driver.FindElement(By.Id("Games"));
+            var venueOwnerLink = _driver.FindElement(By.LinkText("click here"));
 
             //Display Assertions 
             name.Displayed.Should().BeTrue();
@@ -55,6 +56,7 @@ namespace PickUpSportsSpecFlow.VenueDetailTests
             reviewLink.Displayed.Should().BeTrue();
             reviews.Displayed.Should().BeTrue();
             games.Displayed.Should().BeTrue();
+            venueOwnerLink.Displayed.Should().BeTrue();
 
             //Display Text Assertions
             name.Text.Should().Be("BRYAN JOHNSTON PARK");
