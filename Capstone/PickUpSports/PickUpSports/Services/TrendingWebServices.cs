@@ -1,10 +1,4 @@
-﻿
-
-// This code requires the Nuget package Microsoft.AspNet.WebApi.Client to be installed.
-// Instructions for doing this in Visual Studio:
-// Tools -> Nuget Package Manager -> Package Manager Console
-// Install-Package Microsoft.AspNet.WebApi.Client
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -24,7 +18,7 @@ namespace PickUpSports.Services
 
    public class TrendingWebServices
    {
-        public async Task<T>InvokeRequestResponseService<T>( string venueName, string sportName) where T : class
+        public async Task<T>InvokeRequestResponseService<T>(string sportName) where T : class
         {
             using (var client = new HttpClient())
             {
@@ -33,7 +27,7 @@ namespace PickUpSports.Services
                 {
                     new TrendingModel
                     {
-                        VenueName = venueName,
+                        VenueName = null,
                         SportName = sportName
                     }
 
@@ -43,9 +37,10 @@ namespace PickUpSports.Services
                 var convertValues = new string[trendingValues.Count(), propertyCount];
                 for (var i = 0; i < convertValues.GetLength(0); i++)
                 {
-                   
-                    convertValues[i, 0] = trendingValues[i].SportName;
-                    convertValues[i, 1] = trendingValues[i].VenueName;
+
+                    convertValues[i, 0] = trendingValues[i].VenueName;
+                    convertValues[i, 1] = trendingValues[i].SportName;
+                    
                     
                 }
 
@@ -67,10 +62,10 @@ namespace PickUpSports.Services
                     {
                     }
                 };
-                const string apiKey = "9xvMKHc5+f0I3SoYXa/0/pC6Zo4ND9tnWyjGJEFsh6yw6L7jikAhjUUmV52/xsfCaQg0Ku7mUiBXl7Hdhj4cSw=="; // Replace this with the API key for the web service
+                const string apiKey = "ueHS0+SRkBqqBA9h/+W3++G91YRmtXHemob8kF1iAVn35KUwy6KT7gWy4lrWgxG6gjnwnjg9JNYGT3zT9bHObw=="; // Replace this with the API key for the web service
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
-                client.BaseAddress = new Uri("https://ussouthcentral.services.azureml.net/workspaces/7a83674e46da4f92abbebab4311ca309/services/2c62a9f0d3574e6ea1bd94f42aaaf3c5/execute?api-version=2.0&details=true");
+                client.BaseAddress = new Uri("https://ussouthcentral.services.azureml.net/workspaces/7a83674e46da4f92abbebab4311ca309/services/c2acc3251d8f42849896d7f1158c2d48/execute?api-version=2.0&details=true");
 
                 // WARNING: The 'await' statement below can result in a deadlock if you are calling this code from the UI thread of an ASP.Net application.
                 // One way to address this would be to call ConfigureAwait(false) so that the execution does not attempt to resume on the original context.
@@ -80,7 +75,7 @@ namespace PickUpSports.Services
                 //      result = await DoSomeTask().ConfigureAwait(false)
 
 
-                HttpResponseMessage response = await client.PostAsJsonAsync("", scoreRequest);
+                HttpResponseMessage response = await client.PostAsJsonAsync("", scoreRequest).ConfigureAwait(false);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -96,7 +91,7 @@ namespace PickUpSports.Services
                     // Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
                     Debug.WriteLine(response.Headers.ToString());
 
-                    string responseContent = await response.Content.ReadAsStringAsync();
+                    string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     Debug.WriteLine(responseContent);
                     return null;
                 }

@@ -16,7 +16,7 @@
 <h2>Chat</h2>
 
 <div>
-    Hi @User.Identity.Name! Welcome to Global Channel!
+    <center>Hi @User.Identity.Name! Welcome to Global Channel!</center>
 </div>
 
 <div data-bind="visible: isInPrivateChat">
@@ -29,19 +29,20 @@
         <button type="button" id="btnSend" class="btn btn-info" disabled="disabled">Send</button>
         <ul id="messages" data-bind="foreach: messages">
             <li>
-                <span class="label label-important" data-bind="visible: isPrivate">Private</span>
+                <span class="label label-primary" data-bind="visible: isPrivate">Private</span>
                 <strong><span data-bind="text: from"></span>: </strong>
                 <span data-bind="text: message"></span>
             </li>
         </ul>
     </div>
-    <div id="users" class="span2">
-        <ul data-bind="foreach: users">
-            <li data-bind="click: setAsPrivateChat, css: { privateChatUser: isPrivateChatUser }">
-                <span data-bind="text: name"></span>
-            </li>
-        </ul>
-    </div>
+    <div class="col-75"></div>
+   </div>
+<div id="users" class="span2">
+    <ul data-bind="foreach: users">
+        <li data-bind="click: setAsPrivateChat, css: { privateChatUser: isPrivateChatUser }">
+            <span data-bind="text: name"></span>
+        </li>
+    </ul>
 </div>
 @section scripts {
 

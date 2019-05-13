@@ -26,5 +26,7 @@ namespace PickUpSports.Interface
         List<string> GetUserSportPreferences(int contactId);
 
         List<TimePreference> GetUserTimePreferences(int contactId);
+
+        string GetUsernameByContactId(int contactId);
     }
 }

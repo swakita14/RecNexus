@@ -24,16 +24,19 @@
                         <li><a href="@Url.Action("Index", "Venue")">Venues</a></li>
                         <li><a href="@Url.Action("GameList", "Game")">Pick Up Games</a></li>
                         <li><a href="@Url.Action("CreateGame", "Game")">Start a Game</a></li>
+                        <li><a href="@Url.Action("Index", "Trending")">Trending</a></li>
+                        <li><a href="@Url.Action("Chat", "Home")">Chat Forums</a></li>
+                        <li><a href="@Url.Action("AboutUs", "Home")">About Us</a></li>
 
                         @if (Request.IsAuthenticated)
                         {
                             @Html.AntiForgeryToken()
-                            <li>@Html.ActionLink("View your profile", "Details", "Contact", null, new {title = "Manage"})</li>
+                            <li>@Html.ActionLink("View your profile", "Details", "Contact", null, new { title = "Manage" })</li>
                             if (User.IsInRole("Admin"))
                             {
-                                <li>@Html.ActionLink("Admin Dashboard", "Index", "Admin", null, new {title = "Manage"})</li>
+                                <li>@Html.ActionLink("Admin Dashboard", "Index", "Admin", null, new { title = "Manage" })</li>
                             }
-                            <li>@Html.ActionLink("Log off", "LogOut", "Account", null, new {id = "logoutLink"})</li>
+                            <li>@Html.ActionLink("Log off", "LogOut", "Account", null, new { id = "logoutLink" })</li>
                         }
                         else
                         {
@@ -56,6 +59,5 @@
     @Scripts.Render("~/bundles/knockoutjs")
     @RenderSection("scripts", required: false)
     @RenderSection("search_games", required: false)
-
 </body>
 </html>

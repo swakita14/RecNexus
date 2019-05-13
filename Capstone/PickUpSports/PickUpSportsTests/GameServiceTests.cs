@@ -15,6 +15,7 @@ namespace PickUpSportsTests
         private readonly Mock<IPickUpGameRepository> _pickUpGameRepoMock;
         private readonly Mock<IGameRepository> _gameRepositoryMock;
         private readonly Mock<ISportRepository> _sportRepositoryMock;
+        private readonly Mock<IGameStatusRepository> _gameStatusRepoMock;
         private readonly GameService _sut;
 
         public GameServiceTests()
@@ -22,8 +23,8 @@ namespace PickUpSportsTests
             _pickUpGameRepoMock = new Mock<IPickUpGameRepository>();
             _gameRepositoryMock = new Mock<IGameRepository>();
             _sportRepositoryMock = new Mock<ISportRepository>();
-
-            _sut = new GameService(_pickUpGameRepoMock.Object, _gameRepositoryMock.Object, _sportRepositoryMock.Object);
+            _gameStatusRepoMock = new Mock<IGameStatusRepository>();
+            _sut = new GameService(_pickUpGameRepoMock.Object, _gameRepositoryMock.Object, _sportRepositoryMock.Object, _gameStatusRepoMock.Object);
         }
 
         /**

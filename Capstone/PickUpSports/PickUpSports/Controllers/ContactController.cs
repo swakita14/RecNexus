@@ -29,6 +29,9 @@ namespace PickUpSports.Controllers
             _venueOwnerService = venueOwnerService;
         }
         
+        /*
+         * User's internal profile that only they have access to
+         */
         public ActionResult Details()
         {
             string userEmail = User.Identity.GetUserName();
@@ -49,13 +52,18 @@ namespace PickUpSports.Controllers
             return View(contact);
         }
 
+        /*
+         * Route user to this page if they don't have any account details
+         */
         public ActionResult Create()
         {
             ViewBag.States = PopulateStatesDropdown();
             return View();
         }
 
-        // POST: Contacts/Create
+        /*
+         * Submit new user's details
+         */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateContactViewModel model)
@@ -98,20 +106,18 @@ namespace PickUpSports.Controllers
 
         }
 
-        // GET: Contacts/Edit/5
-        public ActionResult Edit(int? id)
+        /*
+         * Route user to page to edit their account details
+         */
+        public ActionResult Edit()
         {
-            ViewBag.States = PopulateStatesDropdown();
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            Contact contact = _contactService.GetContactById((int) id);
-
+            // Get logged in user
+            string email = User.Identity.GetUserName();
+            Contact contact = _contactService.GetContactByEmail(email);
             if (contact == null) return HttpNotFound();
 
+            ViewBag.States = PopulateStatesDropdown();
+            
             EditContactViewModel model = new EditContactViewModel
             {
                 ContactId = contact.ContactId,
@@ -130,10 +136,6 @@ namespace PickUpSports.Controllers
 
             return View(model);
         }
-
-        // POST: Contacts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EditContactViewModel model)

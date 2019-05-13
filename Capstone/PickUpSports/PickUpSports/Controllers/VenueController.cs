@@ -14,6 +14,7 @@ using PickUpSports.Models.Extensions;
 using PickUpSports.Models.ViewModel;
 using PickUpSports.Models.ViewModel.GameController;
 using PickUpSports.Models.ViewModel.VenueController;
+using PickUpSports.Models.ViewModel.VenueOwnerController;
 
 namespace PickUpSports.Controllers
 {
@@ -251,6 +252,16 @@ namespace PickUpSports.Controllers
             // Check if venue owner exists
             model.HasVenueOwner = _venueService.VenueHasOwner(venue);
 
+            if (model.HasVenueOwner)
+            {
+                model.VenueOwner = new VenueOwnerViewModel();
+
+                var venueOwner = _venueOwnerService.GetVenueOwnerByVenueId(id);
+                model.VenueOwner.FirstName = venueOwner.FirstName;
+                model.VenueOwner.LastName = venueOwner.LastName;
+                model.VenueOwner.VenueOwnerId = venueOwner.VenueOwnerId;
+            }
+
             // Map business hours
             List<BusinessHours> businessHours = _venueService.GetVenueBusinessHours(id);
             model.BusinessHours = new List<BusinessHoursViewModel>();
@@ -338,7 +349,11 @@ namespace PickUpSports.Controllers
         public PartialViewResult GetVenueGames(int venueId)
         {
             var model = new List<GameListViewModel>();
-            var games = _gameService.GetCurrentGamesByVenueId(venueId).Where(x => x.GameStatusId == (int)GameStatusEnum.Open);
+            var games = _gameService.GetCurrentGamesByVenueId(venueId);
+            if (games == null) return PartialView("_VenueGames", model);
+
+            var openGames = games.Where(x => x.GameStatusId == (int) GameStatusEnum.Open).ToList();
+            if (openGames.Count < 1) return PartialView("_VenueGames", model);
 
             foreach (var game in games)
             {

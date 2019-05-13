@@ -550,7 +550,11 @@ namespace PickUpSports.Controllers
             //list of games found using venue ID
             var gameList = _gameService.GetCurrentGamesByVenueId(venueId);
 
-            if (gameList.Count == 0) ViewData.ModelState.AddModelError("GameSearch", "There are no games that matches your search");
+            if (gameList == null || gameList.Count == 0)
+            {
+                ViewData.ModelState.AddModelError("GameSearch", "There are no games that matches your search");
+                return PartialView("_GameSearch");
+            }
 
             //List using ViewModel to format how I like 
             List<GameListViewModel> model = new List<GameListViewModel>();
@@ -824,7 +828,7 @@ namespace PickUpSports.Controllers
             _gameService.EditGame(existingGame);
 
             //send email to users once the game is cancelled
-            if (int.Parse(model.Status) == 2)
+            if (int.Parse(model.Status) == (int) GameStatusEnum.Cancelled)
             {
                 var venueName = _venueService.GetVenueNameById(existingGame.VenueId);
                 var sportName = _gameService.GetSportNameById(existingGame.SportId);
@@ -844,10 +848,15 @@ namespace PickUpSports.Controllers
 
 
                 List<PickUpGame> pickUpGameList = _gameService.GetPickUpGameListByGameId(existingGame.GameId);
-                foreach (var player in pickUpGameList)
+
+                // If empty, don't need to email people
+                if (pickUpGameList != null)
                 {
-                    SendMessage(existingGame, player.ContactId, fileContents, subject);
-                }                              
+                    foreach (var player in pickUpGameList)
+                    {
+                        SendMessage(existingGame, player.ContactId, fileContents, subject);
+                    }
+                }                        
             }
 
             //redirect them back to the changed game detail
@@ -871,13 +880,12 @@ namespace PickUpSports.Controllers
             ViewBag.Venue = new SelectList(_venueService.GetAllVenues(), "VenueId", "Name", game.VenueId);
             ViewBag.Sport = new SelectList(_gameService.GetAllSports(), "SportId", "SportName", game.SportId);
 
-            var gameStatusDict = new Dictionary<int, string>();
-            foreach (GameStatusEnum gameStatus in Enum.GetValues(typeof(GameStatusEnum)))
-            {
-                gameStatusDict.Add((int)gameStatus, gameStatus.ToString());
-            }
-
-            ViewBag.Status = new SelectList(gameStatusDict, "GameStatusId", "Status", game.GameStatusId);
+            // Take out Accepted and Rejected statuses since reserved for venue owner
+            var statuses = _gameService.GetAllGameStatuses();
+            statuses.RemoveAll(status => status.Status == "Accepted");
+            statuses.RemoveAll(status => status.Status == "Rejected");
+            
+            ViewBag.Status = new SelectList(statuses, "GameStatusId", "Status", game.GameStatusId);
         }
     }
 }

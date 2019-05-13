@@ -53,7 +53,15 @@
                 </div>
                 
                 <div class="row">
-                    @if (!Model.HasVenueOwner)
+                    @if (Model.HasVenueOwner)
+                    {
+                        <br/>
+                        <html>
+                        The owner of this venue is @Model.VenueOwner.FirstName @Model.VenueOwner.LastName
+                        <br />@Html.ActionLink("Click here", "Detail", "VenueOwner", new { id = @Model.VenueOwner.VenueOwnerId }, null) to contact owner.
+                        </html>
+                    }
+                    else
                     {
                         <br/>
                         <html>
