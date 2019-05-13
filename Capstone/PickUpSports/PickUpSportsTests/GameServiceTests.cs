@@ -299,7 +299,7 @@ namespace PickUpSportsTests
         [Test]
         public void IsThisGameCanCancel_AtLeastBeforeOneHour_ReturnsTrue()
         {
-            var startTime = DateTime.Parse("2019-05-12 09:00 PM");
+            var startTime = DateTime.Parse("2019-05-15 7:00 PM");
             Assert.AreEqual(_sut.IsThisGameCanCancel(startTime), true);
         }
 

@@ -13,7 +13,7 @@ namespace PickUpSportsTests
         public PreferenceNotificationSeleniumTests()
         {
             _driver = new ChromeDriver();
-            _driver.Navigate().GoToUrl("https://localhost:44341/Account/Login");
+            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Account/Login");
         }
         [Test]
         public void UserLogin_UserLoginPage()
@@ -21,7 +21,7 @@ namespace PickUpSportsTests
             _driver.FindElement(By.Id("Email")).SendKeys("kpan17@mail.wou.edu");
             _driver.FindElement(By.Id("Password")).SendKeys("Zx4110740_");
             _driver.FindElement(By.Id("login-button")).Click();
-            _driver.FindElement(By.LinkText("START A GAME")).Click();
+            _driver.FindElement(By.LinkText("Start Game")).Click();
             // select the drop down list
             var venue = _driver.FindElement(By.Id("VenueId"));
             //create select element object 
@@ -39,6 +39,9 @@ namespace PickUpSportsTests
             //write new time range to the datePicker
             datePicker.Clear();
             datePicker.SendKeys("06/14/2019 04:00 PM - 06/14/2019 06:00 PM");
+
+            _driver.FindElement(By.ClassName("applyBtn")).Click();
+
             _driver.FindElement(By.XPath("//body")).Click();
             _driver.FindElement(By.XPath("//div/center/button[text()='Create Your Game']")).Click();
 
