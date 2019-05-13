@@ -234,6 +234,9 @@ namespace PickUpSports.Controllers
          */
         public ActionResult Details(int id)
         {
+            // Initializing Owner authentication variable 
+            ViewBag.IsOwner = false;
+
             // Model to be sent to view
             VenueViewModel model = new VenueViewModel();
 
@@ -247,6 +250,21 @@ namespace PickUpSports.Controllers
             model.State = venue.State;
             model.VenueId = venue.VenueId;
             model.ZipCode = venue.ZipCode;
+
+            //Checking if the user is logged in & and is the owner
+            bool loggedInUser = User.Identity.IsAuthenticated;
+
+            if (loggedInUser)
+            {
+                string email = User.Identity.GetUserName();
+                bool isOwner = _venueService.LoggedInUserIsVenueOwner(email, venue);
+
+                // If logged-in user is the owner, then show link to edit venue 
+                if (isOwner)
+                {
+                    ViewBag.IsOwner = true;
+                }
+            }
 
             // Check if venue owner exists
             model.HasVenueOwner = _venueService.VenueHasOwner(venue);

@@ -53,20 +53,28 @@
                 </div>
                 
                 <div class="row">
-                    @if (Model.HasVenueOwner)
+                    @if (ViewBag.IsOwner)
+                    {
+                        <br/>
+                        <html>
+                        @Html.ActionLink("Edit Venue Details", "EditVenue", "Venue", new {id = @Model.VenueId}, null)
+                        <br/>
+                        </html>
+                    }
+                    else if (Model.HasVenueOwner)
                     {
                         <br/>
                         <html>
                         The owner of this venue is @Model.VenueOwner.FirstName @Model.VenueOwner.LastName
-                        <br />@Html.ActionLink("Click here", "Detail", "VenueOwner", new { id = @Model.VenueOwner.VenueOwnerId }, null) to contact owner.
+                        <br/>@Html.ActionLink("Click here", "Detail", "VenueOwner", new {id = @Model.VenueOwner.VenueOwnerId}, null) to contact owner.
                         </html>
                     }
                     else
                     {
                         <br/>
                         <html>
-                        If you own or run this venue, please @Html.ActionLink("click here", "ClaimVenue", "VenueOwner", new {venueId = @Model.VenueId}, null) 
-                        <br />to claim this venue and maintain any games or information.
+                        If you own or run this venue, please @Html.ActionLink("click here", "ClaimVenue", "VenueOwner", new {venueId = @Model.VenueId}, null)
+                        <br/>to claim this venue and maintain any games or information.
                         </html>
                     }
                 </div>

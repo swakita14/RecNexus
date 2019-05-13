@@ -85,14 +85,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrendingTest\TrendingDataOutputSteps.cs" />
     <Compile Include="VenueOwnerTests\VenueOwnerAvailabilitySteps.cs" />
+    <Compile Include="VenueOwnerTests\VenueOwnerLoginDisplaySteps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="VenueDetailTests\VenueDetailsDisplay.feature" />
+    <None Include="VenueOwnerTests\UpdateVenueDetail.feature" />
     <None Include="TrendingTest\TrendingDataOutput.feature" />
     <None Include="VenueOwnerTests\VenueOwnerAvailability.feature" />
+    <None Include="VenueOwnerTests\VenueOwnerLoginDisplay.feature" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

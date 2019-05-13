@@ -9,12 +9,12 @@ using TechTalk.SpecFlow;
 namespace PickUpSportsSpecFlow
 {
     [Binding]
-    public class VenueOwnerAvailabilitySteps_DoesNotExist : IDisposable
+    public class VenueOwnerAvailability : IDisposable
     {
 
         private readonly IWebDriver _driver;
 
-        public VenueOwnerAvailabilitySteps_DoesNotExist() 
+        public VenueOwnerAvailability() 
         {
             _driver = new ChromeDriver();
         }
