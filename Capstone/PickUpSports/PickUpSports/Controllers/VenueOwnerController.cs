@@ -69,7 +69,7 @@ namespace PickUpSports.Controllers
             // Send email to Scrum Lords for approval
             var email = new MailMessage();
             email.To.Add(_gMailer.GetEmailAddress());
-            email.From = new MailAddress(_gMailer.GetEmailAddress());
+            email.From = new MailAddress(model.Email);
             email.Subject = $"Received request to claim venue {model.VenueName}.";
             email.Body = $"Received below request to claim venue {model.VenueName}:<br />"
                          + $"Name: {model.FirstName} {model.LastName}<br />"

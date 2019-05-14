@@ -302,6 +302,7 @@
     <Compile Include="Interface\Repositories\IPickUpGameRepository.cs" />
     <Compile Include="DAL\Repositories\PickUpGameRepository.cs" />
     <Compile Include="Models\DatabaseModels\VenueOwner.cs" />
+    <Compile Include="Models\ViewModel\HomeController\ContactUsViewModel.cs" />
     <Compile Include="Models\ViewModel\ReviewController\EditReviewViewModel.cs" />
     <Compile Include="Models\ViewModel\TrendingController\ResponseInput.cs" />
     <Compile Include="Models\ViewModel\TrendingController\ResultOutcome.cs" />
