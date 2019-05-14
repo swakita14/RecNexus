@@ -20,7 +20,7 @@
                 {
                     <br />
                     <html>
-                    Game started by @Html.ActionLink(game.ContactName, "Profile", "Contact", new { id = game.ContactId }, null)
+                    Game started by @Html.ActionLink(game.ContactName, "PlayerProfile", "Contact", new { id = game.ContactId }, null)
                 </html>
             }
                     <br />Game status: @Html.DisplayFor(model => game.GameStatus)

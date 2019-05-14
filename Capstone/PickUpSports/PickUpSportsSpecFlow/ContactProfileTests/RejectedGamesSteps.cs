@@ -28,7 +28,7 @@ namespace PickUpSportsSpecFlow.ContactProfileTests
         [When(@"I visit his page")]
         public void WhenIVisitHisPage()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Contact/Profile/34");
+            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Contact/PlayerProfile/34");
         }
         
         [Then(@"I should see a column that shows the games that he created that got rejected")]
