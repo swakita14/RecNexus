@@ -27,7 +27,7 @@
                      @Html.DisplayFor(model => game.StartDate) to @Html.DisplayFor(model => game.EndDate)
                  </div>
                  <div class="row">
-                     Game started by @Html.ActionLink(game.ContactName, "Profile", "Contact", new {id = game.ContactId}, null)
+                     Game started by @Html.ActionLink(game.ContactName, "PlayerProfile", "Contact", new {id = game.ContactId}, null)
                  </div>
 
 
