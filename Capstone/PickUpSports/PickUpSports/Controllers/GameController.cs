@@ -102,6 +102,14 @@ namespace PickUpSports.Controllers
             string email = User.Identity.GetUserName();
             Contact contact = _contactService.GetContactByEmail(email);
 
+            // If no contact and they made it to this page then this means
+            // user did not initialize profile information
+            if (contact == null)
+            {
+                TempData["UserInitialized"] = false;
+                return RedirectToAction("Create", "Contact");
+            }
+
             // All validation passed so add game to database 
             Game newGame = new Game
             {
@@ -250,7 +258,15 @@ namespace PickUpSports.Controllers
 
             if (contact == null)
             {
+                // Check if is venue owner. If not, they did not initalize their profile 
                 VenueOwner venueOwner = _venueOwnerService.GetVenueOwnerByEmail(email);
+
+                if (venueOwner == null)
+                {
+                    TempData["UserInitialized"] = false;
+                    return RedirectToAction("Create", "Contact");
+                }
+
                 ViewBag.IsVenueOwner = true;
                 ViewBag.IsCreator = false;
                 if (venueOwner.VenueId == game.VenueId)
