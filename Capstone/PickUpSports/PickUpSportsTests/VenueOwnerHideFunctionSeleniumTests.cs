@@ -19,7 +19,7 @@ namespace PickUpSportsTests
         [Test]
         public void FindGame_PickUpGamesPage()
         {
-            _driver.FindElement(By.LinkText("Venue Owner")).Click();
+            _driver.FindElement(By.LinkText("Log in as Venue Owner")).Click();
             _driver.FindElement(By.Id("Email")).SendKeys("jcx22092@icloud.com");
             _driver.FindElement(By.Id("Password")).SendKeys("Passw0rd!1819");
             _driver.FindElement(By.Id("login-button")).Click();
