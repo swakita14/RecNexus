@@ -11,11 +11,11 @@
             <div class="well">
                 <p>@Html.DisplayFor(x => x.FirstName) @Html.DisplayFor(x => x.LastName)</p>
                 <p>@Html.DisplayFor(x => x.Email)</p>
-                @if (string.IsNullOrEmpty(Model.Address2))
+                @if (string.IsNullOrEmpty(Model.Address2) && !string.IsNullOrEmpty(Model.Address1))
                 {
                     <p>@Html.DisplayFor(x => x.Address1), @Html.DisplayFor(x => x.City), @Html.DisplayFor(x => x.State) @Html.DisplayFor(x => x.ZipCode)</p>
                 }
-                else
+                else if(!string.IsNullOrEmpty(Model.Address1))
                 {
                     <p>@Html.DisplayFor(x => x.Address1), @Html.DisplayFor(x => x.Address2), @Html.DisplayFor(x => x.City), @Html.DisplayFor(x => x.State) @Html.DisplayFor(x => x.ZipCode)</p>
 

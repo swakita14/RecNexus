@@ -712,9 +712,7 @@ namespace PickUpSports.Controllers
                 {
                     PickUpGameId = player.PickUpGameId,
                     GameId = gameId,
-                    Username = contact.Username,
-                    Email = contact.Email,
-                    PhoneNumber = contact.PhoneNumber
+                    Username = contact.Username
                 });
 
             }

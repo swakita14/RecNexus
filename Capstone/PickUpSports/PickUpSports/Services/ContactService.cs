@@ -52,7 +52,9 @@ namespace PickUpSports.Services
 
         public Contact GetContactByUsername(string username)
         {
-            return _contactRepository.GetContactByUsername(username);
+            var contact = _contactRepository.GetContactByUsername(username);
+            if (contact == null) return null;
+            return contact;
         }
 
         public Contact CreateContact(Contact contact)
@@ -184,6 +186,19 @@ namespace PickUpSports.Services
             else username = contact.Username;
 
             return username;
+        }
+
+        public bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
