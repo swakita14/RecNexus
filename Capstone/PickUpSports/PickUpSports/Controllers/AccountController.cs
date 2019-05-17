@@ -12,6 +12,7 @@ using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 using PickUpSports.Interface;
 using PickUpSports.Models;
+using PickUpSports.Models.DatabaseModels;
 
 namespace PickUpSports.Controllers
 {
@@ -84,9 +85,26 @@ namespace PickUpSports.Controllers
                 return View(model);
             }
 
+            // Check if user entered email or username and assign email if used username
+            var isEmailAddress = _contactService.IsValidEmail(model.Email);
+            if (!isEmailAddress)
+            {
+                var contact = _contactService.GetContactByUsername(model.Email);
+                if (contact == null)
+                {
+                    // Username doesn't exist so it's bad login
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
+                }
+                else
+                {
+                    // Username exists, get email and use that for authentication
+                    model.Email = contact.Email;
+                }
+            }
             // Require the user to have a confirmed email before they can log on.
-            // var user = await UserManager.FindByNameAsync(model.Email);
             var user = UserManager.Find(model.Email, model.Password);
+
             if (user != null)
             {
                 if (!await UserManager.IsEmailConfirmedAsync(user.Id))
@@ -100,11 +118,11 @@ namespace PickUpSports.Controllers
                     return View("EmailConfirmation");
                 }
             }
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-
-
+            
             switch (result)
             {
                 case SignInStatus.Success:
@@ -248,21 +266,33 @@ namespace PickUpSports.Controllers
             CaptchaResponse response = ValidateCaptcha(Request["g-recaptcha-response"]);
             if (response.Success && ModelState.IsValid)
             {
+                if (_contactService.UsernameIsTaken(model.Username))
+                {
+                    ModelState.AddModelError("Username", "Username already taken");
+                    return View(model);
+                }
+
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
               
                 if (result.Succeeded)
                 {
-                    //  Comment the following line to prevent log in until the user is confirmed.
-                    //  await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-
                     string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
                     ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
                                       + "before you can log in.";
+                    
+                    Contact newContact = new Contact
+                    {
+                        Username = model.Username,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Email = model.Email
+                    };
+
+                    _contactService.CreateContact(newContact);
 
                     return View("EmailConfirmation");
-                    //return RedirectToAction("Index", "Home");
                 }
 
                 AddErrors(result);
