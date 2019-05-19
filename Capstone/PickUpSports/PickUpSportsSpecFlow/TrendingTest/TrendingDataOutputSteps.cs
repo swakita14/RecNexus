@@ -21,7 +21,7 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have navigated to the trending page")]
         public void GivenIHaveNavigatedToTheTrendingPage()
         {
-             _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Trending/index");
+             _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Trending/index");
         }
         
         [When(@"I select Select a Sport as the sport")]
