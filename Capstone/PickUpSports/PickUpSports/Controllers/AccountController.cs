@@ -299,7 +299,8 @@ namespace PickUpSports.Controllers
             }
             else
             {
-                return Content("Error From Google ReCaptcha : " + response.ErrorMessage[0]);
+                // Send to reCAPTCHA error page
+                return View("Error", response);
             }
 
             // If we got this far, something failed, redisplay form
