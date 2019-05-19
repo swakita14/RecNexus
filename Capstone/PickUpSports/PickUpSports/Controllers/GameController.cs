@@ -322,6 +322,8 @@ namespace PickUpSports.Controllers
         public ActionResult GameDetails(ViewGameViewModel model, string button)
         {
             ViewBag.IsCreator = false;
+            ViewBag.IsVenueOwner = false;
+            ViewBag.IsThisVenueOwner = false;
 
             //Find all the players that are currently signed up for the game
             List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
