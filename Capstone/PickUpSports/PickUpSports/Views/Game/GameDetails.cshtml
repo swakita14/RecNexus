@@ -77,6 +77,10 @@
                                     <input type="submit" name="button" class="btn btn-default" value=@ViewBag.SubmitValue />
                                 }
                             }
+                            else if(ViewBag.IsRejected)
+                            {
+                                <p>The game is rejected, you can't join this game</p>
+                            }
                             else
                             {
                                 if (ViewBag.IsCreator)
