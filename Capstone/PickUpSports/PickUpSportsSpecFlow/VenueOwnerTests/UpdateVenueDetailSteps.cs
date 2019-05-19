@@ -19,7 +19,7 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have logged in as a venue owner for Real Sports Venue")]
         public void GivenIHaveLoggedInAsAVenueOwnerForRealSportsVenue()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Account/VenueOwnerLogin");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Account/VenueOwnerLogin");
 
             IWebElement username = _driver.FindElement(By.Id("Email"));
             username.Clear();
@@ -36,7 +36,7 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have navigated to my venue's detail page")]
         public void GivenIHaveNavigatedToMyVenueSDetailPage()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Venue/Details/67");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Venue/Details/67");
         }
         
         [When(@"I press edit venue")]

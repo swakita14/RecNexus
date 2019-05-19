@@ -20,13 +20,13 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have navigated to the site")]
         public void GivenIHaveNavigatedToTheSite()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/");
         }
         
         [Given(@"I have logged in as an owner of Real Sports Venue")]
         public void GivenIHaveLoggedInAsAnOwnerOfRealSportsVenue()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Account/VenueOwnerLogin");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Account/VenueOwnerLogin");
 
             IWebElement username = _driver.FindElement(By.Id("Email"));
             username.Clear();
@@ -52,8 +52,7 @@ namespace PickUpSportsSpecFlow
             //Wait for the partial view to show
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
-            var calendar = _driver.FindElement(By.XPath(
-                "//div[@id='calender']/div[2]/div/table/tbody/tr/td/div/div/div[3]/div[2]/table/tbody/tr/td[4]/a/div/span"));
+            var calendar = _driver.FindElement(By.XPath("//div[@id='calender']/div"));
 
             calendar.Displayed.Should().BeTrue();
         }

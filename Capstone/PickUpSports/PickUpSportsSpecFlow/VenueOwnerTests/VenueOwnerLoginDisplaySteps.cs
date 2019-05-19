@@ -7,11 +7,11 @@ using TechTalk.SpecFlow;
 namespace PickUpSportsSpecFlow.VenueOwnerTests
 {
     [Binding]
-    public class VenueOwnerLoginDisplaySteps
+    public class VenueOwnerLoginDisplaySteps : IDisposable
     {
         private readonly IWebDriver _driver;
 
-        public VenueOwnerLoginDisplaySteps()
+        public VenueOwnerLoginDisplaySteps() 
         {
             _driver = new ChromeDriver();
         }
@@ -19,7 +19,7 @@ namespace PickUpSportsSpecFlow.VenueOwnerTests
         [Given(@"I have navigated to the website's welcome screen")]
         public void GivenIHaveNavigatedToTheWebsiteSWelcomeScreen()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/");
         }
         
         [Given(@"I have clicked on the login navbar item")]
@@ -31,7 +31,7 @@ namespace PickUpSportsSpecFlow.VenueOwnerTests
         [When(@"I click the Venue Owner link")]
         public void WhenIClickTheVenueOwnerLink()
         {
-            _driver.FindElement(By.LinkText("Venue Owner")).Click();
+            _driver.FindElement(By.LinkText("Log in as Venue Owner")).Click();
         }
         
         [Then(@"It should take me to a venue owner login portal")]
@@ -61,6 +61,14 @@ namespace PickUpSportsSpecFlow.VenueOwnerTests
 
 
             _driver.FindElement(By.Id("login-button")).Click();
+        }
+
+        public void Dispose()
+        {
+            if (_driver != null)
+            {
+                _driver.Dispose();
+            }
         }
     }
 }

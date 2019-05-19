@@ -21,7 +21,7 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have logged in")]
         public void GivenIHaveLoggedIn()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Account/Login");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Account/Login");
 
             IWebElement username = _driver.FindElement(By.Id("Email"));
             username.Clear();
@@ -38,7 +38,7 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have navigate to the create game page")]
         public void GivenIHaveNavigateToTheCreateGamePage()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Game/CreateGame");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Game/CreateGame");
         }
 
         [When(@"I select Bryan Johnston Park as the venue")]
