@@ -46,64 +46,7 @@ namespace PickUpSports.Controllers
 
             Contact contact = _contactService.GetContactByEmail(userEmail);
             
-            // If username is null, profile was never set up
-            if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
-
             return View(contact);
-        }
-
-        /*
-         * Route user to this page if they don't have any account details
-         */
-        public ActionResult Create()
-        {
-            ViewBag.States = PopulateStatesDropdown();
-            return View();
-        }
-
-        /*
-         * Submit new user's details
-         */
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateContactViewModel model)
-        {
-            ViewBag.Error = "";
-            if (!ModelState.IsValid)
-            {
-                ViewBag.States = PopulateStatesDropdown();
-                return View(model);
-            }
-
-            //create user 
-            string email = User.Identity.GetUserName();
-            Debug.Write(email);
-
-            Contact newContact = new Contact
-            {
-                ContactId = model.ContactId,
-                Username = model.Username,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = email,
-                PhoneNumber = model.PhoneNumber,
-                Address1 = model.Address1,
-                Address2 = model.Address2,
-                City = model.City,
-                State = model.State,
-                ZipCode = model.ZipCode
-            };
-
-            if (_contactService.UsernameIsTaken(model.Username))
-            {
-                ModelState.AddModelError("Username", "Username already taken");
-                ViewBag.States = PopulateStatesDropdown();
-                return View(model);
-            }
-
-            _contactService.CreateContact(newContact);
-            return RedirectToAction("Details", new {id = model.ContactId});
-
         }
 
         /*
@@ -136,6 +79,7 @@ namespace PickUpSports.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EditContactViewModel model)

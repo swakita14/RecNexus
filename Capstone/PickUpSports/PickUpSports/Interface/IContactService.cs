@@ -28,5 +28,13 @@ namespace PickUpSports.Interface
         List<TimePreference> GetUserTimePreferences(int contactId);
 
         string GetUsernameByContactId(int contactId);
+
+        bool IsValidEmail(string email);
+
+        List<Friend> GetUsersFriends(int contactId);
+
+        List<Friend> GetFriendsOfUser(int friendId);
+
+        Friend AddFriend(Friend friend);
     }
 }

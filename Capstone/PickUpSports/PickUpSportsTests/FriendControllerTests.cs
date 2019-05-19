@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using PickUpSports.Controllers;
 using PickUpSports.DAL;
+using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 
 
@@ -12,13 +13,21 @@ namespace PickUpSportsTests
     [TestFixture]
     public class FriendControllerTests
     {
+        private readonly Mock<IContactService> _contactServiceMock;
+        private readonly Mock<IGMailService> _gmailServiceMock;
+        private readonly Mock<IGameService> _gamServiceMock;
+        private readonly Mock<IVenueService> _venueServiceMock;
+
         private readonly FriendsController _sut;
 
         public FriendControllerTests()
         {
-            // Mock Context to pass into service under test (GameController)
-            var contextMock = new Mock<PickUpContext>();
-            _sut = new FriendsController(contextMock.Object);
+            _contactServiceMock = new Mock<IContactService>();
+            _gmailServiceMock = new Mock<IGMailService>();
+            _gamServiceMock = new Mock<IGameService>();
+            _venueServiceMock = new Mock<IVenueService>();
+
+            _sut = new FriendsController(_contactServiceMock.Object, _gmailServiceMock.Object, _gamServiceMock.Object, _venueServiceMock.Object);
         }
 
         [Test]

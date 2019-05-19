@@ -287,8 +287,10 @@
     <Compile Include="Controllers\VenueOwnerController.cs" />
     <Compile Include="DAL\Configurations\VenueOwnerConfiguration.cs" />
     <Compile Include="DAL\Repositories\BusinessHoursRepository.cs" />
+    <Compile Include="DAL\Repositories\FriendRepository.cs" />
     <Compile Include="DAL\Repositories\GameRepository.cs" />
     <Compile Include="DAL\Repositories\GameStatusRepository.cs" />
+    <Compile Include="Interface\Repositories\IFriendRepository.cs" />
     <Compile Include="Interface\Repositories\IGameStatusRepository.cs" />
     <Compile Include="Interface\Repositories\IVenueOwnerRepository.cs" />
     <Compile Include="DAL\Repositories\LocationRepository.cs" />
@@ -509,7 +511,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Contact\Create.cshtml" />
     <Content Include="Views\Contact\Details.cshtml" />
     <Content Include="Views\Contact\Edit.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
@@ -561,6 +562,7 @@
     <Content Include="Views\Game\CreateGame.cshtml" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Views\Account\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\bootstrap\" />

@@ -7,6 +7,12 @@ body {
     color: #00144B;
 }
 
+.tooltip-inner {
+    background-color: #fff; 
+    color: #000;
+    border: 1px solid #000;
+}
+
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */

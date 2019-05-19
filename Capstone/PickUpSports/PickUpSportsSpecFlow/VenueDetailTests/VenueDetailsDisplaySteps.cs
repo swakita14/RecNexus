@@ -21,7 +21,7 @@ namespace PickUpSportsSpecFlow.VenueDetailTests
         [Given(@"I am a guest user to the website")]
         public void GivenIAmAGuestUserToTheWebsite()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/");
         }
         
         [Given(@"I have selected the Venue link on the homepage")]

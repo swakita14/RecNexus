@@ -80,7 +80,6 @@ namespace PickUpSports.Controllers
             Game existingGame = _gameService.CheckForExistingGame(model.VenueId, model.SportId, startDateTime);
             if (existingGame != null)
             {
-                // TODO - Add link to existing game details later when that page is created
                 ViewData.ModelState.AddModelError("GameExists", "A game already exists with this venue, sport, and time.");
                 PopulateDropdownValues();
                 return View(model);
@@ -101,14 +100,6 @@ namespace PickUpSports.Controllers
 
             string email = User.Identity.GetUserName();
             Contact contact = _contactService.GetContactByEmail(email);
-
-            // If no contact and they made it to this page then this means
-            // user did not initialize profile information
-            if (contact == null)
-            {
-                TempData["UserInitialized"] = false;
-                return RedirectToAction("Create", "Contact");
-            }
 
             // All validation passed so add game to database 
             Game newGame = new Game
@@ -140,7 +131,7 @@ namespace PickUpSports.Controllers
 
             //send notification to users once a new game created and it includes the user's preference
             List<SportPreference> checkSportPreference = _contactService.GetAllSportPreferences();
-
+            
             foreach (var item in checkSportPreference)
             {
                 if (item.SportID == model.SportId && item.ContactID != newGame.ContactId)
@@ -150,6 +141,7 @@ namespace PickUpSports.Controllers
                     fileContents = fileContents.Replace("{INFO}", "We have a new game you may interested!");
                     var subject = "New Game At Rec Nexus";
                     SendMessage(newGame, item.ContactID, fileContents, subject);
+                    
                 }
             }
 
@@ -246,7 +238,7 @@ namespace PickUpSports.Controllers
             ViewBag.IsCreator = false;
             ViewBag.IsVenueOwner = false;
             ViewBag.IsThisVenueOwner = false;
-
+            ViewBag.IsRejected = false;
             //validating the id to make sure its not null
             if (id == 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -261,12 +253,6 @@ namespace PickUpSports.Controllers
                 // Check if is venue owner. If not, they did not initalize their profile 
                 VenueOwner venueOwner = _venueOwnerService.GetVenueOwnerByEmail(email);
 
-                if (venueOwner == null)
-                {
-                    TempData["UserInitialized"] = false;
-                    return RedirectToAction("Create", "Contact");
-                }
-
                 ViewBag.IsVenueOwner = true;
                 ViewBag.IsCreator = false;
                 if (venueOwner.VenueId == game.VenueId)
@@ -280,6 +266,10 @@ namespace PickUpSports.Controllers
                 ViewBag.IsCreator = true;
                 ViewBag.IsVenueOwner = false;
                 ViewBag.IsThisVenueOwner = false;
+                if (game.GameStatusId == 4)
+                {
+                    ViewBag.IsRejected = true;
+                }
             }            
 
             //if there are no games then return: 
@@ -321,6 +311,9 @@ namespace PickUpSports.Controllers
         public ActionResult GameDetails(ViewGameViewModel model, string button)
         {
             ViewBag.IsCreator = false;
+            ViewBag.IsVenueOwner = false;
+            ViewBag.IsThisVenueOwner = false;
+            ViewBag.IsRejected = false;
 
             //Find all the players that are currently signed up for the game
             List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
@@ -351,6 +344,12 @@ namespace PickUpSports.Controllers
             fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(game.SportId));
             fileContents = fileContents.Replace("{STARTTIME}", returnModel.StartDate);
             fileContents = fileContents.Replace("{ENDTIME}", returnModel.EndDate);
+
+            //Rejected game doesn't show join or leave button
+            if (game.GameStatusId == 4)
+            {
+                ViewBag.IsRejected = true;
+            }
 
             //If the Reject button was pressed
             if (button.Equals("Reject"))
@@ -390,7 +389,7 @@ namespace PickUpSports.Controllers
 
                 //save it       
                 _gameService.AcceptGame(game.GameId);
-            }
+            }           
 
             //If the Join Game button was pressed 
             if (button.Equals("Join Game"))
@@ -407,13 +406,6 @@ namespace PickUpSports.Controllers
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "Sorry, this game is canceled, you can not join this game");
-                    return View(returnModel);
-                }
-                //if the game is rejected by the venue owner, users are prevent to join this game
-                if (game.GameStatusId == 4)
-                {
-                    //error message
-                    ViewData.ModelState.AddModelError("RejectedGame", "Sorry, this game is rejected by the venue owner, you can not join this game");
                     return View(returnModel);
                 }
                 //check if the person is already signed up for the game 
@@ -493,7 +485,7 @@ namespace PickUpSports.Controllers
             //Initializing Message Details 
             string sendingToEmail = "";
             string messageContent = "";
-          
+
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
@@ -506,7 +498,7 @@ namespace PickUpSports.Controllers
                 if (_contactService.GetContactById(playerId) != null)
                 {
                     //emailing to the players on the game list
-                    sendingToEmail = _contactService.GetContactById(playerId).Email;                    
+                    sendingToEmail = _contactService.GetContactById(playerId).Email;
                 }
                 else
                 {
@@ -520,7 +512,7 @@ namespace PickUpSports.Controllers
             {
                 Body = messageContent,
                 Subject = subject
-                
+
             };
 
             //Send the Message
@@ -712,9 +704,7 @@ namespace PickUpSports.Controllers
                 {
                     PickUpGameId = player.PickUpGameId,
                     GameId = gameId,
-                    Username = contact.Username,
-                    Email = contact.Email,
-                    PhoneNumber = contact.PhoneNumber
+                    Username = contact.Username
                 });
 
             }
