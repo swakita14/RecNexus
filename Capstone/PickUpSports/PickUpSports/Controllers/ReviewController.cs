@@ -34,6 +34,7 @@ namespace PickUpSports.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Create(CreateReviewViewModel model)
         {
             // Get contact to tie to review
@@ -92,9 +93,7 @@ namespace PickUpSports.Controllers
 
             existingReview.Comments = model.Comments;
             existingReview.Rating = model.Rating;
-
-
-
+            
             _venueService.EditVenueReview(existingReview);
 
             return RedirectToAction("Details", "Venue", new { id = model.VenueId });

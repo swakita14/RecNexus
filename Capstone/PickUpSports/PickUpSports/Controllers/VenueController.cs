@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
-using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;

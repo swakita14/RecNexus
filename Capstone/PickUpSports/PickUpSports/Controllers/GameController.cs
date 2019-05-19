@@ -80,7 +80,6 @@ namespace PickUpSports.Controllers
             Game existingGame = _gameService.CheckForExistingGame(model.VenueId, model.SportId, startDateTime);
             if (existingGame != null)
             {
-                // TODO - Add link to existing game details later when that page is created
                 ViewData.ModelState.AddModelError("GameExists", "A game already exists with this venue, sport, and time.");
                 PopulateDropdownValues();
                 return View(model);
@@ -101,14 +100,6 @@ namespace PickUpSports.Controllers
 
             string email = User.Identity.GetUserName();
             Contact contact = _contactService.GetContactByEmail(email);
-
-            // If no contact and they made it to this page then this means
-            // user did not initialize profile information
-            if (contact == null)
-            {
-                TempData["UserInitialized"] = false;
-                return RedirectToAction("Create", "Contact");
-            }
 
             // All validation passed so add game to database 
             Game newGame = new Game
@@ -260,12 +251,6 @@ namespace PickUpSports.Controllers
             {
                 // Check if is venue owner. If not, they did not initalize their profile 
                 VenueOwner venueOwner = _venueOwnerService.GetVenueOwnerByEmail(email);
-
-                if (venueOwner == null)
-                {
-                    TempData["UserInitialized"] = false;
-                    return RedirectToAction("Create", "Contact");
-                }
 
                 ViewBag.IsVenueOwner = true;
                 ViewBag.IsCreator = false;
