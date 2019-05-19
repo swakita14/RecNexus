@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using PickUpSports.Interface;
 using PickUpSports.Interface.Repositories;
@@ -16,13 +15,16 @@ namespace PickUpSports.Services
         private readonly ISportRepository _sportRepository;
         private readonly IPickUpGameRepository _pickUpGameRepository;
         private readonly IGameRepository _gameRepository;
+        private readonly IFriendRepository _friendRepository;
 
         public ContactService(IContactRepository contactRepository, 
             ITimePreferenceRepository timePreferenceRepository, 
             ISportPreferenceRepository sportPreferenceRepository, 
             IReviewRepository reviewRepository, 
             ISportRepository sportRepository, 
-            IPickUpGameRepository pickUpGameRepository, IGameRepository gameRepository)
+            IPickUpGameRepository pickUpGameRepository, 
+            IGameRepository gameRepository, 
+            IFriendRepository friendRepository)
         {
             _contactRepository = contactRepository;
             _timePreferenceRepository = timePreferenceRepository;
@@ -31,6 +33,7 @@ namespace PickUpSports.Services
             _sportRepository = sportRepository;
             _pickUpGameRepository = pickUpGameRepository;
             _gameRepository = gameRepository;
+            _friendRepository = friendRepository;
         }
 
         public Contact GetContactByEmail(string email)
@@ -136,6 +139,19 @@ namespace PickUpSports.Services
                 }
             }
 
+            // Delete friends 
+            var usersFriends = _friendRepository.GetContactsFriends(contact.ContactId);
+            foreach (var usersFriend in usersFriends)
+            {
+                _friendRepository.Delete(usersFriend);
+            }
+
+            var friends = _friendRepository.GetFriends(contact.ContactId);
+            foreach (var friend in friends)
+            {
+                _friendRepository.Delete(friend);
+            }
+
             // Remove from Contact table
             _contactRepository.DeleteContact(contact);
         }
@@ -199,6 +215,21 @@ namespace PickUpSports.Services
             {
                 return false;
             }
+        }
+
+        public List<Friend> GetUsersFriends(int contactId)
+        {
+            return _friendRepository.GetContactsFriends(contactId);
+        }
+
+        public List<Friend> GetFriendsOfUser(int friendId)
+        {
+            return _friendRepository.GetFriends(friendId);
+        }
+
+        public Friend AddFriend(Friend friend)
+        {
+            return _friendRepository.AddFriend(friend);
         }
     }
 }

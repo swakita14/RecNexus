@@ -46,19 +46,7 @@ namespace PickUpSports.Controllers
 
             Contact contact = _contactService.GetContactByEmail(userEmail);
             
-            // If username is null, profile was never set up
-            if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
-
             return View(contact);
-        }
-
-        /*
-         * Route user to this page if they don't have any account details
-         */
-        public ActionResult Create()
-        {
-            ViewBag.States = PopulateStatesDropdown();
-            return View();
         }
 
         /*
@@ -91,6 +79,7 @@ namespace PickUpSports.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EditContactViewModel model)
