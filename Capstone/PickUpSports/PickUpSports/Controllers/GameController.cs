@@ -247,7 +247,7 @@ namespace PickUpSports.Controllers
             ViewBag.IsCreator = false;
             ViewBag.IsVenueOwner = false;
             ViewBag.IsThisVenueOwner = false;
-
+            ViewBag.IsRejected = false;
             //validating the id to make sure its not null
             if (id == 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -281,6 +281,10 @@ namespace PickUpSports.Controllers
                 ViewBag.IsCreator = true;
                 ViewBag.IsVenueOwner = false;
                 ViewBag.IsThisVenueOwner = false;
+                if (game.GameStatusId == 4)
+                {
+                    ViewBag.IsRejected = true;
+                }
             }            
 
             //if there are no games then return: 
@@ -324,6 +328,7 @@ namespace PickUpSports.Controllers
             ViewBag.IsCreator = false;
             ViewBag.IsVenueOwner = false;
             ViewBag.IsThisVenueOwner = false;
+            ViewBag.IsRejected = false;
 
             //Find all the players that are currently signed up for the game
             List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
@@ -354,6 +359,12 @@ namespace PickUpSports.Controllers
             fileContents = fileContents.Replace("{SPORT}", _gameService.GetSportNameById(game.SportId));
             fileContents = fileContents.Replace("{STARTTIME}", returnModel.StartDate);
             fileContents = fileContents.Replace("{ENDTIME}", returnModel.EndDate);
+
+            //Rejected game doesn't show join or leave button
+            if (game.GameStatusId == 4)
+            {
+                ViewBag.IsRejected = true;
+            }
 
             //If the Reject button was pressed
             if (button.Equals("Reject"))
@@ -393,7 +404,7 @@ namespace PickUpSports.Controllers
 
                 //save it       
                 _gameService.AcceptGame(game.GameId);
-            }
+            }           
 
             //If the Join Game button was pressed 
             if (button.Equals("Join Game"))
@@ -410,13 +421,6 @@ namespace PickUpSports.Controllers
                 {
                     //error message
                     ViewData.ModelState.AddModelError("SignedUp", "Sorry, this game is canceled, you can not join this game");
-                    return View(returnModel);
-                }
-                //if the game is rejected by the venue owner, users are prevent to join this game
-                if (game.GameStatusId == 4)
-                {
-                    //error message
-                    ViewData.ModelState.AddModelError("RejectedGame", "Sorry, this game is rejected by the venue owner, you can not join this game");
                     return View(returnModel);
                 }
                 //check if the person is already signed up for the game 
