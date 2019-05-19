@@ -18,6 +18,7 @@ namespace PickUpSportsTests
         private readonly Mock<ISportRepository> _sportRepositoryMock;
         private readonly Mock<IPickUpGameRepository> _pickUpGameRepositoryMock;
         private readonly Mock<IGameRepository> _gameRepositoryMock;
+        private readonly Mock<IFriendRepository> _friendRepositoryMock;
         private readonly ContactService _sut;
 
         public ContactServiceTests()
@@ -29,8 +30,9 @@ namespace PickUpSportsTests
             _sportRepositoryMock = new Mock<ISportRepository>();
             _pickUpGameRepositoryMock = new Mock<IPickUpGameRepository>();
             _gameRepositoryMock = new Mock<IGameRepository>();
+            _friendRepositoryMock = new Mock<IFriendRepository>();
 
-            _sut = new ContactService(_contactRepositoryMock.Object, _timeRepositoryMock.Object, _sportPrefRepositoryMock.Object, _reviewRepositoryMock.Object, _sportRepositoryMock.Object, _pickUpGameRepositoryMock.Object, _gameRepositoryMock.Object);
+            _sut = new ContactService(_contactRepositoryMock.Object, _timeRepositoryMock.Object, _sportPrefRepositoryMock.Object, _reviewRepositoryMock.Object, _sportRepositoryMock.Object, _pickUpGameRepositoryMock.Object, _gameRepositoryMock.Object, _friendRepositoryMock.Object);
         }
 
 
@@ -172,6 +174,8 @@ namespace PickUpSportsTests
                 .Returns(new List<PickUpGame>());
             _gameRepositoryMock.Setup(x => x.GetAllGames())
                 .Returns(new List<Game>());
+            _friendRepositoryMock.Setup(x => x.GetContactsFriends(contact.ContactId)).Returns(new List<Friend>());
+            _friendRepositoryMock.Setup(x => x.GetFriends(contact.ContactId)).Returns(new List<Friend>());
 
             // Act
             _sut.DeleteUser(contact);
@@ -200,6 +204,8 @@ namespace PickUpSportsTests
                 .Returns(new List<Review>());
             _pickUpGameRepositoryMock.Setup(x => x.GetPickUpGameListByContactId(contact.ContactId))
                 .Returns(new List<PickUpGame>());
+            _friendRepositoryMock.Setup(x => x.GetContactsFriends(contact.ContactId)).Returns(new List<Friend>());
+            _friendRepositoryMock.Setup(x => x.GetFriends(contact.ContactId)).Returns(new List<Friend>());
 
             // Return a game that has a players
             _gameRepositoryMock.Setup(x => x.GetAllGames())

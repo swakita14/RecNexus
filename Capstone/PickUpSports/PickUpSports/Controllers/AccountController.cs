@@ -550,6 +550,12 @@ namespace PickUpSports.Controllers
 
             if (ModelState.IsValid)
             {
+                if (_contactService.UsernameIsTaken(model.Username))
+                {
+                    ModelState.AddModelError("Username", "Username already taken");
+                    return View(model);
+                }
+
                 // Get the information about the user from the external login provider
                 var info = await AuthenticationManager.GetExternalLoginInfoAsync();
                 if (info == null)
@@ -566,8 +572,15 @@ namespace PickUpSports.Controllers
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                        // Redirect user to create Contact profile because new user
-                        return RedirectToAction("Create", "Contact");
+                        Contact newContact = new Contact
+                        {
+                            Username = model.Username,
+                            Email = model.Email
+                        };
+
+                        _contactService.CreateContact(newContact);
+
+                        return RedirectToAction("Details", "Contact");
                     }
                 }
                 AddErrors(result);
