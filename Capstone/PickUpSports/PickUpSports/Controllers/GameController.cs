@@ -140,7 +140,7 @@ namespace PickUpSports.Controllers
 
             //send notification to users once a new game created and it includes the user's preference
             List<SportPreference> checkSportPreference = _contactService.GetAllSportPreferences();
-
+            
             foreach (var item in checkSportPreference)
             {
                 if (item.SportID == model.SportId && item.ContactID != newGame.ContactId)
@@ -150,6 +150,7 @@ namespace PickUpSports.Controllers
                     fileContents = fileContents.Replace("{INFO}", "We have a new game you may interested!");
                     var subject = "New Game At Rec Nexus";
                     SendMessage(newGame, item.ContactID, fileContents, subject);
+                    
                 }
             }
 
@@ -493,7 +494,7 @@ namespace PickUpSports.Controllers
             //Initializing Message Details 
             string sendingToEmail = "";
             string messageContent = "";
-          
+
             //Either sending the message to the Creator of the game or the Players in the game
             if (game.ContactId == playerId)
             {
@@ -506,7 +507,7 @@ namespace PickUpSports.Controllers
                 if (_contactService.GetContactById(playerId) != null)
                 {
                     //emailing to the players on the game list
-                    sendingToEmail = _contactService.GetContactById(playerId).Email;                    
+                    sendingToEmail = _contactService.GetContactById(playerId).Email;
                 }
                 else
                 {
@@ -520,7 +521,7 @@ namespace PickUpSports.Controllers
             {
                 Body = messageContent,
                 Subject = subject
-                
+
             };
 
             //Send the Message
