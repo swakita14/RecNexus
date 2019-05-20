@@ -87,7 +87,6 @@
         <li>
             @foreach (var venue in Model.Venues)
             {
-                <div class="container">
                     <div class="row">
                         @Html.DisplayFor(model => venue.Name)
                     </div>
@@ -104,8 +103,6 @@
                     <div class="row">
                         <br/>@Html.ActionLink("Click here for details", "Details", new {id = venue.VenueId})
                     </div>
-
-                </div>
                 <hr/>
             }
         </li>

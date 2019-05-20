@@ -26,7 +26,7 @@
                 
                 <br/>
                 <div class="row" id="BusinessHours">
-                    <b>Hours of Operation:</b>
+                    <h5>Hours of Operation:</h5>
                 </div>
                 @if (Model.BusinessHours.Count > 0)
                 {
@@ -48,7 +48,7 @@
                 <div class="row" id="AverageRating">
                     @if (Model.AverageRating != null)
                     {
-                        <b>Average Review Rating:</b> @Model.AverageRating
+                        <h5>Average Review Rating:</h5> @Model.AverageRating
                     }
                 </div>
                 
@@ -87,7 +87,7 @@
     <div class="container" style="padding-top: 30px">
         <div class="row">
             <div class="col-md-6" id="Reviews">
-                <center><b>@Model.Name Reviews</b></center>
+                <center><h5>@Model.Name Reviews</h5></center>
                 <br />@Html.ActionLink("Leave a review!", "Create", "Review", new { id = @Model.VenueId }, null)    
                 <br /><br/>
                 @{
@@ -96,7 +96,7 @@
             </div>
 
             <div class="col-md-6" id="Games">
-                <center><b>Games coming up at @Model.Name</b></center>
+                <center><h5>Games coming up at @Model.Name</h5></center>
                 <br />@Html.ActionLink("Start a game!", "CreateGame", "Game")
                 <br /><br/>
                 @{

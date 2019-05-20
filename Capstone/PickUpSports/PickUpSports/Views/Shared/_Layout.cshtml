@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -11,7 +9,7 @@
 </head>
 <body>
 
-    <div class="my-nav"  style="margin-bottom: 30px;">
+    <div class="my-nav" style="margin-bottom: 30px;">
         <div class="navbar navbar-default navbar-fixed-top scrollspy_menu mnav navbar__initial" role="navigation">
             <div class="container">
                 <div class="navbar-header mnav">
@@ -46,8 +44,8 @@
             </div>
         </div>
     </div>
-   
-@RenderBody()
+
+    @RenderBody()
     @RenderSection("PageScript", required: false)
 
 

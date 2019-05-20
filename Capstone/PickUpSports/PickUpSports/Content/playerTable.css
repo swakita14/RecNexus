@@ -1,74 +1,27 @@
 ﻿@import "https://fonts.googleapis.com/css?family=Montserrat:300,400,700";
-.rwd-table {
-    margin: 1em 0;
-    min-width: 300px;
-}
-.rwd-table tr {
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-}
-.rwd-table th {
-    display: none;
-}
-.rwd-table td {
-    display: block;
-}
-.rwd-table td:first-child {
-    padding-top: .5em;
-}
-.rwd-table td:last-child {
-    padding-bottom: .5em;
-}
-.rwd-table td:before {
-    content: attr(data-th) ": ";
-    font-weight: bold;
-    width: 6.5em;
-    display: inline-block;
-}
-@media (min-width: 480px) {
-    .rwd-table td:before {
-        display: none;
-    }
-}
-.rwd-table th, .rwd-table td {
-    text-align: left;
-}
-@media (min-width: 480px) {
-    .rwd-table th, .rwd-table td {
-        display: table-cell;
-        padding: .25em .5em;
-    }
-    .rwd-table th:first-child, .rwd-table td:first-child {
-        padding-left: 0;
-    }
-    .rwd-table th:last-child, .rwd-table td:last-child {
-        padding-right: 0;
-    }
-}
-
-
 
 .rwd-table {
-    background: #00144B;
-    color: #fff;
-    border-radius: .4em;
-    overflow: hidden;
+    background: #2F2D2E;
+    border: 1px solid #99C24D !important;
 }
-    .rwd-table tr {
-        border-color: #6B6B6B;
-    }
+
+.rwd-table tr { border: 1px solid #99C24D !important; }
+
 .rwd-table th, .rwd-table td {
+    border: 1px solid #99C24D !important;
     margin: .5em 1em;
 }
+
 @media (min-width: 480px) {
     .rwd-table th, .rwd-table td {
+        border: 1px solid #99C24D !important;
         padding: 1em !important;
         text-align: center;
-
     }
 }
-.rwd-table th, .rwd-table td:before {
-    color: #FCC521;
-    text-align: center;
 
+.rwd-table th, .rwd-table td:before {
+    border: 1px solid #99C24D !important;
+    color: #F18F01;
+    text-align: center;
 }

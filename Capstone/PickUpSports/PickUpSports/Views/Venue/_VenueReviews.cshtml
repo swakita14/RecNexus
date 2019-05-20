@@ -8,15 +8,15 @@
             <li class="list-group-item">
                 @if (reviews.Author != null)
                 {
-                    <h5><b>Author:</b> @reviews.Author</h5>
+                    <h5><b>Author:</b>: @reviews.Author</h5>
                 }
                 else
                 {
                     <h5><b>Author:</b> <i>anonymous</i></h5>
                 }
 
-                <h5><b>Rating: </b>@reviews.Rating</h5>
-                <h5><b>Review Date:</b> @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</h5>
+                <p><b>Rating: </b>@reviews.Rating</p>
+                <p><b>Review Date:</b> @String.Format("{0:M/d/yyyy}", reviews.Timestamp)</p>
                 <p>@reviews.Comments</p>
                 
                 @if (reviews.ReviewBelongsToUser)
