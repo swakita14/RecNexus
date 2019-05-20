@@ -35,11 +35,11 @@ else
 {
     if (Model.IsPublicProfileView)
     {
-        <h4>This user hasn't joined any games yet.</h4>
+        <h6>This user hasn't joined any games yet.</h6>
     }
     else
     {
-        <h4>You have not joined any games yet.</h4>
+        <h6>You have not joined any games yet.</h6>
         @Html.ActionLink("View games to join!", "GameList", "Game", null, null)
     }
 }

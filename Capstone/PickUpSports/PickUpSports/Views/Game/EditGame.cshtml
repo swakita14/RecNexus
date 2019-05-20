@@ -3,7 +3,8 @@
     ViewBag.Title = "Edit Your Game";
 }
 
-@Styles.Render("https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css")
+<link rel="stylesheet" type="text/css" href="../../Content/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="../../Content/Site.css" />
 
 @section Scripts
 {
@@ -25,7 +26,7 @@
                     @Html.HiddenFor(model => model.GameId)
                     @Html.HiddenFor(model => model.VenueId)
                     @Html.HiddenFor(model => model.SportId)
-                    <legend class="text-center header" id="header">Edit Game Detail</legend>
+                    <h4>Edit Game Detail</h4>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Venue)
                         @Html.DropDownList("Venue", null, new { @class = "form-control" })
@@ -40,19 +41,19 @@
                     </div>
                     <div class="form-group" style="padding-top: 20px">
                         @Html.DisplayNameFor(x => x.DateRange)
-                        @Html.EditorFor(x => x.DateRange, new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" }})
+                        @Html.EditorFor(x => x.DateRange, new { htmlAttributes = new { @class = "form-control", name = "datetimes", @id = "datetimes" } })
                     </div>
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <div class="row">
                             <div class="col-md-12">
-                                @Html.ValidationSummary(false, null, new {@class = "text-danger"})
+                                @Html.ValidationSummary(false, null, new { @class = "text-danger" })
 
                             </div>
                         </div>
                     }
 
-                    <button type="submit" class="btn btn-primary">Edit Information</button>
+                    <button type="submit" id="submit" class="btn btn-primary">Edit Information</button>
 
 
                 </fieldset>

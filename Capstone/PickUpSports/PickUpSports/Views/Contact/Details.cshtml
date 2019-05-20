@@ -44,7 +44,7 @@
     <div class="container" style="padding-top: 30px">
         <div class="row">
             <div class="col-md-6">
-                <center><b >Your Sport Preferences</b></center>
+                <center><h5>Your Sport Preferences</h5></center>
                 <br/>
                 @{
                     Html.RenderAction("GetSportPreferences", new {contactId = Model.ContactId, isPublicProfileView = false });
@@ -52,7 +52,7 @@
             </div>
         
             <div class="col-md-6">
-                <center><b >Your Time Preferences</b></center>
+                <center><h5>Your Time Preferences</h5></center>
                 <br/>
                 @{
                     Html.RenderAction("GetTimePreferences", new {contactId = Model.ContactId, isPublicProfileView = false});
@@ -62,13 +62,11 @@
     </div>
 </center>
 
-<hr/>
-
 <center>
     <div class="container" style="padding-top: 30px">
         <div class="row">
             <div class="col-md-6">
-                <center><b>Games You Started</b></center>
+                <center><h5>Games You Started</h5></center>
                 <br />
                 @{
                     Html.RenderAction("GetGamesStartedByUser", new { contactId = Model.ContactId, isPublicProfileView = false });
@@ -76,7 +74,7 @@
             </div>
 
             <div class="col-md-6">
-                <center><b>Games You Joined</b></center>
+                <center><h5>Games You Joined</h5></center>
                 <br />
                 @{
                     Html.RenderAction("GetGamesUserJoined", new { contactId = Model.ContactId, isPublicProfileView = false });

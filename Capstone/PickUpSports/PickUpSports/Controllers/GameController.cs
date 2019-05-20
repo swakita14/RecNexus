@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -8,7 +7,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using PickUpSports.DAL;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
 using PickUpSports.Models.Enums;
@@ -235,12 +233,9 @@ namespace PickUpSports.Controllers
         [HttpGet]
         public ActionResult GameDetails(int id)
         {
-            ViewBag.IsCreator = false;
-            ViewBag.IsVenueOwner = false;
-            ViewBag.IsThisVenueOwner = false;
-            ViewBag.IsRejected = false;
             //validating the id to make sure its not null
             if (id == 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            ViewGameViewModel model = new ViewGameViewModel();
 
             //getting current logged in user information in case they want to join game
             string email = User.Identity.GetUserName();
@@ -252,54 +247,39 @@ namespace PickUpSports.Controllers
             {
                 // Check if is venue owner. If not, they did not initalize their profile 
                 VenueOwner venueOwner = _venueOwnerService.GetVenueOwnerByEmail(email);
+                model.IsCreatorOfGame = false;
+                if (venueOwner.VenueId == game.VenueId) model.IsVenueOwner = true;
+            }
+            else if (_gameService.IsCreatorOfGame(contact.ContactId, game)) 
+            {
+                model.IsCreatorOfGame = true;
+                model.IsVenueOwner = false;
 
-                ViewBag.IsVenueOwner = true;
-                ViewBag.IsCreator = false;
-                if (venueOwner.VenueId == game.VenueId)
+                // Check if logged in user is already a part of this game
+                var allPickUpGames = _gameService.GetPickUpGamesByContactId(contact.ContactId);
+                if (allPickUpGames != null)
                 {
-                    ViewBag.IsThisVenueOwner = true;
+                    var existingPickUpGame = allPickUpGames.FirstOrDefault(x => x.GameId == id);
+                    if (existingPickUpGame == null) model.IsAlreadyJoined = false;
+                    else model.IsAlreadyJoined = true;
+                }
+                else
+                {
+                    model.IsAlreadyJoined = false;
                 }
             }
-            else
-            {
-                if (_gameService.IsCreatorOfGame(contact.ContactId, game))
-                ViewBag.IsCreator = true;
-                ViewBag.IsVenueOwner = false;
-                ViewBag.IsThisVenueOwner = false;
-                if (game.GameStatusId == 4)
-                {
-                    ViewBag.IsRejected = true;
-                }
-            }            
 
-            //if there are no games then return: 
-            if (game == null) return HttpNotFound();
-
-            //creating view model for the page
-            ViewGameViewModel model = new ViewGameViewModel()
-            {
-                EndDate = game.EndTime.ToString(),
-                GameId = game.GameId,
-                Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId),
-                Sport = _gameService.GetSportNameById(game.SportId),
-                StartDate = game.StartTime.ToString(),
-                Venue = _venueService.GetVenueNameById(game.VenueId),
-            };
+            model.EndDate = game.EndTime.ToString();
+            model.GameId = game.GameId;
+            model.Status = Enum.GetName(typeof(GameStatusEnum), game.GameStatusId);
+            model.Sport = _gameService.GetSportNameById(game.SportId);
+            model.StartDate = game.StartTime.ToString();
+            model.Venue = _venueService.GetVenueNameById(game.VenueId);
 
             if (game.ContactId != null)
             {
                 model.ContactId = game.ContactId;
                 model.ContactName = _contactService.GetContactById(game.ContactId).Username;
-            }
-        
-            // Add funtion buttons to the venue owner
-            if (game.GameStatusId == 4)
-            {
-                ViewBag.SubmitValue = "Accept";
-            }
-            if (game.GameStatusId == 3 || game.GameStatusId == 1)
-            {
-                ViewBag.SubmitValue = "Reject";
             }
 
             //returning model to the view
@@ -310,11 +290,6 @@ namespace PickUpSports.Controllers
         [HttpPost]
         public ActionResult GameDetails(ViewGameViewModel model, string button)
         {
-            ViewBag.IsCreator = false;
-            ViewBag.IsVenueOwner = false;
-            ViewBag.IsThisVenueOwner = false;
-            ViewBag.IsRejected = false;
-
             //Find all the players that are currently signed up for the game
             List<PickUpGame> checkGames = _gameService.GetPickUpGameListByGameId(model.GameId);
 
@@ -345,14 +320,8 @@ namespace PickUpSports.Controllers
             fileContents = fileContents.Replace("{STARTTIME}", returnModel.StartDate);
             fileContents = fileContents.Replace("{ENDTIME}", returnModel.EndDate);
 
-            //Rejected game doesn't show join or leave button
-            if (game.GameStatusId == 4)
-            {
-                ViewBag.IsRejected = true;
-            }
-
             //If the Reject button was pressed
-            if (button.Equals("Reject"))
+            if (button.Equals("Reject Game"))
             {               
                 returnModel.Status = Enum.GetName(typeof(GameStatusEnum), 4);
                 if (game.ContactId != null)
@@ -371,7 +340,7 @@ namespace PickUpSports.Controllers
                 _gameService.RejectGame(game.GameId);
             }
             //If the Reject button was pressed
-            if (button.Equals("Accept"))
+            if (button.Equals("Accept Game"))
             {
                 returnModel.Status = Enum.GetName(typeof(GameStatusEnum), 3);
 
@@ -394,7 +363,6 @@ namespace PickUpSports.Controllers
             //If the Join Game button was pressed 
             if (button.Equals("Join Game"))
             {
-
                 if (game.ContactId != null)
                 {
                     returnModel.ContactId = game.ContactId;

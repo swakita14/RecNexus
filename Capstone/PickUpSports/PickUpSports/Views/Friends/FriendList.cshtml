@@ -4,33 +4,28 @@
 }
 
 <head>
-    <link href="@Url.Content("/Content/playerTable.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("/Content/playerTable.css")" rel="stylesheet" type="text/css"/>
 </head>
 
 
 <div class="container">
     <div class="row">
-        <fieldset>
-            <legend class="text-center header" id="header">Friends List</legend>
-
-
-        </fieldset>
-
-
-
+        <h4>Friends List</h4>
     </div>
     @if (!ViewData.ModelState.IsValid)
     {
         <div class="row">
             <div class="col-md-12">
-                @Html.ValidationSummary(false, null, new {@class = "text-danger", @id ="error-msg"})
+                @Html.ValidationSummary(false, null, new {@class = "text-danger", id = "error-msg"})
 
             </div>
         </div>
     }
     @if (Model.Count == 0)
     {
-        <center><h2>You currently have no friends.</h2></center>
+        <center>
+            <h2>You currently have no friends.</h2>
+        </center>
     }
     else
     {
@@ -38,8 +33,6 @@
             <table class="table rwd-table" id="playerTable">
                 <tr>
                     <th>@Html.DisplayName("Username:")</th>
-                    <th>@Html.DisplayName("Email:")</th>
-                    <th>@Html.DisplayName("Phone Number:")</th>
                 </tr>
 
 
@@ -49,16 +42,12 @@
                     @Html.HiddenFor(model => player.ContactFriendId)
 
                     <tr>
-                        <td>@Html.DisplayFor(model => player.FriendName)</td>
-                        <td><a href="mailto:@Html.DisplayFor(model => player.FriendEmail)">@Html.DisplayFor(model => player.FriendEmail)</a></td>
-                        <td>@Html.DisplayFor(model => player.FriendNumber)</td>
+                        <td>@Html.ActionLink(player.FriendName, "PlayerProfile", "Contact", new {id = player.ContactFriendId}, null)</td>
                     </tr>
                 }
-
-
             </table>
         </div>
     }
 
-   
+
 </div>
