@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="form-box">
-                <h2>Find the Most Popular Venue for Each Sport!</h2>
+                <h5>Find the Most Popular Venue for Each Sport!</h5>
                 <form role="form" id="trend-form">
                     @if (!ViewData.ModelState.IsValid)
                     {
@@ -38,7 +38,7 @@
                     </div>
 
                     <div id="result">
-                        <h2>@ViewBag.myData</h2>
+                        <h5>@ViewBag.myData</h5>
                         <center>
                         @if (ViewBag.myData != null)
                         {

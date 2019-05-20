@@ -40,21 +40,22 @@
 <div class="row" style="padding-top: 30px">
     @if (ViewBag.IsOwner)
     {
-        <div id="calender" style="margin: auto; width: 75%; border: 1px solid black; padding: 10px;"></div>
-
+        <div id="calender" style="margin: auto; width: 80%; border: 1px solid black; padding: 10px;"></div>
              <div id="myModal" class="modal fade" role="dialog">
-                 <div class="modal-dialog">
-                     <div class="modal-content">
+                 <div class="modal-dialog"> 
+                     <div class="modal-content" style="background-color: #2F2D2E">
                          <div class="modal-header">
                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                             <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                             <h5 class="modal-title"><span id="eventTitle"></span></h5>
                          </div>
                          <div class="modal-body">
                              <p id="pDetails"></p>
                          </div>
                          <div class="modal-footer">
-                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                         </div>
+                             <center>
+                                 <button type="button" class="btn btn-default" id="submit" data-dismiss="modal">Close</button>
+                             </center>
+                             </div>
                      </div>
                  </div>
              </div>
@@ -69,19 +70,16 @@
     <!-- Modal -->
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirmRemove" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color: #2F2D2E">
                 <div class="modal-header">
-
                     <h5 class="modal-title" id="confirmRemove">New Message for @Model.FirstName @Model.LastName</h5>
                     <br />
                     @Html.LabelFor(x => x.MessageSubject)
                     @Html.EditorFor(x => x.MessageSubject, new { htmlAttributes = new { @class = "form-control", placeholder = "Subject" } })
-                    @Html.ValidationMessageFor(x => x.MessageSubject, "Please enter a subject", new { @class = "text-danger" })
                 </div>
                 <div class="modal-body">
                     @Html.LabelFor(x => x.MessageBody)
                     @Html.TextAreaFor(x => x.MessageBody, new { @class = "form-control", rows = 5, placeholder = "Questions, Comments, or Concerns" })
-                    @Html.ValidationMessageFor(x => x.MessageBody, "This section cannot be empty", new { @class = "text-danger" })
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

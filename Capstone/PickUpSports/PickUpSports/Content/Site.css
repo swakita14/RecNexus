@@ -1,10 +1,12 @@
-﻿/* Set padding to keep content from hitting the edges */
+﻿@import "https://fonts.googleapis.com/css?family=Montserrat:300,400,700";
+@import "https://fonts.googleapis.com/css?family=Anton:300,400,700";
+
 body {
-    background-color: #FDFAFC;
+    background-color: #2E4057;
     padding-bottom: 20px;
     padding-top: 70px;
-    font: 1.2em/1.4 'Arial', sans-serif !important;
-    color: #00144B;
+    font: 17px 'Montserrat', sans-serif !important;
+    color: white;
 }
 
 .tooltip-inner {
@@ -13,109 +15,80 @@ body {
     border: 1px solid #000;
 }
 
+a:link, :visited {
+    color: #048BA8;
+}
+a:hover {
+    color: #99C24D;
+}
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
 
-.dl-horizontal dt { white-space: normal; }
+.dl-horizontal dt {
+    white-space: normal;
+}
 
 /* Set width on the form input elements since they're 100% wide by default */
-
 input,
 select,
 textarea { max-width: 1000px; }
 
-.header {
-    color: #36A0FF;
-    font-size: 27px;
-    padding: 10px;
-}
-
-.bigicon {
-    color: #36A0FF;
-    font-size: 30px;
-}
-
 #Status { color: red; }
-
-.googleButton {
-    background: url(../Content/images/googleSignIn.png) no-repeat;
-    border: none;
-    cursor: pointer;
-}
 
 .map-canvas {
     height: 400px;
     width: 100%;
 }
 
-.body-content { padding-top: 1em; }
-
-.active { border-top: 2px solid #ff6a00; }
-
-.place-rating {
-    background-color: #F0F0F0;
-    border: 1px solid;
-    border-color: #989898;
-    border-radius: 5px;
-    font-size: 16px;
-    padding: 10px;
-}
-
-.placed-rating hr { margin-bottom: 20px; }
-
 /* For venue and pick up games list */
-
 .rolldown-list {
-    margin: 0;
-    padding: 0;
-    text-align: left;
+    margin: auto;
+    max-width: 500px;
+    text-align: center;
 }
 
-.rolldown-list li {
-    color: #FCC521;
-    display: block;
-    font: 1.2em/1.4 'Oswald', sans-serif;
-    list-style: none;
-    margin-bottom: .125em;
-    padding: 1em;
-    text-transform: uppercase;
-}
+    .rolldown-list li {
+        color: #99C24D;
+        list-style: none;
+        margin-bottom: .125em;
+        padding: 1em;
+        text-transform: uppercase;
+        margin: auto;
+        max-width: 500px;
+    }
 
     .rolldown-list a {
-        color: #00144B;
+        color: #048BA8;
         margin-bottom: .125em;
+        border-bottom: 1px solid white;
         text-transform: uppercase;
     }
 
-.rolldown-list li {
-    animation: rolldown .7s 1;
-    animation-fill-mode: forwards;
-    transform-origin: 50% 0;
-    visibility: hidden;
-}
+        .rolldown-list a:hover {
+            color: #F18F01;
+        }
+    .rolldown-list li {
+        animation: rolldown .10s 1;
+        animation-fill-mode: forwards;
+        transform-origin: 50% 0;
+        visibility: hidden;
+        margin: auto;
+        max-width: 500px;
 
-.rolldown-list li:nth-child(2n) { background-color: #6B6B6B; }
+    }
 
-.rolldown-list li:nth-child(2n + 1) { background-color: #6B6B6B; }
+        .rolldown-list li:nth-child(2n) {
+            background-color: #2F2D2E;
+            margin: auto;
+            max-width: 500px;
+        }
 
-#myList {
-    left: 50%;
-    margin-left: -25%;
-    position: absolute;
-    width: 50%;
-}
-
-#btnReload {
-    background: #ccc;
-    border: none;
-    color: #333;
-    float: right;
-    padding: .5em 1em;
-    text-transform: uppercase;
-}
-
-#btnReload:hover { background: #ddd; }
+        .rolldown-list li:nth-child(2n + 1) {
+            background-color: #2F2D2E;
+            margin: auto;
+            max-width: 500px;
+        }
 
 @keyframes rolldown {
     0% {
@@ -134,33 +107,13 @@ textarea { max-width: 1000px; }
     }
 }
 
-body {
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-feature-settings: "kern", "liga", "pnum";
-    -webkit-font-smoothing: antialiased;
-    color: #3d3e44;
-    font-family: "Hind", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-    font-feature-settings: "kern", "liga", "pnum";
-    font-size: .9rem;
-    line-height: 1.7;
-    min-height: 100vh;
-    min-width: 320px;
-}
 
 /* For create game form */
-
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    -webkit-font-feature-settings: "kern", "liga", "pnum";
-    -webkit-font-smoothing: antialiased;
-    color: #444;
-    font-family: "Hind", "Calibre", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-    font-feature-settings: "kern", "liga", "pnum";
-}
-
 .form-box {
     margin: auto;
     padding-top: 20px;
     width: 50%;
+
 }
 
 .form-control {
@@ -175,33 +128,93 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     width: 100%;
 }
 
-.form-box h1 {
-    color: #00144B;
+.form-box h1, h2, h4 {
+    color: #2F2D2E;
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
+    font-family: 'Anton', sans-serif;
+    font-size: 55px;
+    letter-spacing: 5px;
+    text-shadow: -1px 0 #99C24D, 0 1px #99C24D, 1px 0 #99C24D, 0 -1px #99C24D;
+    padding-bottom: 15px;
 }
 
-.form-box h2 {
-    color: #00144B;
-    font-weight: bold;
+h5 {
+    color: #99C24D;
+    font-size: 20px;
     text-align: center;
     text-transform: uppercase;
 }
 
-.form-box h4 {
-    color: #00144B;
+h6 {
+    color: #F18F01;
+    font-size: 16px;
     text-align: center;
-    text-transform: uppercase;
-}
-
-.form-box h5 {
-    color: #00144B;
-    text-align: center;
-    text-transform: uppercase;
 }
 
 .form-box h1 span { font-weight: lighter; }
+
+#formField {
+    border: 2px solid #048BA8;
+    background: none;
+    display: block;
+    padding: 15px 15px;
+    width: 350px;
+    outline: none;
+    color: white;
+    border-radius: 25px;
+    text-align: center;
+    transition: 250ms width ease, 250ms border-color ease;
+}
+
+#formField:hover{
+    width: 370px;
+}
+
+    #formField:focus {
+        width: 390px;
+        border-color: #99C24D;
+    }
+
+#submit {
+    border: 2px solid #99C24D;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    padding: 15px 40px;
+    outline: none;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 200;
+    transition: 250ms background ease;
+    -webkit-transition: 250ms background ease;
+    -moz-transition: 250ms background ease;
+    -o-transition: 250ms background ease;
+}
+
+#password {
+    border: 2px solid #048BA8;
+    background: none;
+    display: block;
+    padding: 15px 15px;
+    width: 350px;
+    outline: none;
+    color: white;
+    border-radius: 25px;
+    text-align: center;
+    transition: 250ms width ease, 250ms border-color ease;
+}
+/************** 
+   On Hover
+***************/
+    #submit:hover {
+        background: #048BA8;
+    }
+
 
 #warning {
     color: red;
@@ -220,12 +233,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 
 /* Navbar CSS*/
-
-html {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    font-size: 12px;
-}
-
 .pad-top { padding-top: 70px; }
 
 .my-nav a {
@@ -904,7 +911,11 @@ html {
 
 /* Logo link color in Navbar*/
 
-.my-nav .navbar-default.mnav .navbar-brand.mnav { color: #FC9D23; }
+    .my-nav .navbar-default.mnav .navbar-brand.mnav {
+        font-size: 20px;
+        color: #F18F01;
+        text-shadow: -1px 0 black, 0 1px black,, 1px 0 black,, 0 -1px black,;
+    }
 
 .my-nav .navbar-default.mnav .navbar-brand.mnav:hover, .my-nav .navbar-default.mnav .navbar-brand.mnav:focus {
     background-color: transparent;
@@ -915,17 +926,21 @@ html {
 
 /* Font link color in Navbar*/
 
-.my-nav .navbar-default.mnav .navbar-nav.mnav > li > a { color: #FC9D23; }
+    .my-nav .navbar-default.mnav .navbar-nav.mnav > li > a {
+        font-size: 14px;
+        color: #F18F01;
+        text-shadow: -1px 0 black, 0 1px black,, 1px 0 black,, 0 -1px black,;
+    }
 
-.my-nav .navbar-default.mnav .navbar-nav.mnav > li > a:hover, .my-nav .navbar-default.mnav .navbar-nav.mnav > li > a:focus {
-    background-color: transparent;
-    color: #00144B;
-}
+        .my-nav .navbar-default.mnav .navbar-nav.mnav > li > a:hover, .my-nav .navbar-default.mnav .navbar-nav.mnav > li > a:focus {
+            background-color: transparent;
+            color: #048BA8;
+        }
 
-.my-nav .navbar-default.mnav .navbar-nav.mnav > .active > a, .my-nav .navbar-default.mnav .navbar-nav.mnav > .active > a:hover, .my-nav .navbar-default.mnav .navbar-nav.mnav > .active > a:focus {
-    background-color: transparent;
-    color: #00144B;
-}
+    .my-nav .navbar-default.mnav .navbar-nav.mnav > .active > a, .my-nav .navbar-default.mnav .navbar-nav.mnav > .active > a:hover, .my-nav .navbar-default.mnav .navbar-nav.mnav > .active > a:focus {
+        background-color: transparent;
+        color: #048BA8;
+    }
 
 .my-nav .navbar-default.mnav .navbar-nav.mnav > .disabled > a, .my-nav .navbar-default.mnav .navbar-nav.mnav > .disabled > a:hover, .my-nav .navbar-default.mnav .navbar-nav.mnav > .disabled > a:focus {
     background-color: transparent;
@@ -968,7 +983,9 @@ html {
 
 .my-nav .navbar-default.mnav .navbar-link.mnav { color: white; }
 
-.my-nav .navbar-default.mnav .navbar-link:hover { color: #00144B; }
+.my-nav .navbar-default.mnav .navbar-link:hover {
+    color: #048BA8;
+}
 
 .my-nav .navbar-default.mnav .btn-link { color: white; }
 

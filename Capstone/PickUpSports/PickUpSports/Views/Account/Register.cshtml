@@ -26,21 +26,24 @@
                     <div class="form-group">
                         <div class="col-md-12">
 
-                            @Html.TextBoxFor(m => m.Email, new {@class = "form-control", placeholder = "Email Address"})
+                            @Html.TextBoxFor(m => m.Email, new {@class = "form-control", id = "formField", placeholder = "Email Address"})
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(m => m.FirstName, new {@class = "form-control", placeholder = "First Name"})
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.FirstName, new {@class = "form-control", id = "formField", placeholder = "First Name"})
                         </div>
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(m => m.LastName, new {@class = "form-control", placeholder = "Last Name"})
+                    </div>
+                <div class="form-group">
+
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.LastName, new {@class = "form-control", id = "formField", placeholder = "Last Name"})
 
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            @Html.TextBoxFor(m => m.Username, new {@class = "form-control", placeholder = "Username"})
+                            @Html.TextBoxFor(m => m.Username, new {@class = "form-control", id = "formField", placeholder = "Username"})
                         </div>
                     </div>
                     <div class="form-group">
@@ -50,7 +53,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            @Html.PasswordFor(m => m.ConfirmPassword, new {@class = "form-control", placeholder = "Confirm Password"})
+                            @Html.PasswordFor(m => m.ConfirmPassword, new {@class = "form-control", id = "formField", placeholder = "Confirm Password"})
                         </div>
                     </div>
 
@@ -62,15 +65,17 @@
                     </div>
                     <div class="form-group">
                         <center>
-                            <input type="submit" class="btn btn-default" value="Register" />
+                            <input type="submit" class="btn btn-default" id="submit" value="Register" />
                         </center>
+                    </div>
+
+                    <hr/>
+                    <div class="form-group">
+                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel {ReturnUrl = ViewBag.ReturnUrl})
                     </div>
                 }
                 
-                <hr/>
-                <div class="form-group">
-                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel {ReturnUrl = ViewBag.ReturnUrl})
-                </div>
+
 
             </section>
         </div>

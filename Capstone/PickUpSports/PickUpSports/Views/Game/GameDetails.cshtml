@@ -1,4 +1,5 @@
-﻿@model PickUpSports.Models.ViewModel.GameController.ViewGameViewModel
+﻿@using PickUpSports.Models.Enums
+@model PickUpSports.Models.ViewModel.GameController.ViewGameViewModel
 @{
     ViewBag.Title = "Game Details";
 }
@@ -17,7 +18,7 @@
     <div class="row">
         <div class="well well-sm">
             <fieldset>
-                <legend class="text-center header" id="header">Game Detail</legend>
+                <h4>Game Detail</h4>
                 <div class="form-group">
                     @Html.LabelFor(model => model.ContactName)
                     @if (Model.ContactId == null)
@@ -70,31 +71,39 @@
                             @Html.HiddenFor(model => model.GameId)
                             @Html.HiddenFor(model => model.ContactId)
                             @Html.HiddenFor(model => model.PickUpGameId)
-                            if (ViewBag.IsVenueOwner)
+                            if (Model.IsVenueOwner)
                             {
-                                if (ViewBag.IsThisVenueOwner)
+                                if (Model.Status == "Rejected")
                                 {
-                                    <input type="submit" name="button" class="btn btn-default" value=@ViewBag.SubmitValue />
+                                    <input type="submit" name="button" class="btn btn-default" id="submit" value="Accept Game"/>
+                                }
+
+                                if (Model.Status == "Open" || Model.Status == "Accepted")
+                                {
+                                    <input type="submit" name="button" class="btn btn-default" id="submit" value="Reject Game"/>
                                 }
                             }
-                            else if(ViewBag.IsRejected)
+                            else if(Model.Status == "Rejected")
                             {
                                 <p>The game is rejected, you can't join this game</p>
                             }
                             else
                             {
-                                if (ViewBag.IsCreator)
+                                // User created game so shouldn't have option to leave or join, just edit
+                                if (Model.IsCreatorOfGame)
                                 {
-                                    <input type="button" class="btn btn-default" value="Edit Information" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'" />
+                                    <input type="button" class="btn btn-default" value="Edit Information" id="submit" onclick="location.href = '@Url.Action("EditGame", "Game", new {id = Model.GameId})'" />
                                 }
+                                // User is not creator but they already joined this game, only show leave button
+                                else if(Model.IsAlreadyJoined)
+                                {
+                                    <input type="submit" name="button" value="Leave Game" id="submit"  class="btn btn-default" />
+                                }
+                                // User is not creator and is not joined, only show joined game option
                                 else
                                 {
-
-                                    <input type="submit" name="button" value="Join Game" class="btn btn-default" />
-                                    <input type="submit" name="button" value="Leave Game" class="btn btn-default" />
-
+                                    <input type="submit" name="button" value="Join Game" id="submit"  class="btn btn-default" />
                                 }
-                                <input type="button" class="btn btn-default" value="Invite a friend" onclick="location.href = '@Url.Action("FriendInvite", "Friends", new {gameId = Model.GameId})'" />
                             }
 
 
@@ -112,6 +121,11 @@
     <div id="myList">
 
     </div>
+    
+    @if(Model.Status != "Rejected")
+    {
+        <input type="button" class="btn btn-default" value="Invite a friend" id="submit" onclick="location.href = '@Url.Action("FriendInvite", "Friends", new {gameId = Model.GameId})'" />
 
+    }
 </div>
 
