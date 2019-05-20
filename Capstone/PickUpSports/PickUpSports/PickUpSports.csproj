@@ -429,7 +429,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\cardList.js" />
     <Content Include="Scripts\ChatInit.js" />
     <Content Include="Content\gameTable.css" />
     <Content Include="Content\playerTable.css" />
