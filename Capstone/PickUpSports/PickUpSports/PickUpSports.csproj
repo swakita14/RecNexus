@@ -556,7 +556,6 @@
     <Content Include="Views\VenueOwner\_ModifyVenueOwners.cshtml" />
     <Content Include="Views\Venue\EditVenue.cshtml" />
     <Content Include="Views\Trending\Index.cshtml" />
-    <Content Include="Views\VenueOwner\_VenueOwnerCalendar.cshtml" />
     <Content Include="Views\VenueOwner\Calendar.cshtml" />
     <Content Include="Views\Home\AboutUs.cshtml" />
     <Content Include="Views\Game\CreateGame.cshtml" />

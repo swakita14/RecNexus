@@ -320,7 +320,7 @@ namespace PickUpSports.Controllers
         }
 
         public JsonResult GetEvents(int id)
-        {
+         {
             var gamesAtVenue = _gameService.GetCurrentGamesByVenueId(id);
             var events = new List<EventViewModel>();
 

@@ -105,9 +105,9 @@
             $.ajax({
                 type: "GET",
                 url: "/VenueOwner/GetEvents/" + @Model.VenueId,
-                success: function(data) {
+                success: function (data) {
                     $.each(data,
-                        function(i, v) {
+                        function (i, v) {
                             events.push({
                                 title: v.Subject,
                                 start: moment(v.Start),
@@ -143,10 +143,10 @@
                         $('#myModal #eventTitle').text(calEvent.title);
                         var $description = $('<div/>');
                         $description.append($('<p/>')
-                            .html('<b>Start:</b>' + " " + calEvent.start.format("MMM DD, YYYY HH:mm a")));
+                            .html('<b>Start:</b>' + " " + calEvent.start.format('MMMM Do YYYY, h:mm:ss a')));
                         if (calEvent.end != null) {
                             $description.append($('<p/>')
-                                .html('<b>End:</b>' + " " + calEvent.end.format("MMM DD, YYYY HH:mm a")));
+                                .html('<b>End:</b>' + " " + calEvent.end.format('MMMM Do YYYY, h:mm:ss a')));
                         }
                         $description.append($('<p/>').html('<b>Game status:</b>' + " " + calEvent.gameStatus));
                         console.log(calEvent.gameStatus);
