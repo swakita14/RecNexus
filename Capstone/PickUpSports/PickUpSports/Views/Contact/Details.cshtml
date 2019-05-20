@@ -67,7 +67,7 @@
 <center>
     <div class="container" style="padding-top: 30px">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <center><b>Games You Started</b></center>
                 <br />
                 @{
@@ -75,11 +75,19 @@
                 }
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <center><b>Games You Joined</b></center>
                 <br />
                 @{
                     Html.RenderAction("GetGamesUserJoined", new { contactId = Model.ContactId, isPublicProfileView = false });
+                }
+            </div>
+            
+            <div class="col-md-4">
+                <center><b>Games Rejected by Venue Owner</b></center>
+                <br />
+                @{
+                    Html.RenderAction("GetGamesRejected", new { contactId = Model.ContactId, isPublicProfileView = false });
                 }
             </div>
         </div>
