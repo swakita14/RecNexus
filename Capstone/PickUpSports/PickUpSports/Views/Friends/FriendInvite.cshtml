@@ -4,45 +4,45 @@
     ViewBag.Title = "Invite a friend to a Game";
 }
 
+<h2>Invite a Friend!</h2>
 
 @using (Html.BeginForm("FriendInvite", "Friends", FormMethod.Post))
 {
 <div class="container">
     <div class="row">
         <div class="form-box">
-            <h4>Invite a Friend</h4>
             <form role="form" id="game-form">
+                @Html.HiddenFor(model => model.ContactId)
+                @Html.HiddenFor(model => model.GameId)
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <div class="row">
                         <div class="col-md-12">
-                            @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+                            @Html.ValidationSummary(false, null, new {@class = "text-danger"})
 
                         </div>
                     </div>
                 }
-                
-                @Html.HiddenFor(model => model.ContactId)
-                @Html.HiddenFor(model => model.GameId)
-               
+                @if(ViewBag.HasFriends) {
                 <!-- Friend field -->
-                <div class="form-group" style="padding-top: 20px">
-                    @Html.DropDownListFor(
-                        x => x.FriendId,
-                        new SelectList(ViewBag.Friends, "Key", "Value"),
-                        "Select a Friend",
-                        new {@class = "form-control"})
-                </div>
+                    <div class="form-group" style="padding-top: 20px">
+                        @Html.DropDownListFor(
+                            x => x.FriendId,
+                            new SelectList(ViewBag.Friends, "Key", "Value"),
+                            "Select a Friend",
+                            new {@class = "form-control"})
+                    </div>
 
-              
 
-                <div class="form-group">
-                    <center>
-                        <button type="submit" class="btn btn-default">Add Friend</button>
-                    </center>
-                </div>
 
-              
+                    <div class="form-group">
+                        <center>
+                            <button type="submit" class="btn btn-default">Add Friend</button>
+                        </center>
+                    </div>
+                 }
+
+
             </form>
         </div>
     </div>

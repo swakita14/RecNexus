@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Mail;
 using System.Web.Mvc;
+using System.Web.UI;
 using Microsoft.AspNet.Identity;
 using PickUpSports.Interface;
 using PickUpSports.Models.DatabaseModels;
@@ -98,13 +99,29 @@ namespace PickUpSports.Controllers
         [HttpGet]
         public ActionResult FriendInvite(int gameId)
         {
+            ViewBag.HasFriends = false;
+
             //find the current logged-on user
             string email = User.Identity.GetUserName();
             Contact currContactUser = _contactService.GetContactByEmail(email);
 
             // Get the id of the user
             int currID = currContactUser.ContactId;
-          
+
+            //Showing error message when the user has no friends on their list 
+            List<Friend> friendList = _contactService.GetUsersFriends(currContactUser.ContactId);
+            if (friendList == null || friendList.Count == 0)
+            {
+                PopulateDropdownValues(currID);
+                ViewData.ModelState.AddModelError("NoFriends", "You currently have no friends to invite");
+                return View();
+            }
+            else
+            {
+                ViewBag.HasFriends = true;
+            }
+
+
             // Populate Dropdown list
             PopulateDropdownValues(currID);
 
@@ -121,8 +138,10 @@ namespace PickUpSports.Controllers
        */
         [Authorize]
         [HttpPost]
-        public ActionResult FriendInvite(FriendInviteViewModel model, int friendId)
+        public ActionResult FriendInvite(FriendInviteViewModel model, int? friendId)
         {
+            ViewBag.HasFriends = true;
+
             //find the current logged-on user
             var email = User.Identity.GetUserName();
             var currContactUser = _contactService.GetContactByEmail(email);
