@@ -426,6 +426,7 @@
     <Content Include="Content\images\sportIcon.png" />
     <Content Include="Content\images\startGame.png" />
     <Content Include="Content\images\venues.png" />
+    <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -433,7 +434,6 @@
     <Content Include="Content\gameTable.css" />
     <Content Include="Content\playerTable.css" />
     <Content Include="Content\responsive.css" />
-    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\fd6urf-Sports-Logo.jpg" />
