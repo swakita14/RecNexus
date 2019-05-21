@@ -14,7 +14,7 @@ namespace PickUpSports.Models.ViewModel
         [Required]
         public int ContactId { get; set; }
         
-        [Required]
+        [Required (ErrorMessage = "Please Select a Friend to Invite")]
         [DisplayName("Friend")]
         public int FriendId { get; set; }
 
