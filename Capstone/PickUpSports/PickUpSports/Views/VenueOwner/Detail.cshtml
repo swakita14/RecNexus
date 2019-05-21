@@ -40,7 +40,7 @@
 <div class="row" style="padding-top: 30px">
     @if (ViewBag.IsOwner)
     {
-        <div id="calender" style="margin: auto; width: 80%; border: 1px solid black; padding: 10px;"></div>
+        <div id="calendar" style="margin: auto; width: 80%; border: 1px solid black; padding: 10px; background-color: #2F2D2E"></div>
              <div id="myModal" class="modal fade" role="dialog">
                  <div class="modal-dialog"> 
                      <div class="modal-content" style="background-color: #2F2D2E">
@@ -103,9 +103,9 @@
             $.ajax({
                 type: "GET",
                 url: "/VenueOwner/GetEvents/" + @Model.VenueId,
-                success: function (data) {
+                success: function(data) {
                     $.each(data,
-                        function (i, v) {
+                        function(i, v) {
                             events.push({
                                 title: v.Subject,
                                 start: moment(v.Start),
@@ -116,23 +116,29 @@
                             });
                         });
 
-                    GenerateCalender(events);
+                    GenerateCalendar(events);
                 },
                 error: function(error) {
                     alert('failed');
                 }
             });
 
-            function GenerateCalender(events) {
-                $('#calender').fullCalendar('destroy');
-                $('#calender').fullCalendar({
-                    contentHeight: 400,
+            function GenerateCalendar(events) {
+                $('#calendar').fullCalendar('destroy');
+                $('#calendar').fullCalendar({
+                    contentHeight: 500,
                     defaultDate: new Date(),
                     timeFormat: 'h(:mm)a',
                     header: {
                         left: 'prev,next today',
                         center: 'title',
                         right: 'month,basicWeek,basicDay,agenda'
+                    },
+                    dayRender: function(date, cell) {
+                        var today = moment();
+                        if (isSameDayAndMonth(today, date)) {
+                            cell.css("background-color", "black");
+                        }
                     },
                     eventLimit: true,
                     eventColor: '#378006',
@@ -149,13 +155,13 @@
                         $description.append($('<p/>').html('<b>Game status:</b>' + " " + calEvent.gameStatus));
                         console.log(calEvent.gameStatus);
                         if (calEvent.gameStatus === "Open" || calEvent.gameStatus === "Accepted") {
-                            var rejectUrl = '@Url.Action("RejectGame", "VenueOwner", new { id = "-1" })';
+                            var rejectUrl = '@Url.Action("RejectGame", "VenueOwner", new {id = "-1"})';
                             rejectUrl = rejectUrl.replace("-1", calEvent.gameId);
                             var rejectTxt = "Reject Game";
                             $description.append($('<p/>').html('<center>' + rejectTxt.link(rejectUrl) + '</center>'));
 
                         } else {
-                            var acceptUrl = '@Url.Action("AcceptGame", "VenueOwner", new { id = "-1" })';
+                            var acceptUrl = '@Url.Action("AcceptGame", "VenueOwner", new {id = "-1"})';
                             acceptUrl = acceptUrl.replace("-1", calEvent.gameId);
                             var acceptTxt = "Reinstate Game";
                             $description.append($('<p/>').html('<center>' + acceptTxt.link(acceptUrl) + '</center>'));
@@ -167,6 +173,11 @@
                     }
                 });
             }
+
+            function isSameDayAndMonth(m1, m2){
+                return m1.date() === m2 .date() && m1.month() === m2.month()
+            }
+
         })
     </script>
 }

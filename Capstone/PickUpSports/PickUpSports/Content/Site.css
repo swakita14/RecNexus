@@ -208,13 +208,17 @@ h6 {
     text-align: center;
     transition: 250ms width ease, 250ms border-color ease;
 }
-/************** 
-   On Hover
-***************/
-    #submit:hover {
-        background: #048BA8;
-    }
 
+#submit:hover {
+    background: #048BA8;
+}
+
+#eventTitle {
+    color: #99C24D;
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase;
+}
 
 #warning {
     color: red;
