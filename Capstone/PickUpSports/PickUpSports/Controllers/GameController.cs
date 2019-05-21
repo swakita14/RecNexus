@@ -254,7 +254,9 @@ namespace PickUpSports.Controllers
             {
                 model.IsCreatorOfGame = true;
                 model.IsVenueOwner = false;
-
+            }
+            else
+            {
                 // Check if logged in user is already a part of this game
                 var allPickUpGames = _gameService.GetPickUpGamesByContactId(contact.ContactId);
                 if (allPickUpGames != null)

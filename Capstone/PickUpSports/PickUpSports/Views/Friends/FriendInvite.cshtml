@@ -4,14 +4,13 @@
     ViewBag.Title = "Invite a friend to a Game";
 }
 
-<h2>Invite a Friend!</h2>
 
 @using (Html.BeginForm("FriendInvite", "Friends", FormMethod.Post))
 {
 <div class="container">
     <div class="row">
         <div class="form-box">
-            <h2>Invite a Friend</h2>
+            <h4>Invite a Friend</h4>
             <form role="form" id="game-form">
                 @if (!ViewData.ModelState.IsValid)
                 {
