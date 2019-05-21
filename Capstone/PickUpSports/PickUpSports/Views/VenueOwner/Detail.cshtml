@@ -16,7 +16,7 @@
                     <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
                     <p>
                         <center>
-                            @Html.ActionLink("Edit Information", "Edit", new { id = Model.VenueOwnerId })
+                            @Html.ActionLink("Edit Information", "Edit", new { id = Model.VenueOwnerId }) | @Html.ActionLink("Go To Venue Page", "Details", "Venue", new { id = Model.VenueId}, null)
                         </center>
                     </p>
                 </div>
