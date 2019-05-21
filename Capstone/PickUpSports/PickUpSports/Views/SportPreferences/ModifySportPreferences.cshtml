@@ -9,7 +9,7 @@
     <div class="container">
         <div class="row">
             <div class="form-box">
-                <h2>@Model.ContactUsername's Sport Preferences</h2>
+                <h4>@Model.ContactUsername's Sport Preferences</h4>
                 <div class="well">
                     @Html.HiddenFor(model => model.ContactId)
 
@@ -27,7 +27,7 @@
 
                     <div class="row">
                         <center>
-                            <button type="submit" class="btn btn-default">Save Changes</button>
+                            <button type="submit" id="submit" class="btn btn-default">Save Changes</button>
                         </center>
                     </div>
                 </div>
