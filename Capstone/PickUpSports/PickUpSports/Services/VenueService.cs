@@ -151,7 +151,7 @@ namespace PickUpSports.Services
             if (mostRecentUpdate == null || mostRecentUpdate.DateUpdated < DateTime.Now.AddDays(-14))
             {
                 // Get list of places 
-                List<PlaceSearchResult> places = _placesApi.GetVenues().Result;
+                List<PlaceSearchResult> places = _placesApi.GetVenues();
 
                 foreach (var place in places)
                 {
@@ -221,8 +221,12 @@ namespace PickUpSports.Services
 
             foreach (var venue in venuesWithoutDetails)
             {
+
+                // Venue owners have ability to manually update their venues, do not auto-update
+                if (VenueHasOwner(venue)) continue;
+
                 // Get Place details from Google API using GooglePlaceId
-                PlaceDetailsResponse venueDetails = _placesApi.GetPlaceDetailsById(venue.GooglePlaceId).Result;
+                PlaceDetailsResponse venueDetails = _placesApi.GetPlaceDetailsById(venue.GooglePlaceId);
 
                 // Map response data to database model properties
                 venue.Phone = venueDetails.Result.FormattedPhoneNumber;
@@ -328,6 +332,30 @@ namespace PickUpSports.Services
             if (venueOwner.VenueId != venue.VenueId) return false;
 
             return true;
+        }
+
+
+        public void ClearBusinessHours(List<BusinessHours> hours)
+        {
+            foreach (var businessHours in hours)
+            {
+                _businessHoursRepository.Delete(businessHours);
+            }
+        }
+
+        public void AddBusinessHour(BusinessHours hour)
+        {
+            _businessHoursRepository.AddBusinessHours(hour);
+        }
+
+        public void UpdateBusinessHours(BusinessHours hours)
+        {
+            _businessHoursRepository.Edit(hours);
+        }
+
+        public void DeleteBusinessHours(BusinessHours hours)
+        {
+           _businessHoursRepository.Delete(hours);
         }
     }
 }

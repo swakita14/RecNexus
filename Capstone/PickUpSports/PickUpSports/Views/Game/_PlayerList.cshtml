@@ -1,23 +1,18 @@
 ﻿
 @model List<PickUpSports.Models.ViewModel.GameController.PickUpGameViewModel>
-@{
-    ViewBag.Title = "_PlayerList";
-}
 
 <h4 id="warning">@ViewBag.ErrorMsg</h4>
 @if (Model == null)
 {
 <center>
-    <h4>No players have joined this game yet.</h4>
+    <h5>No players have joined this game yet.</h5>
 </center>
 }
 else
 {
     <table class="table rwd-table" id="playerTable">
         <tr>
-            <th>@Html.DisplayName("Username:")</th>
-            <th>@Html.DisplayName("Email:")</th>
-            <th>@Html.DisplayName("Phone Number:")</th>
+            <th>@Html.DisplayName("Players signed up for this game:")</th>
         </tr>
 
 
@@ -27,13 +22,11 @@ else
             @Html.HiddenFor(model => player.PickUpGameId)
 
             <tr>
-                <td>@Html.DisplayFor(model => player.Username)</td>
-                <td><a href="mailto:@Html.DisplayFor(model => player.Email)">@Html.DisplayFor(model => player.Email)</a></td>
-                <td>@Html.DisplayFor(model => player.PhoneNumber)</td>
-            </tr>
-        }
-
-
+                <td>
+                    @Html.ActionLink(player.Username, "PlayerProfile", "Contact", new { id = player.ContactId }, null)
+            </td>
+        </tr>
+    }
     </table>
 }
 

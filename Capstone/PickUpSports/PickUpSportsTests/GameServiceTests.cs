@@ -15,6 +15,7 @@ namespace PickUpSportsTests
         private readonly Mock<IPickUpGameRepository> _pickUpGameRepoMock;
         private readonly Mock<IGameRepository> _gameRepositoryMock;
         private readonly Mock<ISportRepository> _sportRepositoryMock;
+        private readonly Mock<IGameStatusRepository> _gameStatusRepoMock;
         private readonly GameService _sut;
 
         public GameServiceTests()
@@ -22,8 +23,8 @@ namespace PickUpSportsTests
             _pickUpGameRepoMock = new Mock<IPickUpGameRepository>();
             _gameRepositoryMock = new Mock<IGameRepository>();
             _sportRepositoryMock = new Mock<ISportRepository>();
-
-            _sut = new GameService(_pickUpGameRepoMock.Object, _gameRepositoryMock.Object, _sportRepositoryMock.Object);
+            _gameStatusRepoMock = new Mock<IGameStatusRepository>();
+            _sut = new GameService(_pickUpGameRepoMock.Object, _gameRepositoryMock.Object, _sportRepositoryMock.Object, _gameStatusRepoMock.Object);
         }
 
         /**
@@ -298,7 +299,7 @@ namespace PickUpSportsTests
         [Test]
         public void IsThisGameCanCancel_AtLeastBeforeOneHour_ReturnsTrue()
         {
-            var startTime = DateTime.Parse("2019-05-12 09:00 PM");
+            var startTime = DateTime.Parse("2020-05-15 7:00 PM");
             Assert.AreEqual(_sut.IsThisGameCanCancel(startTime), true);
         }
 

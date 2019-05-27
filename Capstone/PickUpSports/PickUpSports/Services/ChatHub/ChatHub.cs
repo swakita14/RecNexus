@@ -28,8 +28,6 @@ namespace PickUpSports
         {
 
             string sender = Context.User.Identity.Name;
-
-           
             Clients.All.received(new {sender = sender, message = message, isPrivate = false});
         }
 
@@ -47,7 +45,6 @@ namespace PickUpSports
                 {
                     lock (sender.ConnectionIds)
                     {
-
                         allReceivers = receiver.ConnectionIds.Concat(sender.ConnectionIds);
                     }
                 }

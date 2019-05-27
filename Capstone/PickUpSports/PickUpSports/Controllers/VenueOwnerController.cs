@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using PickUpSports.Interface;
 using PickUpSports.Models;
 using PickUpSports.Models.DatabaseModels;
+using PickUpSports.Models.Enums;
 using PickUpSports.Models.ViewModel.VenueOwnerController;
 
 namespace PickUpSports.Controllers
@@ -20,6 +21,8 @@ namespace PickUpSports.Controllers
         private readonly IVenueOwnerService _venueOwnerService;
         private readonly IVenueService _venueService;
         private ApplicationUserManager _userManager;
+        private readonly IGameService _gameService;
+        private readonly IContactService _contactService;
 
         public ApplicationUserManager UserManager
         {
@@ -35,11 +38,13 @@ namespace PickUpSports.Controllers
 
         public VenueOwnerController(IGMailService gMailer, 
             IVenueOwnerService venueOwnerService, 
-            IVenueService venueService)
+            IVenueService venueService, IGameService gameService, IContactService contactService)
         {
             _gMailer = gMailer;
             _venueOwnerService = venueOwnerService;
             _venueService = venueService;
+            _gameService = gameService;
+            _contactService = contactService;
         }
 
         public ActionResult ClaimVenue(int venueId)
@@ -64,7 +69,7 @@ namespace PickUpSports.Controllers
             // Send email to Scrum Lords for approval
             var email = new MailMessage();
             email.To.Add(_gMailer.GetEmailAddress());
-            email.From = new MailAddress(_gMailer.GetEmailAddress());
+            email.From = new MailAddress(model.Email);
             email.Subject = $"Received request to claim venue {model.VenueName}.";
             email.Body = $"Received below request to claim venue {model.VenueName}:<br />"
                          + $"Name: {model.FirstName} {model.LastName}<br />"
@@ -181,7 +186,7 @@ namespace PickUpSports.Controllers
         }
 
         [Authorize]
-        public ActionResult Detail()
+        public ActionResult Detail(int? id)
         {
             //Bool variable for the View: checking if user is venue owner or not
            ViewBag.IsOwner = false;
@@ -193,25 +198,46 @@ namespace PickUpSports.Controllers
             if (_venueOwnerService.IsVenueOwner(ownerEmail))
             {
                 ViewBag.IsOwner = true;
+
+                VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
+
+                //Create the view model using values of the owner if not null
+                CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
+                {
+                    VenueOwnerId = owner.VenueOwnerId,
+                    FirstName = owner.FirstName,
+                    LastName = owner.LastName,
+                    Email = owner.Email,
+                    PhoneNumber = owner.Phone,
+                    CompanyName = owner.CompanyName,
+                    SignUpDate = owner.SignUpDate,
+                    VenueName = _venueService.GetVenueNameById(owner.VenueId),
+                    VenueId = owner.VenueId
+                };
+
+                //Return it back to the view
+                return View(model);
             }
-
-            VenueOwner owner = _venueOwnerService.GetVenueOwnerByEmail(ownerEmail);
-            
-            //Create the view model using values of the owner if not null
-            CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
+            else
             {
-                VenueOwnerId = owner.VenueOwnerId,
-                FirstName = owner.FirstName,
-                LastName = owner.LastName,
-                Email = owner.Email,
-                PhoneNumber = owner.Phone,
-                CompanyName = owner.CompanyName,
-                SignUpDate = owner.SignUpDate,
-                VenueName = _venueService.GetVenueNameById(owner.VenueId)
-            };
+                ViewBag.IsOwner = false;
+                VenueOwner owner = _venueOwnerService.GetVenueOwnerById((int) id);
 
-            //Return it back to the view
-            return View(model);
+                CreateVenueOwnerViewModel model = new CreateVenueOwnerViewModel()
+                {
+                    VenueOwnerId = owner.VenueOwnerId,
+                    FirstName = owner.FirstName,
+                    LastName = owner.LastName,
+                    Email = owner.Email,
+                    PhoneNumber = owner.Phone,
+                    CompanyName = owner.CompanyName,
+                    SignUpDate = owner.SignUpDate,
+                    VenueName = _venueService.GetVenueNameById(owner.VenueId),
+                    VenueId = owner.VenueId
+                };
+                return View(model);
+
+            }
         }
 
         [HttpGet]
@@ -291,6 +317,107 @@ namespace PickUpSports.Controllers
             _gMailer.Send(mail);
 
             return RedirectToAction("Detail", "VenueOwner", new { id = model.VenueOwnerId });
+        }
+
+        public JsonResult GetEvents(int id)
+         {
+            var gamesAtVenue = _gameService.GetCurrentGamesByVenueId(id);
+            var events = new List<EventViewModel>();
+
+            foreach (var game in gamesAtVenue)
+            {
+                var sportName = _gameService.GetSportNameById(game.SportId);
+                var username = _contactService.GetUsernameByContactId((int) game.ContactId);
+
+                var gameEvent = new EventViewModel();
+                gameEvent.Subject = $"{sportName} game created by {username}";
+                gameEvent.Start = game.StartTime;
+                gameEvent.End = game.EndTime;
+                gameEvent.GameId = game.GameId;
+                gameEvent.GameStatus = ((GameStatusEnum) game.GameStatusId).ToString();
+
+                // Color coding
+                if (game.GameStatusId == (int)GameStatusEnum.Cancelled) gameEvent.Color = "Grey";
+                if (game.GameStatusId == (int)GameStatusEnum.Rejected) gameEvent.Color = "Red";
+
+                events.Add(gameEvent);
+            }
+
+            return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
+
+        /*
+         * A venue owner can reject any game at their venue 
+         */
+        public ActionResult RejectGame(int id)
+        {
+            // Email creator game that game is being cancelled
+            var game = _gameService.GetGameById(id);
+            var owner = _venueOwnerService.GetVenueOwnerByVenueId(game.VenueId);
+            if (game.ContactId != null)
+            {
+                var creator = _contactService.GetContactById(game.ContactId);
+                var venueOwnerLink = "<a href='"
+                           + Request.Url.Scheme + "://"
+                           + Request.Url.Authority
+                           + @Url.Action("Detail", "VenueOwner", new {id = owner.VenueOwnerId})
+                           + "'>Visit this page for owner's contact information</a>";
+
+                var venueName = _venueService.GetVenueNameById(game.VenueId);
+                var sport = _gameService.GetSportNameById(game.SportId);
+
+                var email = new MailMessage();
+                email.To.Add(creator.Email);
+                email.From = new MailAddress(_gMailer.GetEmailAddress());
+                email.Subject = $"We apologize. The owner of {venueName} has cancelled your game.";
+                email.Body = $"<center>Unfortunately, the owner of {venueName} has cancelled your "
+                             + $"{sport.ToLower()} game that you scheduled on {game.StartTime.ToShortDateString()}."
+                             + $"<p>{venueOwnerLink}</p></center>";
+                email.IsBodyHtml = true;
+
+                _gMailer.Send(email);
+            }
+
+            _gameService.RejectGame(id);
+            
+            return RedirectToAction("Detail");
+        }
+
+        /*
+         * If a game was once rejected, only the venue owner can re-accept it
+         */
+        public ActionResult AcceptGame(int id)
+        {
+            // Email creator game that game is being reinstated by owner
+            var game = _gameService.GetGameById(id);
+            var owner = _venueOwnerService.GetVenueOwnerByVenueId(game.VenueId);
+            if (game.ContactId != null)
+            {
+                var creator = _contactService.GetContactById(game.ContactId);
+                var venueOwnerLink = "<a href='"
+                                     + Request.Url.Scheme + "://"
+                                     + Request.Url.Authority
+                                     + @Url.Action("Detail", "VenueOwner", new { id = owner.VenueOwnerId })
+                                     + "'>Visit this page for owner's contact information</a>";
+
+                var venueName = _venueService.GetVenueNameById(game.VenueId);
+                var sport = _gameService.GetSportNameById(game.SportId);
+
+                var email = new MailMessage();
+                email.To.Add(creator.Email);
+                email.From = new MailAddress(_gMailer.GetEmailAddress());
+                email.Subject = $"Good news! The owner of {venueName} has reinstated your game.";
+                email.Body = $"<center>The owner of {venueName} has reinstated your previously rejected "
+                             + $"{sport.ToLower()} game that you scheduled on {game.StartTime.ToShortDateString()}."
+                             + $"<p>{venueOwnerLink}</p></center>";
+                email.IsBodyHtml = true;
+
+                _gMailer.Send(email);
+            }
+
+            _gameService.AcceptGame(id);
+
+            return RedirectToAction("Detail");
         }
 
         /*

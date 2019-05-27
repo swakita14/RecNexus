@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -9,12 +8,12 @@ using TechTalk.SpecFlow;
 namespace PickUpSportsSpecFlow
 {
     [Binding]
-    public class VenueOwnerAvailabilitySteps_DoesNotExist : IDisposable
+    public class VenueOwnerAvailability : IDisposable
     {
 
         private readonly IWebDriver _driver;
 
-        public VenueOwnerAvailabilitySteps_DoesNotExist() 
+        public VenueOwnerAvailability() 
         {
             _driver = new ChromeDriver();
         }
@@ -22,7 +21,7 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have logged in")]
         public void GivenIHaveLoggedIn()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Account/Login");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Account/Login");
 
             IWebElement username = _driver.FindElement(By.Id("Email"));
             username.Clear();
@@ -39,7 +38,7 @@ namespace PickUpSportsSpecFlow
         [Given(@"I have navigate to the create game page")]
         public void GivenIHaveNavigateToTheCreateGamePage()
         {
-            _driver.Navigate().GoToUrl("https://pickupsports-development.azurewebsites.net/Game/CreateGame");
+            _driver.Navigate().GoToUrl("https://pickupsports-production.azurewebsites.net/Game/CreateGame");
         }
 
         [When(@"I select Bryan Johnston Park as the venue")]

@@ -12,8 +12,7 @@ namespace PickUpSports.Models.ViewModel.GameController
         public int? ContactId { get; set; }
 
         public int PickUpGameId { get; set; }
-
-
+        
         [DisplayName("Venue:")]
         public string Venue { get; set; }
 
@@ -48,5 +47,11 @@ namespace PickUpSports.Models.ViewModel.GameController
                 }
             }
         }
+
+        public bool IsVenueOwner { get; set; } = false;
+
+        public bool IsAlreadyJoined { get; set; } = false;
+
+        public bool IsCreatorOfGame { get; set; } = false;
     }
 }

@@ -11,11 +11,11 @@
             <div class="well">
                 <p>@Html.DisplayFor(x => x.FirstName) @Html.DisplayFor(x => x.LastName)</p>
                 <p>@Html.DisplayFor(x => x.Email)</p>
-                @if (string.IsNullOrEmpty(Model.Address2))
+                @if (string.IsNullOrEmpty(Model.Address2) && !string.IsNullOrEmpty(Model.Address1))
                 {
                     <p>@Html.DisplayFor(x => x.Address1), @Html.DisplayFor(x => x.City), @Html.DisplayFor(x => x.State) @Html.DisplayFor(x => x.ZipCode)</p>
                 }
-                else
+                else if(!string.IsNullOrEmpty(Model.Address1))
                 {
                     <p>@Html.DisplayFor(x => x.Address1), @Html.DisplayFor(x => x.Address2), @Html.DisplayFor(x => x.City), @Html.DisplayFor(x => x.State) @Html.DisplayFor(x => x.ZipCode)</p>
 
@@ -23,7 +23,7 @@
                 <p>@Html.DisplayFor(x => x.PhoneNumber)</p>
                 @if (Model.HasPublicProfile)
                 {
-                    <p>Your profile is <b>@Html.ActionLink("public", "Profile", new {id = Model.ContactId })</b></p>
+                    <p>Your profile is <b>@Html.ActionLink("public", "PlayerProfile", new {id = Model.ContactId })</b></p>
                 }
                 else
                 {
@@ -31,7 +31,7 @@
                 }
                 <p>
                     <center>
-                        @Html.ActionLink("Edit Information", "Edit", new { id = Model.ContactId }) | @Html.ActionLink("Change Password", "ChangePassword", "Manage") | <a href="#" data-toggle="modal" data-target="#confirm">Delete Account</a> |  @Html.ActionLink("View Friends", "../Friends/FriendList", new { id = Model.ContactId })
+                        @Html.ActionLink("Edit Information", "Edit") | @Html.ActionLink("Change Password", "ChangePassword", "Manage") | <a href="#" data-toggle="modal" data-target="#confirm">Delete Account</a> |  @Html.ActionLink("View Friends", "../Friends/FriendList", new { id = Model.ContactId })
                     </center>
                 </p>
 
@@ -44,7 +44,7 @@
     <div class="container" style="padding-top: 30px">
         <div class="row">
             <div class="col-md-6">
-                <center><b >Your Sport Preferences</b></center>
+                <center><h5>Your Sport Preferences</h5></center>
                 <br/>
                 @{
                     Html.RenderAction("GetSportPreferences", new {contactId = Model.ContactId, isPublicProfileView = false });
@@ -52,7 +52,7 @@
             </div>
         
             <div class="col-md-6">
-                <center><b >Your Time Preferences</b></center>
+                <center><h5>Your Time Preferences</h5></center>
                 <br/>
                 @{
                     Html.RenderAction("GetTimePreferences", new {contactId = Model.ContactId, isPublicProfileView = false});
@@ -62,24 +62,30 @@
     </div>
 </center>
 
-<hr/>
-
 <center>
     <div class="container" style="padding-top: 30px">
         <div class="row">
-            <div class="col-md-6">
-                <center><b>Games You Started</b></center>
+            <div class="col-md-4">
+                <center><h5>Games You Started</h5></center>
                 <br />
                 @{
                     Html.RenderAction("GetGamesStartedByUser", new { contactId = Model.ContactId, isPublicProfileView = false });
                 }
             </div>
 
-            <div class="col-md-6">
-                <center><b>Games You Joined</b></center>
+            <div class="col-md-4">
+                <center><h5>Games You Joined</h5></center>
                 <br />
                 @{
                     Html.RenderAction("GetGamesUserJoined", new { contactId = Model.ContactId, isPublicProfileView = false });
+                }
+            </div>
+            
+            <div class="col-md-4">
+                <center><h5>Games Rejected by Venue Owner</h5></center>
+                <br />
+                @{
+                    Html.RenderAction("GetGamesRejected", new { contactId = Model.ContactId, isPublicProfileView = false });
                 }
             </div>
         </div>
@@ -96,7 +102,7 @@
     <!-- Modal -->
     <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="confirmRemove" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color: #2F2D2E;">                         
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmRemove">Confirm Deletion</h5>
                 </div>

@@ -29,6 +29,9 @@ namespace PickUpSports.Controllers
             _venueOwnerService = venueOwnerService;
         }
         
+        /*
+         * User's internal profile that only they have access to
+         */
         public ActionResult Details()
         {
             string userEmail = User.Identity.GetUserName();
@@ -43,75 +46,21 @@ namespace PickUpSports.Controllers
 
             Contact contact = _contactService.GetContactByEmail(userEmail);
             
-            // If username is null, profile was never set up
-            if (contact == null || contact.Username == null) return RedirectToAction("Create", "Contact");
-
             return View(contact);
         }
 
-        public ActionResult Create()
+        /*
+         * Route user to page to edit their account details
+         */
+        public ActionResult Edit()
         {
-            ViewBag.States = PopulateStatesDropdown();
-            return View();
-        }
-
-        // POST: Contacts/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateContactViewModel model)
-        {
-            ViewBag.Error = "";
-            if (!ModelState.IsValid)
-            {
-                ViewBag.States = PopulateStatesDropdown();
-                return View(model);
-            }
-
-            //create user 
+            // Get logged in user
             string email = User.Identity.GetUserName();
-            Debug.Write(email);
-
-            Contact newContact = new Contact
-            {
-                ContactId = model.ContactId,
-                Username = model.Username,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = email,
-                PhoneNumber = model.PhoneNumber,
-                Address1 = model.Address1,
-                Address2 = model.Address2,
-                City = model.City,
-                State = model.State,
-                ZipCode = model.ZipCode
-            };
-
-            if (_contactService.UsernameIsTaken(model.Username))
-            {
-                ModelState.AddModelError("Username", "Username already taken");
-                ViewBag.States = PopulateStatesDropdown();
-                return View(model);
-            }
-
-            _contactService.CreateContact(newContact);
-            return RedirectToAction("Details", new {id = model.ContactId});
-
-        }
-
-        // GET: Contacts/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            ViewBag.States = PopulateStatesDropdown();
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            Contact contact = _contactService.GetContactById((int) id);
-
+            Contact contact = _contactService.GetContactByEmail(email);
             if (contact == null) return HttpNotFound();
 
+            ViewBag.States = PopulateStatesDropdown();
+            
             EditContactViewModel model = new EditContactViewModel
             {
                 ContactId = contact.ContactId,
@@ -131,9 +80,6 @@ namespace PickUpSports.Controllers
             return View(model);
         }
 
-        // POST: Contacts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EditContactViewModel model)
@@ -168,7 +114,7 @@ namespace PickUpSports.Controllers
          * Endpoint that routes to public profile view. Should take in a Contact ID 
          */
         [HttpGet]
-        public ActionResult Profile(int id)
+        public ActionResult PlayerProfile(int id)
         {
             var model = new ProfileViewModel();
             var contact = _contactService.GetContactById(id);

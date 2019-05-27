@@ -13,6 +13,8 @@ namespace PickUpSports.Models.ViewModel.GameController
 
         public int SportId { get; set; }
 
+        public int GameStatusId { get; set; }
+
         [Required]
         [DisplayName("Venue:")]
         public string Venue { get; set; }

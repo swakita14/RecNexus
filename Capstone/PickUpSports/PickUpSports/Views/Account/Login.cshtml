@@ -24,23 +24,23 @@
                     }
 
                     <div class="form-group">
-                        @Html.TextBoxFor(m => m.Email, new {@class = "form-control", placeholder = "Enter your email address"})
+                        @Html.TextBoxFor(m => m.Email, new {@class = "form-control", id= "formField", placeholder = "Username or Email"})
                         @Html.ValidationMessageFor(m => m.Email, "", new {@class = "text-danger"})
                     </div>
 
                     <div class="form-group">
-                        @Html.PasswordFor(m => m.Password, new {@class = "form-control", placeholder = "Enter your password"})
+                        @Html.PasswordFor(m => m.Password, new {@class = "form-control", id = "formField", placeholder = "Enter your password"})
                         @Html.ValidationMessageFor(m => m.Password, "", new {@class = "text-danger"})
                     </div>
 
                     <div class="form-group">
                         <center>
-                            <button type="submit" class="btn btn-default" id="login-button">Log In</button>
-                            <p style="padding-top: 20px;">@Html.ActionLink("Register as a new user", "Register") | @Html.ActionLink("Forgot password?", "ForgotPassword")| @Html.ActionLink("Venue Owner", "VenueOwnerLogin")</p>
+                            <button type="submit" class="btn btn-default" id="submit">Log In</button>
+                            <p style="padding-top: 20px;">@Html.ActionLink("Register as a new user", "Register") | @Html.ActionLink("Forgot password?", "ForgotPassword")<br/><br/>@Html.ActionLink("Log in as Venue Owner", "VenueOwnerLogin")</p>
                         </center>
                     </div>
                 }
-
+                
                 <hr/>
                 <div class="form-group">
                     @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel {ReturnUrl = ViewBag.ReturnUrl})
@@ -49,6 +49,7 @@
         </div>
     </div>
 </div>
+
 
 
 

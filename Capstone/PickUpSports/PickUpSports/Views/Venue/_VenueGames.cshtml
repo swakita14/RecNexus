@@ -1,7 +1,13 @@
 ﻿@model List<PickUpSports.Models.ViewModel.GameController.GameListViewModel>
 
 
-@if (Model != null)
+@if (Model == null || Model.Count < 1)
+{
+    <div class="row">
+        There are no games available for this venue.
+    </div>
+}
+else
 {
     <ul class="list-group">
 
@@ -25,7 +31,7 @@
                     else
                     {
                         <html>
-                        Game started by @Html.ActionLink(game.ContactName, "Profile", "Contact", new {id = game.ContactId}, null)
+                        Game started by @Html.ActionLink(game.ContactName, "PlayerProfile", "Contact", new {id = game.ContactId}, null)
                         </html>
                     }
                 </div>
@@ -35,10 +41,4 @@
             </li>
         }
     </ul>
-}
-else
-{
-    <div class="row">
-        There are no games available for this venue.
-    </div>
 }

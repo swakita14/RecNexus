@@ -7,10 +7,8 @@
 
 <div class="container">
     <div class="row">
-        <div class="well well-sm">
-
-            <fieldset>
-                <legend class="text-center header">Time Preference Detail</legend>
+        <div class="well">
+            <h4>Time Preference Detail</h4>
                 <div class="form-group">
                     @Html.Label("Day of Week:")
                     @if(Model.DayOfWeek == 0){ <p>Sunday</p>}
@@ -33,13 +31,16 @@
                     @Html.AntiForgeryToken()
 
                     <div class="form-actions no-color">
-                        <button type="submit" class="btn btn-danger" name="Button">Delete</button> |
-                        @Html.ActionLink("Back to List", "Details")
+                        <button type="submit" class="btn btn-danger" id="submit" name="Button">Delete</button>
                     </div>
                 }
-            </fieldset>
-            @Html.HiddenFor(model => model.TimePrefID)
-
+                @Html.HiddenFor(model => model.TimePrefID)
+            
+            <p>
+                <center>
+                    @Html.ActionLink("Back to Account Detail", "../Contact/Details")
+                </center>
+            </p>
         </div>
     </div>
 </div>

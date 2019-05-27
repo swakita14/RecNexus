@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace PickUpSports.Models.DatabaseModels
+﻿namespace PickUpSports.Models.DatabaseModels
 {
     public class Friend
     {

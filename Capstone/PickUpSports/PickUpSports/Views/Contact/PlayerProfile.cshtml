@@ -1,5 +1,4 @@
-﻿@using PickUpSports.Controllers
-@model PickUpSports.Models.ViewModel.ContactController.ProfileViewModel
+﻿@model PickUpSports.Models.ViewModel.ContactController.ProfileViewModel
 
 
 <div class="container">
@@ -10,7 +9,7 @@
                 @using (Html.BeginForm("AddFriend", "Friends", FormMethod.Post))
                 {
                     @Html.HiddenFor(x => x.ContactId);
-                    <input type="submit" name="button" value="Add Friend" class="btn btn-default" />
+                    <input type="submit" id="submit" name="button" value="Add Friend" class="btn btn-default" />
                 }
             </center>
         </div>
@@ -23,7 +22,7 @@
         <div class="container" style="padding-top: 30px">
             <div class="row">
                 <div class="col-md-6">
-                    <center><b>@Model.Username's Sport Preferences</b></center>
+                    <center><h5>@Model.Username's Sport Preferences</h5></center>
                     <br />
                     @{
                         Html.RenderAction("GetSportPreferences", new { contactId = Model.ContactId, isPublicProfileView = true });
@@ -31,7 +30,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <center><b>@Model.Username's Time Preferences</b></center>
+                    <center><h5>@Model.Username's Time Preferences</h5></center>
                     <br />
                     @{
                         Html.RenderAction("GetTimePreferences", new { contactId = Model.ContactId, isPublicProfileView = true });
@@ -41,13 +40,11 @@
         </div>
     </center>
 
-    <hr/>
-
     <center>
         <div class="container" style="padding-top: 30px">
             <div class="row">
                 <div class="col-md-4">
-                    <center><b>Games Started by @Model.Username</b></center>
+                    <center><h5>Games Started by @Model.Username</h5></center>
                     <br />
                     @{
                         Html.RenderAction("GetGamesStartedByUser", new { contactId = Model.ContactId, isPublicProfileView = true });
@@ -55,7 +52,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <center><b>Games @Model.Username Joined</b></center>
+                    <center><h5>Games @Model.Username Joined</h5></center>
                     <br />
                     @{
                         Html.RenderAction("GetGamesUserJoined", new { contactId = Model.ContactId, isPublicProfileView = true });
@@ -63,14 +60,14 @@
                 </div>
                 
                 <div class="col-md-4">
-                    <center><b>@Model.Username's Games Rejected by Venue Owner</b></center>
+                    <center><h5>@Model.Username's Games Rejected by Venue Owner</h5></center>
                     <br />
                     @{
                         Html.RenderAction("GetGamesRejected", new { contactId = Model.ContactId, isPublicProfileView = true });
                     }
                 </div>
             </div>
-        </div>dss
+        </div>
     </center>
 }
 else
