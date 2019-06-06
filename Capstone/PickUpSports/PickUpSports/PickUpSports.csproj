@@ -414,12 +414,16 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="500.aspx" />
+    <Content Include="500.html" />
+    <Content Include="404.aspx" />
     <Content Include="App_Data\down.sql" />
     <Content Include="App_Data\up.sql" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\custom-404.css" />
     <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\EmailFormat.html" />
     <Content Include="Content\header.jpg" />
@@ -428,6 +432,7 @@
     <Content Include="Content\images\venues.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="404.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\ChatInit.js" />
