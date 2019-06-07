@@ -34,11 +34,17 @@ namespace PickUpSports.Services
             return _gameRepository.AddGame(game);
         }
 
+        /*
+         * Method to add a player to an existing game
+         */
         public PickUpGame AddPlayerToGame(PickUpGame pickUpGame)
         {
             return _pickUpGameRepository.AddPickUpGame(pickUpGame);
         }
 
+        /*
+         * Method to remove a player from a game that they previously joined
+         */
         public void RemovePlayerFromGame(PickUpGame pickUpGame)
         {
             _pickUpGameRepository.DeletePickUpGame(pickUpGame);
@@ -248,6 +254,10 @@ namespace PickUpSports.Services
             return true;
         }
 
+        /*
+         * Given a Venue ID, a Sport ID, and a start time, check if
+         * this game already exists in the database
+         */
         public Game CheckForExistingGame(int venueId, int sportId, DateTime startDateTime)
         {
             // Check for all games that are happening at same venue
@@ -307,7 +317,7 @@ namespace PickUpSports.Services
             return null;
         }
 
-        //Reject Game 
+        // Given a Game ID, allow a Venue Owner to reject a game
         public Game RejectGame(int gameId)
         {
             Game game = GetGameById(gameId);
@@ -315,7 +325,7 @@ namespace PickUpSports.Services
             return game;
         }
 
-        //Accept Game 
+        // Given a Game ID, allow a Venue Owner to accept a previously rejected game
         public Game AcceptGame(int gameId)
         {
             Game game = GetGameById(gameId);
@@ -323,6 +333,7 @@ namespace PickUpSports.Services
             return game;
         }
 
+        // Return a list of all possible game statuses
         public List<GameStatus> GetAllGameStatuses()
         {
             return _gameStatusRepository.GetAllGameStatuses();

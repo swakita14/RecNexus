@@ -36,16 +36,25 @@ namespace PickUpSports.Services
             _friendRepository = friendRepository;
         }
 
+        /*
+         * Given an email, return a Contact
+         */
         public Contact GetContactByEmail(string email)
         {
             return _contactRepository.GetContactByEmail(email);
         }
 
+        /*
+         * Given a Contact ID, return a Contact
+         */
         public Contact GetContactById(int? id)
         {
             return _contactRepository.GetContactById(id);
         }
 
+        /*
+         * Given a Username, check if that username is already taken 
+         */
         public bool UsernameIsTaken(string username)
         {
             var existing = _contactRepository.GetContactByUsername(username);
@@ -53,6 +62,9 @@ namespace PickUpSports.Services
             return true;
         }
 
+        /*
+         * Given a Username, return a Contact
+         */
         public Contact GetContactByUsername(string username)
         {
             var contact = _contactRepository.GetContactByUsername(username);
@@ -60,16 +72,26 @@ namespace PickUpSports.Services
             return contact;
         }
 
+        /*
+         * Create a new Contact entity
+         */
         public Contact CreateContact(Contact contact)
         {
             return _contactRepository.CreateContact(contact);
         }
 
+        /*
+         * Edit an existing Contact entity
+         */
         public void EditContact(Contact contact)
         {
             _contactRepository.EditContact(contact);
         }
 
+        /*
+         * Given a Contact, delete any preferences or games for that user
+         * then delete them from Contact table
+         */
         public void DeleteUser(Contact contact)
         {
             // Delete any SportPreferences related to Contact
@@ -156,17 +178,25 @@ namespace PickUpSports.Services
             _contactRepository.DeleteContact(contact);
         }
 
+        /*
+         * Return a list of all sport preferences for all users
+         */
         public List<SportPreference> GetAllSportPreferences()
         {
             return _sportPreferenceRepository.GetAllSportsPreferences();
         }
 
+        /*
+         * Return a list of all time preferences for all users
+         */
         public List<TimePreference> GetAllTimePreferences()
         {
             return _timePreferenceRepository.GetAllTimePreferences();
         }
 
-
+        /*
+         * Given a Contact ID, return that user's sports preferences
+         */
         public List<string> GetUserSportPreferences(int contactId)
         {
             var sportPreferences = _sportPreferenceRepository.GetAllSportsPreferences();
@@ -185,6 +215,9 @@ namespace PickUpSports.Services
             return results;
         }
 
+        /*
+         * Given a Contact ID, return that user's time preferences
+         */
         public List<TimePreference> GetUserTimePreferences(int contactId)
         {
             var timePreferences = _timePreferenceRepository.GetAllTimePreferences();
@@ -194,6 +227,9 @@ namespace PickUpSports.Services
             return userPrefs;
         }
 
+        /*
+         * Given a ContactID, return Contact's username
+         */
         public string GetUsernameByContactId(int contactId)
         {
             var contact = _contactRepository.GetContactById(contactId);
@@ -204,6 +240,9 @@ namespace PickUpSports.Services
             return username;
         }
 
+        /*
+         * Given an email, return true if an email is a valid email address
+         */
         public bool IsValidEmail(string email)
         {
             try
@@ -217,16 +256,25 @@ namespace PickUpSports.Services
             }
         }
 
+        /*
+         * Given a ContactID, return that Contact's friends
+         */
         public List<Friend> GetUsersFriends(int contactId)
         {
             return _friendRepository.GetContactsFriends(contactId);
         }
 
+        /*
+         * Given a FriendID, get friends of that friend
+         */
         public List<Friend> GetFriendsOfUser(int friendId)
         {
             return _friendRepository.GetFriends(friendId);
         }
 
+        /*
+         * Create a new Friend entity 
+         */
         public Friend AddFriend(Friend friend)
         {
             return _friendRepository.AddFriend(friend);

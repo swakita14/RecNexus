@@ -436,9 +436,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\PublishProfiles\PickupSports-Development - Web Deploy.pubxml" />
     <Content Include="Scripts\gameEdit.js" />
     <Content Include="Scripts\gameView.js" />
+    <None Include="Properties\PublishProfiles\PickupSports-Production - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
