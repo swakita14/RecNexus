@@ -33,71 +33,109 @@ namespace PickUpSports.Services
             _venueOwnerRepository = venueOwnerRepository;
         }
 
-
+        /*
+         * Return a list of all venues 
+         */
         public List<Venue> GetAllVenues()
         {
             return _venueRepository.GetAllVenues();
         }
 
+        /*
+         * Given a Venue ID, return a Venue
+         */
         public Venue GetVenueById(int venueId)
         {
             return _venueRepository.GetVenueById(venueId);
         }
 
+        /*
+         * Given a Venue, edit that existing Venue
+         */
         public void EditVenue(Venue venue)
         {
             _venueRepository.Edit(venue);
         }
 
+        /*
+         * Given a Venue ID, return that Venue's name
+         */
         public string GetVenueNameById(int venueId)
         {
             var venue = _venueRepository.GetVenueById(venueId);
             return venue.Name;
         }
 
+        /*
+         * Given a Venue ID, return that Venue's location
+         */
         public Location GetVenueLocation(int venueId)
         {
             var locations = _locationRepository.GetAllLocations();
             return locations.FirstOrDefault(x => x.VenueId == venueId);
         }
 
+        /*
+         * Given a Venue ID, return all reviews for that venue
+         */
         public List<Review> GetVenueReviews(int venueId)
         {
             var reviews = _reviewRepository.GetAllReviews();
             return reviews.Where(x => x.VenueId == venueId).ToList();
         }
-
+        
+        /*
+         * Given a Review, add that Review to database
+         */
         public void CreateVenueReview(Review review)
         {
             _reviewRepository.AddReview(review);
         }
 
+        /*
+         * Given a Review, edit that existing Review
+         */
         public void EditVenueReview(Review review)
         {
             _reviewRepository.EditReview(review);
         }
 
+        /*
+         * Given a Review, delete that review from the database
+         */
         public void DeleteVenueReview(Review review)
         {
             _reviewRepository.DeleteReview(review);
         }
 
+        /*
+         * Given a review ID, return that Review
+         */
         public Review GetReviewById(int reviewId)
         {
            return _reviewRepository.GetReviewById(reviewId);
         }
 
+        /*
+         * Given a Venue ID, return the Business Hours for that venue
+         */
         public List<BusinessHours> GetVenueBusinessHours(int venueId)
         {
             var businessHours = _businessHoursRepository.GetAllBusinessHours();
             return businessHours.Where(x => x.VenueId == venueId).ToList();
         }
 
+        /*
+         * Return a list of all business hours for all venues
+         */
         public List<BusinessHours> GetAllBusinessHours()
         {
             return _businessHoursRepository.GetAllBusinessHours();
         }
 
+        /*
+         * Given a Venue, check if that Venue already has a VenueOwner
+         */
         public bool VenueHasOwner(Venue venue)
         {
             //Find the owner using the venue ID, again could be simplified using repo patterns
@@ -111,6 +149,9 @@ namespace PickUpSports.Services
             return true;
         }
 
+        /*
+         * Method to check if a venue is available for a game during a certain timeframe
+         */
         public bool IsVenueAvailable(List<BusinessHours> venueHours, DateTime startDateTime, DateTime endDateTime)
         {
             // If no business hours then venue has no hours and is therefore not available
@@ -140,6 +181,9 @@ namespace PickUpSports.Services
             return false;
         }
 
+        /*
+         * Method that adds and updates any venues to our database using Google Places API
+         */
         public void UpdateVenues()
         {
             // Only want to update Venues database once a week
@@ -181,7 +225,7 @@ namespace PickUpSports.Services
 
         }
 
-        /**
+        /*
          * Method to  calculate distance via Haversine formula.
          */
         public double CalculateVenueDistance(double lat1, double long1, double lat2, double long2)
@@ -323,6 +367,9 @@ namespace PickUpSports.Services
             }
         }
 
+        /*
+         * Given logged in user's email and Venue, check if the logged in user is a Venue's Owner
+         */
         public bool LoggedInUserIsVenueOwner(string email, Venue venue)
         {
             VenueOwner venueOwner = _venueOwnerRepository.GetVenueOwnerByEmail(email);
@@ -334,7 +381,9 @@ namespace PickUpSports.Services
             return true;
         }
 
-
+        /*
+         * Given Business Hours, delete from database
+         */
         public void ClearBusinessHours(List<BusinessHours> hours)
         {
             foreach (var businessHours in hours)
@@ -343,16 +392,25 @@ namespace PickUpSports.Services
             }
         }
 
+        /*
+         * Given Business Hours, add to database
+         */
         public void AddBusinessHour(BusinessHours hour)
         {
             _businessHoursRepository.AddBusinessHours(hour);
         }
 
+        /*
+         * Given Business Hours, update those BusinessHours in database
+         */
         public void UpdateBusinessHours(BusinessHours hours)
         {
             _businessHoursRepository.Edit(hours);
         }
 
+        /*
+         * Given Business Hours, delete from database
+         */
         public void DeleteBusinessHours(BusinessHours hours)
         {
            _businessHoursRepository.Delete(hours);

@@ -9,7 +9,7 @@ We are a student development team in Western Oregon University's CS461 Senior Pr
 
 # Scrum Lords Project
 
-## Pick Up Sports App (still need a name)
+## Nec Rexus
 
 For our senior capstone, the project we chose is an application that will provide a way for members of the community to come together and play sports when it is convenient for them.  
 
@@ -21,6 +21,7 @@ For our senior capstone, the project we chose is an application that will provid
 
 * Please refer to the link [here](https://confluence.atlassian.com/bitbucket/forking-a-repository-221449527.html) for information on forking our repository on Bitbucket as any work done by contributors should be done on forked repositories (unless you are the repository owner).
 * Please also get familiar with the project definitions, models, and diagrams that are available in the Milestone folders. 
+* You can find the E-R diagram of our database [here](ERD.PNG) to get familiar with how our tables interact with eachother. 
 
 ## Guidelines and Contribution
 
@@ -29,7 +30,6 @@ When contributing to this repository/project, please follow the guidelines [here
 ## Software construction process
 
 For our projects, we use discipline agile delivery methodology which allows us to develop features so we can collaborate and incorporate feedabck sooner and faster. As part of this scrum/agile methodology, we do daily scrums, sprint planning and reviews, backlog refinement meetings, and sprint retrospectives. 
-
 
 ## Tools 
 

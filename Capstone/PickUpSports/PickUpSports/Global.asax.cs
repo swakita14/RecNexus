@@ -19,12 +19,13 @@ namespace PickUpSports
     {
         protected void Application_Start()
         {
-            var builder = new ContainerBuilder();
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            var builder = new ContainerBuilder();
 
             // Register all controllers in our MVC project 
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
