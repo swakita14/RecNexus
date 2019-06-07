@@ -182,7 +182,7 @@ namespace PickUpSports.Controllers
             var subject = "Game Invite";
 
 
-            // pass Game and Contactfriend to the send email function
+            // pass Game and ContactFriend to the send email function
             SendInvite(game, friendInvId, fileContents, subject);
 
 

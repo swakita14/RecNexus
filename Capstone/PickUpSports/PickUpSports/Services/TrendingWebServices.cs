@@ -62,7 +62,7 @@ namespace PickUpSports.Services
                     {
                     }
                 };
-                const string apiKey = "ueHS0+SRkBqqBA9h/+W3++G91YRmtXHemob8kF1iAVn35KUwy6KT7gWy4lrWgxG6gjnwnjg9JNYGT3zT9bHObw=="; // Replace this with the API key for the web service
+                const string apiKey = ""; // Replace this with the API key for the web service
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
 
                 client.BaseAddress = new Uri("https://ussouthcentral.services.azureml.net/workspaces/7a83674e46da4f92abbebab4311ca309/services/c2acc3251d8f42849896d7f1158c2d48/execute?api-version=2.0&details=true");
