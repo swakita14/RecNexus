@@ -50,13 +50,13 @@ namespace PickUpSports.Controllers
             return View();
         }
 
-
+      
         [HttpPost]
         public ActionResult GetPredictionFromWebService()
         {
             // var venueName = Request.Form["venueName"];
             
-
+            //If the request is empty return error
             if (Request.Form["SportName"] == "")
             {
                 ViewData.ModelState.AddModelError("NoSport","you have not selected any sport!");
@@ -64,9 +64,10 @@ namespace PickUpSports.Controllers
             }
             int sportId = Parse(Request.Form["SportName"]);
 
-
+            
             var sportName = _gameService.GetSportNameById(sportId);
 
+            //Pass the sport name to the Machine Learning Class
             if (!string.IsNullOrEmpty(sportName))
             {
                 var resultResponse = _trendingWebServices.InvokeRequestResponseService<ResultOutcome>(sportName).Result;
@@ -82,11 +83,14 @@ namespace PickUpSports.Controllers
                 }
             }
 
+            // store the returned Venue Name 
             string venName = TrendingResult.VenueName;
+
+            // Find the venue by Name and return the ID
             var findVenue = _venueService.GetAllVenues().Where(v => v.Name == venName);
             int venID = findVenue.ElementAt(0).VenueId;
 
-
+            //pass Venue Name and ID to View model
             ViewBag.myData = venName;
             ViewBag.venID = venID;
             PopulateDropdownValues();
@@ -94,6 +98,7 @@ namespace PickUpSports.Controllers
 
         }
 
+        //Populate the drop down list with all available sports
         public void PopulateDropdownValues()
         {
             ViewBag.Sport = _gameService.GetAllSports().ToList().ToDictionary(s => s.SportID, s => s.SportName);
