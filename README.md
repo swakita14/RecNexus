@@ -15,7 +15,7 @@ For our senior capstone, the project we chose is an application that will provid
 
 ## Vision Statement
 
-*For active individuals, who would like to utilize the facilities and egage in activities with other individuals, Pickup Sport is a web application that reintroduces the sense of commmunity and open doors for available space. This application will help users form sports groups through common interest, and at the same time obtain information on the facilities. Unlike other sport grouping applications, our product will also feature the information on facilities in the region including rating and availability.*
+*For active individuals who would like to utilize local parks and facilities and engage in sports with other individuals, Nec Rexus is a web application that reintroduces the sense of community and opens doors for available facilities with help from park and venue owners. This application will help users form groups through common sport interests or activity interests and at the same time obtain details and reviews on the facilities where these sports can take place. Unlike other sport grouping applications, our website encourages entities and owners to sign up and keep their venue information up to date and ensure time slots are available for players to provide a seamless and enjoyable experience to those wanting to use their facilities. Our website also allows players to find and interact with others near them with similar sport preferences or who can play at the same times. These features provide an interactive way for players and venues to come together through mutual interests and to get out and play!*
 
 ## Getting started 
 
