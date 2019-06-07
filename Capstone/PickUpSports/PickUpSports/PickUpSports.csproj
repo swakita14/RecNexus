@@ -509,7 +509,6 @@
     <Content Include="Views\SportPreferences\ModifySportPreferences.cshtml" />
     <Content Include="Views\SportPreferences\Delete.cshtml" />
     <Content Include="Views\SportPreferences\Edit.cshtml" />
-    <Content Include="Web_deploy.config" />
     <Content Include="Views\Game\_BusinessHours.cshtml" />
     <Content Include="Views\Game\GameList.cshtml" />
     <Content Include="Views\Game\_GameSearch.cshtml" />
