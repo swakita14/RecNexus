@@ -28,17 +28,20 @@ namespace PickUpSports
         {
             _gMailService = gMailService;
         }
-        public async Task SendAsync(IdentityMessage message)
+
+        public Task SendAsync(IdentityMessage message)
         {
-            await configSendGridasync(message);
+            ConfigSendGrid(message).Wait();
+            return Task.CompletedTask;
         }
 
-        private async Task configSendGridasync(IdentityMessage message)
+        private Task ConfigSendGrid(IdentityMessage message)
         {
-            sendMail(message);
+            SendMail(message);
+            return Task.CompletedTask;
         }
 
-        void sendMail(IdentityMessage message)
+        void SendMail(IdentityMessage message)
         {
 
             #region formatter

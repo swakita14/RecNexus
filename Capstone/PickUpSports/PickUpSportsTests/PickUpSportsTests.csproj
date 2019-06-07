@@ -119,7 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContactServiceTests.cs" />
-    <Compile Include="GameControllerTests.cs" />
     <Compile Include="GameServiceTests.cs" />
     <Compile Include="GMailServiceTest.cs" />
     <Compile Include="PreferenceNotificationSeleniumTests.cs" />
